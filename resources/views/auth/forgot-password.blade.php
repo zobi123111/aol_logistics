@@ -18,7 +18,7 @@
                             <div class="card-body">
 
                                 <div class="pt-4 pb-2">
-                                    <h5 class="login-title text-center pb-0 fs-4">Forgot Password?</h5>
+                                    <h5 class="login-title text-center pb-0 fs-4 card-title ">Forgot Password?</h5>
                                     <p class="text-center small">Enter your email to reset your password.</p>
 
                                     @if(session()->has('message'))

@@ -1272,3 +1272,13 @@ h6 {
 .card-title {
   color: #00709e;
 }
+
+.card-container {
+  width: 70%;
+  margin: 0 auto;
+}
+
+.module_cont {
+  display: flex;
+  column-gap: 12px;
+}

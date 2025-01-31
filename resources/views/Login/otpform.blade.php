@@ -45,6 +45,10 @@
                                         <button class="btn btn-primary w-100 btn_primary_color" type="submit">Submit
                                             OTP</button>
                                     </div>
+                                    <div class="col-12">
+                                        <a href="{{ route('login') }}"
+                                            class="btn btn-primary w-100 btn_primary_color">Back to Login</a>
+                                    </div>
                                 </form>
 
                             </div>

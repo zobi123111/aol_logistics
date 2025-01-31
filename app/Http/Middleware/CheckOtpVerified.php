@@ -18,8 +18,15 @@ class CheckOtpVerified
     {
         $user = Auth::user();
 
-        if ($user && !$user->otp_verified) {
-            return redirect()->route('otp.verify');
+        // If user is not logged in, allow access to login page
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        // If user has not verified OTP and is trying to access another page, send them back to login
+        if (!$user->otp_verified && !$request->route()->named('otp.verify') && !$request->route()->named('verifyotp')) {
+            Auth::logout(); // Force logout since OTP is not verified
+            return redirect()->route('login')->with('error', 'You need to verify OTP to continue.');
         }
 
         return $next($request);

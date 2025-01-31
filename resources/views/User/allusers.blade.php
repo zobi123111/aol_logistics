@@ -3,10 +3,12 @@
 @extends('layout.app')
 @section('content')
 <div class="main_cont_outer">
+@if(checkAllowedModule('users', 'save_user.index')->isNotEmpty())
     <div class="create_btn">
         <a href="#" class="btn btn-primary create-button btn_primary_color" id="createUser" data-toggle="modal"
             data-target="#userModal">Create User</a>
     </div>
+@endif
 <div id="successMessagea" class="alert alert-success" style="display: none;" role="alert">
     <i class="bi bi-check-circle me-1"></i>
 </div>
@@ -23,9 +25,15 @@
                 <th scope="col">Last Name</th>
                 <th scope="col">Email</th>
                 <th scope="col">Role</th>
+                @if(checkAllowedModule('users', 'users.toggleStatus')->isNotEmpty())
                 <th scope="col">Status</th>
+                @endif
+                @if(checkAllowedModule('users', 'user.get')->isNotEmpty())
                 <th scope="col">Edit</th>
+                @endif
+                @if(checkAllowedModule('users', 'user.destroy')->isNotEmpty())
                 <th scope="col">Delete</th>
+                @endif
             </tr>
         </thead>
         <tbody>
@@ -35,6 +43,7 @@
                 <td scope="row" class="lname">{{ $val->lname }}</td>
                 <td>{{ $val->email }}</td>
                 <td>{{$val->roledata->role_name}}</td>
+                @if(checkAllowedModule('users', 'users.toggleStatus')->isNotEmpty())
                 <td>
                     <!-- Bootstrap switch to toggle status -->
                     <div class="form-check form-switch">
@@ -47,10 +56,15 @@
                         </label>
                     </div>
                 </td>
+                @endif
+                @if(checkAllowedModule('users', 'user.get')->isNotEmpty())
                 <td><i class="fa fa-edit edit-user-icon table_icon_style blue_icon_color"
                         data-user-id="{{ $val->id }}"></i></td>
+                @endif
+                @if(checkAllowedModule('users', 'user.destroy')->isNotEmpty())
                 <td><i class="fa-solid fa-trash delete-icon table_icon_style blue_icon_color"
                         data-user-id="{{ $val->id }}"></i></td>
+                @endif
             </tr>
             @endforeach
         </tbody>

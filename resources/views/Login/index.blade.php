@@ -123,6 +123,7 @@ $(document).ready(function() {
                 } else {
                     $('.error_ee').html('');
                     $('.credential_error').html(data.credentials_error);
+                    window.location.href = "{{ route('dashboard')}}";
                 }
             },
             error: function(xhr, textStatus, errorThrown) {

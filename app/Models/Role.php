@@ -10,6 +10,18 @@ class Role extends Model
     use HasFactory;
     protected $fillable = [
         'id',
-        'role_name'
+        'role_name',
+        'user_type_id'
     ];
+
+     // Relationship to UserType
+     public function userType()
+     {
+         return $this->belongsTo(UserType::class);
+     }
+
+     public function rolePermissions()
+    {
+        return $this->hasMany(RolePermission::class);
+    }
 }

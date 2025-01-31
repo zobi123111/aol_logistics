@@ -21,18 +21,10 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         if ($request->isMethod('get')) {
-            $userId = session('pending_user_id') ?? Auth::id();
-
-            if ($userId) {
-                // Redirect based on whether OTP is verified
-                $user = User::find($userId);
-                if ($user && $user->otp_verified) {
-                    return redirect()->route('dashboard');
-                } elseif (session('pending_user_id')) {
-                    return redirect()->route('otp_screen'); // Redirect to OTP verification screen
-                }
-            }
-
+            $user = Auth::user();
+            if ($user && $user->otp_verified) {               
+                return redirect()->route('dashboard');
+            } 
             return view('Login.index');
         }
     
@@ -47,7 +39,8 @@ class LoginController extends Controller
              $remember = $request->has('remember'); 
             // Attempt login with credentials
             if (Auth::attempt($credentials, $remember)) {
-                $user = User::where('email', $credentials['email'])->first();
+                $user = Auth::user();
+                
                 // Generate OTP
                 $otp = rand(100000, 999999); 
                 $otpExpiresAt = now()->addMinutes(5);
@@ -57,10 +50,9 @@ class LoginController extends Controller
                 $user->otp_expires_at = $otpExpiresAt;
                 $user->otp_verified = false; // Reset OTP verification status
                 $user->save();
-    
-                // Store user ID in session temporarily
-                session(['pending_user_id' => $user->id]);
                 
+                session(['otp_email' => $user->email]);
+    
                 // Send OTP to user's email (make sure the mail system is configured)
                 Mail::send('emails.otp', ['otp' => $otp, 'user' => $user], function ($message) use ($user) {
                     $message->to($user->email)
@@ -77,19 +69,13 @@ class LoginController extends Controller
 
     public function verifyOtp(Request $request)
     {
-        // Get the user from the session
-        $userId = session('pending_user_id');
-        if (!$userId) {
-            return redirect()->route('login')->withErrors(['error' => 'Session expired. Please log in again.']);
-        }
-
         // Validate OTP
         $request->validate([
             'otp' => 'required|numeric|digits:6', 
         ]);
 
         // Retrieve the logged-in user
-        $user = Auth::user();
+        $user = User::where('email', session('otp_email'))->first();
 
         if (!$user) {
             return response()->json(['error' => 'User not found'], 404);
@@ -106,7 +92,6 @@ class LoginController extends Controller
 
         // Check if OTP matches the stored OTP
         if ($request->otp == $storedOtp) {
-            Auth::login($user);
 
             // Clear OTP and expiration from the database
             $user->otp_verified = true;
@@ -114,9 +99,9 @@ class LoginController extends Controller
             $user->otp_expires_at = null;
             $user->save();
 
-            // Clear session
-            session()->forget('pending_user_id');
+            Auth::login($user);
 
+            session()->forget('otp_email');
 
             // Return success response
             return response()->json([
@@ -131,9 +116,17 @@ class LoginController extends Controller
 
     public function logOut()
     {
-         Session::flush();
-         Auth::logout();
-         return Redirect('/');
+        $user = Auth::user(); // Get the current authenticated user
+    
+        if ($user) {
+            $user->otp_verified = false; // Reset OTP verification flag
+            $user->save();
+        }
+    
+        Session::flush(); // Clear session
+        Auth::logout(); // Log out the user
+        
+        return Redirect('/');
     }
 
     public function forgotPasswordView()
@@ -168,9 +161,7 @@ class LoginController extends Controller
                     ->subject('Reset Your Password');
             });
 
-            return response()->json([
-                'message' => 'Password reset link sent to your email.'
-            ], 200);
+            return redirect()->back()->with('message', 'Password reset link has been sent to your email.');
         } else {
             return response()->json([
                 'message' => 'Email address not found.'
