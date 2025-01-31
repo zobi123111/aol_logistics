@@ -114,15 +114,11 @@ $(document).ready(function() {
             contentType: false,
             success: function(data) {
                 if (data.otp_required) {
-                    // $('#login_form').hide();
-                    // //$("#otp_form").show();
-                    // $(".credential_error").html("");
                     window.location.href = "{{ route('otp.verify') }}";
-                    // } else if (data.success) {
-                    // window.location.href = "{{ route('dashboard') }}";
-                } else {
+                } else if (data.credentials_error) {
                     $('.error_ee').html('');
                     $('.credential_error').html(data.credentials_error);
+                } else {
                     window.location.href = "{{ route('dashboard')}}";
                 }
             },

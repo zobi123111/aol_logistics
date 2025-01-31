@@ -18,7 +18,7 @@
         {{ session()->get('message') }}
     </div>
     @endif
-    <table class="table table-striped" id="user_table" style="padding-top: 10px;">
+    <table class="table table-striped" id="role_table" style="padding-top: 10px;">
         <thead>
             <tr>
                 <th scope="col">Role</th>
@@ -45,7 +45,7 @@
                             data-user-id="{{ $role->id }}"></i></a></td>
                 @endif
                 @if(checkAllowedModule('roles', 'roles.destroy')->isNotEmpty())
-
+<!-- 
                 <td>
                     <form action="{{ route('roles.destroy', ['role' => encode_id($role->id)]) }}" method="POST"
                         style="display: inline;"
@@ -56,12 +56,37 @@
                             <i class="fa-solid fa-trash delete-icon table_icon_style blue_icon_color"></i>
                         </button>
                     </form>
-                </td>
+                </td> -->
+
+                <td><i class="fa-solid fa-trash delete-icon table_icon_style blue_icon_color"
+                data-role-id="{{ encode_id($role->id) }}"></i></td>
                 @endif
             </tr>
             @endforeach
         </tbody>
     </table>
+
+<form method="POST" id="deleteRoleFormId" >
+    @csrf
+    @method('DELETE')
+    <div class="modal fade" id="deleteRoleForm" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this role "<strong><span id="append_name"> </span></strong>" ?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary close_btn" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary user_delete">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
 </div>
 <!-- End of Delete Model -->
 @endsection
@@ -70,16 +95,20 @@
 
 <script>
 $(document).ready(function() {
-    $('#user_table').DataTable();
+    $(document).on('click', '.delete-icon', function (e) {
+        e.preventDefault();
+        var roleId = $(this).data('role-id');
+        var fname = $(this).closest('tr').find('.fname').text();
+        $('#append_name').html(fname);
+         $('#deleteRoleFormId').attr('action', '/roles/' + roleId);
+        $('#deleteRoleForm').modal('show');
 
-    $('#createUser').on('click', function() {
-        $('.error_e').html('');
-        $('.alert-danger').css('display', 'none');
-        $('#userModal').modal('show');
     });
 
-
+    
 });
+
+
 </script>
 
 @endsection

@@ -30,12 +30,9 @@ function getAllowedPages()
         return collect(); 
     }
 
-    // return Page::with('modules')->orderBy('position', 'asc')->whereHas('modules', function ($query) use ($user) {
-    //     $query->whereHas('rolePermissions', function ($subQuery) use ($user) {
-    //         $subQuery->where('role_id', $user->role);
-    //     });
-        
-    // })->get();
+    if ($user->is_owner) {
+        return Page::with('modules')->orderBy('position', 'asc')->get();
+    }
 
     $dashboardPage = Page::with('modules')->whereHas('modules', function ($query) {
         $query->where('route_name', 'dashboard');
@@ -61,11 +58,16 @@ function getAllowedPages()
 function checkAllowedModule($pageRoute, $routeName = null)
 {
     $user = Auth::user();
-
     if (!$user || !$user->role) {
         return collect(); 
     }
 
+    if ($user->is_owner) {
+        return Page::where('route_name', $pageRoute)
+            ->with('modules')
+            ->orderBy('position', 'asc')
+            ->get();
+    }
     return Page::where('route_name', $pageRoute)->with(['modules' => function ($query) use ($routeName) {
         if ($routeName) {
             $query->where('route_name', $routeName);

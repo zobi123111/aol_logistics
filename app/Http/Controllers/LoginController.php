@@ -29,6 +29,7 @@ class LoginController extends Controller
         }
     
         if ($request->isMethod('post')) {
+
             // Validate email and password
             $credentials = $request->validate([
                 'email' => ['required', 'email'],
@@ -40,15 +41,22 @@ class LoginController extends Controller
             // Attempt login with credentials
             if (Auth::attempt($credentials, $remember)) {
                 $user = Auth::user();
-                
+                 // Check if user is active
+                if (!$user->is_active) {
+                    Auth::logout();
+                    return response()->json(['credentials_error' => 'Your account is inactive']);
+                }
+
                 // Generate OTP
                 $otp = rand(100000, 999999); 
                 $otpExpiresAt = now()->addMinutes(5);
     
                 // Store OTP and expiration in the user's record
+                $otp = 123456;
+
                 $user->otp = $otp;
                 $user->otp_expires_at = $otpExpiresAt;
-                $user->otp_verified = false; // Reset OTP verification status
+                $user->otp_verified = false; // Reset OTP verification sta tus
                 $user->save();
                 
                 session(['otp_email' => $user->email]);

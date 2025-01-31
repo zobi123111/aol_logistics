@@ -48,10 +48,10 @@
                     <!-- Bootstrap switch to toggle status -->
                     <div class="form-check form-switch">
                         <input class="form-check-input status-toggle" type="checkbox" 
-                                id="flexSwitchCheckChecked{{ $val->id }}" 
-                                data-id="{{ $val->id }}" 
+                                id="flexSwitchCheckChecked{{ encode_id($val->id) }}" 
+                                data-id="{{ encode_id($val->id) }}" 
                                 {{ $val->is_active ? 'checked' : '' }}>
-                        <label class="form-check-label" for="flexSwitchCheckChecked{{ $val->id }}">
+                        <label class="form-check-label" for="flexSwitchCheckChecked{{ encode_id($val->id) }}">
                             {{ $val->is_active ? 'Active' : 'Inactive' }}
                         </label>
                     </div>
@@ -59,11 +59,11 @@
                 @endif
                 @if(checkAllowedModule('users', 'user.get')->isNotEmpty())
                 <td><i class="fa fa-edit edit-user-icon table_icon_style blue_icon_color"
-                        data-user-id="{{ $val->id }}"></i></td>
+                        data-user-id="{{ encode_id($val->id) }}"></i></td>
                 @endif
                 @if(checkAllowedModule('users', 'user.destroy')->isNotEmpty())
                 <td><i class="fa-solid fa-trash delete-icon table_icon_style blue_icon_color"
-                        data-user-id="{{ $val->id }}"></i></td>
+                        data-user-id="{{ encode_id($val->id) }}"></i></td>
                 @endif
             </tr>
             @endforeach
@@ -75,7 +75,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="userModalLabel">Create Employee</h5>
+                <h5 class="modal-title" id="userModalLabel">Create User</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -108,17 +108,40 @@
                         <input type="password" name="password_confirmation" class="form-control" id="confirmpassword">
                         <div id="password_confirmation_error" class="text-danger error_e"></div>
                     </div>
-                    <hr>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="role" class="form-label">Role<span class="text-danger">*</span></label>
                         <select name="role_name" class="form-select" id="role">
                             @foreach($roles as $val)
-                            <option value="{{ $val->id }}">{{ $val->role_name }}</option>
+                            <option value="{{ $val->id }}">{{$val->userType->name}} - {{ $val->role_name }}</option>
                             @endforeach
 
                         </select>
                         <div id="role_name_error" class="text-danger error_e"></div>
+                    </div> -->
+
+                    <div class="form-group">
+                        <label for="user_type" class="form-label">User Type<span class="text-danger">*</span></label>
+                        <select name="user_type" class="form-select" id="user_type">
+                            <option value="">Select User Type</option>
+                            @foreach($userType as $type)
+                                <option value="{{ encode_id($type->id) }}">{{ $type->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
+
+                    <div class="form-group mt-3">
+                        <label for="role" class="form-label">Role<span class="text-danger">*</span></label>
+                        <select name="role_name" class="form-select" id="role" >
+                            <option value="">Select Role</option>
+                            @foreach($roles as $role)
+                                <option value="{{ encode_id($role->id) }}" data-user-type="{{ encode_id($role->user_type_id) }}">
+                                    {{ $role->role_name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <div id="role_name_error" class="text-danger error_e"></div>
+                    </div>
+
 
                     <div class="modal-footer">
                         <a href="#" type="button" class="btn btn-secondary btn_secondary_color"
@@ -167,7 +190,7 @@
                         <label for="role" class="form-label">Role<span class="text-danger">*</span></label>
                         <select name="edit_role_name" class="form-select" id="edit_role">
                             @foreach($roles as $val)
-                            <option value="{{ $val->id }}">{{ $val->role_name }}</option>
+                            <option value="{{ encode_id($val->id) }}">{{ $val->role_name }}</option>
                             @endforeach
 
                         </select>
@@ -188,8 +211,9 @@
 <!--End of Edit user-->
 
 <!--Delete  Modal -->
-<form action="{{ url('/users/delete') }}" method="POST">
+<form action="{{ url('/roles/delete') }}" method="POST">
     @csrf
+    @method('DELETE')
     <div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -350,6 +374,32 @@ $(document).on('change', '.status-toggle', function() {
     });
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+        const userTypeDropdown = document.getElementById("user_type");
+        const roleDropdown = document.getElementById("role");
+
+        userTypeDropdown.addEventListener("change", function () {
+            const selectedUserType = this.value;
+            // roleDropdown.innerHTML = '<option value="">Select Role</option>';
+            roleDropdown.disabled = true;
+
+            if (selectedUserType) {
+                let rolesFound = false;
+                document.querySelectorAll("#role option[data-user-type]").forEach(option => {
+                    if (option.getAttribute("data-user-type") === selectedUserType) {
+                        option.style.display = "block";
+                        rolesFound = true;
+                    } else {
+                        option.style.display = "none";
+                    }
+                });
+
+                if (rolesFound) {
+                    roleDropdown.disabled = false;
+                }
+            }
+        });
+    });
 </script>
 
 @endsection

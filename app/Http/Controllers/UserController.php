@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Role;
+use App\Models\UserType;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -14,8 +15,9 @@ class UserController extends Controller
     public function users()
     {
         $users = User::with('roledata')->where('id', '!=', auth()->id())->get();
-        $roles = Role::all();
-        return view('User.allusers', compact('users', 'roles'));
+        $roles = Role::with(['userType'])->get();
+        $userType = UserType::all();
+        return view('User.allusers', compact('users', 'roles', 'userType'));
     }
 
     public function save_user(Request $request)
@@ -33,7 +35,7 @@ class UserController extends Controller
             "lname"  => $request->lastname,
             "email"   => $request->email,
             "password"=> Hash::make($request->password),
-            'role'    => $request->role_name,
+            'role'    => decode_id($request->role_name),
             'created_by' => auth()->id()
          );
 
@@ -53,7 +55,7 @@ class UserController extends Controller
 
     public function getUserById(Request $request) 
     {
-        $user = User::find($request->id);
+        $user = User::find(decode_id($request->id));
         if (!$user) {
             return response()->json(['error' => 'User not found']);
         }
@@ -64,7 +66,7 @@ class UserController extends Controller
     public function saveUserById(Request $request)
     {
         $validated = $request->validate([
-            'edit_id' => 'required|exists:users,id',
+            'edit_id' => 'required',
             'fname' => 'required',
             'lname' => 'required',
             'edit_role_name' => 'required'
@@ -77,7 +79,7 @@ class UserController extends Controller
         );
 
         // Find the user by ID
-        $user = User::find($request->edit_id);
+        $user = User::find(decode_id($request->edit_id));
 
         if (!$user) {
             return response()->json(['error' => 'User not found'], 404);
@@ -86,7 +88,7 @@ class UserController extends Controller
         // Update the user's details
         $user->fname = $request->fname;
         $user->lname = $request->lname;
-        $user->role = $request->edit_role_name;
+        $user->role = decode_id($request->edit_role_name);
         $user->save();
 
         // Flash message and response
@@ -96,7 +98,7 @@ class UserController extends Controller
 
     public function destroy(Request $request)
     { 
-        $user = User::find($request->id);
+        $user = User::find(decode_id($request->id));
         if ($user) {
             $user->delete();
             return redirect()->route('users.index')->with('message', 'User deleted successfully');
@@ -105,7 +107,7 @@ class UserController extends Controller
 
     public function toggleStatus(Request $request)
     {
-        $userId = $request->user_id;
+        $userId = decode_id($request->user_id);
         $isActive = $request->is_active;
         $user = User::findOrFail($userId);
 

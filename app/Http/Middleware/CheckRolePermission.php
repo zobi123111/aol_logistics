@@ -17,6 +17,12 @@ class CheckRolePermission
         if (!$user || !$user->role) {
             return redirect()->route('login')->with('error', 'Unauthorized access!');
         }
+
+
+        if ($user->is_owner) {
+            return $next($request);
+        }
+
           // Get allowed pages based on role permissions
           if($request->route()->getName() == 'dashboard'){
                 return $next($request);

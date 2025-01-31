@@ -17,7 +17,7 @@ class Role extends Model
      // Relationship to UserType
      public function userType()
      {
-         return $this->belongsTo(UserType::class);
+         return $this->belongsTo(userType::class);
      }
 
      public function rolePermissions()
