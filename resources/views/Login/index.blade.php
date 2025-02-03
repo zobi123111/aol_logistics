@@ -138,45 +138,6 @@ $(document).ready(function() {
         });
     });
 
-    // Submit OTP form
-    $('#otp_form').submit(function(event) {
-        event.preventDefault();
-
-        // Clear any previous error messages
-        $('.otp_error').html('');
-
-        var otpData = new FormData(this);
-
-        $.ajax({
-            type: 'POST',
-            url: "{{ route('verifyotp') }}",
-            data: otpData,
-            cache: false,
-            processData: false,
-            contentType: false,
-            success: function(response) {
-                if (response.success) {
-                    window.location.href = response.redirect;
-                } else {
-                    $('.otp_error').text(response.error);
-                }
-            },
-            error: function(xhr) {
-                if (xhr.status === 422) {
-                    var errorResponse = JSON.parse(xhr.responseText);
-
-                    if (errorResponse.errors && errorResponse.errors.otp) {
-                        console.log('1111')
-                        var otpErrors = errorResponse.errors.otp.join('<br>');
-                        $('.otp_error').html(otpErrors);
-                    } else if (errorResponse.error) {
-                        $('.otp_error').html(errorResponse.error);
-                    }
-                }
-            }
-        });
-    });
-
     setTimeout(function() {
         $('#successMessage').fadeOut('fast');
     }, 2000);

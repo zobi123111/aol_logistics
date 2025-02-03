@@ -29,6 +29,8 @@ use Illuminate\Support\Facades\Mail;
 
 Route::post('/verify-otp', [LoginController::class, 'verifyOtp'])->name('verifyotp');
 Route::get('/otp-verify', [LoginController::class, 'verifyotpform'])->name('otp.verify');
+Route::post('/resend-otp', [LoginController::class, 'resendOtp'])->name('resendotp');
+
 Route::get('/logout', [LoginController::class, 'logOut']);
 Route::get('/forgot-password', [LoginController::class, 'forgotPasswordView'])->name('forgot-password');
 Route::post('/forgot-password', [LoginController::class, 'forgotPassword'])->name('forgot.password');
@@ -36,7 +38,7 @@ Route::get('/reset/password/{token}', [LoginController::class, 'resetPassword'])
 Route::post('/reset/password', [LoginController::class, 'submitResetPasswordForm'])->name('submit.reset.password');
 
 
-Route::middleware(['auth.user', 'otp.verified', 'role.permission'])->group(function () {
+Route::middleware(['auth.user', 'otp.verified', 'role.permission', 'auto.logout'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/users', [UserController::class, 'users'])->name('users.index');
@@ -49,4 +51,3 @@ Route::middleware(['auth.user', 'otp.verified', 'role.permission'])->group(funct
     //roles 
     Route::resource('roles', RolePermissionController::class);
 });
-

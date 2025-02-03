@@ -29,7 +29,8 @@ class User extends Authenticatable
         'password',
         'otp',
         'otp_expires_at',
-        'created_by'
+        'created_by',
+        'profile_photo'
     ];
 
     /**

@@ -3,15 +3,15 @@
 @extends('layout.app')
 @section('content')
 <div class="main_cont_outer">
-@if(checkAllowedModule('users', 'save_user.index')->isNotEmpty())
+    @if(checkAllowedModule('users', 'save_user.index')->isNotEmpty())
     <div class="create_btn">
         <a href="#" class="btn btn-primary create-button btn_primary_color" id="createUser" data-toggle="modal"
             data-target="#userModal">Create User</a>
     </div>
-@endif
-<div id="successMessagea" class="alert alert-success" style="display: none;" role="alert">
-    <i class="bi bi-check-circle me-1"></i>
-</div>
+    @endif
+    <div id="successMessagea" class="alert alert-success" style="display: none;" role="alert">
+        <i class="bi bi-check-circle me-1"></i>
+    </div>
     @if(session()->has('message'))
     <div id="successMessage" class="alert alert-success fade show" role="alert">
         <i class="bi bi-check-circle me-1"></i>
@@ -47,10 +47,9 @@
                 <td>
                     <!-- Bootstrap switch to toggle status -->
                     <div class="form-check form-switch">
-                        <input class="form-check-input status-toggle" type="checkbox" 
-                                id="flexSwitchCheckChecked{{ encode_id($val->id) }}" 
-                                data-id="{{ encode_id($val->id) }}" 
-                                {{ $val->is_active ? 'checked' : '' }}>
+                        <input class="form-check-input status-toggle" type="checkbox"
+                            id="flexSwitchCheckChecked{{ encode_id($val->id) }}" data-id="{{ encode_id($val->id) }}"
+                            {{ $val->is_active ? 'checked' : '' }}>
                         <label class="form-check-label" for="flexSwitchCheckChecked{{ encode_id($val->id) }}">
                             {{ $val->is_active ? 'Active' : 'Inactive' }}
                         </label>
@@ -124,22 +123,22 @@
                         <select name="user_type" class="form-select" id="user_type">
                             <option value="">Select User Type</option>
                             @foreach($userType as $type)
-                                <option value="{{ encode_id($type->id) }}">{{ $type->name }}</option>
+                            <option value="{{ encode_id($type->id) }}">{{ $type->name }}</option>
                             @endforeach
                         </select>
                     </div>
 
                     <div class="form-group mt-3">
                         <label for="role" class="form-label">Role<span class="text-danger">*</span></label>
-                        <select name="role_name" class="form-select" id="role" >
+                        <select name="role_name" class="form-select" id="role" disabled>
                             <option value="">Select Role</option>
                             @foreach($roles as $role)
-                                <option value="{{ encode_id($role->id) }}" data-user-type="{{ encode_id($role->user_type_id) }}">
-                                    {{ $role->role_name }}
-                                </option>
+                            <option value="{{ encode_id($role->id) }}"
+                                data-user-type="{{ encode_id($role->user_type_id) }}">
+                                {{ $role->role_name }}
+                            </option>
                             @endforeach
                         </select>
-                        <div id="role_name_error" class="text-danger error_e"></div>
                     </div>
 
 
@@ -197,6 +196,14 @@
                         <div id="edit_role_name_error" class="text-danger error_e"></div>
                     </div>
 
+
+                    <div class="form-group">
+                        <div id="current-profile-photo" class="mt-2">
+                        </div>
+                        <label for="edit_profile_photo" class="form-label mt-2">Profile Photo</label>
+                        <input type="file" name="edit_profile_photo" class="form-control">
+                        <div id="edit_profile_photo_error" class="text-danger error_e"></div>
+                    </div>
                     <div class="modal-footer">
                         <a href="#" type="button" class="btn btn-secondary btn_secondary_color"
                             data-bs-dismiss="modal">Close</a>
@@ -344,21 +351,44 @@ $(document).ready(function() {
         });
     });
 
+    $(document).ready(function() {
+        var roleDropdown = $("#role");
+
+        // Store all role options on page load
+        var allRoles = roleDropdown.find("option[data-user-type]").clone();
+
+        $("#user_type").on("change", function() {
+            var selectedUserType = $(this).val();
+
+            roleDropdown.prop("disabled", true).empty().append(
+                '<option value="">Select Role</option>');
+
+            if (selectedUserType) {
+                var matchingRoles = allRoles.filter("[data-user-type='" + selectedUserType +
+                    "']");
+
+                if (matchingRoles.length > 0) {
+                    roleDropdown.append(matchingRoles);
+                    roleDropdown.prop("disabled", false);
+                }
+            }
+        });
+    });
 
 });
 
 $(document).on('change', '.status-toggle', function() {
     const toggleSwitch = $(this);
-    var userId = $(this).data('id'); 
-    var isActive = $(this).prop('checked') ? 1 : 0; 
+    var userId = $(this).data('id');
+    var isActive = $(this).prop('checked') ? 1 : 0;
 
     $.ajax({
-        url: '{{ route("users.toggleStatus") }}', 
+        url: '{{ route("users.toggleStatus") }}',
         type: 'POST',
         data: {
-            _token: '{{ csrf_token() }}', 
-            user_id: userId, 
-            is_active: isActive  
+            _token: '{{ csrf_token() }}',
+            user_id: userId,
+            is_active: isActive
         },
         success: function(response) {
             if (response.success) {
@@ -373,33 +403,6 @@ $(document).on('change', '.status-toggle', function() {
         }
     });
 });
-
-document.addEventListener("DOMContentLoaded", function () {
-        const userTypeDropdown = document.getElementById("user_type");
-        const roleDropdown = document.getElementById("role");
-
-        userTypeDropdown.addEventListener("change", function () {
-            const selectedUserType = this.value;
-            // roleDropdown.innerHTML = '<option value="">Select Role</option>';
-            roleDropdown.disabled = true;
-
-            if (selectedUserType) {
-                let rolesFound = false;
-                document.querySelectorAll("#role option[data-user-type]").forEach(option => {
-                    if (option.getAttribute("data-user-type") === selectedUserType) {
-                        option.style.display = "block";
-                        rolesFound = true;
-                    } else {
-                        option.style.display = "none";
-                    }
-                });
-
-                if (rolesFound) {
-                    roleDropdown.disabled = false;
-                }
-            }
-        });
-    });
 </script>
 
 @endsection

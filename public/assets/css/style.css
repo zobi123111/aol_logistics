@@ -1282,3 +1282,8 @@ h6 {
   display: flex;
   column-gap: 12px;
 }
+
+.resend_otp_btn {
+  color: #4154f1;
+  border: none;
+}

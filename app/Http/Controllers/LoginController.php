@@ -36,12 +36,19 @@ class LoginController extends Controller
                 'password' => ['required'],
             ]);
     
-             // Check if 'remember me' is selected
-             $remember = $request->has('remember'); 
+            // Check if 'remember me' is selected
+            $remember = $request->has('remember'); 
             // Attempt login with credentials
             if (Auth::attempt($credentials, $remember)) {
                 $user = Auth::user();
-                 // Check if user is active
+
+                $currentSession = session()->getId();
+                // Check if the user is already logged in from another device
+                if ($user->session_id && $user->session_id !== $currentSession) {
+                    Auth::logout();
+                    return response()->json(['credentials_error' => 'You are already logged in from another device.']);
+                }
+                // Check if user is active
                 if (!$user->is_active) {
                     Auth::logout();
                     return response()->json(['credentials_error' => 'Your account is inactive']);
@@ -56,16 +63,18 @@ class LoginController extends Controller
 
                 $user->otp = $otp;
                 $user->otp_expires_at = $otpExpiresAt;
-                $user->otp_verified = false; // Reset OTP verification sta tus
+                $user->otp_verified = false; 
                 $user->save();
                 
                 session(['otp_email' => $user->email]);
+                session(['last_otp_sent_time' => time()]); // Store current time
     
                 // Send OTP to user's email (make sure the mail system is configured)
                 Mail::send('emails.otp', ['otp' => $otp, 'user' => $user], function ($message) use ($user) {
                     $message->to($user->email)
                         ->subject('Your OTP for 2FA');
                 });
+                
     
                 return response()->json(['otp_required' => true]);
             } else {
@@ -101,10 +110,18 @@ class LoginController extends Controller
         // Check if OTP matches the stored OTP
         if ($request->otp == $storedOtp) {
 
+            $currentSession = session()->getId();
+            // Check if the user is already logged in from another device
+            if ($user->session_id && $user->session_id !== $currentSession) {
+                Auth::logout();
+                return response()->json(['error' => 'You are already logged in from another device.']);
+            }
+
             // Clear OTP and expiration from the database
             $user->otp_verified = true;
             $user->otp = null;
             $user->otp_expires_at = null;
+            $user->session_id = $currentSession; 
             $user->save();
 
             Auth::login($user);
@@ -122,17 +139,41 @@ class LoginController extends Controller
         }
     }
 
+    public function resendOtp(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email'
+        ]);
+    
+        $user = User::where('email', $request->email)->first();
+    
+        if (!$user) {
+            return response()->json(['error' => 'User not found!'], 404);
+        }
+    
+        $otp = rand(100000, 999999); // Generate OTP
+        $user->update(['otp' => $otp]); // Save OTP
+    
+        // Store the last OTP sent time in session
+        session(['last_otp_sent_time' => time()]);
+    
+        return response()->json(['success' => 'OTP has been resent.', 'remaining_time' => 120]);
+    }
+
     public function logOut()
     {
         $user = Auth::user(); // Get the current authenticated user
     
         if ($user) {
-            $user->otp_verified = false; // Reset OTP verification flag
+            $user->otp_verified = false; 
+            $user->session_id = null;
             $user->save();
         }
     
-        Session::flush(); // Clear session
-        Auth::logout(); // Log out the user
+        Session::flush();
+        Auth::logout(); 
+        session()->invalidate(); 
+        session()->regenerateToken();
         
         return Redirect('/');
     }

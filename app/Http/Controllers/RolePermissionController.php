@@ -9,6 +9,7 @@ use App\Models\RolePermission;
 use App\Models\UserType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use App\Models\UserActivityLog;
 
 class RolePermissionController extends Controller
 {
@@ -58,7 +59,17 @@ class RolePermissionController extends Controller
                     // $rolePermission->modules()->attach($moduleId);
                 }
             }
-    
+
+            // add log
+            UserActivityLog::create([
+                'log_type' => UserActivityLog::LOG_TYPE_CREATE_ROLE,
+                'description' => 'A new role "' . $validated['role_name'] . '"  has been created by ' 
+                        . auth()->user()->fname . ' ' 
+                        . auth()->user()->lname 
+                        . ' (' . auth()->user()->email . ')',
+                    'user_id' => auth()->id(), 
+            ]);
+
             // Success flash message
             Session::flash('message', 'Role Created successfully');
             return redirect()->route('role_permissions.index');
@@ -121,7 +132,15 @@ class RolePermissionController extends Controller
                     ]);
                 }
             }
-
+            // add log
+            UserActivityLog::create([
+                'log_type' => UserActivityLog::LOG_TYPE_EDIT_ROLE,
+                'description' => 'A new role "' . $validated['role_name'] . '"  has been updated by ' 
+                        . auth()->user()->fname . ' ' 
+                        . auth()->user()->lname 
+                        . ' (' . auth()->user()->email . ')',
+                    'user_id' => auth()->id(), 
+            ]);
         Session::flash('message', 'Role Updated successfully');
         return redirect()->route('roles.edit', $en);
     }
@@ -133,6 +152,15 @@ class RolePermissionController extends Controller
         // Find the role and delete it along with its associated role permissions
         $role = Role::findOrFail($roleId);
 
+        // add log
+        UserActivityLog::create([
+            'log_type' => UserActivityLog::LOG_TYPE_DELETE_ROLE,
+            'description' => 'A new role "' . $role->role_name . '"  has been deleted by ' 
+                    . auth()->user()->fname . ' ' 
+                    . auth()->user()->lname 
+                    . ' (' . auth()->user()->email . ')',
+                'user_id' => auth()->id(), 
+        ]);
         $role->rolePermissions()->delete();
         $role->delete();
         Session::flash('message', 'All permissions deleted successfully.');
