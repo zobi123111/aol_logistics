@@ -30,12 +30,9 @@
                 <th scope="col">Delete</th>
                 @endif
             </tr>
-            </tr>
         </thead>
         <tbody>
             @foreach($roles as $role)
-            <tr>
-
             <tr>
                 <td scope="row" class="fname">{{ $role->role_name }}</td>
                 <td>{{$role->userType->name}}</td>
@@ -95,6 +92,7 @@
 
 <script>
 $(document).ready(function() {
+    $('#role_table').DataTable();
     $(document).on('click', '.delete-icon', function (e) {
         e.preventDefault();
         var roleId = $(this).data('role-id');

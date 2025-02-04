@@ -15,6 +15,7 @@ class UserActivityLog extends Model
     const LOG_TYPE_CREATE_ROLE = 'create_role';
     const LOG_TYPE_EDIT_ROLE = 'edit_role';
     const LOG_TYPE_DELETE_ROLE = 'delete_role';
+    
     protected $fillable = ['log_type', 'description', 'user_id'];
     
     public function user()

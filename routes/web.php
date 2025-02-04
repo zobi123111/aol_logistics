@@ -5,10 +5,8 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RolePermissionController;
-
+use App\Http\Controllers\UserActivityLogController;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -38,7 +36,7 @@ Route::get('/reset/password/{token}', [LoginController::class, 'resetPassword'])
 Route::post('/reset/password', [LoginController::class, 'submitResetPasswordForm'])->name('submit.reset.password');
 
 
-Route::middleware(['auth.user', 'otp.verified', 'role.permission', 'auto.logout'])->group(function () {
+Route::middleware(['auth.user', 'otp.verified', 'role.permission'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/users', [UserController::class, 'users'])->name('users.index');
@@ -50,4 +48,5 @@ Route::middleware(['auth.user', 'otp.verified', 'role.permission', 'auto.logout'
 
     //roles 
     Route::resource('roles', RolePermissionController::class);
+    Route::get('/activity-logs', [UserActivityLogController::class, 'showAll'])->name('activityLogs.all');
 });

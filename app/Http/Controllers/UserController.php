@@ -82,11 +82,11 @@ class UserController extends Controller
 
     public function getUserById(Request $request) 
     {
-        $user = User::find(decode_id($request->id));
+        $user = User::with('roledata')->find(decode_id($request->id));
         if (!$user) {
             return response()->json(['error' => 'User not found']);
         }
-        return response()->json(['user' => $user]);
+        return response()->json(['user' => $user, 'selected_role' => encode_id($user->role), 'selected_user_type' => encode_id($user->roledata->user_type_id)]);
     }
 
 

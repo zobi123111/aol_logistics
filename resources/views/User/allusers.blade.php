@@ -78,7 +78,8 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="" method="POST" id="Create_user" class="row g-3 needs-validation">
+                <form action="" method="POST" id="Create_user" class="row g-3 needs-validation"
+                    enctype="multipart/form-data">
                     @csrf
                     <div class="form-group">
                         <label for="firstname" class="form-label">First Name<span class="text-danger">*</span></label>
@@ -139,6 +140,14 @@
                             </option>
                             @endforeach
                         </select>
+                        <div id="role_name_error" class="text-danger error_e"></div>
+                    </div>
+
+                    <!-- Profile Photo Upload -->
+                    <div class="form-group mt-3">
+                        <label for="profile_photo" class="form-label">Profile Photo</label>
+                        <input type="file" name="profile_photo" id="profile_photo" class="form-control">
+                        <div id="profile_photo_error" class="text-danger error_e"></div>
                     </div>
 
 
@@ -165,7 +174,8 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="" method="POST" id="edit_user" class="row g-3 needs-validation">
+                <form action="" method="POST" id="edit_user" class="row g-3 needs-validation"
+                    enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="edit_id" value="">
                     <div class="form-group">
@@ -184,18 +194,27 @@
                         <input type="email" name="email" class="form-control">
                         <div id="email_error" class="text-danger error_e"></div>
                     </div>
-
                     <div class="form-group">
-                        <label for="role" class="form-label">Role<span class="text-danger">*</span></label>
+                        <label for="edit_user_type" class="form-label">User Type</label>
+                        <select name="edit_user_type" class="form-select" id="edit_user_type">
+                            <option value="">Select User Type</option>
+                            @foreach($userType as $type)
+                            <option value="{{ encode_id($type->id) }}"  >{{ $type->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <label for="edit_role_name" class="form-label">Role<span class="text-danger">*</span></label>
                         <select name="edit_role_name" class="form-select" id="edit_role">
+                        <option value="">Select Role Type</option>
                             @foreach($roles as $val)
-                            <option value="{{ encode_id($val->id) }}">{{ $val->role_name }}</option>
+                            <option value="{{ encode_id($val->id) }}" data-user-type="{{ encode_id($val->user_type_id) }}">{{ $val->role_name }}</option>
                             @endforeach
 
                         </select>
                         <div id="edit_role_name_error" class="text-danger error_e"></div>
                     </div>
-
 
                     <div class="form-group">
                         <div id="current-profile-photo" class="mt-2">
@@ -218,9 +237,9 @@
 <!--End of Edit user-->
 
 <!--Delete  Modal -->
-<form action="{{ url('/roles/delete') }}" method="POST">
+<form action="{{ url('/users/delete') }}" method="POST">
     @csrf
-    @method('DELETE')
+    @method('POST')
     <div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -258,10 +277,13 @@ $(document).ready(function() {
     $('#saveuser').click(function(e) {
         e.preventDefault();
         $('.error_e').html('');
+        var formData = new FormData(document.getElementById('Create_user'));
         $.ajax({
             url: '{{ url("/save_user") }}',
             type: 'POST',
-            data: $('#Create_user').serialize(),
+            data: formData,
+            contentType: false,
+            processData: false,
             success: function(response) {
                 $('#userModal').modal('hide');
                 location.reload();
@@ -295,16 +317,34 @@ $(document).ready(function() {
                 $('input[name="lname"]').val(response.user.lname);
                 $('input[name="email"]').val(response.user.email);
                 $('input[name="edit_id"]').val(userId);
+                
+                // let decodedRoleId = decodeId(response.user.role);    
+                // $('#edit_role').val(response.selected_role).trigger('change');
+                // $('#edit_user_type').val(response.selected_user_type).trigger('change');
+                $('#edit_role option[value="' + response.selected_role + '"]').prop('selected', true);
+                $('#edit_user_type option[value="' + response.selected_user_type + '"]').prop('selected', true);
 
+                // Handle Profile Photo
+                if (response.user.profile_photo) {
+                    // Display the profile photo
+                    $('#current-profile-photo').html(
+                        '<label>Current Profile Photo</label><br><img src="/storage/' +
+                        response.user.profile_photo +
+                        '" width="100" height="100" class="rounded-circle" alt="Profile Photo">'
+                    );
+                } else {
+                    // Display a message if no profile photo
+                    $('#current-profile-photo').html('<p>No profile photo uploaded.</p>');
+                }
                 // Primary role
                 var userRoleId = response.user.role;
                 $('#role_id option').removeAttr('selected');
                 $('#edit_role option[value="' + userRoleId + '"]').attr('selected',
                     'selected');
 
-                //Secondary role
+                // //Secondary role
                 var secondary_role = response.user.role_id1;
-                //  $('#secondary_role').val('');
+                 $('#secondary_role').val('');
                 $('#secondary_role option').removeAttr('selected');
                 $('#secondary_role option[value="' + secondary_role + '"]').attr('selected',
                     'selected');
@@ -332,10 +372,13 @@ $(document).ready(function() {
     $('#edituser').click(function(e) {
         e.preventDefault();
         $('.error_e').html('');
+        var formData = new FormData(document.getElementById('edit_user'));
         $.ajax({
             url: '{{ url("/users/edit/save") }}',
             type: 'POST',
-            data: $('#edit_user').serialize(),
+            data: formData,
+            contentType: false,
+            processData: false,
             success: function(response) {
                 $('#userModal').modal('hide');
                 location.reload();
@@ -351,28 +394,44 @@ $(document).ready(function() {
         });
     });
 
-    $(document).ready(function() {
-        var roleDropdown = $("#role");
+    var roleDropdown = $("#role");
 
-        // Store all role options on page load
-        var allRoles = roleDropdown.find("option[data-user-type]").clone();
+    // Store all role options on page load
+    var allRoles = roleDropdown.find("option[data-user-type]").clone();
 
-        $("#user_type").on("change", function() {
-            var selectedUserType = $(this).val();
+    $("#user_type").on("change", function() {
+        var selectedUserType = $(this).val();
 
-            roleDropdown.prop("disabled", true).empty().append(
-                '<option value="">Select Role</option>');
+        roleDropdown.prop("disabled", true).empty().append(
+            '<option value="">Select Role</option>');
 
-            if (selectedUserType) {
-                var matchingRoles = allRoles.filter("[data-user-type='" + selectedUserType +
-                    "']");
+        if (selectedUserType) {
+            var matchingRoles = allRoles.filter("[data-user-type='" + selectedUserType +
+                "']");
 
-                if (matchingRoles.length > 0) {
-                    roleDropdown.append(matchingRoles);
-                    roleDropdown.prop("disabled", false);
-                }
+            if (matchingRoles.length > 0) {
+                roleDropdown.append(matchingRoles);
+                roleDropdown.prop("disabled", false);
             }
-        });
+        }
+    });
+
+    $('#edit_user_type').change(function () {
+        var selectedUserType = $(this).val(); 
+        $('#edit_role').val('');
+        if (selectedUserType === "") {
+            $('#edit_role').val(''); 
+            $('#edit_role option').show(); 
+        } else {
+            $('#edit_role option').each(function () {
+                var userType = $(this).data('user-type');
+                if (userType == selectedUserType) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }
     });
 
 });
@@ -403,6 +462,7 @@ $(document).on('change', '.status-toggle', function() {
         }
     });
 });
+
 </script>
 
 @endsection

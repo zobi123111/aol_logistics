@@ -41,13 +41,17 @@ class LoginController extends Controller
             // Attempt login with credentials
             if (Auth::attempt($credentials, $remember)) {
                 $user = Auth::user();
+                // Check if session has expired
+                // if ($user->last_activity && $user->last_activity < now()->subMinutes(30)) {
+                //     $user->update(['session_id' => null]);
+                // }
 
                 $currentSession = session()->getId();
                 // Check if the user is already logged in from another device
-                if ($user->session_id && $user->session_id !== $currentSession) {
-                    Auth::logout();
-                    return response()->json(['credentials_error' => 'You are already logged in from another device.']);
-                }
+                // if ($user->session_id && $user->session_id !== $currentSession) {
+                //     Auth::logout();
+                //     return response()->json(['credentials_error' => 'You are already logged in from another device.']);
+                // }
                 // Check if user is active
                 if (!$user->is_active) {
                     Auth::logout();
@@ -122,6 +126,7 @@ class LoginController extends Controller
             $user->otp = null;
             $user->otp_expires_at = null;
             $user->session_id = $currentSession; 
+            // $user->last_activity = now(); 
             $user->save();
 
             Auth::login($user);
@@ -167,6 +172,7 @@ class LoginController extends Controller
         if ($user) {
             $user->otp_verified = false; 
             $user->session_id = null;
+            // $user->last_activity = null;
             $user->save();
         }
     
