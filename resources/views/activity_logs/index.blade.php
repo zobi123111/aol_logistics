@@ -4,10 +4,10 @@
 @section('content')
 <div class="main_cont_outer">
     @if(checkAllowedModule('roles', 'roles.create')->isNotEmpty())
-    <div class="create_btn">
+    <!-- <div class="create_btn">
         <a href="{{ route('roles.create') }}" class="btn btn-primary create-button btn_primary_color"
             id="createrole">Create Role</a>
-    </div>
+    </div> -->
     @endif
     <div id="successMessagea" class="alert alert-success" style="display: none;" role="alert">
         <i class="bi bi-check-circle me-1"></i>
@@ -23,7 +23,7 @@
             <tr>
                 <th scope="col">User Name</th>
                 <th scope="col">Log Type</th>
-                <th scope="col">Description</th>  
+                <th scope="col">Description</th>
                 <th scope="col">Timestamp</th>
             </tr>
         </thead>
@@ -34,7 +34,7 @@
                 <td scope="row" class="fname">{{ $log->user->fname }} {{ $log->user->lname }}</td>
                 <td scope="row">{{ $log->log_type }}</td>
                 <td scope="row">{{ $log->description }}</td>
-                <td scope="row">{{ $log->created_at }}</td>
+                <td scope="row">{{ $log->created_at->format('Y-m-d h:i A') }}</td>
             </tr>
             @endforeach
         </tbody>

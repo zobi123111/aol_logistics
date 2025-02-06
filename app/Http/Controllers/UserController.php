@@ -97,11 +97,13 @@ class UserController extends Controller
             'fname' => 'required',
             'lname' => 'required',
             'edit_role_name' => 'required',
-            'edit_profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'edit_profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'edit_password' => 'nullable|min:6|confirmed'
         ], [
             'fname.required' => 'The first name field is required.',
             'lname.required' => 'The last name field is required.',
             'edit_role_name.required' => 'The role field is required.',
+            'edit_password.confirmed' => 'The password confirmation does not match.'
         ]
 
         );
@@ -112,6 +114,14 @@ class UserController extends Controller
         if (!$user) {
             return response()->json(['error' => 'User not found'], 404);
         }
+         // Check if profile photo should be removed
+        if ($request->remove_profile_photo == "1") {
+            if ($user->profile_photo && file_exists(storage_path('app/public/' . $user->profile_photo))) {
+                unlink(storage_path('app/public/' . $user->profile_photo));
+            }
+            $user->profile_photo = null;
+        }
+    
         // Handle Profile Photo Upload
         if ($request->hasFile('edit_profile_photo')) {
             // Delete the old profile photo if exists
@@ -125,6 +135,11 @@ class UserController extends Controller
             $filePath = $file->storeAs('profile_photos', $filename, 'public'); 
 
             $user->profile_photo = $filePath;
+        }
+
+        // Update password if provided and user is Super Admin
+        if (isAdminUser() && $request->filled('edit_password')) {
+            $user->password = Hash::make($request->edit_password);
         }
 
         // Update the user's details

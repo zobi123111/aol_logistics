@@ -85,4 +85,16 @@ function checkAllowedModule($pageRoute, $routeName = null)
     })->get();
 }
 
+function isAdminUser()
+{
+    $user = auth()->user();
+    
+    if (!$user) {
+        return false;
+    }
+
+    return ($user->role === 'admin' || $user->is_owner == 1);
+}
+
+
 ?>

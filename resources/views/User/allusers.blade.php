@@ -199,7 +199,7 @@
                         <select name="edit_user_type" class="form-select" id="edit_user_type">
                             <option value="">Select User Type</option>
                             @foreach($userType as $type)
-                            <option value="{{ encode_id($type->id) }}"  >{{ $type->name }}</option>
+                            <option value="{{ encode_id($type->id) }}">{{ $type->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -207,9 +207,10 @@
                     <div class="form-group mt-3">
                         <label for="edit_role_name" class="form-label">Role<span class="text-danger">*</span></label>
                         <select name="edit_role_name" class="form-select" id="edit_role">
-                        <option value="">Select Role Type</option>
+                            <option value="">Select Role Type</option>
                             @foreach($roles as $val)
-                            <option value="{{ encode_id($val->id) }}" data-user-type="{{ encode_id($val->user_type_id) }}">{{ $val->role_name }}</option>
+                            <option value="{{ encode_id($val->id) }}"
+                                data-user-type="{{ encode_id($val->user_type_id) }}">{{ $val->role_name }}</option>
                             @endforeach
 
                         </select>
@@ -221,8 +222,24 @@
                         </div>
                         <label for="edit_profile_photo" class="form-label mt-2">Profile Photo</label>
                         <input type="file" name="edit_profile_photo" class="form-control">
+                        <input type="hidden" name="remove_profile_photo" id="remove_profile_photo" value="0">
                         <div id="edit_profile_photo_error" class="text-danger error_e"></div>
                     </div>
+
+                    <!-- Password Fields (Only for Super Admin) -->
+                    @if(isAdminUser())
+                    <div class="form-group mt-3">
+                        <label for="edit_password" class="form-label">New Password</label>
+                        <input type="password" name="edit_password" class="form-control">
+                        <div id="edit_password_error" class="text-danger error_e"></div>
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <label for="edit_password_confirmation" class="form-label">Confirm New Password</label>
+                        <input type="password" name="edit_password_confirmation" class="form-control">
+                        <div id="edit_password_confirmation_error" class="text-danger error_e"></div>
+                    </div>
+                    @endif
                     <div class="modal-footer">
                         <a href="#" type="button" class="btn btn-secondary btn_secondary_color"
                             data-bs-dismiss="modal">Close</a>
@@ -312,26 +329,39 @@ $(document).ready(function() {
             url: "{{ url('users/edit') }}",
             data: vdata,
             success: function(response) {
-                console.log(response.user.fname);
                 $('input[name="fname"]').val(response.user.fname);
                 $('input[name="lname"]').val(response.user.lname);
                 $('input[name="email"]').val(response.user.email);
                 $('input[name="edit_id"]').val(userId);
-                
+
                 // let decodedRoleId = decodeId(response.user.role);    
                 // $('#edit_role').val(response.selected_role).trigger('change');
                 // $('#edit_user_type').val(response.selected_user_type).trigger('change');
-                $('#edit_role option[value="' + response.selected_role + '"]').prop('selected', true);
-                $('#edit_user_type option[value="' + response.selected_user_type + '"]').prop('selected', true);
+                $('#edit_role option[value="' + response.selected_role + '"]').prop(
+                    'selected', true);
+                $('#edit_user_type option[value="' + response.selected_user_type + '"]')
+                    .prop('selected', true);
 
                 // Handle Profile Photo
                 if (response.user.profile_photo) {
                     // Display the profile photo
                     $('#current-profile-photo').html(
-                        '<label>Current Profile Photo</label><br><img src="/storage/' +
+                        '<div class="image-cont" style="position:relative;"><label>Current Profile Photo</label><br><img src="/storage/' +
                         response.user.profile_photo +
-                        '" width="100" height="100" class="rounded-circle" alt="Profile Photo">'
+                        '" width="100" height="100" class="rounded-circle" alt="Profile Photo"><button type="button" class="btn btn-danger btn-sm position-absolute remove-photo">x</button></div>'
                     );
+
+                    $(".remove-photo").click(function() {
+                        if (confirm(
+                                "Are you sure you want to remove this profile photo?"
+                            )) {
+                            // Hide the image preview and remove button
+                            $("#current-profile-photo").html("");
+
+                            // Set hidden input value to indicate removal
+                            $("#remove_profile_photo").val("1");
+                        }
+                    });
                 } else {
                     // Display a message if no profile photo
                     $('#current-profile-photo').html('<p>No profile photo uploaded.</p>');
@@ -344,7 +374,7 @@ $(document).ready(function() {
 
                 // //Secondary role
                 var secondary_role = response.user.role_id1;
-                 $('#secondary_role').val('');
+                $('#secondary_role').val('');
                 $('#secondary_role option').removeAttr('selected');
                 $('#secondary_role option[value="' + secondary_role + '"]').attr('selected',
                     'selected');
@@ -416,14 +446,14 @@ $(document).ready(function() {
         }
     });
 
-    $('#edit_user_type').change(function () {
-        var selectedUserType = $(this).val(); 
+    $('#edit_user_type').change(function() {
+        var selectedUserType = $(this).val();
         $('#edit_role').val('');
         if (selectedUserType === "") {
-            $('#edit_role').val(''); 
-            $('#edit_role option').show(); 
+            $('#edit_role').val('');
+            $('#edit_role option').show();
         } else {
-            $('#edit_role option').each(function () {
+            $('#edit_role option').each(function() {
                 var userType = $(this).data('user-type');
                 if (userType == selectedUserType) {
                     $(this).show();
@@ -462,7 +492,6 @@ $(document).on('change', '.status-toggle', function() {
         }
     });
 });
-
 </script>
 
 @endsection
