@@ -115,17 +115,19 @@ class LoginController extends Controller
         if ($request->otp == $storedOtp) {
 
             $currentSession = session()->getId();
-            // Check if the user is already logged in from another device
-            if ($user->session_id && $user->session_id !== $currentSession) {
-                Auth::logout();
-                return response()->json(['error' => 'You are already logged in from another device.']);
-            }
+            // // Check if the user is already logged in from another device
+            // if ($user->session_id && $user->session_id !== $currentSession) {
+            //     Auth::logout();
+            //     return response()->json(['error' => 'You are already logged in from another device.']);
+            // }
 
             // Clear OTP and expiration from the database
             $user->otp_verified = true;
             $user->otp = null;
             $user->otp_expires_at = null;
             $user->session_id = $currentSession; 
+            $user->last_login_at = Carbon::now(); 
+
             // $user->last_activity = now(); 
             $user->save();
 

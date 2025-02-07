@@ -49,4 +49,9 @@ Route::middleware(['auth.user', 'otp.verified', 'role.permission'])->group(funct
     //roles 
     Route::resource('roles', RolePermissionController::class);
     Route::get('/activity-logs', [UserActivityLogController::class, 'showAll'])->name('activityLogs.all');
+    Route::delete('/logs/delete', [UserActivityLogController::class, 'deleteLogs'])->name('logs.delete');
+
+    Route::post('/users/bulk-action', [UserController::class, 'bulkAction'])->name('users.bulkAction');
+
+
 });

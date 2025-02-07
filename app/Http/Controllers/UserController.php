@@ -212,4 +212,47 @@ class UserController extends Controller
             'is_active' => $user->is_active
         ]);
     }
+
+    public function bulkAction(Request $request)
+    {
+
+        $action = $request->input('bulk_action');
+        $selectedUsers = $request->input('selected_users'); 
+        $status = $request->input('status');
+       
+
+        // Ensure at least one user is selected
+        if (empty($selectedUsers)) {
+            return back()->with('error', 'Please select at least one user.');
+        }
+
+        // Perform the action based on selected option
+        if ($action == 'change_status') {
+            if (empty($status)) {
+                return back()->with('error', 'Please select a status to change.');
+            }
+
+            // Update the status of selected users
+            if ($status == 'active') {
+                User::whereIn('id', $selectedUsers)->update(['is_active' => 1]);
+            } elseif ($status == 'deactivated') {
+   
+                User::whereIn('id', $selectedUsers)->update(['is_active' => 0]);
+
+            } else {
+    
+                return back()->with('error', 'Invalid status selected.');
+            }
+
+            return back()->with('success', 'Status updated successfully!');
+        } elseif ($action == 'delete') {
+            // Delete selected users
+            User::whereIn('id', $selectedUsers)->delete();
+
+            return back()->with('success', 'Users deleted successfully!');
+        } else {
+
+            return back()->with('error', 'Invalid action selected.');
+        }
+    }
 }

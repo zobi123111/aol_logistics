@@ -18,13 +18,35 @@
         {{ session()->get('message') }}
     </div>
     @endif
+    <form method="POST" action="{{ route('users.bulkAction') }}"  id="bulk_action_form">
+    @csrf
+    <div class="d-flex justify-content-start mb-3 bulk_div">
+        <!-- Bulk Action Dropdown -->
+        <select name="bulk_action" class="form-control w-25" required>
+            <option value="">Select Bulk Action</option>
+            <option value="change_status">Change Status</option>
+            <option value="delete">Delete</option>
+        </select>
+
+        <!-- Change Status Dropdown for selected users -->
+        <select name="status" class="form-control w-25 ml-3" id="status_dropdown" style="display: none;">
+            <option value="active">Activate</option>
+            <option value="deactivated">Deactivate</option>
+        </select>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary ml-3">Apply Action</button>
+        <div id="bulk_error" class="text-danger error_e"></div>
+    </div>
     <table class="table table-striped" id="user_table" style="padding-top: 10px;">
         <thead>
             <tr>
+                <th scope="col"><input type="checkbox" id="select_all"></th>
                 <th scope="col">First Name</th>
                 <th scope="col">Last Name</th>
                 <th scope="col">Email</th>
                 <th scope="col">Role</th>
+                <th scope="col">Last Login At</th>
                 @if(checkAllowedModule('users', 'users.toggleStatus')->isNotEmpty())
                 <th scope="col">Status</th>
                 @endif
@@ -39,10 +61,12 @@
         <tbody>
             @foreach($users as $val)
             <tr>
+                <td><input type="checkbox" name="selected_users[]" value="{{ $val->id }}" class="user_checkbox"></td>
                 <td scope="row" class="fname">{{ $val->fname }}</td>
                 <td scope="row" class="lname">{{ $val->lname }}</td>
                 <td>{{ $val->email }}</td>
                 <td>{{$val->roledata->role_name}}</td>
+                <td>{{ $val->last_login_at ? $val->last_login_at : '--' }}</td>
                 @if(checkAllowedModule('users', 'users.toggleStatus')->isNotEmpty())
                 <td>
                     <!-- Bootstrap switch to toggle status -->
@@ -67,7 +91,7 @@
             </tr>
             @endforeach
         </tbody>
-    </table>
+    </table> </form>
 </div>
 <!-- Create User -->
 <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
@@ -464,7 +488,30 @@ $(document).ready(function() {
         }
     });
 
-});
+        // Select/Deselect All checkboxes
+        $('#select_all').on('change', function() {
+            $('.user_checkbox').prop('checked', this.checked);
+        });
+
+        // Show/hide status dropdown based on bulk action selection
+        $('select[name="bulk_action"]').on('change', function() {
+            const action = $(this).val();
+            if (action === 'change_status') {
+                $('#status_dropdown').show();
+            } else {
+                $('#status_dropdown').hide();
+            }
+        });
+
+        // Form submission validation: ensure at least one user is selected
+        $('#bulk_action_form').on('submit', function(event) {
+            const selectedUsers = $('.user_checkbox:checked');
+            if (selectedUsers.length === 0) {
+                $("#bulk_error").html('Please select at least one user.');
+                event.preventDefault();
+            }
+        });
+    });
 
 $(document).on('change', '.status-toggle', function() {
     const toggleSwitch = $(this);

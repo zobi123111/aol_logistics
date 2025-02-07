@@ -56,7 +56,7 @@
                 </td> -->
 
                 <td><i class="fa-solid fa-trash delete-icon table_icon_style blue_icon_color"
-                data-role-id="{{ encode_id($role->id) }}"></i></td>
+                data-role-id="{{ encode_id($role->id) }}" data-user-count="{{$role->users_count}}" ></i></td>
                 @endif
             </tr>
             @endforeach
@@ -73,12 +73,11 @@
                     <h5 class="modal-title" id="exampleModalLabel">Delete</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    Are you sure you want to delete this role "<strong><span id="append_name"> </span></strong>" ?
+                <div class="modal-body delete_content">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary close_btn" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary user_delete">Delete</button>
+                    <button type="submit" class="btn btn-primary role_delete">Delete</button>
                 </div>
             </div>
         </div>
@@ -96,8 +95,19 @@ $(document).ready(function() {
     $(document).on('click', '.delete-icon', function (e) {
         e.preventDefault();
         var roleId = $(this).data('role-id');
+        var usercountId = $(this).data('user-count');
         var fname = $(this).closest('tr').find('.fname').text();
-        $('#append_name').html(fname);
+        var modal_text = `You can't delete "<strong><span id="append_name">${fname} </span></strong>" role because it is assigned to "<strong><span id="append_name">${usercountId} </span></strong>" users.`;
+        $(".role_delete").prop("disabled", true)
+        if(usercountId < 1){
+            var modal_text = `Are you sure you want to delete this role "<strong><span id="append_name">${fname} </span></strong>" ?`;
+        $(".role_delete").prop("disabled", false)
+
+        }else{
+        }
+        
+        $('.delete_content').html(modal_text);
+        // $('#append_name').html(fname);
          $('#deleteRoleFormId').attr('action', '/roles/' + roleId);
         $('#deleteRoleForm').modal('show');
 

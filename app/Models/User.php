@@ -30,7 +30,8 @@ class User extends Authenticatable
         'otp',
         'otp_expires_at',
         'created_by',
-        'profile_photo'
+        'profile_photo',
+        'last_login_at'
     ];
 
     /**

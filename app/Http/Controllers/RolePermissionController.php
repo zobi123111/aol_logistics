@@ -17,8 +17,7 @@ class RolePermissionController extends Controller
     public function index()
     {
         $rolePermissions = RolePermission::with(['role.userType', 'module'])->get();
-        $roles = Role::with(['userType'])->get();
-        
+        $roles = Role::with(['userType'])->withCount('users') ->get();
         return view('role_permissions.index', compact('rolePermissions', 'roles'));
     }
 
@@ -150,8 +149,11 @@ class RolePermissionController extends Controller
         $en = $roleId;
         $roleId = decode_id($roleId);
         // Find the role and delete it along with its associated role permissions
-        $role = Role::findOrFail($roleId);
+        $role = Role::withCount('users')->findOrFail($roleId);
 
+        if ($role->users_count > 0) {
+            return redirect()->route('roles.index')->withErrors('You cannot delete this role because it is assigned to ' . $role->users_count . ' users.');
+        }
         // add log
         UserActivityLog::create([
             'log_type' => UserActivityLog::LOG_TYPE_DELETE_ROLE,
