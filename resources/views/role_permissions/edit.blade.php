@@ -69,8 +69,9 @@
             <div class="text-danger">{{ $message }}</div>
         @enderror
     </div>
-
+    @if( Auth::user()->is_dev)
     <button type="submit" class="btn btn-primary create-button btn_primary_color">Submit</button>
+    @endif
 </form>
 </div>
 </div>

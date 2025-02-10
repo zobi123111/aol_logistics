@@ -1291,4 +1291,6 @@ h6 {
 .show_loader.noactive {
   display: none;
 }
-
+.bulk_div {
+  column-gap: 10px;
+}

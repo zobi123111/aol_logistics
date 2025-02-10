@@ -3,7 +3,8 @@
 @extends('layout.app')
 @section('content')
 <div class="main_cont_outer">
-    @if(checkAllowedModule('roles', 'roles.create')->isNotEmpty())
+
+    @if(checkAllowedModule('roles', 'roles.create')->isNotEmpty() && Auth::user()->is_dev)
     <div class="create_btn">
         <a href="{{ route('roles.create') }}" class="btn btn-primary create-button btn_primary_color"
             id="createrole">Create Role</a>
@@ -16,7 +17,7 @@
     <div id="successMessage" class="alert alert-success fade show" role="alert">
         <i class="bi bi-check-circle me-1"></i>
         {{ session()->get('message') }}
-    </div>
+    </div>  
     @endif
     <table class="table table-striped" id="role_table" style="padding-top: 10px;">
         <thead>
@@ -26,7 +27,7 @@
                 @if(checkAllowedModule('roles', 'roles.edit')->isNotEmpty())
                 <th scope="col">Edit</th>
                 @endif
-                @if(checkAllowedModule('roles', 'roles.destroy')->isNotEmpty())
+                @if(checkAllowedModule('roles', 'roles.destroy')->isNotEmpty() && Auth::user()->is_dev)
                 <th scope="col">Delete</th>
                 @endif
             </tr>
@@ -41,7 +42,7 @@
                             class="fa fa-edit edit-user-icon table_icon_style blue_icon_color"
                             data-user-id="{{ $role->id }}"></i></a></td>
                 @endif
-                @if(checkAllowedModule('roles', 'roles.destroy')->isNotEmpty())
+                @if(checkAllowedModule('roles', 'roles.destroy')->isNotEmpty() && Auth::user()->is_dev)
 <!-- 
                 <td>
                     <form action="{{ route('roles.destroy', ['role' => encode_id($role->id)]) }}" method="POST"

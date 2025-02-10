@@ -58,7 +58,7 @@
                                         class="text-danger credential_error">{{ $errors->first('credentials_error') }}</span>
                                     <div class="col-12">
                                         <button class="btn btn-primary w-100 btn_primary_color login-btn"
-                                            type="submit"> <span class="spinner-border spinner-border-sm show_loader noactive" role="status" aria-hidden="true"></span><span>Login</span></button>
+                                            type="submit"><span>Login</span></button>
                                     </div>
                                     <div class="col-12">
                                         <p class="small mb-0"><a href="{{ url('forgot-password') }} ">Forgot Password ?
@@ -102,11 +102,11 @@
 $(document).ready(function() {
     $("#login_form").submit(function(event) {
         event.preventDefault();
-        
+
         let button = $(this).find(".login-btn"); // Find the button inside the form
 
         // Show spinner & disable button
-        $(".show_loader").removeClass("noactive");
+        // $(".show_loader").removeClass("noactive");
         button.prop("disabled", true).find("span:last").text("Logging in...");
 
         $('.error_e').html('');
@@ -120,7 +120,7 @@ $(document).ready(function() {
             processData: false,
             contentType: false,
             success: function(data) {
-                $(".show_loader").addClass("noactive");
+                // $(".show_loader").addClass("noactive");
                 button.prop("disabled", false).find("span:last").text("Login");
                 if (data.otp_required) {
                     window.location.href = "{{ route('otp.verify') }}";
@@ -130,7 +130,7 @@ $(document).ready(function() {
                 } else {
                     window.location.href = "{{ route('dashboard')}}";
                 }
-               
+
             },
             error: function(xhr, textStatus, errorThrown) {
                 if (xhr.status === 422) {
@@ -144,11 +144,11 @@ $(document).ready(function() {
                         });
                     }
                 }
-                $(".show_loader").addClass("noactive");
+                // $(".show_loader").addClass("noactive");
                 button.prop("disabled", false).find("span:last").text("Login");
             }
         });
-       
+
     });
 
     setTimeout(function() {

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Page;
 use Illuminate\Support\Facades\Session;
-
+use Illuminate\Support\Str;
 
 class CheckRolePermission
 {
@@ -18,9 +18,14 @@ class CheckRolePermission
             return redirect()->route('login')->with('error', 'Unauthorized access!');
         }
 
-
-        if ($user->is_owner) {
+        if ($user->is_owner || $user->is_dev) {
             return $next($request);
+        }
+        
+         // Handle specific permissions for Create and Edit actions
+         if (!$user->is_dev && (Str::contains($request->route()->getName(), 'roles'))) {
+            Session::flash('message', 'You dont have permission to access this page');
+            return redirect()->route('dashboard')->with('error', 'Access Denied!');
         }
 
           // Get allowed pages based on role permissions

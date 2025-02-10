@@ -35,7 +35,7 @@
         </select>
 
         <!-- Submit Button -->
-        <button type="submit" class="btn btn-primary ml-3">Apply Action</button>
+        <button type="submit" class="btn btn-primary create-button btn_primary_color">Apply Action</button>
         <div id="bulk_error" class="text-danger error_e"></div>
     </div>
     <table class="table table-striped" id="user_table" style="padding-top: 10px;">
@@ -178,7 +178,9 @@
                     <div class="modal-footer">
                         <a href="#" type="button" class="btn btn-secondary btn_secondary_color"
                             data-bs-dismiss="modal">Close</a>
-                        <a href="#" type="button" id="saveuser" class="btn btn-primary btn_primary_color sbt_btn">Save
+                        <a href="#" type="button" id="saveuser" class="btn btn-primary btn_primary_color sbt_btn"><span
+                                class="spinner-border spinner-border-sm show_loader noactive" role="status"
+                                aria-hidden="true"></span><span>Save</span>
                         </a>
                     </div>
                 </form>
@@ -317,6 +319,9 @@ $(document).ready(function() {
 
     $('#saveuser').click(function(e) {
         e.preventDefault();
+
+        let $btn = $(this);
+        if ($btn.hasClass('disabled')) return;
         $('.error_e').html('');
         var formData = new FormData(document.getElementById('Create_user'));
         $.ajax({
@@ -325,7 +330,14 @@ $(document).ready(function() {
             data: formData,
             contentType: false,
             processData: false,
+            beforeSend: function() {
+                // Show "Saving ..." only before submission
+                $btn.addClass('disabled').css("pointer-events", "none");
+                $btn.find("span").text("Saving ...");
+
+            },
             success: function(response) {
+                $btn.find("span").text("Saved!");
                 $('#userModal').modal('hide');
                 location.reload();
             },
@@ -336,6 +348,9 @@ $(document).ready(function() {
                     var html1 = '<p>' + value + '</p>';
                     $('#' + key + '_error').html(html1);
                 });
+                // Revert button text and enable it
+                $btn.removeClass('disabled').css("pointer-events", "auto");
+                $btn.find("span").text('Save');
             }
         });
     });
@@ -488,30 +503,30 @@ $(document).ready(function() {
         }
     });
 
-        // Select/Deselect All checkboxes
-        $('#select_all').on('change', function() {
-            $('.user_checkbox').prop('checked', this.checked);
-        });
-
-        // Show/hide status dropdown based on bulk action selection
-        $('select[name="bulk_action"]').on('change', function() {
-            const action = $(this).val();
-            if (action === 'change_status') {
-                $('#status_dropdown').show();
-            } else {
-                $('#status_dropdown').hide();
-            }
-        });
-
-        // Form submission validation: ensure at least one user is selected
-        $('#bulk_action_form').on('submit', function(event) {
-            const selectedUsers = $('.user_checkbox:checked');
-            if (selectedUsers.length === 0) {
-                $("#bulk_error").html('Please select at least one user.');
-                event.preventDefault();
-            }
-        });
+    // Select/Deselect All checkboxes
+    $('#select_all').on('change', function() {
+        $('.user_checkbox').prop('checked', this.checked);
     });
+
+    // Show/hide status dropdown based on bulk action selection
+    $('select[name="bulk_action"]').on('change', function() {
+        const action = $(this).val();
+        if (action === 'change_status') {
+            $('#status_dropdown').show();
+        } else {
+            $('#status_dropdown').hide();
+        }
+    });
+
+    // Form submission validation: ensure at least one user is selected
+    $('#bulk_action_form').on('submit', function(event) {
+        const selectedUsers = $('.user_checkbox:checked');
+        if (selectedUsers.length === 0) {
+            $("#bulk_error").html('Please select at least one user.');
+            event.preventDefault();
+        }
+    });
+});
 
 $(document).on('change', '.status-toggle', function() {
     const toggleSwitch = $(this);

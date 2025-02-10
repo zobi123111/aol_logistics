@@ -12,7 +12,7 @@
         {{ session()->get('message') }}
     </div>
     @endif
-
+    @if(checkAllowedModule('activity-logs', 'activityLogs.all')->isNotEmpty())
     <table class="table table-striped" id="logs_table" style="padding-top: 10px;">
         <thead>
             <tr>
@@ -34,6 +34,8 @@
             @endforeach
         </tbody>
     </table>
+    @endif
+    @if(checkAllowedModule('activity-logs', 'logs.delete')->isNotEmpty())
     <div>
     <div class="pagetitle">
             <h1>Delete Logs</h1>
@@ -55,6 +57,7 @@
 
 <button id="delete_logs" class="btn btn-danger">Delete Logs</button>
 </div>
+@endif
 </div>
 <!-- End of Delete Model -->
 @endsection
