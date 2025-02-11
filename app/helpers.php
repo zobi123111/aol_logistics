@@ -2,6 +2,7 @@
 use Hashids\Hashids;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Page;
+use Illuminate\Support\Str;
 
 function encode_id($id)
 {
@@ -30,13 +31,13 @@ function getAllowedPages()
         return collect(); 
     }
 
-    if ($user->is_owner) {
+    if ($user->is_owner || $user->is_dev) {
         return Page::with('modules')->orderBy('position', 'asc')->get();
     }
 
     $dashboardPage = Page::with('modules')->whereHas('modules', function ($query) {
         $query->where('route_name', 'dashboard');
-    })->first(); // Get the Dashboard page
+    })->first(); 
     
     $allowedPages = Page::with('modules')
         ->orderBy('position', 'asc')
@@ -44,6 +45,9 @@ function getAllowedPages()
             $query->whereHas('rolePermissions', function ($subQuery) use ($user) {
                 $subQuery->where('role_id', $user->role);
             });
+        })
+        ->where(function ($query) {
+            $query->whereRaw("route_name NOT LIKE '%roles%'");
         })
         ->get();
     
@@ -62,7 +66,7 @@ function checkAllowedModule($pageRoute, $routeName = null)
         return collect(); 
     }
 
-    if ($user->is_owner) {
+    if ($user->is_owner || $user->is_dev) {
         return Page::where('route_name', $pageRoute)
             ->with('modules')
             ->orderBy('position', 'asc')
@@ -96,5 +100,26 @@ function isAdminUser()
     return ($user->role === 'admin' || $user->is_owner == 1);
 }
 
+function isDev()
+{
+    $user = auth()->user();
+    
+    if (!$user) {
+        return false;
+    }
+
+    return ($user->role === 'admin' || $user->is_dev == 1);
+}
+
+function isAdminOrDev()
+{
+    $user = auth()->user();
+    
+    if (!$user) {
+        return false;
+    }
+
+    return ($user->role === 'admin' || $user->is_owner == 1 || $user->is_dev == 1);
+}
 
 ?>

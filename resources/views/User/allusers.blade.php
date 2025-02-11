@@ -18,80 +18,95 @@
         {{ session()->get('message') }}
     </div>
     @endif
-    <form method="POST" action="{{ route('users.bulkAction') }}"  id="bulk_action_form">
-    @csrf
-    <div class="d-flex justify-content-start mb-3 bulk_div">
-        <!-- Bulk Action Dropdown -->
-        <select name="bulk_action" class="form-control w-25" required>
-            <option value="">Select Bulk Action</option>
-            <option value="change_status">Change Status</option>
-            <option value="delete">Delete</option>
-        </select>
-
-        <!-- Change Status Dropdown for selected users -->
-        <select name="status" class="form-control w-25 ml-3" id="status_dropdown" style="display: none;">
-            <option value="active">Activate</option>
-            <option value="deactivated">Deactivate</option>
-        </select>
-
-        <!-- Submit Button -->
-        <button type="submit" class="btn btn-primary create-button btn_primary_color">Apply Action</button>
-        <div id="bulk_error" class="text-danger error_e"></div>
-    </div>
-    <table class="table table-striped" id="user_table" style="padding-top: 10px;">
-        <thead>
-            <tr>
-                <th scope="col"><input type="checkbox" id="select_all"></th>
-                <th scope="col">First Name</th>
-                <th scope="col">Last Name</th>
-                <th scope="col">Email</th>
-                <th scope="col">Role</th>
-                <th scope="col">Last Login At</th>
-                @if(checkAllowedModule('users', 'users.toggleStatus')->isNotEmpty())
-                <th scope="col">Status</th>
-                @endif
-                @if(checkAllowedModule('users', 'user.get')->isNotEmpty())
-                <th scope="col">Edit</th>
+    <form method="POST" action="{{ route('users.bulkAction') }}" id="bulk_action_form">
+        @csrf
+        @if(checkAllowedModule('users', 'user.destroy')->isNotEmpty() || checkAllowedModule('users',
+        'users.toggleStatus')->isNotEmpty())
+        <div class="d-flex justify-content-start mb-3 bulk_div">
+            <!-- Bulk Action Dropdown -->
+            <select name="bulk_action" class="form-control w-25" required>
+                <option value="">Select Bulk Action</option>
+                @if(checkAllowedModule('users', 'user.toggleStatus')->isNotEmpty())
+                <option value="change_status">Change Status</option>
                 @endif
                 @if(checkAllowedModule('users', 'user.destroy')->isNotEmpty())
-                <th scope="col">Delete</th>
+                <option value="delete">Delete</option>
                 @endif
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($users as $val)
-            <tr>
-                <td><input type="checkbox" name="selected_users[]" value="{{ $val->id }}" class="user_checkbox"></td>
-                <td scope="row" class="fname">{{ $val->fname }}</td>
-                <td scope="row" class="lname">{{ $val->lname }}</td>
-                <td>{{ $val->email }}</td>
-                <td>{{$val->roledata->role_name}}</td>
-                <td>{{ $val->last_login_at ? $val->last_login_at : '--' }}</td>
-                @if(checkAllowedModule('users', 'users.toggleStatus')->isNotEmpty())
-                <td>
-                    <!-- Bootstrap switch to toggle status -->
-                    <div class="form-check form-switch">
-                        <input class="form-check-input status-toggle" type="checkbox"
-                            id="flexSwitchCheckChecked{{ encode_id($val->id) }}" data-id="{{ encode_id($val->id) }}"
-                            {{ $val->is_active ? 'checked' : '' }}>
-                        <label class="form-check-label" for="flexSwitchCheckChecked{{ encode_id($val->id) }}">
-                            {{ $val->is_active ? 'Active' : 'Inactive' }}
-                        </label>
-                    </div>
-                </td>
+            </select>
+
+            <!-- Change Status Dropdown for selected users -->
+            <select name="status" class="form-control w-25 ml-3" id="status_dropdown" style="display: none;">
+                <option value="active">Activate</option>
+                <option value="deactivated">Deactivate</option>
+            </select>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary create-button btn_primary_color">Apply Action</button>
+            <div id="bulk_error" class="text-danger error_e"></div>
+        </div>
+        @endif
+        <table class="table table-striped" id="user_table" style="padding-top: 10px;">
+            <thead>
+                <tr>
+                    <th scope="col"><input type="checkbox" id="select_all"></th>
+                    <th scope="col">First Name</th>
+                    <th scope="col">Last Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Role</th>
+                    <th scope="col">Last Login At</th>
+                    @if(checkAllowedModule('users', 'users.toggleStatus')->isNotEmpty())
+                    <th scope="col">Status</th>
+                    @endif
+                    @if(checkAllowedModule('users', 'user.get')->isNotEmpty())
+                    <th scope="col">Edit</th>
+                    @endif
+                    @if(checkAllowedModule('users', 'user.destroy')->isNotEmpty())
+                    <th scope="col">Delete</th>
+                    @endif
+                </tr>
+            </thead>
+            <tbody>
+                @if($users->isEmpty())
+                <tr>
+                    <td colspan="8" class="text-center">No users found</td>
+                </tr>
+                @else
+                @foreach($users as $val)
+                <tr>
+                    <td><input type="checkbox" name="selected_users[]" value="{{ $val->id }}" class="user_checkbox">
+                    </td>
+                    <td scope="row" class="fname">{{ $val->fname }}</td>
+                    <td scope="row" class="lname">{{ $val->lname }}</td>
+                    <td>{{ $val->email }}</td>
+                    <td>{{$val->roledata->role_name}}</td>
+                    <td>{{ $val->last_login_at ? $val->last_login_at : '--' }}</td>
+                    @if(checkAllowedModule('users', 'users.toggleStatus')->isNotEmpty())
+                    <td>
+                        <!-- Bootstrap switch to toggle status -->
+                        <div class="form-check form-switch">
+                            <input class="form-check-input status-toggle" type="checkbox"
+                                id="flexSwitchCheckChecked{{ encode_id($val->id) }}" data-id="{{ encode_id($val->id) }}"
+                                {{ $val->is_active ? 'checked' : '' }}>
+                            <label class="form-check-label" for="flexSwitchCheckChecked{{ encode_id($val->id) }}">
+                                {{ $val->is_active ? 'Active' : 'Inactive' }}
+                            </label>
+                        </div>
+                    </td>
+                    @endif
+                    @if(checkAllowedModule('users', 'user.get')->isNotEmpty())
+                    <td><i class="fa fa-edit edit-user-icon table_icon_style blue_icon_color"
+                            data-user-id="{{ encode_id($val->id) }}"></i></td>
+                    @endif
+                    @if(checkAllowedModule('users', 'user.destroy')->isNotEmpty())
+                    <td><i class="fa-solid fa-trash delete-icon table_icon_style blue_icon_color"
+                            data-user-id="{{ encode_id($val->id) }}"></i></td>
+                    @endif
+                </tr>
+                @endforeach
                 @endif
-                @if(checkAllowedModule('users', 'user.get')->isNotEmpty())
-                <td><i class="fa fa-edit edit-user-icon table_icon_style blue_icon_color"
-                        data-user-id="{{ encode_id($val->id) }}"></i></td>
-                @endif
-                @if(checkAllowedModule('users', 'user.destroy')->isNotEmpty())
-                <td><i class="fa-solid fa-trash delete-icon table_icon_style blue_icon_color"
-                        data-user-id="{{ encode_id($val->id) }}"></i></td>
-                @endif
-            </tr>
-            @endforeach
-        </tbody>
-    </table> </form>
+            </tbody>
+        </table>
+    </form>
 </div>
 <!-- Create User -->
 <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
