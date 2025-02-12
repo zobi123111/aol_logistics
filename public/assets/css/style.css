@@ -17,6 +17,7 @@ body {
   font-family: "Open Sans", sans-serif;
   background: #f6f9ff;
   color: #444444;
+  position: relative;
 }
 
 a {
@@ -1291,6 +1292,34 @@ h6 {
 .show_loader.noactive {
   display: none;
 }
+
 .bulk_div {
   column-gap: 10px;
+}
+
+.new_loader {
+  display: none;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 333333;
+  background: rgb(255 255 255 / 53%);
+  margin: 0;
+  right: 0;
+  top: 0;
+  padding: 0;
+}
+
+.new_loader img {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  width: 5%;
+}
+
+.document-lists li {
+  display: flex;
+  flex-direction: column;
+  row-gap: 15px;
+  padding-bottom: 25px;
 }

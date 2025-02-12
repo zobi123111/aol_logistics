@@ -17,19 +17,19 @@
     <div id="successMessage" class="alert alert-success fade show" role="alert">
         <i class="bi bi-check-circle me-1"></i>
         {{ session()->get('message') }}
-    </div>  
+    </div>
     @endif
     <table class="table table-striped" id="role_table" style="padding-top: 10px;">
         <thead>
             <tr>
                 <th scope="col">Role</th>
                 <th scope="col">User Type</th>
-                @if(checkAllowedModule('roles', 'roles.edit')->isNotEmpty())
-                <th scope="col">Edit</th>
+                @if(checkAllowedModule('roles', 'roles.edit')->isNotEmpty() || (checkAllowedModule('roles', 'roles.destroy')->isNotEmpty() && Auth::user()->is_dev))
+                <th scope="col">Actions</th>
                 @endif
-                @if(checkAllowedModule('roles', 'roles.destroy')->isNotEmpty() && Auth::user()->is_dev)
+                <!-- @if(checkAllowedModule('roles', 'roles.destroy')->isNotEmpty() && Auth::user()->is_dev)
                 <th scope="col">Delete</th>
-                @endif
+                @endif -->
             </tr>
         </thead>
         <tbody>
@@ -37,53 +37,47 @@
             <tr>
                 <td scope="row" class="fname">{{ $role->role_name }}</td>
                 <td>{{$role->userType->name}}</td>
+
+                @if(checkAllowedModule('roles', 'roles.edit')->isNotEmpty() || (checkAllowedModule('roles', 'roles.destroy')->isNotEmpty() && Auth::user()->is_dev))
+                <td>
                 @if(checkAllowedModule('roles', 'roles.edit')->isNotEmpty())
-                <td><a href="{{ route('roles.edit', ['role' => encode_id($role->id)]) }}"><i
+                <a href="{{ route('roles.edit', ['role' => encode_id($role->id)]) }}"><i
                             class="fa fa-edit edit-user-icon table_icon_style blue_icon_color"
-                            data-user-id="{{ $role->id }}"></i></a></td>
+                            data-user-id="{{ $role->id }}"></i></a>
                 @endif
                 @if(checkAllowedModule('roles', 'roles.destroy')->isNotEmpty() && Auth::user()->is_dev)
-<!-- 
-                <td>
-                    <form action="{{ route('roles.destroy', ['role' => encode_id($role->id)]) }}" method="POST"
-                        style="display: inline;"
-                        onsubmit="return confirm('Are you sure you want to delete this role and all its permissions?');">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" style="border: none; background: none; cursor: pointer;">
-                            <i class="fa-solid fa-trash delete-icon table_icon_style blue_icon_color"></i>
-                        </button>
-                    </form>
-                </td> -->
+               <i class="fa-solid fa-trash delete-icon table_icon_style blue_icon_color"
+                data-role-id="{{ encode_id($role->id) }}" data-user-count="{{$role->users_count}}" ></i>
+                @endif
+                </td>
 
-                <td><i class="fa-solid fa-trash delete-icon table_icon_style blue_icon_color"
-                data-role-id="{{ encode_id($role->id) }}" data-user-count="{{$role->users_count}}" ></i></td>
                 @endif
             </tr>
             @endforeach
         </tbody>
     </table>
 
-<form method="POST" id="deleteRoleFormId" >
-    @csrf
-    @method('DELETE')
-    <div class="modal fade" id="deleteRoleForm" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Delete</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body delete_content">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary close_btn" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary role_delete">Delete</button>
+    <form method="POST" id="deleteRoleFormId">
+        @csrf
+        @method('DELETE')
+        <div class="modal fade" id="deleteRoleForm" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Delete</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body delete_content">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary close_btn" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary role_delete btn_primary_color">Delete</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</form>
+    </form>
 </div>
 <!-- End of Delete Model -->
 @endsection
@@ -93,31 +87,30 @@
 <script>
 $(document).ready(function() {
     $('#role_table').DataTable();
-    $(document).on('click', '.delete-icon', function (e) {
+    $(document).on('click', '.delete-icon', function(e) {
         e.preventDefault();
         var roleId = $(this).data('role-id');
         var usercountId = $(this).data('user-count');
         var fname = $(this).closest('tr').find('.fname').text();
-        var modal_text = `You can't delete "<strong><span id="append_name">${fname} </span></strong>" role because it is assigned to "<strong><span id="append_name">${usercountId} </span></strong>" users.`;
+        var modal_text =
+            `You can't delete "<strong><span id="append_name">${fname} </span></strong>" role because it is assigned to "<strong><span id="append_name">${usercountId} </span></strong>" users.`;
         $(".role_delete").prop("disabled", true)
-        if(usercountId < 1){
-            var modal_text = `Are you sure you want to delete this role "<strong><span id="append_name">${fname} </span></strong>" ?`;
-        $(".role_delete").prop("disabled", false)
+        if (usercountId < 1) {
+            var modal_text =
+                `Are you sure you want to delete this role "<strong><span id="append_name">${fname} </span></strong>" ?`;
+            $(".role_delete").prop("disabled", false)
 
-        }else{
-        }
-        
+        } else {}
+
         $('.delete_content').html(modal_text);
         // $('#append_name').html(fname);
-         $('#deleteRoleFormId').attr('action', '/roles/' + roleId);
+        $('#deleteRoleFormId').attr('action', '/roles/' + roleId);
         $('#deleteRoleForm').modal('show');
 
     });
 
-    
+
 });
-
-
 </script>
 
 @endsection

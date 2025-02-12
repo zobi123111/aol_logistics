@@ -6,6 +6,9 @@
     @include('layout.sections.sidebar')
 
     <main id="main" class="main">
+        <div class="new_loader">
+            <img src="{{env('LOADER_IMG')}}" alt="">
+        </div>
         <div class="pagetitle">
             <h1>@yield('sub-title')</h1>
         </div><!-- End Page Title -->

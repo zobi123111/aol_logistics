@@ -57,12 +57,13 @@
                     @if(checkAllowedModule('users', 'users.toggleStatus')->isNotEmpty())
                     <th scope="col">Status</th>
                     @endif
-                    @if(checkAllowedModule('users', 'user.get')->isNotEmpty())
-                    <th scope="col">Edit</th>
+
+                    @if(checkAllowedModule('users', 'user.get')->isNotEmpty() || checkAllowedModule('users', 'user.destroy')->isNotEmpty())
+                    <th scope="col">Actions</th>
                     @endif
-                    @if(checkAllowedModule('users', 'user.destroy')->isNotEmpty())
+                    <!-- @if(checkAllowedModule('users', 'user.destroy')->isNotEmpty())
                     <th scope="col">Delete</th>
-                    @endif
+                    @endif -->
                 </tr>
             </thead>
             <tbody>
@@ -93,13 +94,17 @@
                         </div>
                     </td>
                     @endif
+                    @if(checkAllowedModule('users', 'user.get')->isNotEmpty() || checkAllowedModule('users', 'user.destroy')->isNotEmpty())
+                    <td>
                     @if(checkAllowedModule('users', 'user.get')->isNotEmpty())
-                    <td><i class="fa fa-edit edit-user-icon table_icon_style blue_icon_color"
-                            data-user-id="{{ encode_id($val->id) }}"></i></td>
+                    <i class="fa fa-edit edit-user-icon table_icon_style blue_icon_color"
+                            data-user-id="{{ encode_id($val->id) }}"></i>
                     @endif
                     @if(checkAllowedModule('users', 'user.destroy')->isNotEmpty())
-                    <td><i class="fa-solid fa-trash delete-icon table_icon_style blue_icon_color"
-                            data-user-id="{{ encode_id($val->id) }}"></i></td>
+                    <i class="fa-solid fa-trash delete-icon table_icon_style blue_icon_color"
+                            data-user-id="{{ encode_id($val->id) }}"></i>
+                    @endif
+                    </td>
                     @endif
                 </tr>
                 @endforeach
@@ -561,7 +566,6 @@ $(document).on('change', '.status-toggle', function() {
                 const label = toggleSwitch.siblings("label");
                 label.text(isActive ? "Active" : "Inactive");
                 $('#successMessagea').text(response.message).fadeIn().delay(3000).fadeOut();
-
             }
         },
         error: function(xhr, status, error) {

@@ -47,13 +47,12 @@ Route::middleware(['auth.user', 'otp.verified', 'role.permission'])->group(funct
     Route::post('/users/delete', [UserController::class, 'destroy'])->name('user.destroy');
     Route::post('/users/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggleStatus');
 
-    //roles 
     Route::resource('roles', RolePermissionController::class);
-
     Route::get('/activity-logs', [UserActivityLogController::class, 'showAll'])->name('activityLogs.all');
     Route::delete('/logs/delete', [UserActivityLogController::class, 'deleteLogs'])->name('logs.delete');
     Route::post('/users/bulk-action', [UserController::class, 'bulkAction'])->name('users.bulkAction');
-
     Route::resource('suppliers', SupplierController::class);
+    Route::post('/suppliers/toggle-status', [SupplierController::class, 'toggleStatus'])->name('suppliers.toggleStatus');
+
 
 });

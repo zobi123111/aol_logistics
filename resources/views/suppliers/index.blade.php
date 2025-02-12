@@ -45,7 +45,12 @@
                 <th scope="col">SCAC Documents</th>
                 <th scope="col">CAAT Number</th>
                 <th scope="col">CAAT Documents</th> -->
+                @if(checkAllowedModule('suppliers', 'suppliers.toggleStatus')->isNotEmpty())
+                <th>Status</th>
+                @endif
+                @if(checkAllowedModule('suppliers', 'suppliers.edit')->isNotEmpty() || checkAllowedModule('suppliers', 'suppliers.show')->isNotEmpty()|| checkAllowedModule('suppliers', 'suppliers.delete')->isNotEmpty())
                 <th scope="col">Actions</th>
+                @endif
             </tr>
         </thead>
         <tbody>
@@ -93,9 +98,25 @@
                     <a href="{{ asset('storage/' . $document) }}" target="_blank">View</a><br>
                     @endforeach
                 </td> -->
+                @if(checkAllowedModule('suppliers', 'suppliers.toggleStatus')->isNotEmpty())
                 <td>
-                    <!-- <a href="{{ route('suppliers.edit', $supplier->id) }}" class=""><i
-                            class="fa fa-edit edit-user-icon table_icon_style blue_icon_color"></i></a> -->
+                        <!-- Bootstrap switch to toggle status -->
+                    <div class="form-check form-switch">
+                        <input class="form-check-input status-toggle" type="checkbox"
+                            id="flexSwitchCheckChecked{{ encode_id($supplier->id) }}" data-id="{{ encode_id($supplier->id) }}"
+                            {{ $supplier->is_active ? 'checked' : '' }}>
+                        <label class="form-check-label" for="flexSwitchCheckChecked{{ encode_id($supplier->id) }}">
+                            {{ $supplier->is_active ? 'Active' : 'Inactive' }}
+                        </label>
+                    </div>
+                </td>
+                @endif
+                @if(checkAllowedModule('suppliers', 'suppliers.edit')->isNotEmpty() || checkAllowedModule('suppliers', 'suppliers.show')->isNotEmpty()|| checkAllowedModule('suppliers', 'suppliers.destroy')->isNotEmpty())
+                <td>
+                @if(checkAllowedModule('suppliers', 'suppliers.edit')->isNotEmpty())
+                    <a href="{{ route('suppliers.edit', encode_id($supplier->id)) }}" class=""><i
+                            class="fa fa-edit edit-user-icon table_icon_style blue_icon_color"></i></a>
+                    @endif
                     @if(checkAllowedModule('suppliers', 'suppliers.destroy')->isNotEmpty() )
                     <i class="fa-solid fa-trash delete-icon table_icon_style blue_icon_color"
                         data-supplier-id="{{ encode_id($supplier->id) }}"></i>
@@ -106,6 +127,9 @@
                             class="fa-solid fa-eye view-icon table_icon_style blue_icon_color"></i></a>
                     @endif
                 </td>
+                @endif
+
+                
             </tr>
             @endforeach
             @endif
@@ -127,7 +151,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary close_btn" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary role_delete">Delete</button>
+                        <button type="submit" class="btn btn-primary role_delete btn_primary_color">Delete</button>
                     </div>
                 </div>
             </div>
@@ -152,10 +176,33 @@ $(document).ready(function() {
         $('.delete_content').html(modal_text);
         $('#deleteRoleFormId').attr('action', '/suppliers/' + supplierId);
         $('#deleteRoleForm').modal('show');
-
     });
+});
+$(document).on('change', '.status-toggle', function() {
+    const toggleSwitch = $(this);
+    var userId = $(this).data('id');
+    var isActive = $(this).prop('checked') ? 1 : 0;
 
+    $.ajax({
+        url: '{{ route("suppliers.toggleStatus") }}',
+        type: 'POST',
+        data: {
+            _token: '{{ csrf_token() }}',
+            user_id: userId,
+            is_active: isActive
+        },
+        success: function(response) {
+            if (response.success) {
+                const label = toggleSwitch.siblings("label");
+                label.text(isActive ? "Active" : "Inactive");
+                $('#successMessagea').text(response.message).fadeIn().delay(3000).fadeOut();
 
+            }
+        },
+        error: function(xhr, status, error) {
+            alert('An error occurred while updating the user status.');
+        }
+    });
 });
 </script>
 

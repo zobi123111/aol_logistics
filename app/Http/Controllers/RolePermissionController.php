@@ -70,8 +70,8 @@ class RolePermissionController extends Controller
             ]);
 
             // Success flash message
-            Session::flash('message', 'Role Created successfully');
-            return redirect()->route('role_permissions.index');
+            return redirect()->to('/roles')->with('message', 'Role Created successfully');
+
         } catch (\Exception $e) {
             return redirect()->back()
                 ->withErrors('Something went wrong. Please try again.')
@@ -165,7 +165,7 @@ class RolePermissionController extends Controller
         ]);
         $role->rolePermissions()->delete();
         $role->delete();
-        Session::flash('message', 'All permissions deleted successfully.');
+        Session::flash('message', 'Role deleted successfully.');
         return redirect()->route('roles.index');
     }
 }
