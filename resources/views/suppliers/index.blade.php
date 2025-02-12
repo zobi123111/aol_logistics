@@ -56,7 +56,7 @@
         <tbody>
             @if($suppliers->isEmpty())
             <tr>
-                <td colspan="7" class="text-center">No suppliers found</td>
+                <td colspan="8" class="text-center">No suppliers found</td>
             </tr>
             @else
             @foreach($suppliers as $supplier)

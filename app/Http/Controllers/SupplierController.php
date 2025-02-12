@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Role;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
+use App\Models\UserActivityLog;
 
 
 class SupplierController extends Controller
@@ -86,7 +87,9 @@ class SupplierController extends Controller
             }
              
             // Find role ID by matching role_slug with user_role
-            $role = Role::where('role_slug', $request->user_role)->first();
+            // $role = Role::where('role_slug', $request->user_role)->first();
+            $role = Role::where('role_slug', 'master_client')->first();
+
             
             if (!$role) {
                 return redirect()->route('suppliers.index')->with('success', 'Supplier created successfully.');
@@ -189,7 +192,7 @@ class SupplierController extends Controller
             'primary_contact_email' => 'required|email|max:255',
             'primary_contact_office_phone' => 'required|string|max:20',
             'primary_contact_mobile_phone' => 'required|string|max:20',
-            'user_role' => 'required',
+            // 'user_role' => 'required',
             'user_email' => 'required|email|max:255',
             'user_office_phone' => 'required|string|max:20',
             'user_mobile_phone' => 'required|string|max:20',
@@ -310,7 +313,9 @@ class SupplierController extends Controller
             }
 
             // Update the user's role
-            $role = Role::where('role_slug', $request->user_role)->first();
+            // $role = Role::where('role_slug', $request->user_role)->first();
+            $role = Role::where('role_slug', 'master_client')->first();
+
             if ($role) {
                 $user->role = $role->id;
             }
@@ -406,15 +411,12 @@ class SupplierController extends Controller
         $supplier->save();
 
         // Log the status update
-        // UserActivityLog::create([
-        //     'log_type' => UserActivityLog::LOG_TYPE_UPDATE_STATUS,
-        //     'description' => 'User ' . $user->fname . ' ' . $user->lname . ' (' . $user->email . ') status changed from ' 
-        //                     . $oldStatus . ' to ' . $newStatus . ' by ' 
-        //                     . auth()->user()->fname . ' ' 
-        //                     . auth()->user()->lname 
-        //                     . ' (' . auth()->user()->email . ')',
-        //     'user_id' => auth()->id(),
-        // ]);
+        UserActivityLog::create([
+            'log_type' => UserActivityLog::LOG_TYPE_UPDATE_STATUS_SUPPLIER,
+            'description' => 'Supplier  (' . $supplier->user_email . ') status changed from ' 
+                            . $oldStatus . ' to ' . $newStatus . ' by User with email (' . auth()->user()->email . ')',
+            'user_id' => auth()->id(),
+        ]);
         return response()->json([
             'success' => true,
             'message' => 'Supplier status updated successfully',

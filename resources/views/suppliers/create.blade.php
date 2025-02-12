@@ -124,7 +124,7 @@
                 </div>
 
                 <!-- User Role Selection -->
-                <div class="mb-3">
+                <!-- <div class="mb-3">
                     <label class="form-label">User Role</label>
                     <select name="user_role" class="form-select">
                         <option value="master_client" {{ old('user_role') == 'master_client' ? 'selected' : '' }}>Master
@@ -138,7 +138,7 @@
                     @error('user_role')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
-                </div>
+                </div> -->
 
                 <!-- User Email -->
                 <div class="mb-3">
