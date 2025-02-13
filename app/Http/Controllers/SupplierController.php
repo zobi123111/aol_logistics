@@ -336,7 +336,7 @@ class SupplierController extends Controller
             'primary_contact_email' => $request->primary_contact_email,
             'primary_contact_office_phone' => $request->primary_contact_office_phone,
             'primary_contact_mobile_phone' => $request->primary_contact_mobile_phone,
-            'user_role' => $request->user_role,
+            // 'user_role' => $request->user_role,
             'user_email' => $request->user_email,
             'user_office_phone' => $request->user_office_phone,
             'user_mobile_phone' => $request->user_mobile_phone,

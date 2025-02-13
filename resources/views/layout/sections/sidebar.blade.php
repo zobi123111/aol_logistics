@@ -10,6 +10,16 @@
             </a>
         </li>
     @endforeach
+ 
+
+@if(Auth::check() && Auth::user()->supplier_id !== null)
+<li class="nav-item">
+            <a class="nav-link" href="{{ route('supplier_users.index', encode_id(Auth::user()->supplier_id)) }}">
+            <i class="{{ $page->icon }}"></i> 
+                <span>Supplier Users</span>
+            </a>
+        </li>
+@endif
 </ul>
       <!-- <ul class="sidebar-nav" id="sidebar-nav">
 

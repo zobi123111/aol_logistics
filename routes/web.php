@@ -8,6 +8,7 @@ use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\UserActivityLogController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\SupplierUserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,6 +54,14 @@ Route::middleware(['auth.user', 'otp.verified', 'role.permission'])->group(funct
     Route::post('/users/bulk-action', [UserController::class, 'bulkAction'])->name('users.bulkAction');
     Route::resource('suppliers', SupplierController::class);
     Route::post('/suppliers/toggle-status', [SupplierController::class, 'toggleStatus'])->name('suppliers.toggleStatus');
+    Route::prefix('suppliers/{supplierId}/users')->group(function () {
+        Route::get('/', [SupplierUserController::class, 'index'])->name('supplier_users.index');
+        Route::get('/create', [SupplierUserController::class, 'create'])->name('supplier_users.create');
+        Route::post('/', [SupplierUserController::class, 'store'])->name('supplier_users.store');
+        Route::get('/{userId}/edit', [SupplierUserController::class, 'edit'])->name('supplier_users.edit');
+        Route::put('/{userId}', [SupplierUserController::class, 'update'])->name('supplier_users.update');
+        Route::delete('/{userId}', [SupplierUserController::class, 'destroy'])->name('supplier_users.destroy');
+    });
 
 
 });

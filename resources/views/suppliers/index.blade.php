@@ -51,6 +51,8 @@
                 @if(checkAllowedModule('suppliers', 'suppliers.edit')->isNotEmpty() || checkAllowedModule('suppliers', 'suppliers.show')->isNotEmpty()|| checkAllowedModule('suppliers', 'suppliers.delete')->isNotEmpty())
                 <th scope="col">Actions</th>
                 @endif
+                <th scope="col">Users</th>
+
             </tr>
         </thead>
         <tbody>
@@ -128,6 +130,11 @@
                     @endif
                 </td>
                 @endif
+                <td>
+<a href="{{ route('supplier_users.index', encode_id($supplier->id)) }}" class="btn btn-info">
+    <i class="fa-solid fa-users"></i> Manage Users
+</a>
+                </td>
 
                 
             </tr>
