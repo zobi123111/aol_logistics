@@ -32,6 +32,7 @@ class User extends Authenticatable
         'created_by',
         'profile_photo',
         'last_login_at',
+        'is_client',
         'supplier_id',
         'is_supplier'
     ];

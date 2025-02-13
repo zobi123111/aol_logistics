@@ -8,6 +8,7 @@ use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\UserActivityLogController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\SupplierUserController;
 
 /*
@@ -62,6 +63,9 @@ Route::middleware(['auth.user', 'otp.verified', 'role.permission'])->group(funct
         Route::put('/{userId}', [SupplierUserController::class, 'update'])->name('supplier_users.update');
         Route::delete('/{userId}', [SupplierUserController::class, 'destroy'])->name('supplier_users.destroy');
     });
+
+    // Routes for client page
+    Route::resource('client', ClientController::class);
 
 
 });
