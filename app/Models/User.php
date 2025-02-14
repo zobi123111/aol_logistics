@@ -60,4 +60,9 @@ class User extends Authenticatable
 {
     return $this->belongsTo(Role::class, 'role');
 }
+
+public function supplier()
+{
+    return $this->hasOne(Supplier::class, 'user_id');
+}
 }

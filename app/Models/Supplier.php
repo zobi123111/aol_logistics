@@ -22,4 +22,14 @@ class Supplier extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function units()
+    {
+        return $this->hasMany(SupplierUnit::class);
+    }
+
+    public function services()
+    {
+        return $this->hasMany(Service::class);
+    }
 }

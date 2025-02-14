@@ -3,12 +3,11 @@
 @extends('layout.app')
 @section('content')
 <div class="main_cont_outer">
-    @if(checkAllowedModule('suppliers', 'suppliers.create')->isNotEmpty() )
     <div class="create_btn">
         <a href="{{ route('suppliers.create') }}" class="btn btn-primary create-button btn_primary_color"
             id="createrole">Create Supplier</a>
     </div>
-    @endif
+
     <div id="successMessagea" class="alert alert-success" style="display: none;" role="alert">
         <i class="bi bi-check-circle me-1"></i>
     </div>
@@ -51,7 +50,11 @@
                 @if(checkAllowedModule('suppliers', 'suppliers.edit')->isNotEmpty() || checkAllowedModule('suppliers', 'suppliers.show')->isNotEmpty()|| checkAllowedModule('suppliers', 'suppliers.delete')->isNotEmpty())
                 <th scope="col">Actions</th>
                 @endif
-                <th scope="col">Users</th>
+                <th scope="col">User</th>
+                <th scope="col">Equipment</th>
+                <th scope="col">Service</th>
+
+
 
             </tr>
         </thead>
@@ -131,9 +134,22 @@
                 </td>
                 @endif
                 <td>
-<a href="{{ route('supplier_users.index', encode_id($supplier->id)) }}" class="btn btn-info">
-    <i class="fa-solid fa-users"></i> Manage Users
-</a>
+                    <a href="{{ route('supplier_users.index', encode_id($supplier->id)) }}" class="btn btn-info">
+                        <i class="fa-solid fa-users"></i> Manage
+                    </a>
+                </td>
+
+                <td>
+                    <a href="{{ route('supplier_units.index', encode_id($supplier->id)) }}" class="btn btn-info">
+                        <i class="fa-solid fa-truck"></i> Manage
+                    </a>
+                </td>
+
+
+                <td>
+                    <a href="{{ route('services.index', encode_id($supplier->id)) }}" class="btn btn-info">
+                        <i class="fa-solid fa-gear"></i> Manage
+                    </a>
                 </td>
 
                 

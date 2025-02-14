@@ -106,7 +106,7 @@ class RolePermissionController extends Controller
 
         $validated = $request->validate([
             'role_name' => 'required|string',
-            'module_ids' => 'required|array', 
+            'module_ids' => 'array', 
             'module_ids.*' => 'exists:modules,id', 
         ]);
         
@@ -117,20 +117,22 @@ class RolePermissionController extends Controller
             'role_name' => $request->input('role_name'),
         ]);
 
-        // Get the selected modules from the request
-        $selectedModules = $request->input('module_ids');
-        $role->rolePermissions()->delete();
 
-            // Attach the selected modules to the role_permission
-            foreach ($validated['module_ids'] as $pageId => $moduleIds) {
-                foreach ($moduleIds as $moduleId) {
-                    $rolePermission = RolePermission::create([
-                        'role_id' => $role->id,
-                        'module_id' => $moduleId
+            $role->rolePermissions()->delete();
 
-                    ]);
+            if(isset($validated['module_ids'])){
+                // Attach the selected modules to the role_permission
+                foreach ($validated['module_ids'] as $pageId => $moduleIds) {
+                    foreach ($moduleIds as $moduleId) {
+                        $rolePermission = RolePermission::create([
+                            'role_id' => $role->id,
+                            'module_id' => $moduleId
+
+                        ]);
+                    }
                 }
             }
+          
             // add log
             UserActivityLog::create([
                 'log_type' => UserActivityLog::LOG_TYPE_EDIT_ROLE,

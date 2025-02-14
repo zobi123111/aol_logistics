@@ -67,6 +67,8 @@ class Kernel extends HttpKernel
         'otp.verified' => \App\Http\Middleware\CheckOtpVerified::class,
         'role.permission' => \App\Http\Middleware\CheckRolePermission::class,
         'auto.logout' => \App\Http\Middleware\AutoLogout::class,
+        'check.supplier' => \App\Http\Middleware\CheckSupplier::class,
+
 
     ];
 }

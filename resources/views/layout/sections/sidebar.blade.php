@@ -1,49 +1,40 @@
   <!-- ======= Sidebar ======= -->
   <aside id="sidebar" class="sidebar">
   <ul class="sidebar-nav" id="sidebar-nav">
+  @if(!empty(getAllowedPages()) && is_iterable(getAllowedPages()))
     @foreach(getAllowedPages() as $page)
-    <!-- {{$page->modules}} -->
-        <li class="nav-item">
-            <a class="nav-link {{ Request::is($page->route_name) ? 'active' : '' }}" href="{{ url($page->route_name) }}">
-            <i class="{{ $page->icon }}"></i> 
-                <span>{{ ucfirst($page->name) }}</span>
-            </a>
-        </li>
+        @if(isset($page->route_name, $page->icon, $page->name)) 
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is($page->route_name) ? 'active' : '' }}" href="{{ url($page->route_name) }}">
+                    <i class="{{ $page->icon }}"></i> 
+                    <span>{{ ucfirst($page->name) }}</span>
+                </a>
+            </li>
+        @endif
     @endforeach
+@endif
  
 
-@if(Auth::check() && Auth::user()->supplier_id !== null)
+@if(Auth::check() && Auth::user()->roledata->role_slug == 'master_client')
 <li class="nav-item">
-            <a class="nav-link" href="{{ route('supplier_users.index', encode_id(Auth::user()->supplier_id)) }}">
-            <i class="{{ $page->icon }}"></i> 
-                <span>Supplier Users</span>
-            </a>
-        </li>
+        <a class="nav-link {{ Request::routeIs('supplier_users.index') ? 'active' : '' }}" href="{{ route('supplier_users.index', encode_id(Auth::user()->supplier->id)) }}">
+        <i class="bi bi-grid"></i> 
+            <span>Supplier people</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {{ Request::routeIs('supplier_units.index') ? 'active' : '' }}" href="{{ route('supplier_units.index', encode_id(Auth::user()->supplier->id)) }}">
+        <i class="bi bi-truck"></i> 
+            <span>Supplier Equipment</span>
+        </a>
+    </li>   
+    <li class="nav-item">
+        <a class="nav-link {{ Request::routeIs('services.index') ? 'active' : '' }}" href="{{ route('services.index', encode_id(Auth::user()->supplier->id)) }}">
+        <i class="bi bi-gear"></i> 
+            <span>Supplier Services</span>
+        </a>
+    </li>
 @endif
 </ul>
-      <!-- <ul class="sidebar-nav" id="sidebar-nav">
-
-      
-          <li class="nav-item">
-              <a class="nav-link {{ Request::is('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
-                  <i class="bi bi-grid"></i>
-                  <span>Dashboard</span>
-              </a>
-          </li>
-
-
-          <li class="nav-item">
-              <a class="nav-link {{ Request::is('users') ? 'active' : '' }}" href="{{ url('users') }}">
-                  <i class="bi bi-person"></i>
-                  <span>Users</span>
-              </a>
-          </li>
-          <li class="nav-item">
-              <a class="nav-link {{ Request::is('roles') ? 'active' : '' }}" href="{{ url('roles') }}">
-                  <i class="bi bi-person"></i>
-                  <span>Roles</span>
-              </a>
-          </li>
-      </ul> -->
 
   </aside><!-- End Sidebar-->

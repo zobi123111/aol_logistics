@@ -3,12 +3,10 @@
 @extends('layout.app')
 @section('content')
 <div class="main_cont_outer">
-    @if(checkAllowedModule('suppliers', 'suppliers.create')->isNotEmpty() )
     <div class="create_btn">
         <a href="{{ route('supplier_users.create', encode_id($supplier->id)) }}" class="btn btn-primary create-button btn_primary_color"
             id="createrole">Create Supplier User</a>
     </div>
-    @endif
     <div id="successMessagea" class="alert alert-success" style="display: none;" role="alert">
         <i class="bi bi-check-circle me-1"></i>
     </div>
@@ -18,7 +16,6 @@
         {{ session()->get('message') }}
     </div>
     @endif
-    @if(checkAllowedModule('suppliers', 'suppliers.index')->isNotEmpty() )
     <table class="table table-striped mt-3" id="supplierUser">
         <thead>
             <tr>
@@ -51,7 +48,6 @@
                     </div>
                 </td>
                 <td>
-
                     <a href="{{ route('supplier_users.edit', [encode_id($supplier->id), encode_id($user->id)]) }}" class=""><i
                             class="fa fa-edit edit-user-icon table_icon_style blue_icon_color"></i></a>
                     <i class="fa-solid fa-trash delete-icon table_icon_style blue_icon_color"
@@ -62,7 +58,6 @@
             @endif
         </tbody>
     </table>
-    @endif
     <form method="POST" id="deleteRoleFormId">
         @csrf
         @method('DELETE')

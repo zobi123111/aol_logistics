@@ -24,7 +24,7 @@
             <tr>
                 <th scope="col">Role</th>
                 <th scope="col">User Type</th>
-                @if(checkAllowedModule('roles', 'roles.edit')->isNotEmpty() || (checkAllowedModule('roles', 'roles.destroy')->isNotEmpty() && Auth::user()->is_dev))
+                @if((checkAllowedModule('roles', 'roles.edit')->isNotEmpty() || checkAllowedModule('roles', 'roles.destroy')->isNotEmpty()) || (Auth::user()->is_dev ||Auth::user()->is_owner))
                 <th scope="col">Actions</th>
                 @endif
                 <!-- @if(checkAllowedModule('roles', 'roles.destroy')->isNotEmpty() && Auth::user()->is_dev)
@@ -38,14 +38,14 @@
                 <td scope="row" class="fname">{{ $role->role_name }}</td>
                 <td>{{$role->userType->name}}</td>
 
-                @if(checkAllowedModule('roles', 'roles.edit')->isNotEmpty() || (checkAllowedModule('roles', 'roles.destroy')->isNotEmpty() && Auth::user()->is_dev))
+                @if((checkAllowedModule('roles', 'roles.edit')->isNotEmpty() || checkAllowedModule('roles', 'roles.destroy')->isNotEmpty()) || (Auth::user()->is_dev || Auth::user()->is_owner))
                 <td>
-                @if(checkAllowedModule('roles', 'roles.edit')->isNotEmpty())
+                @if(checkAllowedModule('roles', 'roles.edit')->isNotEmpty() || (Auth::user()->is_dev ||Auth::user()->is_owner))
                 <a href="{{ route('roles.edit', ['role' => encode_id($role->id)]) }}"><i
                             class="fa fa-edit edit-user-icon table_icon_style blue_icon_color"
                             data-user-id="{{ $role->id }}"></i></a>
                 @endif
-                @if(checkAllowedModule('roles', 'roles.destroy')->isNotEmpty() && Auth::user()->is_dev)
+                @if(Auth::user()->is_dev)
                <i class="fa-solid fa-trash delete-icon table_icon_style blue_icon_color"
                 data-role-id="{{ encode_id($role->id) }}" data-user-count="{{$role->users_count}}" ></i>
                 @endif
