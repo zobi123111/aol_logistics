@@ -15,11 +15,11 @@
 @endif
  
 
-@if(Auth::check() && Auth::user()->roledata->role_slug == 'master_client')
+@if(Auth::check() && Auth::user()->roledata->role_slug == config('constants.roles.MASTERCLIENT'))
 <li class="nav-item">
         <a class="nav-link {{ Request::routeIs('supplier_users.index') ? 'active' : '' }}" href="{{ route('supplier_users.index', encode_id(Auth::user()->supplier->id)) }}">
-        <i class="bi bi-grid"></i> 
-            <span>Supplier people</span>
+        <i class="bi bi-people"></i> 
+            <span>Supplier Users</span>
         </a>
     </li>
     <li class="nav-item">

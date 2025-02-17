@@ -32,4 +32,8 @@ class Supplier extends Model
     {
         return $this->hasMany(Service::class);
     }
+
+    public function supplierdocuments() {
+        return $this->hasMany(SupplierDocument::class, 'supplier_id');
+    }
 }

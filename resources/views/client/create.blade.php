@@ -53,50 +53,32 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Password<span class="text-danger">*</span></label>
-                        <input type="text" name="password" class="form-control" value="{{ old('password') }}">
+                        <input type="password" name="password" class="form-control" value="{{ old('password') }}">
                         @error('password')
                         <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Confirm Password<span class="text-danger">*</span></label>
-                        <input type="text" name="password_confirmation" class="form-control" value="{{ old('password_confirmation') }}">
+                        <input type="password" name="password_confirmation" class="form-control" value="{{ old('password_confirmation') }}">
                         @error('confirm_password')
                         <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>
 
-                <!-- User Role Selection -->
-                <div class="mb-3">
-                    <label class="form-label">Role<span class="text-danger">*</span></label>
-                    <select name="role" class="form-select">
-                        <option value = "" disabled selected>Select Role</option>
-                        <option value="cl_master_client" {{ old('role') == 'cl_master_client' ? 'selected' : '' }}>Master
-                            Client</option>
-                        <option value="cl_customer_service_executive"
-                            {{ old('role') == 'cl_customer_service_executive' ? 'selected' : '' }}>Customer Service
-                            Executive</option>
-                    </select>
-                    @error('role')
-                    <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-
                 <!-- Profile Photo Uploads -->
-                <div class="mb-3">
+                <!-- <div class="mb-3">
                     <label for="profile_photo" class="form-label">Profile Photo</label>
                     <input type="file" name="profile_photo" id="profile_photo" class="form-control">
                     @error('profile_photo')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
-                </div>
+                </div> -->
 
                 <!-- Submit Button -->
                 <button type="submit" class="btn btn-primary btn_primary_color">Save Client</button>
             </form>
-
-
         </div>
     </div>
 </div>

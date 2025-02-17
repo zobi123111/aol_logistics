@@ -11,6 +11,7 @@ use App\Models\Role;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use App\Models\UserActivityLog;
+use App\Models\SupplierDocument;
 
 
 class SupplierController extends Controller
@@ -41,7 +42,7 @@ class SupplierController extends Controller
             'primary_contact_email' => 'required|email|max:255',
             'primary_contact_office_phone' => 'required|string|max:20',
             'primary_contact_mobile_phone' => 'required|string|max:20',
-            'user_role' => 'required',
+            // 'user_role' => 'required',
             'user_email' => 'required|email|max:255',
             'user_office_phone' => 'required|string|max:20',
             'user_mobile_phone' => 'required|string|max:20',
@@ -49,13 +50,13 @@ class SupplierController extends Controller
             'service_type' => 'required',
             'currency' => 'required',
             'preferred_language' => 'required',
-            'document_path' => 'required|array',
+            'document_path' => 'array',
             'document_path.*' => 'file|mimes:pdf,jpg,jpeg,png|max:2048',
             'scac_number' => 'required|string|max:50',
-            'scac_documents' => 'required|array',
+            'scac_documents' => 'array',
             'scac_documents.*' => 'file|mimes:pdf,jpg,jpeg,png|max:2048',
             'caat_number' => 'required|string|max:50',
-            'caat_documents' => 'required|array',
+            'caat_documents' => 'array',
             'caat_documents.*' => 'file|mimes:pdf,jpg,jpeg,png|max:2048',
         ];
     
@@ -88,7 +89,7 @@ class SupplierController extends Controller
              
             // Find role ID by matching role_slug with user_role
             // $role = Role::where('role_slug', $request->user_role)->first();
-            $role = Role::where('role_slug', 'master_client')->first();
+            $role = Role::where('role_slug', config('constants.roles.MASTERCLIENT'))->first();
 
             
             if (!$role) {
@@ -124,24 +125,29 @@ class SupplierController extends Controller
                 'service_type' => $request->service_type,
                 'currency' => $request->currency,
                 'preferred_language' => $request->preferred_language,
-                'documents' => $request->hasFile('document_path') 
-                ? collect($request->file('document_path'))->map(function ($file) {
-                    return $file->store('documents' , 'public');
-                })->toJson()
-                : null,
+                // 'documents' => $request->hasFile('document_path') 
+                // ? collect($request->file('document_path'))->map(function ($file) {
+                //     return $file->store('documents' , 'public');
+                // })->toJson()
+                // : null,
                 'scac_number' => $request->scac_number,
-                            'scac_documents' => $request->hasFile('scac_documents') 
-                ? collect($request->file('scac_documents'))->map(function ($file) {
-                    return $file->store('scac_documents', 'public');
-                })->toJson()
-                : null,
+                // 'scac_documents' => $request->hasFile('scac_documents') 
+                // ? collect($request->file('scac_documents'))->map(function ($file) {
+                //     return $file->store('scac_documents', 'public');
+                // })->toJson()
+                // : null,
                 'caat_number' => $request->caat_number,
-                'caat_documents' => $request->hasFile('caat_documents') 
-                ? collect($request->file('caat_documents'))->map(function ($file) {
-                    return $file->store('caat_documents', 'public');
-                })->toJson()
-                : null,
+                // 'caat_documents' => $request->hasFile('caat_documents') 
+                // ? collect($request->file('caat_documents'))->map(function ($file) {
+                //     return $file->store('caat_documents', 'public');
+                // })->toJson()
+                // : null,
             ]);
+
+            // Function to save documents
+            $this->storeDocuments($supplier->id, $request, 'document_path', 'documents');
+            $this->storeDocuments($supplier->id, $request, 'scac_documents', 'scac_documents');
+            $this->storeDocuments($supplier->id, $request, 'caat_documents', 'caat_documents');
         
             DB::commit();
             return redirect()->route('suppliers.index')
@@ -161,7 +167,7 @@ class SupplierController extends Controller
     {
         $en = $supplier_id;
         $de_supplier_id = decode_id($supplier_id);
-        $supplier = Supplier::find($de_supplier_id);
+        $supplier = Supplier::with('supplierdocuments')->find($de_supplier_id);
         if (!$supplier) {
             return redirect()->route('suppliers.index')->with('error', 'Supplier not found.');
         }
@@ -172,7 +178,8 @@ class SupplierController extends Controller
     {
         $en = $supplier_id;
         $de_supplier_id = decode_id($supplier_id);
-        $supplier = Supplier::with('user')->findOrFail($de_supplier_id);
+        $supplier = Supplier::with(['user', 'supplierdocuments'])->findOrFail($de_supplier_id);
+        // dd($supplier, $supplier->supplierdocuments);
         return view('suppliers.edit', compact('supplier')); 
     }
 
@@ -230,71 +237,73 @@ class SupplierController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
     
+        $this->storeDocuments($supplier->id, $request, 'document_path', 'documents');
+        $this->storeDocuments($supplier->id, $request, 'scac_documents', 'scac_documents');
+        $this->storeDocuments($supplier->id, $request, 'caat_documents', 'caat_documents');
+        // // Documents Handling
+        // $existingDocuments = json_decode($supplier->documents, true) ?? [];
+        // $existingScacDocuments = json_decode($supplier->scac_documents, true) ?? [];
+        // $existingCaatDocuments = json_decode($supplier->caat_documents, true) ?? [];
 
-        // Documents Handling
-        $existingDocuments = json_decode($supplier->documents, true) ?? [];
-        $existingScacDocuments = json_decode($supplier->scac_documents, true) ?? [];
-        $existingCaatDocuments = json_decode($supplier->caat_documents, true) ?? [];
+        // // Handle document deletion
+        // if ($request->has('delete_documents')) {
+        //     $remainingDocuments = array_diff($existingDocuments, $request->delete_documents);
+        //     if (empty($remainingDocuments) && !$request->hasFile('document_path')) {
+        //         return redirect()->back()->withErrors(['document_path' => 'At least one document must be uploaded.']);
+        //     }
+        //     foreach ($request->delete_documents as $deletedFile) {
+        //         Storage::disk('public')->delete($deletedFile);
+        //     }
+        //     $existingDocuments = $remainingDocuments;
+        // }
 
-        // Handle document deletion
-        if ($request->has('delete_documents')) {
-            $remainingDocuments = array_diff($existingDocuments, $request->delete_documents);
-            if (empty($remainingDocuments) && !$request->hasFile('document_path')) {
-                return redirect()->back()->withErrors(['document_path' => 'At least one document must be uploaded.']);
-            }
-            foreach ($request->delete_documents as $deletedFile) {
-                Storage::disk('public')->delete($deletedFile);
-            }
-            $existingDocuments = $remainingDocuments;
-        }
+        // // Handle scac_documents deletion
+        // if ($request->has('delete_scac_documents')) {
+        //     $remainingScacDocuments = array_diff($existingScacDocuments, $request->delete_scac_documents);
+        //     if (empty($remainingScacDocuments) && !$request->hasFile('scac_documents')) {
+        //         return redirect()->back()->withErrors(['scac_documents' => 'At least one SCAC document must be uploaded.']);
+        //     }
+        //     foreach ($request->delete_scac_documents as $deletedFile) {
+        //         Storage::disk('public')->delete($deletedFile);
+        //     }
+        //     $existingScacDocuments = $remainingScacDocuments;
+        // }
 
-        // Handle scac_documents deletion
-        if ($request->has('delete_scac_documents')) {
-            $remainingScacDocuments = array_diff($existingScacDocuments, $request->delete_scac_documents);
-            if (empty($remainingScacDocuments) && !$request->hasFile('scac_documents')) {
-                return redirect()->back()->withErrors(['scac_documents' => 'At least one SCAC document must be uploaded.']);
-            }
-            foreach ($request->delete_scac_documents as $deletedFile) {
-                Storage::disk('public')->delete($deletedFile);
-            }
-            $existingScacDocuments = $remainingScacDocuments;
-        }
+        // // Handle caat_documents deletion
+        // if ($request->has('delete_caat_documents')) {
+        //     $remainingCaatDocuments = array_diff($existingCaatDocuments, $request->delete_caat_documents);
+        //     if (empty($remainingCaatDocuments) && !$request->hasFile('caat_documents')) {
+        //         return redirect()->back()->withErrors(['caat_documents' => 'At least one CAAT document must be uploaded.']);
+        //     }
+        //     foreach ($request->delete_caat_documents as $deletedFile) {
+        //         Storage::disk('public')->delete($deletedFile);
+        //     }
+        //     $existingCaatDocuments = $remainingCaatDocuments;
+        // }
 
-        // Handle caat_documents deletion
-        if ($request->has('delete_caat_documents')) {
-            $remainingCaatDocuments = array_diff($existingCaatDocuments, $request->delete_caat_documents);
-            if (empty($remainingCaatDocuments) && !$request->hasFile('caat_documents')) {
-                return redirect()->back()->withErrors(['caat_documents' => 'At least one CAAT document must be uploaded.']);
-            }
-            foreach ($request->delete_caat_documents as $deletedFile) {
-                Storage::disk('public')->delete($deletedFile);
-            }
-            $existingCaatDocuments = $remainingCaatDocuments;
-        }
+        // // Handle document upload
+        // if ($request->hasFile('document_path')) {
+        //     $newDocuments = collect($request->file('document_path'))->map(function ($file) {
+        //         return $file->store('documents', 'public');
+        //     })->toArray();
+        //     $existingDocuments = array_merge($existingDocuments, $newDocuments);
+        // }
 
-        // Handle document upload
-        if ($request->hasFile('document_path')) {
-            $newDocuments = collect($request->file('document_path'))->map(function ($file) {
-                return $file->store('documents', 'public');
-            })->toArray();
-            $existingDocuments = array_merge($existingDocuments, $newDocuments);
-        }
+        // // Handle scac_document upload
+        // if ($request->hasFile('scac_documents')) {
+        //     $newScacDocuments = collect($request->file('scac_documents'))->map(function ($file) {
+        //         return $file->store('scac_documents', 'public');
+        //     })->toArray();
+        //     $existingScacDocuments = array_merge($existingScacDocuments, $newScacDocuments);
+        // }
 
-        // Handle scac_document upload
-        if ($request->hasFile('scac_documents')) {
-            $newScacDocuments = collect($request->file('scac_documents'))->map(function ($file) {
-                return $file->store('scac_documents', 'public');
-            })->toArray();
-            $existingScacDocuments = array_merge($existingScacDocuments, $newScacDocuments);
-        }
-
-        // Handle caat_document upload
-        if ($request->hasFile('caat_documents')) {
-            $newCaatDocuments = collect($request->file('caat_documents'))->map(function ($file) {
-                return $file->store('caat_documents', 'public');
-            })->toArray();
-            $existingCaatDocuments = array_merge($existingCaatDocuments, $newCaatDocuments);
-        }
+        // // Handle caat_document upload
+        // if ($request->hasFile('caat_documents')) {
+        //     $newCaatDocuments = collect($request->file('caat_documents'))->map(function ($file) {
+        //         return $file->store('caat_documents', 'public');
+        //     })->toArray();
+        //     $existingCaatDocuments = array_merge($existingCaatDocuments, $newCaatDocuments);
+        // }
 
         $user = $supplier->user; // Assuming Supplier has a `user` relation
 
@@ -314,7 +323,7 @@ class SupplierController extends Controller
 
             // Update the user's role
             // $role = Role::where('role_slug', $request->user_role)->first();
-            $role = Role::where('role_slug', 'master_client')->first();
+            $role = Role::where('role_slug', config('constants.roles.MASTERCLIENT'))->first();
 
             if ($role) {
                 $user->role = $role->id;
@@ -322,6 +331,21 @@ class SupplierController extends Controller
 
             // Save the user updates
             $user->save();
+        }
+
+         // Check for documents to delete
+        if ($request->has('delete_documents')) {
+            foreach ($request->delete_documents as $filePath) {
+                // Delete the file from storage
+                if (Storage::exists('public/' . $filePath)) {
+                    Storage::delete('public/' . $filePath);
+                }
+
+                // Delete the corresponding record from supplier_documents table
+                SupplierDocument::where('supplier_id', $id)
+                    ->where('file_path', $filePath)
+                    ->delete();
+            }
         }
         // Update Supplier
         $supplier->update([
@@ -345,9 +369,9 @@ class SupplierController extends Controller
             'preferred_language' => $request->preferred_language,
             'scac_number' => $request->scac_number,
             'caat_number' => $request->caat_number,
-            'documents' => json_encode($existingDocuments),
-            'scac_documents' => json_encode($existingScacDocuments),
-            'caat_documents' => json_encode($existingCaatDocuments),
+            // 'documents' => json_encode($existingDocuments),
+            // 'scac_documents' => json_encode($existingScacDocuments),
+            // 'caat_documents' => json_encode($existingCaatDocuments),
         ]);
 
         return redirect()->route('suppliers.edit', encode_id($supplier->id))
@@ -422,5 +446,20 @@ class SupplierController extends Controller
             'message' => 'Supplier status updated successfully',
             'is_active' => $supplier->is_active
         ]);
+    }
+
+
+    private function storeDocuments($supplierId, $request, $inputName, $documentType) {
+        if ($request->hasFile($inputName)) {
+            foreach ($request->file($inputName) as $file) {
+                $filePath = $file->store($documentType, 'public');
+    
+                SupplierDocument::create([
+                    'supplier_id' => $supplierId,
+                    'document_type' => $documentType,
+                    'file_path' => $filePath,
+                ]);
+            }
+        }
     }
 }

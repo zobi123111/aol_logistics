@@ -25,12 +25,10 @@
                 <th scope="col">Last Name</th>
                 <th scope="col">Email</th>
                 <th scope="col">Role</th>
-                @if(checkAllowedModule('client', 'client.toggleStatus')->isNotEmpty())
-                <th>Status</th>
-                @endif
-                @if(checkAllowedModule('client', 'client.edit')->isNotEmpty() || checkAllowedModule('client', 'client.show')->isNotEmpty()|| checkAllowedModule('client', 'client.delete')->isNotEmpty())
+                @if(checkAllowedModule('client', 'client.edit')->isNotEmpty() ||  checkAllowedModule('client', 'client.destroy')->isNotEmpty())
                 <th scope="col">Actions</th>
                 @endif
+                <!-- <th scope="col">Users</th> -->
             </tr>
         </thead>
         <tbody>
@@ -41,36 +39,31 @@
             @else
             @foreach($clients as $clientdata)
             <tr>
-                <td class="clientFname">{{ $clientdata->fname }}</td>
-                <td>{{ $clientdata->lname }}</td>
+                <td class="fname">{{ $clientdata->fname }}</td>
+                <td class="lname">{{ $clientdata->lname }}</td>
                 <td>{{ $clientdata->email }}</td>
-                <td>{{ $clientdata->roledata->role_name }}</td>
-                @if(checkAllowedModule('client', 'client.toggleStatus')->isNotEmpty())
-                <td>
-                    <div class="form-check form-switch">
-                        <input class="form-check-input status-toggle" type="checkbox"
-                            id="flexSwitchCheckChecked{{ encode_id($clientdata->id) }}" data-id="{{ encode_id($clientdata->id) }}"
-                            {{ $clientdata->is_active ? 'checked' : '' }}>
-                        <label class="form-check-label" for="flexSwitchCheckChecked{{ encode_id($clientdata->id) }}">
-                            {{ $clientdata->is_active ? 'Active' : 'Inactive' }}
-                        </label>
-                    </div>
-                </td>
-                @endif
+                <td>{{ $clientdata->roledata->role_name }}</td>                
                 @if(checkAllowedModule('client', 'client.edit')->isNotEmpty() || checkAllowedModule('client', 'client.show')->isNotEmpty()|| checkAllowedModule('client', 'client.destroy')->isNotEmpty())
+
                 <td>
                 @if(checkAllowedModule('client', 'client.edit')->isNotEmpty())
-                    <a href="#" class=""><i
-                            class="fa fa-edit edit-user-icon table_icon_style blue_icon_color"></i></a>
-                    @endif
-                    @if(checkAllowedModule('client', 'client.destroy')->isNotEmpty() )
-                    <i class="fa-solid fa-trash delete-icon table_icon_style blue_icon_color"
-                        data-clientdata-id="{{ encode_id($clientdata->id) }}"></i>
+
+                <a href="{{ route('client.edit', encode_id($clientdata->id)) }}" class=""><i
+                        class="fa fa-edit edit-user-icon table_icon_style blue_icon_color"></i></a>
+
+                        @endif
+                        @if(checkAllowedModule('client', 'client.destroy')->isNotEmpty() )
+
+                                        <i class="fa-solid fa-trash delete-icon table_icon_style blue_icon_color"
+                    data-clientdata-id="{{ encode_id($clientdata->id) }}"></i>
                     @endif
                 </td>
                 @endif
-
-                
+                <!-- <td>
+                    <a href="{{ route('client.index', encode_id($clientdata->id)) }}" class="btn btn-info">
+                        <i class="fa-solid fa-users"></i> Manage
+                    </a>
+                </td> -->
             </tr>
             @endforeach
             @endif
@@ -108,9 +101,10 @@ $(document).ready(function() {
     $(document).on('click', '.delete-icon', function(e) {
         e.preventDefault();
         var clientId = $(this).data('clientdata-id');
-        console.log("test");
+        var fname = $(this).closest('tr').find('.fname').text();
+        var lname = $(this).closest('tr').find('.lname').text();
         var modal_text =
-            `Are you sure you want to delete this client?`;
+            `Are you sure you want to delete this client "<strong><span id="append_name">${fname} ${lname}</span></strong>"?`;
 
         $('.delete_content').html(modal_text);
         $('#deleteClientFormId').attr('action', '/client/' + clientId);

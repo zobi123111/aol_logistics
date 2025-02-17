@@ -16,9 +16,13 @@ class UserController extends Controller
     public function users()
     {
         // $users = User::with('roledata')->where('id', '!=', auth()->id())->get();
-        $users = User::with('roledata')->get();
-
-        $roles = Role::with(['userType'])->get();
+        // $users = User::with('roledata')->whereNotNull('created_by')->get();
+        $users = User::with('roledata')
+        ->whereHas('roledata', function ($query) {
+            $query->where('user_type_id', 1); 
+        })
+        ->get();
+        $roles = Role::with(['userType'])->where('user_type_id', 1)->get();
         $userType = UserType::all();
         return view('User.allusers', compact('users', 'roles', 'userType'));
     }

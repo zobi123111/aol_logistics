@@ -163,7 +163,7 @@
                         <div id="role_name_error" class="text-danger error_e"></div>
                     </div> -->
 
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="user_type" class="form-label">User Type<span class="text-danger">*</span></label>
                         <select name="user_type" class="form-select" id="user_type">
                             <option value="">Select User Type</option>
@@ -171,11 +171,11 @@
                             <option value="{{ encode_id($type->id) }}">{{ $type->name }}</option>
                             @endforeach
                         </select>
-                    </div>
+                    </div> -->
 
                     <div class="form-group mt-3">
                         <label for="role" class="form-label">Role<span class="text-danger">*</span></label>
-                        <select name="role_name" class="form-select" id="role" disabled>
+                        <select name="role_name" class="form-select" id="role">
                             <option value="">Select Role</option>
                             @foreach($roles as $role)
                             <option value="{{ encode_id($role->id) }}"
@@ -240,7 +240,7 @@
                         <input type="email" name="email" class="form-control">
                         <div id="email_error" class="text-danger error_e"></div>
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="edit_user_type" class="form-label">User Type</label>
                         <select name="edit_user_type" class="form-select" id="edit_user_type">
                             <option value="">Select User Type</option>
@@ -248,7 +248,7 @@
                             <option value="{{ encode_id($type->id) }}">{{ $type->name }}</option>
                             @endforeach
                         </select>
-                    </div>
+                    </div> -->
 
                     <div class="form-group mt-3">
                         <label for="edit_role_name" class="form-label">Role<span class="text-danger">*</span></label>

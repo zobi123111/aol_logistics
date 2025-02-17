@@ -48,65 +48,103 @@
         <div class="card-body">
             <h5 class="card-title">Uploaded Documents</h5>
 
-            @if($supplier->documents && json_decode($supplier->documents))
-            <ul class="list-unstyled document-lists">
-                @foreach(json_decode($supplier->documents) as $document)
-                <li>
-                    @if (in_array(pathinfo($document, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'gif']))
-                    <!-- Show image for document if it's an image file -->
-                    <img src="{{ asset('storage/' . $document) }}" alt="{{ basename($document) }}"
-                        class="img-thumbnail mt-2" style="max-width: 150px; max-height: 150px;">
-                    @endif
-                    <a href="{{ asset('storage/' . $document) }}" target="_blank" class="text-decoration-none">
-                        <i class="fa fa-file-pdf-o"></i> View Document
-                    </a>
-                </li>
-                @endforeach
-            </ul>
-            @else
-            <p>No documents uploaded.</p>
+            @if($supplier->supplierdocuments && json_decode($supplier->supplierdocuments, true))
+                @php
+                    $documents = array_filter(json_decode($supplier->supplierdocuments, true), function ($document) {
+                        return isset($document['document_type']) && $document['document_type'] === 'documents';
+                    });
+                @endphp
+
+                @if (!empty($documents))
+                    <ul class="list-unstyled document-lists">
+                        @foreach($documents as $document)
+                            <li>
+                                @if (in_array(pathinfo($document['file_path'], PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'gif']))
+                                    <img src="{{ asset('storage/' . $document['file_path']) }}" 
+                                        alt="{{ basename($document['file_path']) }}"
+                                        class="img-thumbnail mt-2" 
+                                        style="max-width: 150px; max-height: 150px;">
+                                @endif
+                                <a href="{{ asset('storage/' . $document['file_path']) }}" 
+                                    target="_blank" class="text-decoration-none">
+                                    <i class="fa fa-file-pdf-o"></i> View Document
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                @else
+                    <p>No valid documents found.</p>
+                @endif
+            @else   
+                <p>No documents uploaded.</p>
             @endif
 
             <hr>
 
             <h5 class="card-title">SCAC Documents</h5>
-            @if($supplier->scac_documents && json_decode($supplier->scac_documents))
-            <ul class="list-unstyled document-lists">
-                @foreach(json_decode($supplier->scac_documents) as $document)
-                <li>
-                    @if (in_array(pathinfo($document, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'gif']))
-                    <img src="{{ asset('storage/' . $document) }}" alt="{{ basename($document) }}"
-                        class="img-thumbnail mt-2" style="max-width: 150px; max-height: 150px;">
-                    @endif
-                    <a href="{{ asset('storage/' . $document) }}" target="_blank" class="text-decoration-none">
-                        <i class="fa fa-file-pdf-o"></i> View Document
-                    </a>
-                </li>
-                @endforeach
-            </ul>
-            @else
-            <p>No SCAC documents uploaded.</p>
+            @if($supplier->supplierdocuments && json_decode($supplier->supplierdocuments, true))
+                @php
+                    $documents = array_filter(json_decode($supplier->supplierdocuments, true), function ($document) {
+                        return isset($document['document_type']) && $document['document_type'] === 'scac_documents';
+                    });
+                @endphp
+
+                @if (!empty($documents))
+                    <ul class="list-unstyled document-lists">
+                        @foreach($documents as $document)
+                            <li>
+                                @if (in_array(pathinfo($document['file_path'], PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'gif']))
+                                    <img src="{{ asset('storage/' . $document['file_path']) }}" 
+                                        alt="{{ basename($document['file_path']) }}"
+                                        class="img-thumbnail mt-2" 
+                                        style="max-width: 150px; max-height: 150px;">
+                                @endif
+                                <a href="{{ asset('storage/' . $document['file_path']) }}" 
+                                    target="_blank" class="text-decoration-none">
+                                    <i class="fa fa-file-pdf-o"></i> View Document
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                @else
+                    <p>No valid documents found.</p>
+                @endif
+            @else   
+                <p>No documents uploaded.</p>
             @endif
 
             <hr>
 
             <h5 class="card-title">CAAT Documents</h5>
-            @if($supplier->caat_documents && json_decode($supplier->caat_documents))
-            <ul class="list-unstyled document-lists">
-                @foreach(json_decode($supplier->caat_documents) as $document)
-                <li>
-                    @if (in_array(pathinfo($document, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'gif']))
-                    <img src="{{ asset('storage/' . $document) }}" alt="{{ basename($document) }}"
-                        class="img-thumbnail mt-2" style="max-width: 150px; max-height: 150px;">
-                    @endif
-                    <a href="{{ asset('storage/' . $document) }}" target="_blank" class="text-decoration-none">
-                        <i class="fa fa-file-pdf-o"></i> View Document
-                    </a>
-                </li>
-                @endforeach
-            </ul>
-            @else
-            <p>No CAAT documents uploaded.</p>
+            @if($supplier->supplierdocuments && json_decode($supplier->supplierdocuments, true))
+                @php
+                    $documents = array_filter(json_decode($supplier->supplierdocuments, true), function ($document) {
+                        return isset($document['document_type']) && $document['document_type'] === 'caat_documents';
+                    });
+                @endphp
+
+                @if (!empty($documents))
+                    <ul class="list-unstyled document-lists">
+                        @foreach($documents as $document)
+                            <li>
+                                @if (in_array(pathinfo($document['file_path'], PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'gif']))
+                                    <img src="{{ asset('storage/' . $document['file_path']) }}" 
+                                        alt="{{ basename($document['file_path']) }}"
+                                        class="img-thumbnail mt-2" 
+                                        style="max-width: 150px; max-height: 150px;">
+                                @endif
+                                <a href="{{ asset('storage/' . $document['file_path']) }}" 
+                                    target="_blank" class="text-decoration-none">
+                                    <i class="fa fa-file-pdf-o"></i> View Document
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                @else
+                    <p>No valid documents found.</p>
+                @endif
+            @else   
+                <p>No documents uploaded.</p>
             @endif
         </div>
     </div>

@@ -19,7 +19,7 @@ class CheckSupplier
     {
         $user = Auth::user();
         // Check if the user is authenticated and has a supplier_id
-        if (Auth::check() && Auth::user()->roledata->role_slug == 'master_client' || ($user->is_owner || $user->is_dev)) {
+        if (Auth::check() && Auth::user()->roledata->role_slug == config('constants.roles.MASTERCLIENT') || ($user->is_owner || $user->is_dev)) {
             return $next($request); 
         }
 

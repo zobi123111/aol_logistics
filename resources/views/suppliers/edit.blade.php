@@ -130,18 +130,6 @@
                     @enderror
                 </div>
 
-                <!-- <div class="mb-3">
-                    <label class="form-label">User Role</label>
-                    <select name="user_role" class="form-select">
-                        <option value="master_client" {{ old('user_role', $supplier->user_role) == 'master_client' ? 'selected' : '' }}>Master Client</option>
-                        <option value="customer_service_executive" {{ old('user_role', $supplier->user_role) == 'customer_service_executive' ? 'selected' : '' }}>Customer Service Executive</option>
-                        <option value="accounting_user" {{ old('user_role', $supplier->user_role) == 'accounting_user' ? 'selected' : '' }}>Accounting User</option>
-                    </select>
-                    @error('user_role')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div> -->
-
                 <div class="mb-3">
                     <label class="form-label">User Email</label>
                     <input type="email" name="user_email" class="form-control" value="{{ old('user_email', $supplier->user_email) }}">
@@ -166,8 +154,6 @@
                     @enderror
                 </div>
 
-
-            
                 <div class="mb-3">
                     <label class="form-label">Password</label>
                     <input type="password" name="password" class="form-control" value="{{ old('password') }}">
@@ -249,12 +235,30 @@
                 <div class="mb-3">
                     <label class="form-label">Uploaded Documents</label>
                     <ul>
-                        @foreach(json_decode($supplier->documents, true) ?? [] as $index => $document)
-                            <li>
-                                <a href="{{ asset('storage/' . $document) }}" target="_blank">View Document {{ $index + 1 }}</a>
-                                <input type="checkbox" name="delete_documents[]" value="{{ $document }}"> Delete
-                            </li>
-                        @endforeach
+                    @if($supplier->supplierdocuments && $decodedDocuments = json_decode($supplier->supplierdocuments, true))
+                        @php
+                            $filteredDocuments = collect($decodedDocuments)->filter(function($document) {
+                                return isset($document['document_type']) && $document['document_type'] === 'documents';
+                            });
+                        @endphp
+
+                        @if($filteredDocuments->isNotEmpty())
+                            <ul>
+                                @foreach($filteredDocuments as $index => $document)
+                                    <li>
+                                        <a href="{{ asset('storage/' . $document['file_path']) }}" target="_blank">View Document</a>
+                                        <label>
+                                        <input type="checkbox" name="delete_documents[]" value="{{ $document['file_path'] }}"> Delete
+                                        </label>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @else
+                            <p>No documents found with type 'documents'.</p>
+                        @endif
+                    @else
+                        <p>No documents available.</p>
+                    @endif
                     </ul>
                 </div>
                 <div class="mb-3">
@@ -276,13 +280,32 @@
           
                 <div class="mb-3">
                     <label class="form-label">Uploaded SCAC Documents</label>
+
                     <ul>
-                        @foreach(json_decode($supplier->scac_documents, true) ?? [] as $index => $document)
-                            <li>
-                                <a href="{{ asset('storage/' . $document) }}" target="_blank">View SCAC Document {{ $index + 1 }}</a>
-                                <input type="checkbox" name="delete_scac_documents[]" value="{{ $document }}"> Delete
-                            </li>
-                        @endforeach
+                    @if($supplier->supplierdocuments && $decodedDocuments = json_decode($supplier->supplierdocuments, true))
+                        @php
+                            $filteredDocuments = collect($decodedDocuments)->filter(function($document) {
+                                return isset($document['document_type']) && $document['document_type'] === 'scac_documents';
+                            });
+                        @endphp
+
+                        @if($filteredDocuments->isNotEmpty())
+                            <ul>
+                                @foreach($filteredDocuments as $index => $document)
+                                    <li>
+                                        <a href="{{ asset('storage/' . $document['file_path']) }}" target="_blank">View Document</a>
+                                        <label>
+                                        <input type="checkbox" name="delete_documents[]" value="{{ $document['file_path'] }}"> Delete
+                                        </label>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @else
+                            <p>No documents found.</p>
+                        @endif
+                    @else
+                        <p>No documents available.</p>
+                    @endif
                     </ul>
                 </div>
                 <div class="mb-3">
@@ -301,14 +324,31 @@
 
                 <div class="mb-3">
                     <label class="form-label">Uploaded CAAT Documents</label>
-                    <ul>
-                        @foreach(json_decode($supplier->caat_documents, true) ?? [] as $index => $document)
-                            <li>
-                                <a href="{{ asset('storage/' . $document) }}" target="_blank">View CAAT Document {{ $index + 1 }}</a>
-                                <input type="checkbox" name="delete_caat_documents[]" value="{{ $document }}"> Delete
-                            </li>
-                        @endforeach
-                    </ul>
+
+                    @if($supplier->supplierdocuments && $decodedDocuments = json_decode($supplier->supplierdocuments, true))
+                        @php
+                            $filteredDocuments = collect($decodedDocuments)->filter(function($document) {
+                                return isset($document['document_type']) && $document['document_type'] === 'caat_documents';
+                            });
+                        @endphp
+
+                        @if($filteredDocuments->isNotEmpty())
+                            <ul>
+                                @foreach($filteredDocuments as $index => $document)
+                                    <li>
+                                        <a href="{{ asset('storage/' . $document['file_path']) }}" target="_blank">View Document</a>
+                                        <label>
+                                        <input type="checkbox" name="delete_documents[]" value="{{ $document['file_path'] }}"> Delete
+                                        </label>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @else
+                            <p>No documents found.</p>
+                        @endif
+                    @else
+                        <p>No documents available.</p>
+                    @endif
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Upload New CAAT Documents</label>

@@ -47,7 +47,7 @@
                 @if(checkAllowedModule('suppliers', 'suppliers.toggleStatus')->isNotEmpty())
                 <th>Status</th>
                 @endif
-                @if(checkAllowedModule('suppliers', 'suppliers.edit')->isNotEmpty() || checkAllowedModule('suppliers', 'suppliers.show')->isNotEmpty()|| checkAllowedModule('suppliers', 'suppliers.delete')->isNotEmpty())
+                @if(checkAllowedModule('suppliers', 'suppliers.edit')->isNotEmpty() || checkAllowedModule('suppliers', 'suppliers.show')->isNotEmpty()|| checkAllowedModule('suppliers', 'suppliers.destroy')->isNotEmpty())
                 <th scope="col">Actions</th>
                 @endif
                 <th scope="col">User</th>
@@ -84,25 +84,6 @@
                 <td>{{ $supplier->service_type }}</td> -->
                 <!-- <td>{{ $supplier->currency }}</td>
                 <td>{{ $supplier->preferred_language }}</td> -->
-                <!-- <td> -->
-                <!-- @foreach(json_decode($supplier->documents) as $document) -->
-                <!-- <a href="{{ asset('storage/' . $document) }}" target="_blank">View</a><br> -->
-                <!-- <img src="{{ asset('storage/' . $document) }}" alt="{{ basename($document) }}" style="max-width: 150px; max-height: 150px; margin-bottom: 10px;"> -->
-
-                <!-- @endforeach -->
-                <!-- </td> -->
-                <!-- <td>{{ $supplier->scac_number }}</td> -->
-                <!-- <td>
-                    @foreach(json_decode($supplier->scac_documents) as $document)
-                    <a href="{{ asset('storage/' . $document) }}" target="_blank">View</a><br>
-                    @endforeach
-                </td> -->
-                <!-- <td>{{ $supplier->caat_number }}</td>
-                <td>
-                    @foreach(json_decode($supplier->caat_documents) as $document)
-                    <a href="{{ asset('storage/' . $document) }}" target="_blank">View</a><br>
-                    @endforeach
-                </td> -->
                 @if(checkAllowedModule('suppliers', 'suppliers.toggleStatus')->isNotEmpty())
                 <td>
                         <!-- Bootstrap switch to toggle status -->
