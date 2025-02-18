@@ -34,7 +34,8 @@ class User extends Authenticatable
         'last_login_at',
         'is_client',
         'supplier_id',
-        'is_supplier'
+        'is_supplier',
+        'client_id'
     ];
 
     /**

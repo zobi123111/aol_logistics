@@ -31,7 +31,7 @@
         <div class="card-body">
         <form action="{{ route('supplier_users.store', $supplier->id) }}" method="POST">
         @csrf
-        <div class="form-group mb-3">
+        <div class="form-group mb-3 mt-3">
             <label for="firstname" class="form-label">First Name<span class="text-danger">*</span></label>
             <input type="text" name="firstname" class="form-control" value="{{ old('firstname') }}">
             @error('firstname')

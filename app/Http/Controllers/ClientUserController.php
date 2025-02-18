@@ -2,35 +2,36 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Role;
 use Illuminate\Support\Facades\Session;
 
-class ClientController extends Controller
+class ClientUserController extends Controller
 {
-    public function index()
+    public function index($id)
     {
-        $clients = User::with('roledata')->where('is_client', 1)->get(); 
-        return view('client.index', compact('clients'));
+        $de_id = decode_id($id);
+        $clients = User::with('roledata')->where('client_id', $de_id)->get(); 
+        return view('client_users.index', compact('clients', 'id'));
     }
 
-    public function create()
+    public function create($id)
     {
-        return view('client.create');
+        $client_id = decode_id($id);
+        return view('client_users.create', compact('client_id'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request, $id)
     {
         $clientdata = [
             'client_Fname' => 'required|string|max:255',
             'client_Lname' => 'required|string|max:255',
             'email' => 'required|string|max:255',
             'password' => 'required|string|min:6|confirmed',
-            'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ];
         
       
@@ -41,19 +42,12 @@ class ClientController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        // $profilePhotoPath = null;
-        // if ($request->hasFile('profile_photo')) {
-        //     $file = $request->file('profile_photo');
-        //     $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension(); 
-        //     $profilePhotoPath = $file->storeAs('profile_photos', $filename, 'public'); 
-        // }
-
         DB::beginTransaction();
         try {
             if (User::where('email', $request->email)->exists()) {
                 return redirect()->back()->withInput()->withErrors(['email' => 'The email is already registered.']);
             }
-            $role = Role::where('role_slug', config('constants.roles.CLIENTMASTERCLIENT'))->first();
+            $role = Role::where('role_slug', config('constants.roles.CLIENT_SERVICE_EXECUTIVE'))->first();
         
             $createClient = User::create([
                 'fname' => $request->client_Fname,
@@ -62,12 +56,11 @@ class ClientController extends Controller
                 'created_by' => auth()->id(),
                 'password' => Hash::make($request->password),
                 'role' => $role->id,
-                // 'profile_photo' => $profilePhotoPath,
-                'is_client' => 1
+                'client_id' => $id
             ]);
         
             DB::commit();
-            return redirect()->route('client.index')
+            return redirect()->route('client_users.index', encode_id($id))
             ->with('message', 'Client created successfully!');
 
         } catch (\Exception $e) {
@@ -75,10 +68,10 @@ class ClientController extends Controller
             ->withInput()
             ->withErrors(['message' => 'Client creation failed! Please try again later.']);
                 }
-        return redirect()->route('client.index')->with('success', 'Client created successfully!');
+        return redirect()->route('client_users.index', encode_id($id))->with('success', 'Client created successfully!');
     }
 
-    public function destroy($clientId)
+    public function destroy($clientId, $master_client)
     {
         $de_clientId = decode_id($clientId);
         $client_data = User::find($de_clientId);
@@ -87,31 +80,33 @@ class ClientController extends Controller
         }
         $client_data->delete();
         Session::flash('message', 'Client deleted successfully.');
-        return redirect()->route('client.index')->with('success', 'Client deleted successfully.');
+        return redirect()->route('client_users.index',$master_client )->with('success', 'Client deleted successfully.');
     }
 
-    public function edit($id)
+    public function edit($id, $master_client)
     {
         $en = $id;
         $de_id = decode_id($id);
+        $en = $master_client;
+        $master_client = decode_id($master_client);
         $client = User::findOrFail($de_id);
-        // dd($supplier, $supplier->supplierdocuments);
-        return view('client.edit', compact('client')); 
+        return view('client_users.edit', compact('client', 'master_client')); 
     }
 
      // Update user information
-     public function update(Request $request, $clientId)
+     public function update(Request $request, $clientId, $master_id)
      {
 
         $de_clientId = decode_id($clientId);
          $user = User::findOrFail($de_clientId);
-
+     
+        
          $validator = Validator::make($request->all(), [
             'client_Fname' => 'required|string|max:255',
             'client_Lname' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
          ]);
-     
+       
          // Check if validation fails
          if ($validator->fails()) {
              return redirect()->back()
@@ -119,14 +114,13 @@ class ClientController extends Controller
                  ->withInput();
          }
      
+ 
          $user->fname = $request->client_Fname;
-         $user->lname = $request->client_Lname; 
+         $user->lname = $request->client_Lname;
          $user->email = $request->email;
          $user->save();
-         return redirect()->route('client.index', ['supplierId' => $clientId])
+         return redirect()->route('client_users.index',  $master_id)
              ->with('message', 'Client updated successfully.');
      }
 
-
-     
 }

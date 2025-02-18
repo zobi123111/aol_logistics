@@ -22,7 +22,7 @@
         @method('PUT')
 
         <!-- Origin -->
-        <div class="form-group mb-3">
+        <div class="form-group mb-3 mt-3">
             <label for="origin" class="form-label">Origin <span class="text-danger">*</span></label>
             <select name="origin" class="form-control">
                 <option value="">Select Origin</option>

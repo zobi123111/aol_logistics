@@ -1,10 +1,10 @@
-@section('title', 'Supplier User')
-@section('sub-title', 'Supplier User')
+@section('title', 'Supplier Equipment')
+@section('sub-title', 'Supplier Equipment')
 @extends('layout.app')
 @section('content')
 <div class="main_cont_outer">
     <div class="create_btn">
-        <a href="{{ route('supplier_users.index',  encode_id($supplier->id)) }}" class="btn btn-primary create-button btn_primary_color" id="createUser"><i class="bi bi-arrow-left-circle-fill"> </i>back</a>
+        <a href="{{ route('supplier_units.index',  encode_id($supplier->id)) }}" class="btn btn-primary create-button btn_primary_color" id="createUser"><i class="bi bi-arrow-left-circle-fill"> </i>back</a>
     </div>
 <div id="successMessagea" class="alert alert-success" style="display: none;" role="alert">
     <i class="bi bi-check-circle me-1"></i>
@@ -21,7 +21,7 @@
         @csrf
         @method('PUT')
 
-        <div class="form-group mb-3">
+        <div class="form-group mb-3 mt-3">
             <label for="unit_type" class="form-label">Unit Type<span class="text-danger">*</span></label>
             <select name="unit_type" class="form-control" >
                 <option value="">Select Unit Type</option>
@@ -35,7 +35,7 @@
             @enderror  
         </div>
 
-        <div class="form-group mb-3">
+        <div class="form-group mb-3 mt-3">
             <label for="unit_number" class="form-label">Unit Number<span class="text-danger">*</span></label>
             <input type="text" name="unit_number" class="form-control" value="{{ old('unit_number', $unit->unit_number) }}" >
             @error('unit_number')

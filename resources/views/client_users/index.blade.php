@@ -1,13 +1,13 @@
-@section('title', 'Client')
-@section('sub-title', 'Client')
+@section('title', 'Client Customer Service Executve')
+@section('sub-title', 'Client Customer Service Executve')
 @extends('layout.app')
 @section('content')
 <div class="main_cont_outer">
-    @if(checkAllowedModule('client', 'client.create')->isNotEmpty() )
     <div class="create_btn">
-        <a href="{{ route('client.create') }}" class="btn btn-primary create-button btn_primary_color" id="createClient">Create Client</a>
+    <a href="{{ route('client.index') }}" class="btn btn-primary create-button btn_primary_color"
+    id="createClient"><i class="bi bi-arrow-left-circle-fill"></i> back</a>
+        <a href="{{ route('client_users.create', $id ) }}" class="btn btn-primary create-button btn_primary_color" id="createClient">Create</a>
     </div>
-    @endif
     <div id="successMessagea" class="alert alert-success" style="display: none;" role="alert">
         <i class="bi bi-check-circle me-1"></i>
     </div>
@@ -17,7 +17,6 @@
         {{ session()->get('message') }}
     </div>
     @endif
-    @if(checkAllowedModule('client', 'client.index')->isNotEmpty() )
     <table class="table table-striped" id="client">
         <thead>
             <tr>
@@ -25,13 +24,8 @@
                 <th scope="col">Last Name</th>
                 <th scope="col">Email</th>
                 <th scope="col">Role</th>
-                @if(checkAllowedModule('client', 'client.toggleStatus')->isNotEmpty() )
                 <th scope="col">Status</th>
-                @endif
-                @if(checkAllowedModule('client', 'client.edit')->isNotEmpty() ||  checkAllowedModule('client', 'client.destroy')->isNotEmpty())
                 <th scope="col">Actions</th>
-                @endif
-                <th scope="col">Users</th>
             </tr>
         </thead>
         <tbody>
@@ -46,7 +40,6 @@
                 <td class="lname">{{ $clientdata->lname }}</td>
                 <td>{{ $clientdata->email }}</td>
                 <td>{{ $clientdata->roledata->role_name }}</td>   
-                @if(checkAllowedModule('client', 'client.toggleStatus')->isNotEmpty() )
                 <td>
                     <div class="form-check form-switch">
                         <input class="form-check-input status-toggle" type="checkbox"
@@ -57,33 +50,20 @@
                         </label>
                     </div>
                 </td>   
-                @endif          
-                @if(checkAllowedModule('client', 'client.edit')->isNotEmpty() || checkAllowedModule('client', 'client.show')->isNotEmpty()|| checkAllowedModule('client', 'client.destroy')->isNotEmpty())
-                <td>
-                @if(checkAllowedModule('client', 'client.edit')->isNotEmpty())
-
-                <a href="{{ route('client.edit', encode_id($clientdata->id)) }}" class=""><i
+                 <td>
+                <a href="{{ route('client_users.edit', [encode_id($clientdata->id), $id]) }}" class=""><i
                         class="fa fa-edit edit-user-icon table_icon_style blue_icon_color"></i></a>
 
-                        @endif
-                        @if(checkAllowedModule('client', 'client.destroy')->isNotEmpty() )
 
-                                        <i class="fa-solid fa-trash delete-icon table_icon_style blue_icon_color"
-                    data-clientdata-id="{{ encode_id($clientdata->id) }}"></i>
-                    @endif
-                </td>
-                @endif
-                <td>
-                    <a href="{{ route('client_users.index', encode_id($clientdata->id)) }}" class="btn btn-primary create-button btn_primary_color">
-                        <i class="fa-solid fa-users"></i> Manage
-                    </a>
+                    <i class="fa-solid fa-trash delete-icon table_icon_style blue_icon_color"
+                    data-clientdata-id="{{ encode_id($clientdata->id) }}" data-clientmaster-id="{{ $id }}"></i>
                 </td>
             </tr>
             @endforeach
             @endif
         </tbody>
     </table>
-    @endif
+
     <form method="POST" id="deleteClientFormId">
         @csrf
         @method('DELETE')
@@ -115,13 +95,15 @@ $(document).ready(function() {
     $(document).on('click', '.delete-icon', function(e) {
         e.preventDefault();
         var clientId = $(this).data('clientdata-id');
+        var clientmaster = $(this).data('clientmaster-id');
         var fname = $(this).closest('tr').find('.fname').text();
         var lname = $(this).closest('tr').find('.lname').text();
         var modal_text =
             `Are you sure you want to delete this client "<strong><span id="append_name">${fname} ${lname}</span></strong>"?`;
 
         $('.delete_content').html(modal_text);
-        $('#deleteClientFormId').attr('action', '/client/' + clientId);
+        $('#deleteClientFormId').attr('action', `/clients/${clientId}/users/${clientmaster}`);
+
         $('#deleteClientForm').modal('show');
     });
 });

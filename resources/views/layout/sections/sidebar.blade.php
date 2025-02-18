@@ -35,6 +35,15 @@
         </a>
     </li>
 @endif
+@if(Auth::check() && Auth::user()->roledata->role_slug == config('constants.roles.CLIENTMASTERCLIENT'))
+    <li class="nav-item">
+        <a class="nav-link {{ Request::routeIs('client_users.index') ? 'active' : '' }}" href="{{ route('client_users.index', encode_id(Auth::user()->id)) }}">
+        <i class="bi bi-people"></i> 
+            <span>Client Users</span>
+        </a>
+    </li>
+@endif
+
 </ul>
 
   </aside><!-- End Sidebar-->

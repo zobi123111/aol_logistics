@@ -18,15 +18,6 @@
     </div>
     @endif
 
-    @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
     <div class="card card-container">
         <div class="card-body">
             <form action="{{ route('suppliers.update', $supplier->id) }}" method="POST" enctype="multipart/form-data">
@@ -34,8 +25,8 @@
                 @method('PUT')
 
                 <!-- Company Name -->
-                <div class="mb-3">
-                    <label class="form-label">Full and Legal Name of the Company</label>
+                <div class="mb-3 mt-3">
+                    <label class="form-label">Full and Legal Name of the Company</label><span class="text-danger">*</span>
                     <input type="text" name="company_name" class="form-control" value="{{ old('company_name', $supplier->company_name) }}">
                     @error('company_name')
                     <div class="text-danger">{{ $message }}</div>
@@ -44,7 +35,7 @@
 
                 <!-- DBA -->
                 <div class="mb-3">
-                    <label class="form-label">DBA (Nickname)</label>
+                    <label class="form-label">DBA (Nickname)</label><span class="text-danger">*</span>
                     <input type="text" name="dba" class="form-control" value="{{ old('dba', $supplier->dba) }}">
                     @error('dba')
                     <div class="text-danger">{{ $message }}</div>
@@ -53,7 +44,7 @@
 
                 <!-- Address Fields -->
                 <div class="mb-3">
-                    <label class="form-label">Street Address</label>
+                    <label class="form-label">Street Address</label><span class="text-danger">*</span>
                     <input type="text" name="street_address" class="form-control" value="{{ old('street_address', $supplier->street_address) }}">
                     @error('street_address')
                     <div class="text-danger">{{ $message }}</div>
@@ -62,21 +53,21 @@
 
                 <div class="row">
                     <div class="col-md-4 mb-3">
-                        <label class="form-label">City</label>
+                        <label class="form-label">City</label><span class="text-danger">*</span>
                         <input type="text" name="city" class="form-control" value="{{ old('city', $supplier->city) }}">
                         @error('city')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label class="form-label">State</label>
+                        <label class="form-label">State</label><span class="text-danger">*</span>
                         <input type="text" name="state" class="form-control" value="{{ old('state', $supplier->state) }}">
                         @error('state')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label class="form-label">Zip Code</label>
+                        <label class="form-label">Zip Code</label><span class="text-danger">*</span>
                         <input type="text" name="zip_code" class="form-control" value="{{ old('zip_code', $supplier->zip_code) }}">
                         @error('zip_code')
                     <div class="text-danger">{{ $message }}</div>
@@ -85,7 +76,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Country</label>
+                    <label class="form-label">Country</label><span class="text-danger">*</span>
                     <select name="country" class="form-select">
                         <option value="USA" {{ old('country', $supplier->country) == 'USA' ? 'selected' : '' }}>United States</option>
                         <option value="Mexico" {{ old('country', $supplier->country) == 'Mexico' ? 'selected' : '' }}>Mexico</option>
@@ -99,7 +90,7 @@
 
                 <!-- Contact Details -->
                 <div class="mb-3">
-                    <label class="form-label">Office Phone</label>
+                    <label class="form-label">Office Phone</label><span class="text-danger">*</span>
                     <input type="text" name="office_phone" class="form-control" value="{{ old('office_phone', $supplier->office_phone) }}">
                     @error('office_phone')
                     <div class="text-danger">{{ $message }}</div>
@@ -107,7 +98,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Primary Contact Email</label>
+                    <label class="form-label">Primary Contact Email</label><span class="text-danger">*</span>
                     <input type="email" name="primary_contact_email" class="form-control" value="{{ old('primary_contact_email', $supplier->primary_contact_email) }}">
                     @error('primary_contact_email')
                     <div class="text-danger">{{ $message }}</div>
@@ -115,7 +106,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Primary Contact Office Phone</label>
+                    <label class="form-label">Primary Contact Office Phone</label><span class="text-danger">*</span>
                     <input type="text" name="primary_contact_office_phone" class="form-control" value="{{ old('primary_contact_office_phone', $supplier->primary_contact_office_phone) }}">
                     @error('primary_contact_office_phone')
                     <div class="text-danger">{{ $message }}</div>
@@ -123,7 +114,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Primary Contact Mobile Phone</label>
+                    <label class="form-label">Primary Contact Mobile Phone</label><span class="text-danger">*</span>
                     <input type="text" name="primary_contact_mobile_phone" class="form-control" value="{{ old('primary_contact_mobile_phone', $supplier->primary_contact_mobile_phone) }}">
                     @error('primary_contact_mobile_phone')
                     <div class="text-danger">{{ $message }}</div>
@@ -131,7 +122,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">User Email</label>
+                    <label class="form-label">User Email <small>(Used for login)</small></label><span class="text-danger">*</span>
                     <input type="email" name="user_email" class="form-control" value="{{ old('user_email', $supplier->user_email) }}">
                     @error('user_email')
                     <div class="text-danger">{{ $message }}</div>
@@ -139,7 +130,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">User Office Phone</label>
+                    <label class="form-label">User Office Phone</label><span class="text-danger">*</span>
                     <input type="text" name="user_office_phone" class="form-control" value="{{ old('user_office_phone', $supplier->user_office_phone) }}">
                     @error('user_office_phone')
                     <div class="text-danger">{{ $message }}</div>
@@ -147,7 +138,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">User Mobile Phone</label>
+                    <label class="form-label">User Mobile Phone</label><span class="text-danger">*</span>
                     <input type="text" name="user_mobile_phone" class="form-control" value="{{ old('user_mobile_phone', $supplier->user_mobile_phone) }}">
                     @error('user_mobile_phone')
                     <div class="text-danger">{{ $message }}</div>
@@ -155,7 +146,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Password</label>
+                    <label class="form-label">Password</label><span class="text-danger">*</span>
                     <input type="password" name="password" class="form-control" value="{{ old('password') }}">
                     @error('password')
                     <div class="text-danger">{{ $message }}</div>
@@ -164,7 +155,7 @@
 
              
                 <div class="mb-3">
-                    <label class="form-label">Confirm Password</label>
+                    <label class="form-label">Confirm Password</label><span class="text-danger">*</span>
                     <input type="password" name="password_confirmation" class="form-control"
                         value="{{ old('password_confirmation') }}">
                     @error('password_confirmation')
@@ -174,7 +165,7 @@
 
 
                 <div class="mb-3">
-                    <label class="form-label">Service Type</label>
+                    <label class="form-label">Service Type</label><span class="text-danger">*</span>
                     <select name="service_type" class="form-select">
                         <option value="Land Freight" {{ old('service_type', $supplier->service_type) == 'Land Freight' ? 'selected' : '' }}>Land Freight</option>
                         <option value="Air Freight" {{ old('service_type', $supplier->service_type) == 'Air Freight' ? 'selected' : '' }}>Air Freight</option>
@@ -186,7 +177,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Will the supplier invoice in</label>
+                    <label class="form-label">Will the supplier invoice in</label><span class="text-danger">*</span>
                     <div>
                         <input type="radio" name="currency" value="USD" id="usd"
                             {{ old('currency', $supplier->currency) == 'USD' ? 'checked' : '' }}> <label for="usd">USD</label>
@@ -202,7 +193,7 @@
 
             
                 <div class="mb-3">
-                    <label class="form-label">Preferred Language</label>
+                    <label class="form-label">Preferred Language</label><span class="text-danger">*</span>
                     <select name="preferred_language" class="form-select">
                         <option value="english" {{ old('preferred_language', $supplier->preferred_language) == 'english' ? 'selected' : '' }}>English</option>
                         <option value="spanish" {{ old('preferred_language', $supplier->preferred_language) == 'spanish' ? 'selected' : '' }}>Spanish</option>
@@ -215,7 +206,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">SCAC Number</label>
+                    <label class="form-label">SCAC Number</label><span class="text-danger">*</span>
                     <input type="text" name="scac_number" class="form-control" value="{{ old('scac_number', $supplier->scac_number) }}">
                     @error('scac_number')
                     <div class="text-danger">{{ $message }}</div>
@@ -225,7 +216,7 @@
               
 
                 <div class="mb-3">
-                    <label class="form-label">CAAT Number</label>
+                    <label class="form-label">CAAT Number</label><span class="text-danger">*</span>
                     <input type="text" name="caat_number" class="form-control" value="{{ old('caat_number', $supplier->caat_number) }}">
                     @error('caat_number')
                     <div class="text-danger">{{ $message }}</div>

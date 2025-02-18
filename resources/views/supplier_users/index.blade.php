@@ -4,6 +4,8 @@
 @section('content')
 <div class="main_cont_outer">
     <div class="create_btn">
+    <a href="{{ route('suppliers.index') }}" class="btn btn-primary create-button btn_primary_color"
+    id="createClient"><i class="bi bi-arrow-left-circle-fill"></i> back</a>
         <a href="{{ route('supplier_users.create', encode_id($supplier->id)) }}" class="btn btn-primary create-button btn_primary_color"
             id="createrole">Create Supplier User</a>
     </div>

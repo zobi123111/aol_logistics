@@ -21,7 +21,7 @@
         @csrf
         @method('PUT')
 
-        <div class="form-group mb-3">
+        <div class="form-group mb-3 mt-3">
             <label for="firstname" class="form-label">First Name<span class="text-danger">*</span></label>
             <input type="text" name="firstname" class="form-control" value="{{ old('firstname', $user->fname) }}">
             @error('firstname') <div class="text-danger">{{ $message }}</div> @enderror

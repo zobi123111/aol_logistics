@@ -12,6 +12,7 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\SupplierUserController;
 use App\Http\Controllers\SupplierUnitController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\ClientUserController;
 
 
 /*
@@ -99,5 +100,15 @@ Route::middleware(['auth.user', 'otp.verified', 'check.supplier'])->group(functi
         Route::put('/{serviceId}', [ServiceController::class, 'update'])->name('services.update');
         Route::delete('/{serviceId}', [ServiceController::class, 'destroy'])->name('services.destroy');
         Route::post('/restore/{serviceId}', [ServiceController::class, 'restore'])->name('services.restore');
+    });
+});
+Route::middleware(['auth.user', 'otp.verified', 'check.client'])->group(function () {
+    Route::prefix('clients/{clientId}/users')->group(function () {
+        Route::get('/', [ClientUserController::class, 'index'])->name('client_users.index');
+        Route::get('/create', [ClientUserController::class, 'create'])->name('client_users.create');
+        Route::post('/', [ClientUserController::class, 'store'])->name('client_users.store');
+        Route::get('/{userId}/edit', [ClientUserController::class, 'edit'])->name('client_users.edit');
+        Route::put('/{userId}', [ClientUserController::class, 'update'])->name('client_users.update');
+        Route::delete('/{userId}', [ClientUserController::class, 'destroy'])->name('client_users.destroy');
     });
 });

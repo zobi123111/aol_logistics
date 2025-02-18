@@ -31,7 +31,7 @@
         <div class="card-body">
         <form action="{{ route('supplier_units.store', $supplier->id) }}" method="POST">
         @csrf
-        <div class="form-group mb-3">
+        <div class="form-group mb-3 mt-3">
             <label for="unit_type" class="form-label">Unit Type<span class="text-danger">*</span></label>
             <select name="unit_type" class="form-control">
                 <option value="">Select Unit Type</option>

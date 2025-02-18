@@ -4,6 +4,10 @@
 @section('sub-title', 'Supplier')
 
 @section('content')
+<div class="main_cont_outer">
+<div class="create_btn mb-3">
+        <a href="{{ route('suppliers.index') }}" class="btn btn-primary create-button btn_primary_color" id="createUser"><i class="bi bi-arrow-left-circle-fill"> </i>back</a>
+    </div>
 <div class="container mt-4">
 
     <!-- Supplier Information -->
@@ -31,7 +35,7 @@
         <div class="card-body">
             <h5 class="card-title">User Details</h5>
             <p class="card-text">
-                <strong>User Role:</strong> {{ $supplier->user_role }} <br>
+                <strong>User Role:</strong> {{ str_replace('_', ' ', $supplier->user_role) }} <br>
                 <strong>User Email:</strong> {{ $supplier->user_email }} <br>
                 <strong>User Office Phone:</strong> {{ $supplier->user_office_phone }} <br>
                 <strong>User Mobile Phone:</strong> {{ $supplier->user_mobile_phone }} <br>
@@ -152,4 +156,6 @@
     <a href="{{ route('suppliers.index') }}" class="btn btn-primary create-button btn_primary_color">Back to Supplier
         List</a>
 </div>
+</div>
+
 @endsection

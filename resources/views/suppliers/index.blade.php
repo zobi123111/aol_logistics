@@ -115,20 +115,20 @@
                 </td>
                 @endif
                 <td>
-                    <a href="{{ route('supplier_users.index', encode_id($supplier->id)) }}" class="btn btn-info">
+                    <a href="{{ route('supplier_users.index', encode_id($supplier->id)) }}" class="btn btn-primary create-button btn_primary_color">
                         <i class="fa-solid fa-users"></i> Manage
                     </a>
                 </td>
 
                 <td>
-                    <a href="{{ route('supplier_units.index', encode_id($supplier->id)) }}" class="btn btn-info">
+                    <a href="{{ route('supplier_units.index', encode_id($supplier->id)) }}" class="btn btn-secondary create-button btn_secondary_color">
                         <i class="fa-solid fa-truck"></i> Manage
                     </a>
                 </td>
 
 
                 <td>
-                    <a href="{{ route('services.index', encode_id($supplier->id)) }}" class="btn btn-info">
+                    <a href="{{ route('services.index', encode_id($supplier->id)) }}" class="btn btn-primary create-button btn_primary_color">
                         <i class="fa-solid fa-gear"></i> Manage
                     </a>
                 </td>
