@@ -22,17 +22,7 @@
                 <th scope="col">Timestamp</th>
             </tr>
         </thead>
-        <tbody>
-            @foreach($logs as $log)
-
-            <tr>
-                <td scope="row" class="fname">{{ $log->user->fname }} {{ $log->user->lname }}</td>
-                <td scope="row">{{ $log->log_type }}</td>
-                <td scope="row">{{ $log->description }}</td>
-                <td scope="row">{{ $log->created_at->format('Y-m-d h:i A') }}</td>
-            </tr>
-            @endforeach
-        </tbody>
+      
     </table>
     @endif
     @if(checkAllowedModule('activity-logs', 'logs.delete')->isNotEmpty())
@@ -65,7 +55,30 @@
 @section('js_scripts')
 <script>
 $(document).ready(function() {
-    $('#logs_table').DataTable();
+    // $('#logs_table').DataTable();
+    $('#logs_table').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{ route('logs.data') }}", // Ensure this route returns JSON
+        columns: [
+            { data: 'id', name: 'id' },
+            { data: 'log_type', name: 'log_type' },
+            { data: 'description', name: 'description' },
+            {
+            data: 'created_at', 
+            name: 'created_at',
+            render: function (data, type, row) {
+                // If data is available, format the date
+                if (data) {
+                    // Using moment.js or native JavaScript to format date
+                    return moment(data).format('YYYY-MM-DD hh:mm A');
+                }
+                return data; // Return raw data if date is missing
+            }
+        }
+
+        ]
+    });
 
     $('#date_range').change(function () {
         if ($(this).val() === 'custom') {

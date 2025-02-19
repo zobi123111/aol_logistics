@@ -12,6 +12,7 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\SupplierUserController;
 use App\Http\Controllers\SupplierUnitController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\TrackTrailer;
 use App\Http\Controllers\ClientUserController;
 
 
@@ -55,6 +56,8 @@ Route::middleware(['auth.user', 'otp.verified', 'role.permission'])->group(funct
 
     Route::resource('roles', RolePermissionController::class);
     Route::get('/activity-logs', [UserActivityLogController::class, 'showAll'])->name('activityLogs.all');
+    Route::get('/logs/data', [UserActivityLogController::class, 'getLogs'])->name('logs.data');
+
     Route::delete('/logs/delete', [UserActivityLogController::class, 'deleteLogs'])->name('logs.delete');
     Route::post('/users/bulk-action', [UserController::class, 'bulkAction'])->name('users.bulkAction');
     Route::resource('suppliers', SupplierController::class);
@@ -101,6 +104,12 @@ Route::middleware(['auth.user', 'otp.verified', 'check.supplier'])->group(functi
         Route::delete('/{serviceId}', [ServiceController::class, 'destroy'])->name('services.destroy');
         Route::post('/restore/{serviceId}', [ServiceController::class, 'restore'])->name('services.restore');
     });
+
+    Route::prefix('track')->group(function () {
+        Route::get('/lastposition', [TrackTrailer::class, 'lastposition'])->name('lastposition.index');
+    });
+
+    
 });
 Route::middleware(['auth.user', 'otp.verified', 'check.client'])->group(function () {
     Route::prefix('clients/{clientId}/users')->group(function () {

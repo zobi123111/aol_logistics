@@ -45,8 +45,8 @@
                     <div class="text-danger">{{ $message }}</div>
                     @enderror        </div>
         <div class="form-group mb-3">
-            <label for="email" class="form-label">Email<span class="text-danger" value="{{ old('email') }}">*</span></label>
-            <input type="email" name="email" class="form-control">
+            <label for="email" class="form-label">Email<span class="text-danger" >*</span></label>
+            <input type="email" name="email" class="form-control" value="{{ old('email') }}">
             @error('email')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror        </div>
@@ -65,14 +65,14 @@
         </div>
         <div class="form-group mb-3">
             <label for="password" class="form-label">Password<span class="text-danger">*</span></label>
-            <input type="password" name="password" class="form-control">
+            <input type="password" name="password" class="form-control" value="{{ old('password') }}">
             @error('password')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror        </div>
         <div class="form-group mb-3">
             <label for="confirmpassword" class="form-label">Confirm Password<span
                     class="text-danger">*</span></label>
-            <input type="password" name="password_confirmation" class="form-control" id="confirmpassword">
+            <input type="password" name="password_confirmation" class="form-control" id="confirmpassword" value="{{ old('password_confirmation') }}">
             @error('password_confirmation')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror        </div>

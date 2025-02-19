@@ -12,14 +12,45 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use App\Models\UserActivityLog;
 use App\Models\SupplierDocument;
+use Yajra\DataTables\DataTables;
 
 
 class SupplierController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $suppliers = Supplier::all();
-        return view('suppliers.index', compact('suppliers'));
+        // $suppliers = Supplier::all();
+        // return view('suppliers.index', compact('suppliers'));
+        if ($request->ajax()) {
+            $suppliers = Supplier::query(); 
+    
+            return DataTables::of($suppliers)
+            ->addColumn('status', function ($supplier) {
+                return view('suppliers.partials.toggle_status', compact('supplier'))->render();
+            })
+            ->addColumn('actions', function ($supplier) {
+                return view('suppliers.partials.actions', compact('supplier'))->render();
+            })
+            ->addColumn('supplier_users', function ($supplier) {
+                return '<a href="'.route('supplier_users.index', encode_id($supplier->id)).'" class="btn btn-primary create-button btn_primary_color">
+                            <i class="fa-solid fa-user"></i> Manage
+                        </a>';
+            })
+            ->addColumn('supplier_units', function ($supplier) {
+                return '<a href="'.route('supplier_units.index', encode_id($supplier->id)).'" class="btn btn-secondary create-button btn_secondary_color">
+                            <i class="fa-solid fa-truck"></i> Manage
+                        </a>';
+            })
+            ->addColumn('services', function ($supplier) {
+                return '<a href="'.route('services.index', encode_id($supplier->id)).'" class="btn btn-primary create-button btn_primary_color">
+                            <i class="fa-solid fa-gear"></i> Manage
+                        </a>';
+            })
+            ->rawColumns(['status', 'actions', 'supplier_users', 'supplier_units', 'services']) 
+            ->make(true);
+        }
+    
+        return view('suppliers.index');
     }
 
     public function create()
@@ -125,6 +156,7 @@ class SupplierController extends Controller
                 'service_type' => $request->service_type,
                 'currency' => $request->currency,
                 'preferred_language' => $request->preferred_language,
+                'is_supplier' => true,
                 // 'documents' => $request->hasFile('document_path') 
                 // ? collect($request->file('document_path'))->map(function ($file) {
                 //     return $file->store('documents' , 'public');
@@ -429,6 +461,10 @@ class SupplierController extends Controller
         // Store the old status before updating
         $oldStatus = $supplier->is_active ? 'Active' : 'Inactive';
         $newStatus = $isActive ? 'Active' : 'Inactive';
+
+        $user = User::findOrFail($supplier->user_id);
+        $user->is_active = $isActive;
+        $user->save();
 
         // Update the user's status
         $supplier->is_active = $isActive;

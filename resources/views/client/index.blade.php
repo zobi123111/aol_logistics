@@ -23,6 +23,7 @@
             <tr>
                 <th scope="col">First Name</th>
                 <th scope="col">Last Name</th>
+                <th scope="col">Business Name</th>
                 <th scope="col">Email</th>
                 <th scope="col">Role</th>
                 @if(checkAllowedModule('client', 'client.toggleStatus')->isNotEmpty() )
@@ -44,6 +45,7 @@
             <tr>
                 <td class="fname">{{ $clientdata->fname }}</td>
                 <td class="lname">{{ $clientdata->lname }}</td>
+                <td >{{ $clientdata->business_name ?? '---' }}</td>
                 <td>{{ $clientdata->email }}</td>
                 <td>{{ $clientdata->roledata->role_name }}</td>   
                 @if(checkAllowedModule('client', 'client.toggleStatus')->isNotEmpty() )

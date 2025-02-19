@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
+use App\Models\Log;
+use Yajra\DataTables\DataTables;
 
 class UserActivityLogController extends Controller
 {
@@ -56,4 +58,11 @@ class UserActivityLogController extends Controller
 
         return response()->json(['message' => 'Logs deleted successfully!']);
     }
+
+    public function getLogs(Request $request)
+{
+    $logs = UserActivityLog::select(['id', 'log_type', 'description', 'created_at']);
+
+    return DataTables::of($logs)->make(true);
+}
 }

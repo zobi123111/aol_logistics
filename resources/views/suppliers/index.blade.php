@@ -53,91 +53,9 @@
                 <th scope="col">User</th>
                 <th scope="col">Equipment</th>
                 <th scope="col">Service</th>
-
-
-
             </tr>
         </thead>
-        <tbody>
-            @if($suppliers->isEmpty())
-            <tr>
-                <td colspan="8" class="text-center">No suppliers found</td>
-            </tr>
-            @else
-            @foreach($suppliers as $supplier)
-            <tr>
-                <td class="company">{{ $supplier->company_name }}</td>
-                <td>{{ $supplier->dba }}</td>
-                <!-- <td>{{ $supplier->street_address }}</td>
-                <td>{{ $supplier->city }}</td>
-                <td>{{ $supplier->state }}</td>
-                <td>{{ $supplier->zip_code }}</td>
-                <td>{{ $supplier->country }}</td> -->
-                <td>{{ $supplier->office_phone }}</td>
-                <td>{{ $supplier->primary_contact_email }}</td>
-                <td>{{ $supplier->primary_contact_office_phone }}</td>
-                <td>{{ $supplier->primary_contact_mobile_phone }}</td>
-                <!-- <td>{{ $supplier->user_role }}</td>
-                <td>{{ $supplier->user_email }}</td>
-                <td>{{ $supplier->user_office_phone }}</td>
-                <td>{{ $supplier->user_mobile_phone }}</td>
-                <td>{{ $supplier->service_type }}</td> -->
-                <!-- <td>{{ $supplier->currency }}</td>
-                <td>{{ $supplier->preferred_language }}</td> -->
-                @if(checkAllowedModule('suppliers', 'suppliers.toggleStatus')->isNotEmpty())
-                <td>
-                        <!-- Bootstrap switch to toggle status -->
-                    <div class="form-check form-switch">
-                        <input class="form-check-input status-toggle" type="checkbox"
-                            id="flexSwitchCheckChecked{{ encode_id($supplier->id) }}" data-id="{{ encode_id($supplier->id) }}"
-                            {{ $supplier->is_active ? 'checked' : '' }}>
-                        <label class="form-check-label" for="flexSwitchCheckChecked{{ encode_id($supplier->id) }}">
-                            {{ $supplier->is_active ? 'Active' : 'Inactive' }}
-                        </label>
-                    </div>
-                </td>
-                @endif
-                @if(checkAllowedModule('suppliers', 'suppliers.edit')->isNotEmpty() || checkAllowedModule('suppliers', 'suppliers.show')->isNotEmpty()|| checkAllowedModule('suppliers', 'suppliers.destroy')->isNotEmpty())
-                <td>
-                @if(checkAllowedModule('suppliers', 'suppliers.edit')->isNotEmpty())
-                    <a href="{{ route('suppliers.edit', encode_id($supplier->id)) }}" class=""><i
-                            class="fa fa-edit edit-user-icon table_icon_style blue_icon_color"></i></a>
-                    @endif
-                    @if(checkAllowedModule('suppliers', 'suppliers.destroy')->isNotEmpty() )
-                    <i class="fa-solid fa-trash delete-icon table_icon_style blue_icon_color"
-                        data-supplier-id="{{ encode_id($supplier->id) }}"></i>
-                    @endif
-                    <!-- View Button to navigate to supplier details -->
-                    @if(checkAllowedModule('suppliers', 'suppliers.show')->isNotEmpty() )
-                    <a href="{{ route('suppliers.show', encode_id($supplier->id)) }}" class=""><i
-                            class="fa-solid fa-eye view-icon table_icon_style blue_icon_color"></i></a>
-                    @endif
-                </td>
-                @endif
-                <td>
-                    <a href="{{ route('supplier_users.index', encode_id($supplier->id)) }}" class="btn btn-primary create-button btn_primary_color">
-                        <i class="fa-solid fa-users"></i> Manage
-                    </a>
-                </td>
-
-                <td>
-                    <a href="{{ route('supplier_units.index', encode_id($supplier->id)) }}" class="btn btn-secondary create-button btn_secondary_color">
-                        <i class="fa-solid fa-truck"></i> Manage
-                    </a>
-                </td>
-
-
-                <td>
-                    <a href="{{ route('services.index', encode_id($supplier->id)) }}" class="btn btn-primary create-button btn_primary_color">
-                        <i class="fa-solid fa-gear"></i> Manage
-                    </a>
-                </td>
-
-                
-            </tr>
-            @endforeach
-            @endif
-        </tbody>
+      
     </table>
     @endif
     <form method="POST" id="deleteRoleFormId">
@@ -169,7 +87,30 @@
 
 <script>
 $(document).ready(function() {
-    $('#supplier').DataTable();
+    $('#supplier').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{ route('suppliers.index') }}", 
+        columns: [
+            { data: 'company_name', name: 'company_name' },
+            { data: 'dba', name: 'dba' },
+            { data: 'office_phone', name: 'office_phone' },
+            { data: 'primary_contact_email', name: 'primary_contact_email' },
+            { data: 'primary_contact_office_phone', name: 'primary_contact_office_phone' },
+            { data: 'primary_contact_mobile_phone', name: 'primary_contact_mobile_phone' },
+            { data: 'status', name: 'status', orderable: false, searchable: false },
+            { data: 'actions', name: 'actions', orderable: false, searchable: false },
+            { data: 'supplier_users', name: 'supplier_users', orderable: false, searchable: false },
+            { data: 'supplier_units', name: 'supplier_units', orderable: false, searchable: false },
+            { data: 'services', name: 'services', orderable: false, searchable: false }
+        ],
+        columnDefs: [
+            {
+                targets: 0, 
+                className: "company" 
+            }
+        ]
+    });
     $(document).on('click', '.delete-icon', function(e) {
         e.preventDefault();
         var supplierId = $(this).data('supplier-id');

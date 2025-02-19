@@ -18,17 +18,23 @@
         {{ session()->get('message') }}
     </div>
     @endif
+    @php
+    $supplierId = request()->route('supplierId'); 
+ 
+@endphp
+
+<input type="hidden" id="supplierId" value="{{ $supplierId }}">
     <table class="table table-striped mt-3" id="supplierUser">
         <thead>
             <tr>
                 <th scope="col">Name</th>
-                <th scope="col">Email</th>
+                <!-- <th scope="col">Email</th> -->
                 <th scope="col">Role</th>
                 <th scope="col">Status</th>
                 <th scope="col">Actions</th>
             </tr>
         </thead>
-        <tbody>
+        <!-- <tbody>
         @if($users->isEmpty())
             <tr>
                 <td colspan="5" class="text-center">No suppliers found</td>
@@ -58,7 +64,7 @@
             </tr>
             @endforeach
             @endif
-        </tbody>
+        </tbody> -->
     </table>
     <form method="POST" id="deleteRoleFormId">
         @csrf
@@ -89,7 +95,29 @@
 
 <script>
 $(document).ready(function() {
-    $('#supplierUser').DataTable();
+    let supplierId = $("#supplierId").val(); 
+
+    $('#supplierUser').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: `/suppliers/${supplierId}/users`, 
+            type: "GET",
+        },
+        columns: [
+            { data: 'name', name: 'name' },
+            { data: 'role', name: 'role' },
+            { data: 'status', name: 'status', orderable: false, searchable: false },
+            { data: 'actions', name: 'actions', orderable: false, searchable: false },
+        ],
+        columnDefs: [
+            {
+                targets: 0, 
+                className: "username" 
+            }
+        ]
+        
+    });
     $(document).on('click', '.delete-icon', function(e) {
         e.preventDefault();
         var supplierId = $(this).data('supplier-id');

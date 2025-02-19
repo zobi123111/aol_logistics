@@ -28,6 +28,7 @@ class ClientController extends Controller
         $clientdata = [
             'client_Fname' => 'required|string|max:255',
             'client_Lname' => 'required|string|max:255',
+            'business_name' => 'required|string|max:255',
             'email' => 'required|string|max:255',
             'password' => 'required|string|min:6|confirmed',
             'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -59,6 +60,7 @@ class ClientController extends Controller
                 'fname' => $request->client_Fname,
                 'lname' => $request->client_Lname,
                 'email' => $request->email,
+                'business_name' => $request->business_name,
                 'created_by' => auth()->id(),
                 'password' => Hash::make($request->password),
                 'role' => $role->id,
@@ -109,6 +111,7 @@ class ClientController extends Controller
          $validator = Validator::make($request->all(), [
             'client_Fname' => 'required|string|max:255',
             'client_Lname' => 'required|string|max:255',
+            'business_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
          ]);
      
@@ -122,6 +125,8 @@ class ClientController extends Controller
          $user->fname = $request->client_Fname;
          $user->lname = $request->client_Lname; 
          $user->email = $request->email;
+         $user->business_name = $request->business_name;
+
          $user->save();
          return redirect()->route('client.index', ['supplierId' => $clientId])
              ->with('message', 'Client updated successfully.');

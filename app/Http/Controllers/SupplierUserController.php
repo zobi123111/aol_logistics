@@ -8,18 +8,42 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Role;
-
+use Yajra\DataTables\DataTables;
 
 class SupplierUserController extends Controller
 {
     // Display all users for a specific supplier
-    public function index($supplier_id)
+    public function index(Request $request, $supplier_id)
     {
+        // $de_supplier_id = decode_id($supplier_id);
+        // $supplier = Supplier::findOrFail($de_supplier_id);
+
+        // // Retrieve all users belonging to this supplier
+        // $users = User::with('roledata')->where('supplier_id', $de_supplier_id)->get();
+
+        // return view('supplier_users.index', compact('supplier', 'users'));
+
         $de_supplier_id = decode_id($supplier_id);
         $supplier = Supplier::findOrFail($de_supplier_id);
-
-        // Retrieve all users belonging to this supplier
         $users = User::with('roledata')->where('supplier_id', $de_supplier_id)->get();
+
+        if ($request->ajax()) {
+            return DataTables::of($users)
+                ->addColumn('name', function ($user) use ($users) {
+                    return $user->fname. ' '.$user->lname ; 
+                })
+                ->addColumn('role', function ($user) {
+                    return $user->roledata ? $user->roledata->role_name : 'N/A';
+                })
+                ->addColumn('status', function ($user) {
+                    return view('supplier_users.partials.toggle_status', compact('user'))->render();
+                })
+                ->addColumn('actions', function ($user) use ($supplier) {
+                    return view('supplier_users.partials.actions', compact('user', 'supplier'))->render();
+                })
+                ->rawColumns(['status', 'actions'])
+                ->make(true);
+        }
 
         return view('supplier_users.index', compact('supplier', 'users'));
     }
@@ -65,7 +89,6 @@ class SupplierUserController extends Controller
         $user->role = $role->id;
         $user->password = Hash::make($request->password);
         $user->supplier_id = $supplierId;
-        $user->is_supplier = true;
         $user->save();
     
         return redirect()->route('supplier_users.index', ['supplierId' => encode_id($supplierId)])

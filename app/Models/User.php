@@ -35,7 +35,8 @@ class User extends Authenticatable
         'is_client',
         'supplier_id',
         'is_supplier',
-        'client_id'
+        'client_id',
+        'business_name'
     ];
 
     /**

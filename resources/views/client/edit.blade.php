@@ -44,6 +44,14 @@
                     @enderror
                 </div>
 
+                <div class="mb-3">
+                    <label class="form-label">Business Name<span class="text-danger">*</span></label>
+                    <input type="text" name="business_name" class="form-control" value="{{ old('business_name', $client->business_name) }}">
+                    @error('business_name')
+                    <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+
                 <!-- Client Email -->
                 <div class="mb-3">
                     <label class="form-label">Email <span class="text-danger">*</span></label>
