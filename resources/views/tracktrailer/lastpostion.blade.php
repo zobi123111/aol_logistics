@@ -2,28 +2,38 @@
 @section('title', 'Trailers')
 @section('sub-title', 'Trailers')
 @section('content')
-<div class="mb-3 mt-3 trailer_number">
-    <label class="form-label">Select Trailer Number</label>
-    <select id="trailer_no">
-        @foreach($trailers as $row)
-        <option value="{{ $row->trailer_num }}">{{ $row->trailer_num }}</option>
-        @endforeach
-    </select>
-</div>
-<div class="mb-3 mt-3" id="address">
-    <label class="form-label">Address</label>
-    <div id="append_address"></div>
+<div class="main_cont_outer">
+    <div class="card card-container">
+        <div class="card-body">
+            <div class="mb-3 mt-3 trailer_number">
+                <label class="form-label">Select Trailer Number</label>
+                <select id="trailer_no" class="searchable-select">
+                    <option value="">Select a Trailer</option>
+                    @foreach($trailers as $row)
+                        <option value="{{ $row->trailer_num }}">{{ $row->trailer_num }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="mb-3 mt-3 address-container" id="address">
+                <div id="append_address" class="address-box"></div>
+                <div id="append_error" class="text-danger error-message"></div>
+            </div>
+            <div id="map"></div>
+        </div>
+    </div>
 </div>
 
-<div>
-    
-</div>
-<div id="map"></div>
 
 @endsection
 
 @section('js_scripts')
 <script>
+    $(document).ready(function() {
+    $('.searchable-select').select2({
+        placeholder: "Select a Trailer",
+        allowClear: true // Adds a clear button
+    });
+});
 var map;
 var marker;
 
@@ -60,10 +70,12 @@ function setCurrentLocation() {
     }
 }
 
-// Initialize the map with the current location when the page loads
 setCurrentLocation();
 
+
 $('#trailer_no').on('change', function() {
+    $('#append_address').html('');
+    $('#append_error').html('');
     var trailerId = $(this).val(); // Get the selected trailer ID
     console.log('Selected Trailer ID:', trailerId);
 
@@ -74,7 +86,7 @@ $('#trailer_no').on('change', function() {
             attribution: '&copy; OpenStreetMap contributors'
         }).addTo(map);
 
-        marker = L.marker([0, 0]).addTo(map); // Initialize the marker
+        marker = L.marker([0, 0]).addTo(map); 
     }
 
     var apiUrl = `https://gemco.forzatrans.app/api/Trailers/lastposition/${trailerId}`;
@@ -83,12 +95,24 @@ $('#trailer_no').on('change', function() {
     $.ajax({
         url: apiUrl,
         type: 'GET',
+        beforeSend: function() {
+        $('#trailer_no').prop('disabled', true);
+        },
+
         headers: {
             'X-API-Key': apiKey,
             'Content-Type': 'application/json'
         },
         timeout: 30000,
         success: function(response) {
+            if (!response.length) {
+                $('#trailer_no').prop('disabled', false);
+                $('#append_address').html('');
+                $('#append_error').html('No location data found.');
+
+                return;
+            }
+
             var address = response[0].address;
             var city = response[0].city;
             var country = response[0].country;
@@ -100,17 +124,21 @@ $('#trailer_no').on('change', function() {
             var latitude = response[0].latitude;
             var longitude = response[0].longitude;
 
-            $('#append_address').html(fullAddress);
+            $('#append_address').html('Address: '+fullAddress);
+            $('#append_error').html('');
 
             // Update map position
             map.setView([latitude, longitude], 10);
             marker.setLatLng([latitude, longitude])
                 .bindPopup('Trailer Location: ' + latitude + ', ' + longitude)
                 .openPopup();
+            $('#trailer_no').prop('disabled', false);
         },
         error: function(xhr, status, error) {
+            $('#trailer_no').prop('disabled', false);
             console.log('Error:', error);
-            alert('Request failed: ' + error);
+            $('#append_address').html('');
+            $('#append_error').html('Request failed');
         }
     });
 });

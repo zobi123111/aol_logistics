@@ -1360,6 +1360,14 @@ div#append_address {
   display: flex;
   width: 50%;
 }
+
+div#append_error {
+  width: 50%;
+  padding: 2px 28px;
+  color: #1a1919;
+  display: flex;
+  width: 50%;
+}
 .switch-color{
   background-color: #00709e;
 }
