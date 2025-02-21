@@ -73,6 +73,8 @@ Route::middleware(['auth.user', 'otp.verified', 'role.permission'])->group(funct
 
     // Routes for client page
     Route::resource('client', ClientController::class);
+    Route::get('/lastposition', [TrackTrailer::class, 'lastposition'])->name('lastposition.index');
+
 });
 
 Route::middleware(['auth.user', 'otp.verified', 'check.supplier'])->group(function () {
@@ -105,9 +107,9 @@ Route::middleware(['auth.user', 'otp.verified', 'check.supplier'])->group(functi
         Route::post('/restore/{serviceId}', [ServiceController::class, 'restore'])->name('services.restore');
     });
 
-    Route::prefix('track')->group(function () {
-        Route::get('/lastposition', [TrackTrailer::class, 'lastposition'])->name('lastposition.index');
-    });
+    // Route::prefix('track')->group(function () {
+    //     Route::get('/lastposition', [TrackTrailer::class, 'lastposition'])->name('lastposition.index');
+    // });
 
     
 });

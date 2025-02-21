@@ -18,10 +18,33 @@
                 <div id="append_address" class="address-box"></div>
                 <div id="append_error" class="text-danger error-message"></div>
             </div>
-            <div id="map"></div>
+            <!-- <div id="map"></div> -->
+                        <iframe 
+            id="mapFrame"
+            width="800" 
+            height="500" 
+            frameborder="0" 
+            scrolling="no" 
+            marginheight="0" 
+            marginwidth="0" 
+            src=""
+            style="display: none;"
+            >
+            </iframe>
+            <br />
+            <small>
+            <a id="mapLink" 
+                href="#" 
+                style="color:#0000FF;text-align:left; display: none;" 
+                target="_blank">
+                See map bigger
+            </a>
+            </small>
         </div>
     </div>
 </div>
+
+
 
 
 @endsection
@@ -29,10 +52,14 @@
 @section('js_scripts')
 <script>
     $(document).ready(function() {
+        if ($.fn.select2) { 
     $('.searchable-select').select2({
         placeholder: "Select a Trailer",
         allowClear: true // Adds a clear button
     });
+} else {
+            console.error("Select2 is not loaded!");
+        }
 });
 var map;
 var marker;
@@ -70,7 +97,7 @@ function setCurrentLocation() {
     }
 }
 
-setCurrentLocation();
+// setCurrentLocation();
 
 
 $('#trailer_no').on('change', function() {
@@ -80,14 +107,14 @@ $('#trailer_no').on('change', function() {
     console.log('Selected Trailer ID:', trailerId);
 
     // If map is not already initialized, initialize it
-    if (!map) {
-        map = L.map('map').setView([0, 0], 2); // Default view
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(map);
+    // if (!map) {
+    //     map = L.map('map').setView([0, 0], 2); // Default view
+    //     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    //         attribution: '&copy; OpenStreetMap contributors'
+    //     }).addTo(map);
 
-        marker = L.marker([0, 0]).addTo(map); 
-    }
+    //     marker = L.marker([0, 0]).addTo(map); 
+    // }
 
     var apiUrl = `https://gemco.forzatrans.app/api/Trailers/lastposition/${trailerId}`;
     var apiKey = 'pT7#f9@Lk2^bWz8!xQeV3$Mn6*ArYt1&JdF4+Gh9%UzXo7=KpL';
@@ -97,6 +124,7 @@ $('#trailer_no').on('change', function() {
         type: 'GET',
         beforeSend: function() {
         $('#trailer_no').prop('disabled', true);
+        $('#mapFrame, #mapLink').hide();
         },
 
         headers: {
@@ -127,11 +155,17 @@ $('#trailer_no').on('change', function() {
             $('#append_address').html('Address: '+fullAddress);
             $('#append_error').html('');
 
+             // Update Google Maps iframe
+             var mapSrc = `https://maps.google.com/maps?q=${latitude},${longitude}&z=14&output=embed`;
+            var mapHref = `https://maps.google.com/maps?q=${latitude},${longitude}&z=14`;
+
+            $('#mapFrame').attr('src', mapSrc).show(); // Set src and show iframe
+            $('#mapLink').attr('href', mapHref).show();
             // Update map position
-            map.setView([latitude, longitude], 10);
-            marker.setLatLng([latitude, longitude])
-                .bindPopup('Trailer Location: ' + latitude + ', ' + longitude)
-                .openPopup();
+            // map.setView([latitude, longitude], 10);
+            // marker.setLatLng([latitude, longitude])
+            //     .bindPopup('Trailer Location: ' + latitude + ', ' + longitude)
+            //     .openPopup();
             $('#trailer_no').prop('disabled', false);
         },
         error: function(xhr, status, error) {
