@@ -21,7 +21,12 @@ class UserActivityLog extends Model
     const LOG_TYPE_EDIT_SUPPLIER = 'edit_supplier';
     const LOG_TYPE_DELETE_SUPPLIER = 'delete_supplier';
 
+    const LOG_TYPE_UPDATE_STATUS_CLIENT = 'change_status_client'; 
+    const LOG_TYPE_CREATE_CLIENT = 'create_client';
+    const LOG_TYPE_EDIT_CLIENT = 'edit_client';
+    const LOG_TYPE_DELETE_CLIENT = 'delete_client';
 
+    
     protected $fillable = ['log_type', 'description', 'user_id'];
     
     public function user()

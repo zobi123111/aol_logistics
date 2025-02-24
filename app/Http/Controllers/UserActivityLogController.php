@@ -61,8 +61,18 @@ class UserActivityLogController extends Controller
 
     public function getLogs(Request $request)
 {
-    $logs = UserActivityLog::select(['id', 'log_type', 'description', 'created_at']);
+    // $logs = UserActivityLog::with('user:id,name')->select(['id', 'log_type', 'description', 'created_at'])->orderBy('id', 'desc');
 
-    return DataTables::of($logs)->make(true);
+
+    // return DataTables::of($logs)->make(true);
+    $logs = UserActivityLog::with('user:id,fname,lname') // Eager load user with only 'id', 'fname', and 'lname'
+    ->select(['id', 'log_type', 'description', 'created_at', 'user_id'])
+    ->orderBy('id', 'desc');
+
+return DataTables::of($logs)
+    ->addColumn('user_name', function ($log) {
+        return $log->user ? $log->user->fname . ' ' . $log->user->lname : 'N/A'; // Concatenating first and last name
+    })
+    ->make(true);
 }
 }

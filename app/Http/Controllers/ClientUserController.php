@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Role;
 use Illuminate\Support\Facades\Session;
+use App\Models\UserActivityLog;
+
 
 class ClientUserController extends Controller
 {
@@ -60,6 +62,15 @@ class ClientUserController extends Controller
             ]);
         
             DB::commit();
+             // add log
+             UserActivityLog::create([
+                'log_type' => UserActivityLog::LOG_TYPE_CREATE_CLIENT,
+                'description' => 'A new client user'. ' (' .$request->email . ') has been created by ' 
+                        . auth()->user()->fname . ' ' 
+                        . auth()->user()->lname 
+                        . ' (' . auth()->user()->email . ') with role '.$role->role_name,
+                'user_id' => auth()->id(), 
+            ]);
             return redirect()->route('client_users.index', encode_id($id))
             ->with('message', 'Client created successfully!');
 
@@ -79,6 +90,17 @@ class ClientUserController extends Controller
             return redirect()->route('client.index')->with('error', 'Client not found.');
         }
         $client_data->delete();
+
+        // add log
+        UserActivityLog::create([
+            'log_type' => UserActivityLog::LOG_TYPE_DELETE_CLIENT,
+            'description' => 'A new client user'. ' (' .$client_data->email . ') has been deleted by ' 
+                    . auth()->user()->fname . ' ' 
+                    . auth()->user()->lname 
+                    . ' (' . auth()->user()->email . ')',
+                'user_id' => auth()->id(), 
+            ]);
+
         Session::flash('message', 'Client deleted successfully.');
         return redirect()->route('client_users.index',$master_client )->with('success', 'Client deleted successfully.');
     }
@@ -119,6 +141,16 @@ class ClientUserController extends Controller
          $user->lname = $request->client_Lname;
          $user->email = $request->email;
          $user->save();
+         
+        // add log
+        UserActivityLog::create([
+            'log_type' => UserActivityLog::LOG_TYPE_EDIT_CLIENT,
+            'description' => 'A new client user'. ' (' .$request->email . ') has been updated by ' 
+                    . auth()->user()->fname . ' ' 
+                    . auth()->user()->lname 
+                    . ' (' . auth()->user()->email . ')',
+                'user_id' => auth()->id(), 
+            ]);
          return redirect()->route('client_users.index',  $master_id)
              ->with('message', 'Client updated successfully.');
      }

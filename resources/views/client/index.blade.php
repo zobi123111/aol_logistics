@@ -35,55 +35,7 @@
                 <th scope="col">Users</th>
             </tr>
         </thead>
-        <tbody>
-            @if($clients->isEmpty())
-            <tr>
-                <td colspan="8" class="text-center">No clients found</td>
-            </tr>
-            @else
-            @foreach($clients as $clientdata)
-            <tr>
-                <td class="fname">{{ $clientdata->fname }}</td>
-                <td class="lname">{{ $clientdata->lname }}</td>
-                <td >{{ $clientdata->business_name ?? '---' }}</td>
-                <td>{{ $clientdata->email }}</td>
-                <td>{{ $clientdata->roledata->role_name }}</td>   
-                @if(checkAllowedModule('client', 'client.toggleStatus')->isNotEmpty() )
-                <td>
-                    <div class="form-check form-switch">
-                        <input class="form-check-input status-toggle" type="checkbox"
-                            id="flexSwitchCheckChecked{{ encode_id($clientdata->id) }}" data-id="{{ encode_id($clientdata->id) }}"
-                            {{ $clientdata->is_active ? 'checked' : '' }}>
-                        <label class="form-check-label" for="flexSwitchCheckChecked{{ encode_id($clientdata->id) }}">
-                            {{ $clientdata->is_active ? 'Active' : 'Inactive' }}
-                        </label>
-                    </div>
-                </td>   
-                @endif          
-                @if(checkAllowedModule('client', 'client.edit')->isNotEmpty() || checkAllowedModule('client', 'client.show')->isNotEmpty()|| checkAllowedModule('client', 'client.destroy')->isNotEmpty())
-                <td>
-                @if(checkAllowedModule('client', 'client.edit')->isNotEmpty())
-
-                <a href="{{ route('client.edit', encode_id($clientdata->id)) }}" class=""><i
-                        class="fa fa-edit edit-user-icon table_icon_style blue_icon_color"></i></a>
-
-                        @endif
-                        @if(checkAllowedModule('client', 'client.destroy')->isNotEmpty() )
-
-                                        <i class="fa-solid fa-trash delete-icon table_icon_style blue_icon_color"
-                    data-clientdata-id="{{ encode_id($clientdata->id) }}"></i>
-                    @endif
-                </td>
-                @endif
-                <td>
-                    <a href="{{ route('client_users.index', encode_id($clientdata->id)) }}" class="btn btn-primary create-button btn_primary_color">
-                        <i class="fa-solid fa-users"></i> Manage
-                    </a>
-                </td>
-            </tr>
-            @endforeach
-            @endif
-        </tbody>
+       
     </table>
     @endif
     <form method="POST" id="deleteClientFormId">
@@ -113,7 +65,31 @@
 
 <script>
 $(document).ready(function() {
-    $('#client').DataTable();
+    $('#client').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{ route('client.index') }}", 
+        columns: [
+            { data: 'fname', name: 'fname' },
+            { data: 'lname', name: 'lname' },
+            { data: 'business_name', name: 'business_name' },
+            { data: 'email', name: 'email' },
+            { data: 'role_name', name: 'role_name' },
+            { data: 'status', name: 'status', orderable: false, searchable: false },
+            { data: 'actions', name: 'actions', orderable: false, searchable: false },
+            { data: 'client_users', name: 'client_users', orderable: false, searchable: false }
+        ],
+        columnDefs: [
+            {
+                targets: 0, 
+                className: "fname" 
+            },
+            {
+                targets: 1, 
+                className: "lname" 
+            }
+        ]
+    });
     $(document).on('click', '.delete-icon', function(e) {
         e.preventDefault();
         var clientId = $(this).data('clientdata-id');

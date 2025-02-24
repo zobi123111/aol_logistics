@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Role;
 use Yajra\DataTables\DataTables;
+use App\Models\UserActivityLog;
+
 
 class SupplierUserController extends Controller
 {
@@ -90,7 +92,16 @@ class SupplierUserController extends Controller
         $user->password = Hash::make($request->password);
         $user->supplier_id = $supplierId;
         $user->save();
-    
+
+        // add log
+        UserActivityLog::create([
+        'log_type' => UserActivityLog::LOG_TYPE_CREATE_SUPPLIER,
+        'description' => 'A new supplier user'. ' (' .$request->email . ') has been created by ' 
+                . auth()->user()->fname . ' ' 
+                . auth()->user()->lname 
+                . ' (' . auth()->user()->email . ') with role '.$role->role_name,
+            'user_id' => auth()->id(), 
+        ]);
         return redirect()->route('supplier_users.index', ['supplierId' => encode_id($supplierId)])
             ->with('message', 'User added successfully.');
     }
@@ -140,7 +151,16 @@ class SupplierUserController extends Controller
         $user->role = $role->id;
     
         $user->save();
-    
+
+       // add log
+        UserActivityLog::create([
+        'log_type' => UserActivityLog::LOG_TYPE_EDIT_SUPPLIER,
+        'description' => 'A new supplier user'. ' (' .$request->email . ') has been updated by ' 
+                . auth()->user()->fname . ' ' 
+                . auth()->user()->lname 
+                . ' (' . auth()->user()->email . ')',
+            'user_id' => auth()->id(), 
+        ]);
     
         return redirect()->route('supplier_users.index', ['supplierId' => $supplier_id])
             ->with('message', 'User updated successfully.');
@@ -156,6 +176,16 @@ class SupplierUserController extends Controller
     
         $user->delete(); // Soft delete
     
+         // add log
+         UserActivityLog::create([
+            'log_type' => UserActivityLog::LOG_TYPE_DELETE_SUPPLIER,
+            'description' => 'A new supplier user'. ' (' .$user->email . ') has been deleted by ' 
+                    . auth()->user()->fname . ' ' 
+                    . auth()->user()->lname 
+                    . ' (' . auth()->user()->email . ')',
+                'user_id' => auth()->id(), 
+            ]);
+
         return redirect()->route('supplier_users.index', ['supplierId' => $supplier_id])
         ->with('message', 'User deteted successfully.');
     }

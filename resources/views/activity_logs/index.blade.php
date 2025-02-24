@@ -61,7 +61,7 @@ $(document).ready(function() {
         serverSide: true,
         ajax: "{{ route('logs.data') }}", // Ensure this route returns JSON
         columns: [
-            { data: 'id', name: 'id' },
+            { data: 'user_name', name: 'user_name' },
             { data: 'log_type', name: 'log_type' },
             { data: 'description', name: 'description' },
             {

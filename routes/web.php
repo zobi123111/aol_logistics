@@ -14,7 +14,7 @@ use App\Http\Controllers\SupplierUnitController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\TrackTrailer;
 use App\Http\Controllers\ClientUserController;
-
+use App\Http\Controllers\LoadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,19 +62,14 @@ Route::middleware(['auth.user', 'otp.verified', 'role.permission'])->group(funct
     Route::post('/users/bulk-action', [UserController::class, 'bulkAction'])->name('users.bulkAction');
     Route::resource('suppliers', SupplierController::class);
     Route::post('/suppliers/toggle-status', [SupplierController::class, 'toggleStatus'])->name('suppliers.toggleStatus');
-    // Route::prefix('suppliers/{supplierId}/users')->group(function () {
-    //     Route::get('/', [SupplierUserController::class, 'index'])->name('supplier_users.index');
-    //     Route::get('/create', [SupplierUserController::class, 'create'])->name('supplier_users.create');
-    //     Route::post('/', [SupplierUserController::class, 'store'])->name('supplier_users.store');
-    //     Route::get('/{userId}/edit', [SupplierUserController::class, 'edit'])->name('supplier_users.edit');
-    //     Route::put('/{userId}', [SupplierUserController::class, 'update'])->name('supplier_users.update');
-    //     Route::delete('/{userId}', [SupplierUserController::class, 'destroy'])->name('supplier_users.destroy');
-    // });
 
     // Routes for client page
     Route::resource('client', ClientController::class);
     Route::get('/lastposition', [TrackTrailer::class, 'lastposition'])->name('lastposition.index');
-
+    Route::resource('loads', LoadController::class);
+    Route::get('/loads/{id}/assign', [LoadController::class, 'assignPage'])->name('loads.assign');
+    Route::get('/loads/{load_id}/assign/{supplier_id}/{service_id}', [LoadController::class, 'assignSupplier'])
+    ->name('loads.assign.supplier');
 });
 
 Route::middleware(['auth.user', 'otp.verified', 'check.supplier'])->group(function () {

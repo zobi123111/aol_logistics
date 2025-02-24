@@ -176,6 +176,16 @@ class SupplierController extends Controller
                 // : null,
             ]);
 
+            // add log
+            UserActivityLog::create([
+            'log_type' => UserActivityLog::LOG_TYPE_CREATE_SUPPLIER,
+            'description' => 'A new master supplier'. ' (' .$request->user_email . ') has been created by ' 
+                    . auth()->user()->fname . ' ' 
+                    . auth()->user()->lname 
+                    . ' (' . auth()->user()->email . ')',
+                'user_id' => auth()->id(), 
+            ]);
+
             // Function to save documents
             $this->storeDocuments($supplier->id, $request, 'document_path', 'documents');
             $this->storeDocuments($supplier->id, $request, 'scac_documents', 'scac_documents');
@@ -405,6 +415,15 @@ class SupplierController extends Controller
             // 'scac_documents' => json_encode($existingScacDocuments),
             // 'caat_documents' => json_encode($existingCaatDocuments),
         ]);
+        // add log
+        UserActivityLog::create([
+        'log_type' => UserActivityLog::LOG_TYPE_EDIT_SUPPLIER,
+        'description' => 'A supplier'. ' (' .$request->user_email . ') has been updated by ' 
+                . auth()->user()->fname . ' ' 
+                . auth()->user()->lname 
+                . ' (' . auth()->user()->email . ')',
+            'user_id' => auth()->id(), 
+        ]);
 
         return redirect()->route('suppliers.edit', encode_id($supplier->id))
         ->with('message', 'Supplier updated successfully!');
@@ -419,6 +438,16 @@ class SupplierController extends Controller
             return redirect()->route('suppliers.index')->with('error', 'Supplier not found.');
         }
         $supplier->delete();
+
+        // add log
+        UserActivityLog::create([
+        'log_type' => UserActivityLog::LOG_TYPE_DELETE_SUPPLIER,
+        'description' => 'A supplier'. ' (' .$supplier->user_email . ') has been deleted by ' 
+                . auth()->user()->fname . ' ' 
+                . auth()->user()->lname 
+                . ' (' . auth()->user()->email . ')',
+            'user_id' => auth()->id(), 
+        ]);
         Session::flash('message', 'Supplier deleted successfully.');
         return redirect()->route('suppliers.index')->with('success', 'Supplier deleted successfully.');
     }

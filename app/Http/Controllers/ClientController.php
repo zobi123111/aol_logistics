@@ -9,13 +9,39 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Role;
 use Illuminate\Support\Facades\Session;
+use App\Models\UserActivityLog;
+use Yajra\DataTables\DataTables;
+
 
 class ClientController extends Controller
 {
-    public function index()
+    public function index(Request $request )
     {
-        $clients = User::with('roledata')->where('is_client', 1)->get(); 
-        return view('client.index', compact('clients'));
+        // $clients = User::with('roledata')->where('is_client', 1)->get(); 
+        // return view('client.index', compact('clients'));
+        if ($request->ajax()) {
+            $clients = User::with('roledata')->where('is_client', 1); 
+    
+            return DataTables::of($clients)
+            ->addColumn('role_name', function ($client) {
+                return $client->roledata ? $client->roledata->role_name : '---'; // Concatenating first and last name
+            })
+            ->addColumn('status', function ($client) {
+                return view('client.partials.toggle_status', compact('client'))->render();
+            })
+            ->addColumn('actions', function ($client) {
+                return view('client.partials.actions', compact('client'))->render();
+            })
+            ->addColumn('client_users', function ($client) {
+                return '<a href="'.route('client_users.index', encode_id($client->id)).'" class="btn btn-primary create-button btn_primary_color">
+                            <i class="fa-solid fa-user"></i> Manage
+                        </a>';
+            })
+            ->rawColumns(['status', 'actions', 'client_users']) 
+            ->make(true);
+        }
+    
+        return view('client.index');
     }
 
     public function create()
@@ -69,6 +95,16 @@ class ClientController extends Controller
             ]);
         
             DB::commit();
+
+             // add log
+            UserActivityLog::create([
+                'log_type' => UserActivityLog::LOG_TYPE_CREATE_CLIENT,
+                'description' => 'A new client user'. ' (' .$request->email . ') has been created by ' 
+                        . auth()->user()->fname . ' ' 
+                        . auth()->user()->lname 
+                        . ' (' . auth()->user()->email . ') with role '.$role->role_name,
+                'user_id' => auth()->id(), 
+            ]);
             return redirect()->route('client.index')
             ->with('message', 'Client created successfully!');
 
@@ -88,6 +124,16 @@ class ClientController extends Controller
             return redirect()->route('client.index')->with('error', 'Client not found.');
         }
         $client_data->delete();
+
+         // add log
+         UserActivityLog::create([
+            'log_type' => UserActivityLog::LOG_TYPE_DELETE_CLIENT,
+            'description' => 'A new client user'. ' (' .$client_data->email . ') has been deleted by ' 
+                    . auth()->user()->fname . ' ' 
+                    . auth()->user()->lname 
+                    . ' (' . auth()->user()->email . ')',
+                'user_id' => auth()->id(), 
+            ]);
         Session::flash('message', 'Client deleted successfully.');
         return redirect()->route('client.index')->with('success', 'Client deleted successfully.');
     }
@@ -128,6 +174,16 @@ class ClientController extends Controller
          $user->business_name = $request->business_name;
 
          $user->save();
+
+          // add log
+        UserActivityLog::create([
+        'log_type' => UserActivityLog::LOG_TYPE_EDIT_CLIENT,
+        'description' => 'A new client user'. ' (' .$request->email . ') has been updated by ' 
+                . auth()->user()->fname . ' ' 
+                . auth()->user()->lname 
+                . ' (' . auth()->user()->email . ')',
+            'user_id' => auth()->id(), 
+        ]);
          return redirect()->route('client.index', ['supplierId' => $clientId])
              ->with('message', 'Client updated successfully.');
      }
