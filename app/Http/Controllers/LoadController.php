@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Load;
 use App\Models\Supplier;
 use Yajra\DataTables\DataTables;
-
+use App\Models\Origin;
+use App\Models\Destination;
 
 class LoadController extends Controller
 {
@@ -18,9 +19,24 @@ class LoadController extends Controller
         // $loads = Load::get();
         // return view('loads.index', compact('loads'));
         if ($request->ajax()) {
-            $loads = Load::get(); 
-    
+            $loads = Load::with(['origindata', 'destinationdata', 'supplierdata'])->latest('id')->get(); 
+            // dd($loads->pluck('id'));
+
             return DataTables::of($loads)
+            ->addColumn('originval', function ($load) {
+                return $load->origindata
+                    ? $load->origindata->street . ', ' . $load->origindata->city . ', ' . $load->origindata->state . ', ' . $load->origindata->country
+                    : 'N/A';
+            })
+            ->addColumn('destinationval', function ($load) {
+                return $load->destinationdata
+                    ? $load->destinationdata->street . ', ' . $load->destinationdata->city . ', ' . $load->destinationdata->state . ', ' . $load->destinationdata->country
+                    : 'N/A';
+            })
+            ->addColumn('suppliercompany', function ($load) {
+                return $load->supplierdata ? $load->supplierdata->company_name : '---';
+                    
+            })
             ->addColumn('actions', function ($load) {
                 $editUrl = route('loads.edit', encode_id($load->id));
                 $deleteId = encode_id($load->id);
@@ -37,9 +53,10 @@ class LoadController extends Controller
                         </a>';
             })
             
-            ->rawColumns(['actions', 'assign']) 
+            ->rawColumns(['originval', 'destinationval', 'actions', 'assign', 'suppliercompany']) 
             ->make(true);
         }
+
         return view('loads.index');
     }
 
@@ -48,7 +65,11 @@ class LoadController extends Controller
      */
     public function create()
     {
-        return view('loads.create');
+        // Fetch origins and destinations
+        $origins = Origin::all();
+        $destinations = Destination::all();
+        $suppliers = Supplier::all();
+        return view('loads.create', compact('origins', 'destinations', 'suppliers'));
     }
 
     /**
@@ -59,18 +80,21 @@ class LoadController extends Controller
         $request->validate([
             'origin' => 'required',
             'destination' => 'required',
+            'service_type' => 'required',
             'payer' => 'required',
-            // 'equipment_type' => 'required',
-            'weight' => 'required|numeric',
+            'equipment_type' => 'required',
+            'supplier_id' => 'nullable',
+            'weight' => 'nullable|numeric',
             'delivery_deadline' => 'required|date',
-            'customer_po' => 'required|nullable',
+            'customer_po' => 'nullable',
             'is_hazmat' => 'boolean',
             'is_inbond' => 'boolean',
         ]);
-    
+        $status = $request->filled('supplier_id') ? 'assigned' : 'requested';
+
         Load::create(array_merge(
             $request->except('aol_number'), 
-            ['status' => 'requested']
+            ['status' => $status]
         ));    
         return redirect()->route('loads.index')->with('message', 'Load added successfully.');
     }
@@ -87,8 +111,11 @@ class LoadController extends Controller
     {
         $en = $id;
         $de = decode_id($id);
-        $load = Load::findOrFail($de);
-        return view('loads.edit', compact('load'));
+        $load = Load::with(['origindata', 'destinationdata'])->findOrFail($de);
+        $origins = Origin::all(); 
+        $destinations = Destination::all();
+        $suppliers = Supplier::all();
+        return view('loads.edit', compact('load', 'origins', 'destinations', 'suppliers'));
     }
     
     public function update(Request $request, $id)
@@ -97,22 +124,34 @@ class LoadController extends Controller
             'origin' => 'required|string',
             'destination' => 'required|string',
             'payer' => 'required|string',
-            // 'equipment_type' => 'required|string',
-            'weight' => 'required|numeric',
+            'equipment_type' => 'required|string',
+            'weight' => 'nullable|numeric',
             'delivery_deadline' => 'required|date',
+            'service_type' => 'required',
+            'supplier_id' => 'nullable',
         ]);
     
         $load = Load::findOrFail($id);
+        $status = $load->status; 
+
+        if ($request->has('supplier_id')) {
+            $status = $request->filled('supplier_id') ? 'assigned' : 'requested';
+        }
+
+
         $load->update([
             'origin' => $request->origin,
             'destination' => $request->destination,
             'payer' => $request->payer,
-            // 'equipment_type' => $request->equipment_type,
+            'equipment_type' => $request->equipment_type,
+            'service_type' => $request->service_type,
             'weight' => $request->weight,
             'delivery_deadline' => $request->delivery_deadline,
             'customer_po' => $request->customer_po,
             'is_hazmat' => $request->has('is_hazmat'),
             'is_inbond' => $request->has('is_inbond'),
+            'supplier_id' => $request->supplier_id,
+            'status' => $status,
         ]);
     
         return redirect()->route('loads.index')->with('meassge', 'Load updated successfully.');
@@ -142,8 +181,9 @@ class LoadController extends Controller
     })->with(['services' => function ($query) use ($load) {
         $query->where('origin', $load->origin)
               ->where('destination', $load->destination)
-              ->orderBy('cost', 'asc'); // Sort services by cost (ascending)
-    }])->get();
+              ->orderBy('cost', 'asc');
+    }, 'services.origindata', 
+        'services.destinationdata'])->get();
     
     return view('loads.assign', compact('load', 'suppliers'));
 }

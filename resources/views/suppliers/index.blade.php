@@ -48,7 +48,7 @@
                 <th>Status</th>
                 @endif
                 @if(checkAllowedModule('suppliers', 'suppliers.edit')->isNotEmpty() || checkAllowedModule('suppliers', 'suppliers.show')->isNotEmpty()|| checkAllowedModule('suppliers', 'suppliers.destroy')->isNotEmpty())
-                <th scope="col">Actions</th>
+                <th scope="col" width="100px">Actions</th>
                 @endif
                 <th scope="col">User</th>
                 <th scope="col">Equipment</th>
@@ -108,6 +108,10 @@ $(document).ready(function() {
             {
                 targets: 0, 
                 className: "company" 
+            },
+            {
+                targets: 7, 
+                className: "icon-design" 
             }
         ]
     });

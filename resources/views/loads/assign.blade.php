@@ -37,14 +37,16 @@
                 <tr>
                     <td>{{ $supplier->company_name }}</td>
                     <td>
-                        {{ $service->origin }} → {{ $service->destination }}
+                    {{ $service->origindata ? $service->origindata->street . ', ' . $service->origindata->city . ', ' . $service->origindata->state . ', ' . $service->origindata->zip . ', ' . $service->origindata->country : 'N/A' }}
+                    →  {{ $service->destinationdata ? $service->destinationdata->street . ', ' . $service->destinationdata->city . ', ' . $service->destinationdata->state . ', ' . $service->destinationdata->zip . ', ' . $service->destinationdata->country : 'N/A' }}
+
                     </td>
                     <td>${{ number_format($service->cost, 2) }}</td>
                     <td>
                     @if($load->supplier_id == $supplier->id)
                  <span class="badge bg-success">Assigned</span>
                 @else
-                    <a href="{{ route('loads.assign.supplier', ['load_id' => encode_id($load->id), 'supplier_id' => encode_id($supplier->id), 'service_id' => encode_id($service->id)]) }}" class="btn btn-primary">
+                    <a href="{{ route('loads.assign.supplier', ['load_id' => encode_id($load->id), 'supplier_id' => encode_id($supplier->id), 'service_id' => encode_id($service->id)]) }}" class="btn btn-primary create-button btn_primary_color">
                         Assign
                     </a>
                 @endif

@@ -20,16 +20,19 @@
         <thead>
             <tr>
             <th>AOL Number</th>
+                <th>Service Type</th>
                 <th>Origin</th>
                 <th>Destination</th>
                 <th>Payer</th>
-                <!-- <th>Equipment Type</th> -->
+                <th>Equipment Type</th>
                 <th>Weight</th>
                 <th>Delivery Deadline</th>
                 <th>Customer PO</th>
                 <th>HazMat</th>
                 <th>Inbond</th>
                 <th>Status</th>
+                <th>Supplier Company</th>
+
                 <th>Actions</th>
                 <th>Assign</th>
 
@@ -70,12 +73,14 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax: "{{ route('loads.index') }}", 
+        order: [],
         columns: [
             { data: 'aol_number', name: 'aol_number' },
-            { data: 'origin', name: 'origin' },
-            { data: 'destination', name: 'destination' },
+            { data: 'service_type', name: 'service_type' },
+            { data: 'originval', name: 'origin' },
+            { data: 'destinationval', name: 'destination' },
             { data: 'payer', name: 'payer'},
-            // { data: 'equipment_type', name: 'equipment_type' },
+            { data: 'equipment_type', name: 'equipment_type' },
             { data: 'weight', name: 'weight' },
             { data: 'delivery_deadline', name: 'delivery_deadline',  render: function (data, type, row) {
                 if (data) {
@@ -87,26 +92,27 @@ $(document).ready(function() {
             { data: 'is_hazmat', name: 'is_hazmat', orderable: false, searchable: false },
             { data: 'is_inbond', name: 'is_inbond', orderable: false, searchable: false },
             { data: 'status', name: 'status'},
+            { data: 'suppliercompany', name: 'suppliercompany' },
             { data: 'actions', name: 'actions', orderable: false, searchable: false },
             { data: 'assign', name: 'assign', orderable: false, searchable: false },
         ],
         columnDefs: [
             {
-            targets: 3, 
+            targets: 4, 
             className: 'text-center',
             render: function(data, type, row, meta) {
                return data=='another_party'? 'Another party will pay for the load':'Client'
             }
         },
             {
-            targets: 7, 
+            targets: 9, 
             className: 'text-center',
             render: function(data, type, row) {
                 return '<input type="checkbox" ' + (row.is_hazmat ? 'checked' : '') + ' disabled>';
             }
         },
         {
-            targets: 8, 
+            targets: 10, 
             className: 'text-center',
             render: function(data, type, row) {
                 return '<input type="checkbox" ' + (row.is_inbond ? 'checked' : '') + ' disabled>';

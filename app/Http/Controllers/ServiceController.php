@@ -3,6 +3,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Service;
 use App\Models\Supplier;
+use App\Models\Origin;
+use App\Models\Destination;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -14,8 +16,12 @@ class ServiceController extends Controller
     {
         $de_supplier_id = decode_id($supplier_id);
         $supplier = Supplier::findOrFail($de_supplier_id);
-        $services = $supplier->services;  
-        return view('services.index', compact('supplier', 'services'));
+        $services = Service::where('supplier_id', $de_supplier_id)
+        ->with(['origindata', 'destinationdata'])
+        ->get();
+        $origins = Origin::all();
+        $destinations = Destination::all();
+        return view('services.index', compact('supplier', 'services', 'origins', 'destinations'));
     }
 
     // Show form to create a new service
@@ -23,7 +29,10 @@ class ServiceController extends Controller
     {
         $de_supplier_id = decode_id($supplier_id);
         $supplier = Supplier::findOrFail($de_supplier_id);
-        return view('services.create', compact('supplier'));
+        // Fetch origins and destinations
+        $origins = Origin::all();
+        $destinations = Destination::all();
+        return view('services.create', compact('supplier', 'origins', 'destinations'));
     }
 
     // Store a newly created service
@@ -52,8 +61,10 @@ class ServiceController extends Controller
     public function edit($supplierId, $serviceId)
     {
         $serviceId = decode_id($serviceId);
-        $service = Service::findOrFail($serviceId);
-        return view('services.edit', compact('service', 'supplierId'));
+        $service = Service::with(['origindata', 'destinationdata'])->findOrFail($serviceId);
+        $origins = Origin::all(); 
+        $destinations = Destination::all();
+        return view('services.edit', compact('service', 'supplierId', 'origins', 'destinations'));
     }
 
     // Update the service

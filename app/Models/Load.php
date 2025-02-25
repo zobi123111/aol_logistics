@@ -13,7 +13,7 @@ class Load extends Model
     protected $fillable = [
         'aol_number', 'origin', 'destination', 'payer', 
         'equipment_type', 'weight', 'delivery_deadline', 
-        'customer_po', 'is_hazmat', 'is_inbond', 'status'
+        'customer_po', 'is_hazmat', 'is_inbond', 'status', 'service_type', 'supplier_id'
     ];
 
     protected $casts = [
@@ -43,5 +43,22 @@ class Load extends Model
         return $aol;
     }
     
+    // Relationship with Origin (Address)
+    public function origindata()
+    {
+        return $this->belongsTo(Origin::class, 'origin');
+    }
+
+    // Relationship with Destination (Address)
+    public function destinationdata()
+    {
+        return $this->belongsTo(Destination::class, 'destination');
+    }
+
+    // Relationship with Destination (Address)
+    public function supplierdata()
+    {
+        return $this->belongsTo(Supplier::class, 'supplier_id');
+    }
     
 }

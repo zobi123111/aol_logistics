@@ -15,6 +15,9 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\TrackTrailer;
 use App\Http\Controllers\ClientUserController;
 use App\Http\Controllers\LoadController;
+use App\Http\Controllers\OriginController;
+use App\Http\Controllers\DestinationController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -70,6 +73,9 @@ Route::middleware(['auth.user', 'otp.verified', 'role.permission'])->group(funct
     Route::get('/loads/{id}/assign', [LoadController::class, 'assignPage'])->name('loads.assign');
     Route::get('/loads/{load_id}/assign/{supplier_id}/{service_id}', [LoadController::class, 'assignSupplier'])
     ->name('loads.assign.supplier');
+    Route::resource('origins', OriginController::class);
+    Route::resource('destinations', DestinationController::class);
+
 });
 
 Route::middleware(['auth.user', 'otp.verified', 'check.supplier'])->group(function () {

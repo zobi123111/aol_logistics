@@ -1371,3 +1371,7 @@ div#append_error {
 .switch-color{
   background-color: #00709e;
 }
+
+td.icon-design a, td.icon-design i {
+  padding: 0px 5px 0px 5px;
+}

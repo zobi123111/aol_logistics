@@ -354,12 +354,7 @@
                     <div class="text-danger">{{ $message[0] }}</div>
                     @endforeach
                 </div>
-                </div>
-
-                <!-- Submit Button -->
-                <div class="text-center">
-                    <button type="submit" class="btn btn-success">Update Supplier</button>
-                </div>
+                    <button type="submit" class="btn btn-primary btn_primary_color">Update Supplier</button>
             </form>
         </div>
     </div>

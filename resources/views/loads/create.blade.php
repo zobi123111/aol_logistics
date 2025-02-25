@@ -1,5 +1,5 @@
-@section('title', 'Supplier Equipment')
-@section('sub-title', 'Supplier Equipment')
+@section('title', 'Load')
+@section('sub-title', 'Load')
 @extends('layout.app')
 @section('content')
 <div class="main_cont_outer">
@@ -16,8 +16,7 @@
         {{ session()->get('message') }}
     </div>
     @endif
-
-    @if ($errors->any())
+    <!-- @if ($errors->any())
     <div class="alert alert-danger">
         <ul>    
             @foreach ($errors->all() as $error)
@@ -25,20 +24,49 @@
             @endforeach
         </ul>
     </div>
-@endif
+@endif -->
 
     <div class="card card-container">
         <div class="card-body">
         <form action="{{ route('loads.store') }}" method="POST">
         @csrf
-        <div class="form-group mb-3 mt-3">
+
+        <div class="form-group form-group mb-3 mt-3">
+            <label for="service_type" class="form-label">Service Type<span class="text-danger">*</span></label>
+            <select name="service_type" id="service_type" class="form-control">
+                <option value="">Select Service Type</option>
+                <option value="Express" {{ old('service_type') == 'Express' ? 'selected' : '' }}>Express</option>
+                <option value="Standard" {{ old('service_type') == 'Standard' ? 'selected' : '' }}>Standard</option>
+                <option value="Overnight" {{ old('service_type') == 'Overnight' ? 'selected' : '' }}>Overnight</option>
+            </select>
+            @error('service_type')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="supplier_id" class="form-label">Select Supplier</label>
+            <select name="supplier_id" id="supplier_id" class="form-control select2">
+                <option value="">Select Supplier</option>
+                @foreach($suppliers as $supplier)
+                    <option value="{{ $supplier->id }}" {{ old('supplier_id') == $supplier->id ? 'selected' : '' }}>
+                        {{ $supplier->company_name }}
+                    </option>
+                @endforeach
+            </select>
+            @error('supplier_id')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
+        </div>
+        <div class="form-group mb-3">
                 <label for="origin" class="form-label">Origin<span class="text-danger">*</span></label>
                 <select name="origin" id="origin" class="form-control">
                     <option value="">Select Origin</option>
-                    <option value="Chicago, IL" {{ old('origin') == 'Chicago, IL' ? 'selected' : '' }}>Chicago, IL</option>
-                    <option value="New York, NY" {{ old('origin') == 'New York, NY' ? 'selected' : '' }}>New York, NY</option>
-                    <option value="Los Angeles, CA" {{ old('origin') == 'Los Angeles, CA' ? 'selected' : '' }}>Los Angeles, CA</option>
-                    <option value="Houston, TX" {{ old('origin') == 'Houston, TX' ? 'selected' : '' }}>Houston, TX</option>
+                    @foreach($origins as $origin)
+                        <option value="{{ $origin->id }}" {{ old('origin') == $origin->id ? 'selected' : '' }}>
+                            {{ $origin->street }}, {{ $origin->city }}, {{ $origin->state }}, {{ $origin->zip }}, {{ $origin->country }}
+                        </option>
+                    @endforeach
                 </select>
                 @error('origin')
                     <div class="text-danger">{{ $message }}</div>
@@ -49,10 +77,11 @@
                 <label for="destination" class="form-label">Destination<span class="text-danger">*</span></label>
                 <select name="destination" id="destination" class="form-control">
                     <option value="">Select Destination</option>
-                    <option value="Miami, FL" {{ old('destination') == 'Miami, FL' ? 'selected' : '' }}>Miami, FL</option>
-                    <option value="Seattle, WA" {{ old('destination') == 'Seattle, WA' ? 'selected' : '' }}>Seattle, WA</option>
-                    <option value="Denver, CO" {{ old('destination') == 'Denver, CO' ? 'selected' : '' }}>Denver, CO</option>
-                    <option value="Atlanta, GA" {{ old('destination') == 'Atlanta, GA' ? 'selected' : '' }}>Atlanta, GA</option>
+                    @foreach($destinations as $destination)
+                        <option value="{{ $destination->id }}" {{ old('destination') == $destination->id ? 'selected' : '' }}>
+                            {{ $destination->street }}, {{ $destination->city }}, {{ $destination->state }}, {{ $destination->zip }}, {{ $destination->country }}
+                        </option>
+                    @endforeach
                 </select>
                 @error('destination')
                     <div class="text-danger">{{ $message }}</div>
@@ -71,8 +100,8 @@
                 @enderror
         </div>
 
-        <!-- <div class="form-group mb-3">
-            <label for="equipment_type" class="form-label">Equipment Type</label>
+        <div class="form-group mb-3">
+            <label for="equipment_type" class="form-label">Equipment Type<span class="text-danger">*</span></label>
             <select name="equipment_type" id="equipment_type" class="form-control">
                 <option value="">Select Equipment</option>
                 <option value="53' Truck" {{ old('equipment_type') == "53' Truck" ? 'selected' : '' }}>53' Truck</option>
@@ -83,10 +112,10 @@
                 @error('equipment_type')
                     <div class="text-danger">{{ $message }}</div>
                 @enderror
-        </div> -->
+        </div>
 
         <div class="form-group mb-3">
-            <label for="weight" class="form-label">Weight<span class="text-danger">*</span></label>
+            <label for="weight" class="form-label">Weight</label>
             <input type="text" name="weight" id="weight" class="form-control"  value="{{old('weight')}}">
             @error('equipment_type')
                     <div class="text-danger">{{ $message }}</div>
@@ -96,13 +125,13 @@
         <div class="form-group mb-3">
             <label for="delivery_deadline" class="form-label">Delivery Deadline<span class="text-danger">*</span></label>
             <input type="date" id="delivery_deadline" name="delivery_deadline" class="form-control" value="{{old('delivery_deadline')}}">
-            @error('equipment_type')
+            @error('delivery_deadline')
                     <div class="text-danger">{{ $message }}</div>
                 @enderror
         </div>
 
         <div class="form-group mb-3">
-            <label for="customer_po" class="form-label">Customer PO / Reference Number<span class="text-danger">*</span></label>
+            <label for="customer_po" class="form-label">Customer PO / Reference Number</label>
             <input type="text" id="customer_po" name="customer_po" class="form-control" value="{{old('customer_po')}}">
             @error('customer_po')
                     <div class="text-danger">{{ $message }}</div>
@@ -136,7 +165,10 @@
 
 <script>
 $(document).ready(function() {
-
+    $('#supplier_id').select2({
+            placeholder: "Select a Supplier",
+            allowClear: true
+        });
 });
 </script>
 

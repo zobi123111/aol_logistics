@@ -26,10 +26,11 @@
                 <label for="origin" class="form-label">Origin<span class="text-danger">*</span></label>
                 <select name="origin" id="origin" class="form-control">
                     <option value="">Select Origin</option>
-                    <option value="Chicago, IL" {{ old('origin') == 'Chicago, IL' ? 'selected' : '' }}>Chicago, IL</option>
-                    <option value="New York, NY" {{ old('origin') == 'New York, NY' ? 'selected' : '' }}>New York, NY</option>
-                    <option value="Los Angeles, CA" {{ old('origin') == 'Los Angeles, CA' ? 'selected' : '' }}>Los Angeles, CA</option>
-                    <option value="Houston, TX" {{ old('origin') == 'Houston, TX' ? 'selected' : '' }}>Houston, TX</option>
+                    @foreach($origins as $origin)
+                        <option value="{{ $origin->id }}" {{ old('origin') == $origin->id ? 'selected' : '' }}>
+                            {{ $origin->street }}, {{ $origin->city }}, {{ $origin->state }}, {{ $origin->zip }}, {{ $origin->country }}
+                        </option>
+                    @endforeach
                 </select>
                 @error('origin')
                     <div class="text-danger">{{ $message }}</div>
@@ -40,10 +41,11 @@
                 <label for="destination" class="form-label">Destination<span class="text-danger">*</span></label>
                 <select name="destination" id="destination" class="form-control">
                     <option value="">Select Destination</option>
-                    <option value="Miami, FL" {{ old('destination') == 'Miami, FL' ? 'selected' : '' }}>Miami, FL</option>
-                    <option value="Seattle, WA" {{ old('destination') == 'Seattle, WA' ? 'selected' : '' }}>Seattle, WA</option>
-                    <option value="Denver, CO" {{ old('destination') == 'Denver, CO' ? 'selected' : '' }}>Denver, CO</option>
-                    <option value="Atlanta, GA" {{ old('destination') == 'Atlanta, GA' ? 'selected' : '' }}>Atlanta, GA</option>
+                    @foreach($destinations as $destination)
+                        <option value="{{ $destination->id }}" {{ old('destination') == $destination->id ? 'selected' : '' }}>
+                            {{ $destination->street }}, {{ $destination->city }}, {{ $destination->state }}, {{ $destination->zip }}, {{ $destination->country }}
+                        </option>
+                    @endforeach
                 </select>
                 @error('destination')
                     <div class="text-danger">{{ $message }}</div>

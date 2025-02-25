@@ -15,15 +15,7 @@
         {{ session()->get('message') }}
     </div>
     @endif
-    @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>    
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
+
     <div class="card card-container">
     <div class="card-body">
     <form action="{{ route('loads.update', $load->id) }}" method="POST">
@@ -31,13 +23,43 @@
     @method('PUT')
 
     <div class="form-group mb-3 mt-3">
+    <label for="service_type" class="form-label">Service Type<span class="text-danger">*</span></label>
+    <select name="service_type" id="service_type" class="form-control">
+        <option value="">Select Service Type</option>
+        <option value="Express" {{ old('service_type', $load->service_type) == 'Express' ? 'selected' : '' }}>Express</option>
+        <option value="Standard" {{ old('service_type', $load->service_type) == 'Standard' ? 'selected' : '' }}>Standard</option>
+        <option value="Overnight" {{ old('service_type', $load->service_type) == 'Overnight' ? 'selected' : '' }}>Overnight</option>
+    </select>
+    @error('service_type')
+        <div class="text-danger">{{ $message }}</div>
+    @enderror
+</div>
+<div class="form-group form-group mb-3 mt-3">
+    <label for="supplier_id" class="form-label">Supplier</label>
+    <select name="supplier_id" id="supplier_id" class="form-control select2">
+        <option value="">Select Supplier</option>
+        @foreach ($suppliers as $supplier)
+            <option value="{{ $supplier->id }}" 
+                {{ old('supplier_id', $load->supplier_id ?? '') == $supplier->id ? 'selected' : '' }}>
+                {{ $supplier->company_name }}
+            </option>
+        @endforeach
+    </select>
+    @error('supplier_id')
+        <div class="text-danger">{{ $message }}</div>
+    @enderror
+</div>
+
+    <div class="form-group mb-3">
         <label for="origin" class="form-label">Origin<span class="text-danger">*</span></label>
         <select name="origin" id="origin" class="form-control">
             <option value="">Select Origin</option>
-            <option value="Chicago, IL" {{ $load->origin == 'Chicago, IL' ? 'selected' : '' }}>Chicago, IL</option>
-            <option value="New York, NY" {{ $load->origin == 'New York, NY' ? 'selected' : '' }}>New York, NY</option>
-            <option value="Los Angeles, CA" {{ $load->origin == 'Los Angeles, CA' ? 'selected' : '' }}>Los Angeles, CA</option>
-            <option value="Houston, TX" {{ $load->origin == 'Houston, TX' ? 'selected' : '' }}>Houston, TX</option>
+            @foreach($origins as $origin)
+                <option value="{{ $origin->id }}" {{ old('origin', $load->origindata->id) == $origin->id ? 'selected' : '' }}>
+                    {{ $origin->street }}, {{ $origin->city }}, {{ $origin->state }}, {{ $origin->country }}
+                </option>
+            @endforeach
+            </select>
         </select>
         @error('origin')
             <div class="text-danger">{{ $message }}</div>
@@ -48,10 +70,11 @@
         <label for="destination" class="form-label">Destination<span class="text-danger">*</span></label>
         <select name="destination" id="destination" class="form-control">
             <option value="">Select Destination</option>
-            <option value="Miami, FL" {{ $load->destination == 'Miami, FL' ? 'selected' : '' }}>Miami, FL</option>
-            <option value="Seattle, WA" {{ $load->destination == 'Seattle, WA' ? 'selected' : '' }}>Seattle, WA</option>
-            <option value="Denver, CO" {{ $load->destination == 'Denver, CO' ? 'selected' : '' }}>Denver, CO</option>
-            <option value="Atlanta, GA" {{ $load->destination == 'Atlanta, GA' ? 'selected' : '' }}>Atlanta, GA</option>
+            @foreach($destinations as $destination)
+                <option value="{{ $destination->id }}" {{ old('destination', $load->destinationdata->id) == $destination->id ? 'selected' : '' }}>
+                    {{ $destination->street }}, {{ $destination->city }}, {{ $destination->state }}, {{ $destination->country }}
+                </option>
+            @endforeach
         </select>
         @error('destination')
             <div class="text-danger">{{ $message }}</div>
@@ -69,9 +92,9 @@
             <div class="text-danger">{{ $message }}</div>
         @enderror
     </div>
-<!-- 
+
     <div class="form-group mb-3">
-        <label for="equipment_type" class="form-label">Equipment Type</label>
+        <label for="equipment_type" class="form-label">Equipment Type<span class="text-danger">*</span></label>
         <select name="equipment_type" id="equipment_type" class="form-control">
             <option value="">Select Equipment</option>
             <option value="53' Truck" {{ $load->equipment_type == "53' Truck" ? 'selected' : '' }}>53' Truck</option>
@@ -82,10 +105,10 @@
         @error('equipment_type')
             <div class="text-danger">{{ $message }}</div>
         @enderror
-    </div> -->
+    </div>
 
     <div class="form-group mb-3">
-        <label for="weight" class="form-label">Weight<span class="text-danger">*</span></label>
+        <label for="weight" class="form-label">Weight</label>
         <input type="text" name="weight" id="weight" class="form-control" value="{{ $load->weight }}">
         @error('weight')
             <div class="text-danger">{{ $message }}</div>
@@ -101,7 +124,7 @@
     </div>
 
     <div class="form-group mb-3">
-        <label for="customer_po" class="form-label">Customer PO / Reference Number<span class="text-danger">*</span></label>
+        <label for="customer_po" class="form-label">Customer PO / Reference Number</label>
         <input type="text" id="customer_po" name="customer_po" class="form-control" value="{{ $load->customer_po }}">
         @error('customer_po')
             <div class="text-danger">{{ $message }}</div>
@@ -136,7 +159,10 @@
 
 <script>
 $(document).ready(function() {
-  
+    $('.select2').select2({
+        placeholder: "Select Supplier",
+        allowClear: true
+    });
 });
 
 </script>

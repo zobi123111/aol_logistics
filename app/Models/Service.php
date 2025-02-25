@@ -21,4 +21,16 @@ class Service extends Model
     {
         return $this->belongsTo(Supplier::class);
     }
+
+     // Relationship with Origin (Address)
+     public function origindata()
+     {
+         return $this->belongsTo(Origin::class, 'origin');
+     }
+ 
+     // Relationship with Destination (Address)
+     public function destinationdata()
+     {
+         return $this->belongsTo(Destination::class, 'destination');
+     }
 }

@@ -35,9 +35,13 @@
             @else
             @foreach($services as $service)
                 <tr>
-                    <td>{{ $service->origin }}</td>
-                    <td>{{ $service->destination }}</td>
-                    <td>{{ $service->cost }}</td>
+                <td>
+                    {{ $service->origindata ? $service->origindata->street . ', ' . $service->origindata->city . ', ' . $service->origindata->state . ', ' . $service->origindata->zip . ', ' . $service->origindata->country : 'N/A' }}
+                </td>
+                <td>
+                    {{ $service->destinationdata ? $service->destinationdata->street . ', ' . $service->destinationdata->city . ', ' . $service->destinationdata->state . ', ' . $service->destinationdata->zip . ', ' . $service->destinationdata->country : 'N/A' }}
+                </td>                   
+                <td>{{ $service->cost }}</td>
                     <td>
                         <!-- <a href="{{ route('services.edit', [$supplier->id, $service->id]) }}" class="btn btn-warning">Edit</a>
                         <form action="{{ route('services.destroy', [$supplier->id, $service->id]) }}" method="POST" style="display:inline;">
