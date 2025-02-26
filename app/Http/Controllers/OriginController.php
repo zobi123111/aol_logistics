@@ -26,6 +26,7 @@ class OriginController extends Controller
             'state' => 'required|string|max:255',
             'zip' => 'required|numeric|digits_between:4,10',
             'country' => 'required|string|max:255',
+            'name' => 'nullable|string|max:255',
         ]);
 
         Origin::create($request->all());
@@ -46,6 +47,7 @@ class OriginController extends Controller
             'state' => 'required|string|max:255',
             'zip' => 'required|string|max:10',
             'country' => 'required|string|max:255',
+            'name' => 'nullable|string|max:255',
         ]);
 
         $origin->update($request->all());

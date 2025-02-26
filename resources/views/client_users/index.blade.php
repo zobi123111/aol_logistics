@@ -1,5 +1,5 @@
-@section('title', 'Client Customer Service Executve')
-@section('sub-title', 'Client Customer Service Executve')
+@section('title', 'Client Customer Service Executive')
+@section('sub-title', 'Client Customer Service Executive')
 @extends('layout.app')
 @section('content')
 <div class="main_cont_outer">
@@ -50,7 +50,7 @@
                         </label>
                     </div>
                 </td>   
-                 <td>
+                 <td class="icon-design">
                 <a href="{{ route('client_users.edit', [encode_id($clientdata->id), $id]) }}" class=""><i
                         class="fa fa-edit edit-user-icon table_icon_style blue_icon_color"></i></a>
 

@@ -20,6 +20,13 @@
         <div class="card-body">
         <form action="{{ route('origins.store') }}" method="POST">
         @csrf
+        <div class="mb-3 mt-3">
+            <label for="name" class="form-label">Name for Address</label>
+            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" >
+            @error('name')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
+        </div>
         <div class="mb-3">
             <label for="street" class="form-label">Street</label>
             <input type="text" name="street" class="form-control @error('street') is-invalid @enderror" value="{{ old('street') }}" >

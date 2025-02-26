@@ -75,7 +75,8 @@ Route::middleware(['auth.user', 'otp.verified', 'role.permission'])->group(funct
     ->name('loads.assign.supplier');
     Route::resource('origins', OriginController::class);
     Route::resource('destinations', DestinationController::class);
-
+    Route::post('/assign-service', [LoadController::class, 'assign'])->name('assign.service');
+    Route::delete('/unassign-service/{id}', [LoadController::class, 'unassignService'])->name('unassign.service');
 });
 
 Route::middleware(['auth.user', 'otp.verified', 'check.supplier'])->group(function () {

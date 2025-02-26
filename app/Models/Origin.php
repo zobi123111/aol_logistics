@@ -13,6 +13,7 @@ class Origin extends Model
         'city',
         'state',
         'zip',
-        'country'
+        'country',
+        'name'
     ];
 }

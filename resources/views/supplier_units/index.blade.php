@@ -54,7 +54,7 @@
                             </form>
                         @endif
                     </td> -->
-                    <td>
+                    <td class="icon-design">
                     <a href="{{ route('supplier_units.edit', [encode_id($supplier->id), encode_id($unit->id)]) }}" class=""><i
                             class="fa fa-edit edit-user-icon table_icon_style blue_icon_color"></i></a>
                     <i class="fa-solid fa-trash delete-icon table_icon_style blue_icon_color"

@@ -28,6 +28,7 @@ class DestinationController extends Controller
             'state' => 'required|string|max:255',
             'zip' => 'required|numeric',
             'country' => 'required|string|max:255',
+            'name' => 'nullable|string|max:255',
         ]);
 
         Destination::create($request->all());
@@ -52,6 +53,7 @@ class DestinationController extends Controller
             'state' => 'required|string|max:255',
             'zip' => 'required|numeric',
             'country' => 'required|string|max:255',
+            'name' => 'nullable|string|max:255',
         ]);
 
         $destination->update($request->all());

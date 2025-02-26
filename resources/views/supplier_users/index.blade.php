@@ -114,7 +114,12 @@ $(document).ready(function() {
             {
                 targets: 0, 
                 className: "username" 
+            },
+            {
+                targets: 3, 
+                className: "icon-design" 
             }
+
         ]
         
     });

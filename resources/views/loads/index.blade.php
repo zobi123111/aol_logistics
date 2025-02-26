@@ -32,8 +32,7 @@
                 <th>Inbond</th>
                 <th>Status</th>
                 <th>Supplier Company</th>
-
-                <th>Actions</th>
+                <th width="160px">Actions</th>
                 <th>Assign</th>
 
             </tr>
@@ -117,6 +116,11 @@ $(document).ready(function() {
             render: function(data, type, row) {
                 return '<input type="checkbox" ' + (row.is_inbond ? 'checked' : '') + ' disabled>';
             }
+        },
+        {
+            targets: 13, 
+            className: 'icon-design',
+           
         }
         ]
     });

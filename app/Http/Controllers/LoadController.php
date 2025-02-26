@@ -8,6 +8,7 @@ use App\Models\Supplier;
 use Yajra\DataTables\DataTables;
 use App\Models\Origin;
 use App\Models\Destination;
+use App\Models\AssignedService;
 
 class LoadController extends Controller
 {
@@ -20,8 +21,6 @@ class LoadController extends Controller
         // return view('loads.index', compact('loads'));
         if ($request->ajax()) {
             $loads = Load::with(['origindata', 'destinationdata', 'supplierdata'])->latest('id')->get(); 
-            // dd($loads->pluck('id'));
-
             return DataTables::of($loads)
             ->addColumn('originval', function ($load) {
                 return $load->origindata
@@ -40,8 +39,11 @@ class LoadController extends Controller
             ->addColumn('actions', function ($load) {
                 $editUrl = route('loads.edit', encode_id($load->id));
                 $deleteId = encode_id($load->id);
-            
-                return '<a href="' . $editUrl . '" class="">
+                $showUrl = route('loads.show', $deleteId);
+                return '<a href="' . $showUrl . '" class="">
+                            <i class="fa fa-eye table_icon_style blue_icon_color"></i>
+                        </a>
+                        <a href="' . $editUrl . '" class="">
                             <i class="fa fa-edit edit-user-icon table_icon_style blue_icon_color"></i>
                         </a>
                         <i class="fa-solid fa-trash delete-icon table_icon_style blue_icon_color"
@@ -83,6 +85,8 @@ class LoadController extends Controller
             'service_type' => 'required',
             'payer' => 'required',
             'equipment_type' => 'required',
+            'trailer_number' => 'nullable',
+            'port_of_entry' => 'nullable',
             'supplier_id' => 'nullable',
             'weight' => 'nullable|numeric',
             'delivery_deadline' => 'required|date',
@@ -102,9 +106,13 @@ class LoadController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        $en = $id;
+        $de = decode_id($id);
+        $load = Load::with(['supplierdata', 'assignedServices.supplier', 'assignedServices.service', 'origindata', 'destinationdata',])->findOrFail($de);
+
+        return view('loads.show', compact('load'));
     }
 
     public function edit($id)
@@ -129,6 +137,8 @@ class LoadController extends Controller
             'delivery_deadline' => 'required|date',
             'service_type' => 'required',
             'supplier_id' => 'nullable',
+            'trailer_number' => 'nullable',
+            'port_of_entry' => 'nullable',
         ]);
     
         $load = Load::findOrFail($id);
@@ -138,9 +148,8 @@ class LoadController extends Controller
             $status = $request->filled('supplier_id') ? 'assigned' : 'requested';
         }
 
-
         $load->update([
-            'origin' => $request->origin,
+            'origin' => $request->origin,     
             'destination' => $request->destination,
             'payer' => $request->payer,
             'equipment_type' => $request->equipment_type,
@@ -150,6 +159,8 @@ class LoadController extends Controller
             'customer_po' => $request->customer_po,
             'is_hazmat' => $request->has('is_hazmat'),
             'is_inbond' => $request->has('is_inbond'),
+            'trailer_number' => $request->trailer_number,
+            'port_of_entry' => $request->port_of_entry,
             'supplier_id' => $request->supplier_id,
             'status' => $status,
         ]);
@@ -175,17 +186,29 @@ class LoadController extends Controller
     $en = $id;
     $de = decode_id($id);
     $load = Load::findOrFail($de);
-    $suppliers = Supplier::whereHas('services', function ($query) use ($load) {
-        $query->where('origin', $load->origin)
-              ->where('destination', $load->destination);
-    })->with(['services' => function ($query) use ($load) {
+    $assignedServiceIds = AssignedService::where('load_id', $load->id)->pluck('service_id');
+    $suppliers = Supplier::whereHas('services', function ($query) use ($load, $assignedServiceIds) {
         $query->where('origin', $load->origin)
               ->where('destination', $load->destination)
-              ->orderBy('cost', 'asc');
-    }, 'services.origindata', 
-        'services.destinationdata'])->get();
-    
-    return view('loads.assign', compact('load', 'suppliers'));
+              ->whereNotIn('id', $assignedServiceIds);
+    })->with(['services' => function ($query) use ($load, $assignedServiceIds) {
+        $query->where('origin', $load->origin)
+              ->where('destination', $load->destination)
+              ->whereNotIn('id', $assignedServiceIds)
+              ->orderBy('cost', 'asc'); 
+    }])->get();
+
+    $assignedServices = AssignedService::where('load_id', $load->id)
+    ->with(['supplier', 'service'])
+    ->get();
+
+    // Get suppliers that do not have matching services
+    $remainingSuppliers = Supplier::whereDoesntHave('services', function ($query) use ($load) {
+        $query->where('origin', $load->origin)
+            ->where('destination', $load->destination);
+    })->get();
+
+    return view('loads.assign', compact('load', 'suppliers','remainingSuppliers', 'assignedServices'));
 }
 
     // Assign Supplier to Load
@@ -202,4 +225,46 @@ class LoadController extends Controller
         return redirect()->back()->with('message', 'Supplier assigned successfully.');
     }
     
+
+    public function assign(Request $request)
+    {
+        // Validate input
+        $request->validate([
+            'load_id' => 'required|exists:loads,id',
+            'supplier_id' => 'required|exists:suppliers,id',
+            'service_id' => 'required|exists:services,id',
+        ]);
+
+        // Check if service is already assigned to the load
+        $existingAssignment = AssignedService::where([
+            'load_id' => $request->load_id,
+            'service_id' => $request->service_id
+        ])->first();
+
+        if ($existingAssignment) {
+            return redirect()->back()->with('error', 'This service is already assigned.');
+        }
+
+        // Assign the service
+        AssignedService::create([
+            'load_id' => $request->load_id,
+            'supplier_id' => $request->supplier_id,
+            'service_id' => $request->service_id,
+        ]);
+
+        return redirect()->back()->with('message', 'Service assigned successfully.');
+    }
+
+    public function unassignService($id)
+    {
+        $assignedService = AssignedService::find($id);
+
+        if ($assignedService) {
+            $assignedService->delete();
+            return back()->with('message', 'Service unassigned successfully.');
+        }
+
+        return back()->with('error', 'Service not found.');
+}
+
 }

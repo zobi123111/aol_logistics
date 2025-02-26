@@ -19,6 +19,7 @@
         <table class="table mt-3" id="origins">
             <thead>
             <tr>
+                <th>Name</th>
                 <th>Street</th>
                 <th>City</th>
                 <th>State</th>
@@ -30,18 +31,19 @@
             <tbody>
                 @foreach($origins as $origin)
                     <tr>
+                    <td>{{ $origin->name ? $origin->name: '---' }}</td>
                     <td>{{ $origin->street }}</td>
                     <td>{{ $origin->city }}</td>
                     <td>{{ $origin->state }}</td>
                     <td>{{ $origin->zip }}</td>
                     <td>{{ $origin->country }}</td>
-                        <td>
+                        <td class="icon-design">
                             <a href="{{ route('origins.edit', $origin) }}" class=""><i
                             class="fa fa-edit edit-user-icon table_icon_style blue_icon_color"></i></a>
                         <form action="{{ route('origins.destroy', $origin) }}" method="POST" class="d-inline delete-form">
                             @csrf
                             @method('DELETE')
-                            <a href="#" class="delete-icon " onclick="confirmDelete(this)">
+                            <a href="#" class="delete-icon blue_icon_color" onclick="confirmDelete(this)">
                                 <i class="fa-solid fa-trash"></i>
                             </a>
                         </form>

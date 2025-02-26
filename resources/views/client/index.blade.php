@@ -87,7 +87,12 @@ $(document).ready(function() {
             {
                 targets: 1, 
                 className: "lname" 
-            }
+            },
+            {
+            targets: 6, 
+            className: 'icon-design',
+           
+        }
         ]
     });
     $(document).on('click', '.delete-icon', function(e) {

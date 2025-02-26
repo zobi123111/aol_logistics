@@ -4,7 +4,7 @@
 @section('content')
 <div class="main_cont_outer">
     <div class="create_btn">
-        <a href="{{ route('supplier_units.index',  encode_id($supplier->id)) }}" class="btn btn-primary create-button btn_primary_color"
+        <a href="{{ route('services.index',  encode_id($supplier->id)) }}" class="btn btn-primary create-button btn_primary_color"
             id="createUser"><i class="bi bi-arrow-left-circle-fill"></i> back</a>
     </div>
     <div id="successMessagea" class="alert alert-success" style="display: none;" role="alert">

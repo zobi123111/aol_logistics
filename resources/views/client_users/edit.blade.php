@@ -1,7 +1,7 @@
 @extends('layout.app')
 
-@section('title', 'Client Customer Service Executve')
-@section('sub-title', 'Client Customer Service Executve')
+@section('title', 'Client Customer Service Executive')
+@section('sub-title', 'Client Customer Service Executive')
 
 @section('content')
 <div class="main_cont_outer">

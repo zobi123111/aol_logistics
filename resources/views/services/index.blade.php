@@ -42,7 +42,7 @@
                     {{ $service->destinationdata ? $service->destinationdata->street . ', ' . $service->destinationdata->city . ', ' . $service->destinationdata->state . ', ' . $service->destinationdata->zip . ', ' . $service->destinationdata->country : 'N/A' }}
                 </td>                   
                 <td>{{ $service->cost }}</td>
-                    <td>
+                    <td class="icon-design">
                         <!-- <a href="{{ route('services.edit', [$supplier->id, $service->id]) }}" class="btn btn-warning">Edit</a>
                         <form action="{{ route('services.destroy', [$supplier->id, $service->id]) }}" method="POST" style="display:inline;">
                             @csrf

@@ -107,6 +107,22 @@
         @enderror
     </div>
 
+
+    <div class="form-group mb-3">
+            <label for="trailer_number" class="form-label">Trailer Number</label>
+            <input type="text" id="trailer_number" name="trailer_number" class="form-control" value="{{ old('trailer_number', $load->trailer_number) }}">
+            @error('trailer_number')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+        </div>
+        <div class="form-group mb-3">
+            <label for="port_of_entry" class="form-label">Port of Entry</label>
+            <input type="text" id="port_of_entry" name="port_of_entry" class="form-control" value="{{ old('port_of_entry', $load->port_of_entry) }}">
+            @error('port_of_entry')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+        </div>
+
     <div class="form-group mb-3">
         <label for="weight" class="form-label">Weight</label>
         <input type="text" name="weight" id="weight" class="form-control" value="{{ $load->weight }}">
