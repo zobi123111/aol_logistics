@@ -1,11 +1,12 @@
 @section('title', 'Loads')
-@section('sub-title', 'Loads')
+{{-- @section('sub-title', 'Loads') --}}
+@section('sub-title', GoogleTranslate::trans('Loads', app()->getLocale()))
 @extends('layout.app')
 @section('content')
 <div class="main_cont_outer">
     <div class="create_btn">
         <a href="{{ route('loads.create') }}" class="btn btn-primary create-button btn_primary_color"
-            id="createrole">Add Load</a>
+            id="createrole"> {{ GoogleTranslate::trans('Add Load', app()->getLocale()) }} </a>
     </div>
     <div id="successMessagea" class="alert alert-success" style="display: none;" role="alert">
         <i class="bi bi-check-circle me-1"></i>
@@ -13,27 +14,28 @@
     @if(session()->has('message'))
     <div id="successMessage" class="alert alert-success fade show" role="alert">
         <i class="bi bi-check-circle me-1"></i>
-        {{ session()->get('message') }}
+        {{-- {{ session()->get('message') }} --}}
+        {{ GoogleTranslate::trans(session('message'), app()->getLocale()) }}
     </div>
     @endif
     <table class="table mt-3" id="loads">
         <thead>
             <tr>
-            <th>AOL Number</th>
-                <th>Service Type</th>
-                <th>Origin</th>
-                <th>Destination</th>
-                <th>Payer</th>
-                <th>Equipment Type</th>
-                <th>Weight</th>
-                <th>Delivery Deadline</th>
-                <th>Customer PO</th>
-                <th>HazMat</th>
-                <th>Inbond</th>
-                <th>Status</th>
-                <th>Supplier Company</th>
-                <th width="160px">Actions</th>
-                <th>Assign</th>
+                <th> {{ GoogleTranslate::trans('AOL Number', app()->getLocale()) }} </th>
+                <th> {{ GoogleTranslate::trans('Service Type', app()->getLocale()) }} </th>
+                <th> {{ GoogleTranslate::trans('Origin', app()->getLocale()) }} </th>
+                <th> {{ GoogleTranslate::trans('Destination', app()->getLocale()) }} </th>
+                <th> {{ GoogleTranslate::trans('Payer', app()->getLocale()) }} </th>
+                <th> {{ GoogleTranslate::trans('Equipment Type', app()->getLocale()) }} </th>
+                <th> {{ GoogleTranslate::trans('Weight', app()->getLocale()) }} </th>
+                <th> {{ GoogleTranslate::trans('Delivery Deadline', app()->getLocale()) }} </th>
+                <th> {{ GoogleTranslate::trans('Customer PO', app()->getLocale()) }} </th>
+                <th> {{ GoogleTranslate::trans('HazMat', app()->getLocale()) }} </th>
+                <th> {{ GoogleTranslate::trans('Inbond', app()->getLocale()) }} </th>
+                <th> {{ GoogleTranslate::trans('Status', app()->getLocale()) }} </th>
+                <th> {{ GoogleTranslate::trans('Supplier Company', app()->getLocale()) }} </th>
+                <th width="160px"> {{ GoogleTranslate::trans('Actions', app()->getLocale()) }} </th>
+                <th> {{ GoogleTranslate::trans('Assign', app()->getLocale()) }} </th>
 
             </tr>
         </thead>
@@ -47,14 +49,14 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Delete</h5>
+                        <h5 class="modal-title" id="exampleModalLabel"> {{ GoogleTranslate::trans('Add Load', app()->getLocale()) }} Delete</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body delete_content">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary close_btn" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary load_delete btn_primary_color">Delete</button>
+                        <button type="button" class="btn btn-secondary close_btn" data-bs-dismiss="modal"> {{ GoogleTranslate::trans('Add Load', app()->getLocale()) }} Close</button>
+                        <button type="submit" class="btn btn-primary load_delete btn_primary_color"> {{ GoogleTranslate::trans('Add Load', app()->getLocale()) }} Delete</button>
                     </div>
                 </div>
             </div>
@@ -95,6 +97,15 @@ $(document).ready(function() {
             { data: 'actions', name: 'actions', orderable: false, searchable: false },
             { data: 'assign', name: 'assign', orderable: false, searchable: false },
         ],
+        language: {
+            sSearch: "{{ GoogleTranslate::trans('Search', app()->getLocale()) }}",
+            sLengthMenu: "{{ GoogleTranslate::trans('Show', app()->getLocale()) }} _MENU_ {{ GoogleTranslate::trans('entries', app()->getLocale()) }}",
+            sInfo: "{{ GoogleTranslate::trans('Showing', app()->getLocale()) }} _START_ {{ GoogleTranslate::trans('to', app()->getLocale()) }} _END_ {{ GoogleTranslate::trans('of', app()->getLocale()) }} _TOTAL_ {{ GoogleTranslate::trans('entries', app()->getLocale()) }}",
+            oPaginate: {
+                sPrevious: "{{ GoogleTranslate::trans('Previous', app()->getLocale()) }}",
+                sNext: "{{ GoogleTranslate::trans('Next', app()->getLocale()) }}"
+            }
+        },
         columnDefs: [
             {
             targets: 4, 
@@ -128,7 +139,7 @@ $(document).ready(function() {
         e.preventDefault();
         var loadid = $(this).data('load-id');
         var modal_text =
-            `Are you sure you want to delete ?`;
+            `{{ GoogleTranslate::trans('Are you sure you want to delete ?', app()->getLocale()) }}`;
         $('.delete_content').html(modal_text);
         $('#deleteloadFormId').attr('action', `/loads/${loadid}`);
 

@@ -9,8 +9,18 @@
           <i class="bi bi-list toggle-sidebar-btn"></i>
       </div><!-- End Logo -->
 
-      <nav class="header-nav ms-auto">
+      {{-- <nav class="header-nav ms-auto">
+
+          <div class="col-md-6">
+              <select class="form-select changeLang">
+                  <option value="en" {{ session()->get('locale') == 'en' ? 'selected' : '' }}>English</option>
+                  <option value="fr" {{ session()->get('locale') == 'fr' ? 'selected' : '' }}>France</option>
+                  <option value="es" {{ session()->get('locale') == 'es' ? 'selected' : '' }}>Spanish</option>
+              </select>
+          </div>
           <ul class="d-flex align-items-center">
+
+            
 
               <li class="nav-item d-block d-lg-none">
                   <a class="nav-link nav-icon search-bar-toggle " href="#">
@@ -80,6 +90,52 @@
               </li><!-- End Profile Nav -->
 
           </ul>
-      </nav><!-- End Icons Navigation -->
+      </nav> --}}
+
+      <nav class="header-nav ms-auto d-flex align-items-center">
+
+        <div class="col-md-6">
+            <select class="form-select changeLang">
+                <option value="en" {{ session()->get('locale') == 'en' ? 'selected' : '' }}>English</option>
+                <option value="fr" {{ session()->get('locale') == 'fr' ? 'selected' : '' }}>French</option>
+                <option value="es" {{ session()->get('locale') == 'es' ? 'selected' : '' }}>Spanish</option>
+            </select>
+        </div>
+        
+        <ul class="d-flex align-items-center ms-3">
+            <li class="nav-item d-block d-lg-none">
+                <a class="nav-link nav-icon search-bar-toggle" href="#">
+                    <i class="bi bi-search"></i>
+                </a>
+            </li><!-- End Search Icon-->
+            
+            <li class="nav-item dropdown pe-5">
+                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+                    <img src="{{ Auth::user()->profile_photo ? asset('storage/' . Auth::user()->profile_photo) : asset('assets/img/dummy.png') }}"
+                        alt="Profile" class="rounded-circle">
+                    <span class="d-none d-md-block dropdown-toggle ps-2">{{ Auth::user()->fname }}</span>
+                </a>
+                <!-- End Profile Image Icon -->
+    
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+                    <li class="dropdown-header">
+                        <h6>{{ Auth::user()->fname }} {{ Auth::user()->lname }}</h6>
+                        <span>{{ Auth::user()->roledata->role_name }}</span>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="{{ url('logout') }}">
+                            <i class="bi bi-box-arrow-right"></i>
+                            <span>{{ GoogleTranslate::trans('Sign Out', app()->getLocale()) }} </span>
+                        </a>
+                    </li>
+                </ul><!-- End Profile Dropdown Items -->
+            </li><!-- End Profile Nav -->
+        </ul>
+    </nav>
+    
+      <!-- End Icons Navigation -->
 
   </header><!-- End Header -->

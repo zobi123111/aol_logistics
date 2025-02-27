@@ -7,16 +7,18 @@
     @if(session()->has('message'))
     <div id="successMessage" class="alert alert-success fade show" role="alert">
         <i class="bi bi-check-circle me-1"></i>
-        {{ session()->get('message') }}
+        {{-- {{ session()->get('message') }} --}}
+        {{ GoogleTranslate::trans(session('message'), app()->getLocale()) }}
     </div>
     @endif
-        <p>Welcome to {{ env('PROJECT_NAME')}} dashboard </p>
+        {{-- <p>Welcome to {{ env('PROJECT_NAME')}} dashboard </p> --}}
+        <p>{{ GoogleTranslate::trans('Welcome to ' . env('PROJECT_NAME') . ' dashboard', app()->getLocale()) }}</p>
     </div>
     <div class="row">
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">User Statistics (Active vs Total)</h5>
+                    <h5 class="card-title">{{GoogleTranslate::trans('User Statistics (Active vs Total)', app()->getLocale()) }}</h5>
                     <div id="userChart"></div>
                 </div>
             </div>

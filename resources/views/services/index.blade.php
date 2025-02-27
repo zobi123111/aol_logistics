@@ -1,5 +1,7 @@
 @section('title', 'Supplier Services')
-@section('sub-title', 'Supplier Services')
+{{-- @section('sub-title', 'Supplier Services') --}}
+@section('sub-title', GoogleTranslate::trans('Supplier Services', app()->getLocale()))
+
 @extends('layout.app')
 @section('content')
 <div class="main_cont_outer">
@@ -7,7 +9,7 @@
     <a href="{{ route('suppliers.index') }}" class="btn btn-primary create-button btn_primary_color"
     id="createClient"><i class="bi bi-arrow-left-circle-fill"></i> back</a>
         <a href="{{ route('services.create', encode_id($supplier->id)) }}" class="btn btn-primary create-button btn_primary_color"
-            id="createrole">Add Service</a>
+            id="createrole"> {{ GoogleTranslate::trans('Add Service', app()->getLocale()) }} </a>
     </div>
     <div id="successMessagea" class="alert alert-success" style="display: none;" role="alert">
         <i class="bi bi-check-circle me-1"></i>
@@ -15,22 +17,23 @@
     @if(session()->has('message'))
     <div id="successMessage" class="alert alert-success fade show" role="alert">
         <i class="bi bi-check-circle me-1"></i>
-        {{ session()->get('message') }}
+        {{-- {{ session()->get('message') }} --}}
+        {{ GoogleTranslate::trans(session('message'), app()->getLocale()) }}
     </div>
     @endif
     <table class="table mt-3" id="service">
         <thead>
             <tr>
-                <th>Origin</th>
-                <th>Destination</th>
-                <th>Cost</th>
-                <th>Actions</th>
+                <th> {{ GoogleTranslate::trans('Origin', app()->getLocale()) }} </th>
+                <th> {{ GoogleTranslate::trans('Destination', app()->getLocale()) }} </th>
+                <th> {{ GoogleTranslate::trans('Cost', app()->getLocale()) }} </th>
+                <th> {{ GoogleTranslate::trans('Actions', app()->getLocale()) }} </th>
             </tr>
         </thead>
         <tbody>
         @if($services->isEmpty())
             <tr>
-                <td colspan="5" class="text-center">No suppliers found</td>
+                <td colspan="5" class="text-center"> {{ GoogleTranslate::trans('No suppliers found', app()->getLocale()) }}</td>
             </tr>
             @else
             @foreach($services as $service)
@@ -68,14 +71,14 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Delete</h5>
+                        <h5 class="modal-title" id="exampleModalLabel"> {{ GoogleTranslate::trans('Delete', app()->getLocale()) }} </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body delete_content">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary close_btn" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary role_delete btn_primary_color">Delete</button>
+                        <button type="button" class="btn btn-secondary close_btn" data-bs-dismiss="modal"> {{ GoogleTranslate::trans('Close', app()->getLocale()) }} </button>
+                        <button type="submit" class="btn btn-primary role_delete btn_primary_color"> {{ GoogleTranslate::trans('Delete', app()->getLocale()) }} </button>
                     </div>
                 </div>
             </div>
@@ -96,7 +99,7 @@ $(document).ready(function() {
         var serviceId = $(this).data('service-id');
         // var username = $(this).closest('tr').find('.username').text();
         var modal_text =
-            `Are you sure you want to delete ?`;
+            `{{ GoogleTranslate::trans('Are you sure you want to delete ?', app()->getLocale()) }}`;
         $('.delete_content').html(modal_text);
         $('#deleteRoleFormId').attr('action', `/suppliers/${supplierId}/services/${serviceId}`);
 

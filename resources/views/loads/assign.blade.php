@@ -1,11 +1,13 @@
 @section('title', 'Assign Load')
-@section('sub-title', 'Assign Load')
+{{-- @section('sub-title', 'Assign Load') --}}
+@section('sub-title', GoogleTranslate::trans('Assign Load', app()->getLocale()))
+
 @extends('layout.app')
 @section('content')
 <div class="main_cont_outer">
     <div class="create_btn">
         <a href="{{ route('loads.index') }}" class="btn btn-primary create-button btn_primary_color"
-            id="createUser"><i class="bi bi-arrow-left-circle-fill"></i> back</a>
+            id="createUser"><i class="bi bi-arrow-left-circle-fill"></i> {{ GoogleTranslate::trans('Back', app()->getLocale()) }} </a>
     </div>
     <div id="successMessagea" class="alert alert-success" style="display: none;" role="alert">
         <i class="bi bi-check-circle me-1"></i>
@@ -13,23 +15,25 @@
     @if(session()->has('message'))
     <div id="successMessage" class="alert alert-success fade show" role="alert">
         <i class="bi bi-check-circle me-1"></i>
-        {{ session()->get('message') }}
+        {{-- {{ session()->get('message') }} --}}
+        {{ GoogleTranslate::trans(session('message'), app()->getLocale()) }}
+
     </div>
     @endif
 
         <!-- <table class="table mt-3" id="assign_loads">
     <thead>
         <tr>
-            <th>Supplier Company Name</th>
-            <th>Service Details</th>
-            <th>Cost</th>
-            <th>Action</th>
+            <th> {{ GoogleTranslate::trans('Supplier Company Name', app()->getLocale()) }} </th>
+            <th> {{ GoogleTranslate::trans('Service Details', app()->getLocale()) }} </th>
+            <th> {{ GoogleTranslate::trans('Cost', app()->getLocale()) }} </th>
+            <th> {{ GoogleTranslate::trans('Action', app()->getLocale()) }} </th>
         </tr>
     </thead>
     <tbody>
     @if($suppliers->isEmpty())
         <tr>
-            <td colspan="4" class="text-center">No Service found</td>
+            <td colspan="4" class="text-center"> {{ GoogleTranslate::trans('No Service found', app()->getLocale()) }} </td>
         </tr>
         @else
         @foreach ($suppliers as $supplier)
@@ -44,10 +48,10 @@
                     <td>${{ number_format($service->cost, 2) }}</td>
                     <td>
                     @if($load->supplier_id == $supplier->id)
-                 <span class="badge bg-success">Assigned</span>
+                 <span class="badge bg-success"> {{ GoogleTranslate::trans('Assigned', app()->getLocale()) }} </span>
                 @else
                     <a href="{{ route('loads.assign.supplier', ['load_id' => encode_id($load->id), 'supplier_id' => encode_id($supplier->id), 'service_id' => encode_id($service->id)]) }}" class="btn btn-primary create-button btn_primary_color">
-                        Assign
+                        {{ GoogleTranslate::trans('Assign', app()->getLocale()) }} 
                     </a>
                 @endif
                     </td>
@@ -86,7 +90,7 @@
     </div>
 </div>
 
-<h3 class=" ">Assigned Suppliers</h3>
+<h3 class=" ">Assigned Services</h3>
 <table class="table" id="assignedServices">
     <thead>
         <tr>
@@ -130,7 +134,7 @@
 </table>
 
 
-<h3 class="mt-3">Suppliers</h3>
+<h3 class="mt-3">Services</h3>
 <table class="table" id="allServices">
     <thead>
         <tr>

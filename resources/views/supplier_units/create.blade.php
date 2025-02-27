@@ -1,47 +1,55 @@
 @section('title', 'Supplier Equipment')
-@section('sub-title', 'Supplier Equipment')
+{{-- @section('sub-title', 'Supplier Equipment') --}}
+@section('sub-title', GoogleTranslate::trans('Supplier Equipment', app()->getLocale()))
+
 @extends('layout.app')
 @section('content')
 <div class="main_cont_outer">
     <div class="create_btn">
         <a href="{{ route('supplier_units.index',  encode_id($supplier->id)) }}" class="btn btn-primary create-button btn_primary_color"
-            id="createUser"><i class="bi bi-arrow-left-circle-fill"></i> back</a>
+            id="createUser"><i class="bi bi-arrow-left-circle-fill"></i> {{ GoogleTranslate::trans('Back', app()->getLocale()) }} 
+        </a>
     </div>
+    
     <div id="successMessagea" class="alert alert-success" style="display: none;" role="alert">
         <i class="bi bi-check-circle me-1"></i>
     </div>
+
     @if(session()->has('message'))
-    <div id="successMessage" class="alert alert-success fade show" role="alert">
-        <i class="bi bi-check-circle me-1"></i>
-        {{ session()->get('message') }}
-    </div>
+        <div id="successMessage" class="alert alert-success fade show" role="alert">
+            <i class="bi bi-check-circle me-1"></i>
+            {{-- {{ session()->get('message') }} --}}
+            {{ GoogleTranslate::trans(session('message'), app()->getLocale()) }}
+        </div>
     @endif
 
     @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>    
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
+        <div class="alert alert-danger">
+            <ul>    
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
     <div class="card card-container">
         <div class="card-body">
-        <form action="{{ route('supplier_units.store', $supplier->id) }}" method="POST">
-        @csrf
-        <div class="form-group mb-3 mt-3">
-            <label for="unit_type" class="form-label">Unit Type<span class="text-danger">*</span></label>
-            <select name="unit_type" class="form-control">
-                <option value="">Select Unit Type</option>
-                <option value="53' Truck" {{ old('unit_type') == "53' Truck" ? 'selected' : '' }}>53' Truck</option>
-                <option value="48' Truck" {{ old('unit_type') == "48' Truck" ? 'selected' : '' }}>48' Truck</option>
-                <option value="48' Flatbed" {{ old('unit_type') == "48' Flatbed" ? 'selected' : '' }}>48' Flatbed</option>
-                <option value="53' R" {{ old('unit_type') == "53' R" ? 'selected' : '' }}>53' R</option>
-            </select>
-            @error('unit_type')
-                    <div class="text-danger">{{ $message }}</div>
+            <form action="{{ route('supplier_units.store', $supplier->id) }}" method="POST">
+                @csrf
+                <div class="form-group mb-3 mt-3">
+                    <label for="unit_type" class="form-label"> {{ GoogleTranslate::trans('Unit Type', app()->getLocale()) }} <span class="text-danger">*</span></label>
+                    <select name="unit_type" class="form-control">
+                        <option value="">Select Unit Type</option>
+                        <option value="53' Truck" {{ old('unit_type') == "53' Truck" ? 'selected' : '' }}>53' Truck</option>
+                        <option value="48' Truck" {{ old('unit_type') == "48' Truck" ? 'selected' : '' }}>48' Truck</option>
+                        <option value="48' Flatbed" {{ old('unit_type') == "48' Flatbed" ? 'selected' : '' }}>48' Flatbed</option>
+                        <option value="53' R" {{ old('unit_type') == "53' R" ? 'selected' : '' }}>53' R</option>
+                    </select>
+                    @error('unit_type')
+                        <div class="text-danger">
+                            {{ GoogleTranslate::trans($message, app()->getLocale()) }}
+                        </div>
                     @enderror  
         </div>
         <div class="form-group mb-3">
@@ -74,16 +82,18 @@
             @enderror  
         </div>
 
-        <div class="form-group mb-3">
-            <label for="state" class="form-label">State<span class="text-danger">*</span></label>
-            <input type="text" name="state" class="form-control" value="{{ old('state') }}" >
-            @error('state')
-            <div class="text-danger">{{ $message }}</div>
-            @enderror  
-        </div>
-  
-        <button type="submit" class="btn btn-primary btn_primary_color">Create Unit</button>
-    </form>
+                <div class="form-group mb-3">
+                    <label for="state" class="form-label"> {{ GoogleTranslate::trans('State', app()->getLocale()) }} <span class="text-danger">*</span></label>
+                    <input type="text" name="state" class="form-control" value="{{ old('state') }}" >
+                    @error('state')
+                        <div class="text-danger">
+                            {{ GoogleTranslate::trans($message, app()->getLocale()) }}
+                        </div>
+                    @enderror  
+                </div>
+        
+                <button type="submit" class="btn btn-primary btn_primary_color"> {{ GoogleTranslate::trans('Create Unit', app()->getLocale()) }} </button>
+            </form>
         </div>
     </div>
 </div>
@@ -93,9 +103,9 @@
 @section('js_scripts')
 
 <script>
-$(document).ready(function() {
+    $(document).ready(function() {
 
-});
+    });
 </script>
 
 @endsection

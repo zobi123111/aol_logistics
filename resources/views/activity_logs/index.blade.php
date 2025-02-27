@@ -1,5 +1,6 @@
 @section('title', 'Logs')
-@section('sub-title', 'Logs')
+{{-- @section('sub-title', 'Logs') --}}
+@section('sub-title', GoogleTranslate::trans('Logs', app()->getLocale()))
 @extends('layout.app')
 @section('content')
 <div class="main_cont_outer">
@@ -9,17 +10,19 @@
     @if(session()->has('message'))
     <div id="successMessage" class="alert alert-success fade show" role="alert">
         <i class="bi bi-check-circle me-1"></i>
-        {{ session()->get('message') }}
+        {{-- {{ session()->get('message') }} --}}
+        {{ GoogleTranslate::trans(session('message'), app()->getLocale()) }}
+
     </div>
     @endif
     @if(checkAllowedModule('activity-logs', 'activityLogs.all')->isNotEmpty())
     <table class="table table-striped" id="logs_table" style="padding-top: 10px;">
         <thead>
             <tr>
-                <th scope="col">User Name</th>
-                <th scope="col">Log Type</th>
-                <th scope="col">Description</th>
-                <th scope="col">Timestamp</th>
+                <th scope="col"> {{ GoogleTranslate::trans('User Name', app()->getLocale()) }}  </th>
+                <th scope="col"> {{ GoogleTranslate::trans('Log Type', app()->getLocale()) }}  </th>
+                <th scope="col"> {{ GoogleTranslate::trans('Description', app()->getLocale()) }}  </th>
+                <th scope="col"> {{ GoogleTranslate::trans('Timestamp', app()->getLocale()) }}  </th>
             </tr>
         </thead>
       
@@ -28,14 +31,14 @@
     @if(checkAllowedModule('activity-logs', 'logs.delete')->isNotEmpty())
     <div>
     <div class="pagetitle">
-            <h1>Delete Logs</h1>
+            <h1>{{ GoogleTranslate::trans('Delete Logs', app()->getLocale()) }} </h1>
         </div>
     <div class="mb-3">
     <select id="date_range" class="form-control">
-        <option value="daily">Daily</option>
-        <option value="weekly">Weekly</option>
-        <option value="monthly">Monthly</option>
-        <option value="custom">Custom</option>
+        <option value="daily">{{ GoogleTranslate::trans('Daily', app()->getLocale()) }} </option>
+        <option value="weekly">{{ GoogleTranslate::trans('Weekly', app()->getLocale()) }} </option>
+        <option value="monthly">{{ GoogleTranslate::trans('Monthly', app()->getLocale()) }} </option>
+        <option value="custom">{{ GoogleTranslate::trans('Custom', app()->getLocale()) }} </option>
     </select>
 </div>
 
@@ -45,7 +48,7 @@
 </div>
 <div id="edit_profile_photo_error" class="text-danger otp_error"></div>
 
-<button id="delete_logs" class="btn btn-danger">Delete Logs</button>
+<button id="delete_logs" class="btn btn-danger">{{ GoogleTranslate::trans('Delete Logs', app()->getLocale()) }} </button>
 </div>
 @endif
 </div>
@@ -77,7 +80,16 @@ $(document).ready(function() {
             }
         }
 
-        ]
+        ],
+        language: {
+            sSearch: "{{ GoogleTranslate::trans('Search', app()->getLocale()) }}",
+            sLengthMenu: "{{ GoogleTranslate::trans('Show', app()->getLocale()) }} _MENU_ {{ GoogleTranslate::trans('entries', app()->getLocale()) }}",
+            sInfo: "{{ GoogleTranslate::trans('Showing', app()->getLocale()) }} _START_ {{ GoogleTranslate::trans('to', app()->getLocale()) }} _END_ {{ GoogleTranslate::trans('of', app()->getLocale()) }} _TOTAL_ {{ GoogleTranslate::trans('entries', app()->getLocale()) }}",
+            oPaginate: {
+                sPrevious: "{{ GoogleTranslate::trans('Previous', app()->getLocale()) }}",
+                sNext: "{{ GoogleTranslate::trans('Next', app()->getLocale()) }}"
+            }
+        }
     });
 
     $('#date_range').change(function () {

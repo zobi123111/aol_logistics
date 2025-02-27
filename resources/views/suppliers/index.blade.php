@@ -1,11 +1,13 @@
 @section('title', 'Supplier')
-@section('sub-title', 'Supplier')
+{{-- @section('sub-title', 'Supplier') --}}
+@section('sub-title', GoogleTranslate::trans('Supplier', app()->getLocale()))
+
 @extends('layout.app')
 @section('content')
 <div class="main_cont_outer">
     <div class="create_btn">
         <a href="{{ route('suppliers.create') }}" class="btn btn-primary create-button btn_primary_color"
-            id="createrole">Create Supplier</a>
+            id="createrole"> {{ GoogleTranslate::trans('Create Supplier', app()->getLocale()) }} </a>
     </div>
 
     <div id="successMessagea" class="alert alert-success" style="display: none;" role="alert">
@@ -14,24 +16,25 @@
     @if(session()->has('message'))
     <div id="successMessage" class="alert alert-success fade show" role="alert">
         <i class="bi bi-check-circle me-1"></i>
-        {{ session()->get('message') }}
+        {{-- {{ session()->get('message') }} --}}
+        {{ GoogleTranslate::trans(session('message'), app()->getLocale()) }}
     </div>
     @endif
     @if(checkAllowedModule('suppliers', 'suppliers.index')->isNotEmpty() )
     <table class="table table-striped" id="supplier">
         <thead>
             <tr>
-                <th scope="col">Company Name</th>
-                <th scope="col">DBA</th>
+                <th scope="col"> {{ GoogleTranslate::trans('Company Name', app()->getLocale()) }} </th>
+                <th scope="col"> {{ GoogleTranslate::trans('DBA', app()->getLocale()) }}  </th>
                 <!-- <th scope="col">Street Address</th>
                 <th scope="col">City</th>
                 <th scope="col">State</th>
                 <th scope="col">Zip Code</th>
                 <th scope="col">Country</th> -->
-                <th scope="col">Office Phone</th>
-                <th scope="col">Email</th>
-                <th scope="col">Office Phone</th>
-                <th scope="col">Mobile Phone</th>
+                <th scope="col"> {{ GoogleTranslate::trans('Office Phone', app()->getLocale()) }}  </th>
+                <th scope="col"> {{ GoogleTranslate::trans('Email', app()->getLocale()) }}  </th>
+                <th scope="col"> {{ GoogleTranslate::trans('Office Phone', app()->getLocale()) }}  </th>
+                <th scope="col"> {{ GoogleTranslate::trans('Mobile Phone', app()->getLocale()) }}  </th>
                 <!-- <th scope="col">User Role</th>
                 <th scope="col">User Email</th>
                 <th scope="col">User Office Phone</th>
@@ -45,14 +48,14 @@
                 <th scope="col">CAAT Number</th>
                 <th scope="col">CAAT Documents</th> -->
                 @if(checkAllowedModule('suppliers', 'suppliers.toggleStatus')->isNotEmpty())
-                <th>Status</th>
+                <th> {{ GoogleTranslate::trans('Status', app()->getLocale()) }}  </th>
                 @endif
                 @if(checkAllowedModule('suppliers', 'suppliers.edit')->isNotEmpty() || checkAllowedModule('suppliers', 'suppliers.show')->isNotEmpty()|| checkAllowedModule('suppliers', 'suppliers.destroy')->isNotEmpty())
-                <th scope="col" width="100px">Actions</th>
+                <th scope="col" width="100px"> {{ GoogleTranslate::trans('Create', app()->getLocale()) }}  Actions</th>
                 @endif
-                <th scope="col">User</th>
-                <th scope="col">Equipment</th>
-                <th scope="col">Service</th>
+                <th scope="col"> {{ GoogleTranslate::trans('User', app()->getLocale()) }}  </th>
+                <th scope="col"> {{ GoogleTranslate::trans('Equipment', app()->getLocale()) }}  </th>
+                <th scope="col"> {{ GoogleTranslate::trans('Service', app()->getLocale()) }}  </th>
             </tr>
         </thead>
       
@@ -66,14 +69,14 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Delete</h5>
+                        <h5 class="modal-title" id="exampleModalLabel"> {{ GoogleTranslate::trans('Delete', app()->getLocale()) }} </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body delete_content">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary close_btn" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary role_delete btn_primary_color">Delete</button>
+                        <button type="button" class="btn btn-secondary close_btn" data-bs-dismiss="modal"> {{ GoogleTranslate::trans('Close', app()->getLocale()) }} </button>
+                        <button type="submit" class="btn btn-primary role_delete btn_primary_color"> {{ GoogleTranslate::trans('Delete', app()->getLocale()) }} </button>
                     </div>
                 </div>
             </div>
@@ -86,73 +89,83 @@
 @section('js_scripts')
 
 <script>
-$(document).ready(function() {
-    $('#supplier').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: "{{ route('suppliers.index') }}", 
-        columns: [
-            { data: 'company_name', name: 'company_name' },
-            { data: 'dba', name: 'dba' },
-            { data: 'office_phone', name: 'office_phone' },
-            { data: 'primary_contact_email', name: 'primary_contact_email' },
-            { data: 'primary_contact_office_phone', name: 'primary_contact_office_phone' },
-            { data: 'primary_contact_mobile_phone', name: 'primary_contact_mobile_phone' },
-            { data: 'status', name: 'status', orderable: false, searchable: false },
-            { data: 'actions', name: 'actions', orderable: false, searchable: false },
-            { data: 'supplier_users', name: 'supplier_users', orderable: false, searchable: false },
-            { data: 'supplier_units', name: 'supplier_units', orderable: false, searchable: false },
-            { data: 'services', name: 'services', orderable: false, searchable: false }
-        ],
-        columnDefs: [
-            {
-                targets: 0, 
-                className: "company" 
+    $(document).ready(function() {
+        $('#supplier').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: "{{ route('suppliers.index') }}", 
+            columns: [
+                { data: 'company_name', name: 'company_name' },
+                { data: 'dba', name: 'dba' },
+                { data: 'office_phone', name: 'office_phone' },
+                { data: 'primary_contact_email', name: 'primary_contact_email' },
+                { data: 'primary_contact_office_phone', name: 'primary_contact_office_phone' },
+                { data: 'primary_contact_mobile_phone', name: 'primary_contact_mobile_phone' },
+                { data: 'status', name: 'status', orderable: false, searchable: false },
+                { data: 'actions', name: 'actions', orderable: false, searchable: false },
+                { data: 'supplier_users', name: 'supplier_users', orderable: false, searchable: false },
+                { data: 'supplier_units', name: 'supplier_units', orderable: false, searchable: false },
+                { data: 'services', name: 'services', orderable: false, searchable: false }
+            ],
+            language: {
+                sSearch: "{{ GoogleTranslate::trans('Search', app()->getLocale()) }}",
+                sLengthMenu: "{{ GoogleTranslate::trans('Show', app()->getLocale()) }} _MENU_ {{ GoogleTranslate::trans('entries', app()->getLocale()) }}",
+                sInfo: "{{ GoogleTranslate::trans('Showing', app()->getLocale()) }} _START_ {{ GoogleTranslate::trans('to', app()->getLocale()) }} _END_ {{ GoogleTranslate::trans('of', app()->getLocale()) }} _TOTAL_ {{ GoogleTranslate::trans('entries', app()->getLocale()) }}",
+                oPaginate: {
+                    sPrevious: "{{ GoogleTranslate::trans('Previous', app()->getLocale()) }}",
+                    sNext: "{{ GoogleTranslate::trans('Next', app()->getLocale()) }}"
+                }
             },
-            {
-                targets: 7, 
-                className: "icon-design" 
+            columnDefs: [
+                {
+                    targets: 0, 
+                    className: "company" 
+                },
+                {
+                    targets: 7, 
+                    className: "icon-design" 
+                }
+            ]
+        });
+        $(document).on('click', '.delete-icon', function(e) {
+            e.preventDefault();
+            var supplierId = $(this).data('supplier-id');
+            var company = $(this).closest('tr').find('.company').text();
+            var modal_text =
+                `{{ GoogleTranslate::trans('Are you sure you want to delete this supplier from', app()->getLocale()) }} "<strong><span id="append_name">${company}</span></strong>"?`;
+
+            $('.delete_content').html(modal_text);
+            $('#deleteRoleFormId').attr('action', '/suppliers/' + supplierId);
+            $('#deleteRoleForm').modal('show');
+        });
+    });
+
+    $(document).on('change', '.status-toggle', function() {
+        const toggleSwitch = $(this);
+        var userId = $(this).data('id');
+        var isActive = $(this).prop('checked') ? 1 : 0;
+
+        $.ajax({
+            url: '{{ route("suppliers.toggleStatus") }}',
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                user_id: userId,
+                is_active: isActive
+            },
+            success: function(response) {
+                if (response.success) {
+                    const label = toggleSwitch.siblings("label");
+                    label.text(isActive ? "Active" : "Inactive");
+                    $('#successMessagea').text(response.message).fadeIn().delay(3000).fadeOut();
+
+                }
+            },
+            error: function(xhr, status, error) {
+                alert('An error occurred while updating the user status.');
             }
-        ]
+        });
     });
-    $(document).on('click', '.delete-icon', function(e) {
-        e.preventDefault();
-        var supplierId = $(this).data('supplier-id');
-        var company = $(this).closest('tr').find('.company').text();
-        var modal_text =
-            `Are you sure you want to delete this supplier from "<strong><span id="append_name">${company}</span></strong>"?`;
-
-        $('.delete_content').html(modal_text);
-        $('#deleteRoleFormId').attr('action', '/suppliers/' + supplierId);
-        $('#deleteRoleForm').modal('show');
-    });
-});
-$(document).on('change', '.status-toggle', function() {
-    const toggleSwitch = $(this);
-    var userId = $(this).data('id');
-    var isActive = $(this).prop('checked') ? 1 : 0;
-
-    $.ajax({
-        url: '{{ route("suppliers.toggleStatus") }}',
-        type: 'POST',
-        data: {
-            _token: '{{ csrf_token() }}',
-            user_id: userId,
-            is_active: isActive
-        },
-        success: function(response) {
-            if (response.success) {
-                const label = toggleSwitch.siblings("label");
-                label.text(isActive ? "Active" : "Inactive");
-                $('#successMessagea').text(response.message).fadeIn().delay(3000).fadeOut();
-
-            }
-        },
-        error: function(xhr, status, error) {
-            alert('An error occurred while updating the user status.');
-        }
-    });
-});
 </script>
 
 @endsection

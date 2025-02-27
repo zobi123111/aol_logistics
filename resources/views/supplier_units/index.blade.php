@@ -1,13 +1,14 @@
 @section('title', 'Supplier Equipment')
-@section('sub-title', 'Supplier Equipment')
+{{-- @section('sub-title', 'Supplier Equipment') --}}
+@section('sub-title', GoogleTranslate::trans('Supplier Equipment', app()->getLocale()))
 @extends('layout.app')
 @section('content')
 <div class="main_cont_outer">
     <div class="create_btn">
     <a href="{{ route('suppliers.index') }}" class="btn btn-primary create-button btn_primary_color"
-    id="createClient"><i class="bi bi-arrow-left-circle-fill"></i> back</a>
+    id="createClient"><i class="bi bi-arrow-left-circle-fill"></i> {{ GoogleTranslate::trans('Back', app()->getLocale()) }} </a>
         <a href="{{ route('supplier_units.create', encode_id($supplier->id)) }}" class="btn btn-primary create-button btn_primary_color"
-            id="createrole">Add Equipment</a>
+            id="createrole"> {{ GoogleTranslate::trans('Add Equipment', app()->getLocale()) }}  </a>
     </div>
     <div id="successMessagea" class="alert alert-success" style="display: none;" role="alert">
         <i class="bi bi-check-circle me-1"></i>
@@ -15,17 +16,18 @@
     @if(session()->has('message'))
     <div id="successMessage" class="alert alert-success fade show" role="alert">
         <i class="bi bi-check-circle me-1"></i>
-        {{ session()->get('message') }}
+        {{-- {{ session()->get('message') }} --}}
+        {{ GoogleTranslate::trans(session('message'), app()->getLocale()) }}
     </div>
     @endif
     <table class="table mt-3" id="unit">
         <thead>
             <tr>
-                <th>Unit Type</th>
-                <th>Unit Number</th>
-                <th>License Plate</th>
-                <th>State</th>
-                <th>Actions</th>
+                <th> {{ GoogleTranslate::trans('Unit Type', app()->getLocale()) }} </th>
+                <th> {{ GoogleTranslate::trans('Unit Number', app()->getLocale()) }} </th>
+                <th> {{ GoogleTranslate::trans('License Plate', app()->getLocale()) }} </th>
+                <th> {{ GoogleTranslate::trans('State', app()->getLocale()) }} </th>
+                <th> {{ GoogleTranslate::trans('Actions', app()->getLocale()) }} </th>
             </tr>
         </thead>
         <tbody>
@@ -74,14 +76,14 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Delete</h5>
+                        <h5 class="modal-title" id="exampleModalLabel"> {{ GoogleTranslate::trans('Delete', app()->getLocale()) }} </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body delete_content">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary close_btn" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary role_delete btn_primary_color">Delete</button>
+                        <button type="button" class="btn btn-secondary close_btn" data-bs-dismiss="modal"> {{ GoogleTranslate::trans('Close', app()->getLocale()) }} </button>
+                        <button type="submit" class="btn btn-primary role_delete btn_primary_color"> {{ GoogleTranslate::trans('Delete', app()->getLocale()) }} </button>
                     </div>
                 </div>
             </div>

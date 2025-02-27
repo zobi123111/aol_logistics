@@ -17,7 +17,7 @@ use App\Http\Controllers\ClientUserController;
 use App\Http\Controllers\LoadController;
 use App\Http\Controllers\OriginController;
 use App\Http\Controllers\DestinationController;
-
+use App\Http\Controllers\LangController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +34,7 @@ use App\Http\Controllers\DestinationController;
 // Route::middleware(['guest'])->group(function () {
     Route::match(['get', 'post'], '/', [LoginController::class, 'index']);
     Route::match(['get', 'post'], '/login', [LoginController::class, 'login'])->name('login');
+    Route::get('lang/change', [LangController::class, 'change'])->name('changeLang');
 // });
 
 Route::post('/verify-otp', [LoginController::class, 'verifyOtp'])->name('verifyotp');

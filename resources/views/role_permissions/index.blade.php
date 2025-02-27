@@ -1,5 +1,7 @@
 @section('title', 'Roles')
-@section('sub-title', 'Roles')
+{{-- @section('sub-title', 'Roles') --}}
+@section('sub-title', GoogleTranslate::trans('Roles', app()->getLocale()))
+
 @extends('layout.app')
 @section('content')
 <div class="main_cont_outer">
@@ -7,7 +9,7 @@
     @if(checkAllowedModule('roles', 'roles.create')->isNotEmpty() && Auth::user()->is_dev)
     <div class="create_btn">
         <a href="{{ route('roles.create') }}" class="btn btn-primary create-button btn_primary_color"
-            id="createrole">Create Role</a>
+            id="createrole"> {{ GoogleTranslate::trans('Create Role', app()->getLocale()) }} </a>
     </div>
     @endif
     <div id="successMessagea" class="alert alert-success" style="display: none;" role="alert">
@@ -16,16 +18,17 @@
     @if(session()->has('message'))
     <div id="successMessage" class="alert alert-success fade show" role="alert">
         <i class="bi bi-check-circle me-1"></i>
-        {{ session()->get('message') }}
+        {{-- {{ session()->get('message') }} --}}
+        {{ GoogleTranslate::trans(session('message'), app()->getLocale()) }}
     </div>
     @endif
     <table class="table table-striped" id="role_table" style="padding-top: 10px;">
         <thead>
             <tr>
-                <th scope="col">Role</th>
-                <th scope="col">User Type</th>
+                <th scope="col"> {{ GoogleTranslate::trans('Role', app()->getLocale()) }} </th>
+                <th scope="col"> {{ GoogleTranslate::trans('User Type', app()->getLocale()) }} </th>
                 @if((checkAllowedModule('roles', 'roles.edit')->isNotEmpty() || checkAllowedModule('roles', 'roles.destroy')->isNotEmpty()) || (Auth::user()->is_dev ||Auth::user()->is_owner))
-                <th scope="col">Actions</th>
+                <th scope="col"> {{ GoogleTranslate::trans('Actions', app()->getLocale()) }} </th>
                 @endif
                 <!-- @if(checkAllowedModule('roles', 'roles.destroy')->isNotEmpty() && Auth::user()->is_dev)
                 <th scope="col">Delete</th>
@@ -65,14 +68,14 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Delete</h5>
+                        <h5 class="modal-title" id="exampleModalLabel"> {{ GoogleTranslate::trans('Delete', app()->getLocale()) }} </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body delete_content">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary close_btn" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary role_delete btn_primary_color">Delete</button>
+                        <button type="button" class="btn btn-secondary close_btn" data-bs-dismiss="modal">{{ GoogleTranslate::trans('Close', app()->getLocale()) }} </button>
+                        <button type="submit" class="btn btn-primary role_delete btn_primary_color">{{ GoogleTranslate::trans('Delete', app()->getLocale()) }} </button>
                     </div>
                 </div>
             </div>
@@ -97,7 +100,8 @@ $(document).ready(function() {
         $(".role_delete").prop("disabled", true)
         if (usercountId < 1) {
             var modal_text =
-                `Are you sure you want to delete this role "<strong><span id="append_name">${fname} </span></strong>" ?`;
+                // `Are you sure you want to delete this role "<strong><span id="append_name">${fname} </span></strong>" ?`;
+                `{{ GoogleTranslate::trans('Are you sure you want to delete this role', app()->getLocale()) }} "<strong><span id="append_name">${fname} </span></strong>" ?`;
             $(".role_delete").prop("disabled", false)
 
         } else {}

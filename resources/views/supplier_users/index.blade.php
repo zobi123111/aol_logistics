@@ -1,13 +1,15 @@
 @section('title', 'Supplier Users')
-@section('sub-title', 'Supplier Users')
+{{-- @section('sub-title', 'Supplier Users') --}}
+@section('sub-title', GoogleTranslate::trans('Supplier Users', app()->getLocale()))
+
 @extends('layout.app')
 @section('content')
 <div class="main_cont_outer">
     <div class="create_btn">
     <a href="{{ route('suppliers.index') }}" class="btn btn-primary create-button btn_primary_color"
-    id="createClient"><i class="bi bi-arrow-left-circle-fill"></i> back</a>
+    id="createClient"><i class="bi bi-arrow-left-circle-fill"></i> {{ GoogleTranslate::trans('Back', app()->getLocale()) }} </a>
         <a href="{{ route('supplier_users.create', encode_id($supplier->id)) }}" class="btn btn-primary create-button btn_primary_color"
-            id="createrole">Create Supplier User</a>
+            id="createrole"> {{ GoogleTranslate::trans('Create Supplier User', app()->getLocale()) }} </a>
     </div>
     <div id="successMessagea" class="alert alert-success" style="display: none;" role="alert">
         <i class="bi bi-check-circle me-1"></i>
@@ -15,7 +17,8 @@
     @if(session()->has('message'))
     <div id="successMessage" class="alert alert-success fade show" role="alert">
         <i class="bi bi-check-circle me-1"></i>
-        {{ session()->get('message') }}
+        {{-- {{ session()->get('message') }} --}}
+        {{ GoogleTranslate::trans(session('message'), app()->getLocale()) }}
     </div>
     @endif
     @php
@@ -27,11 +30,11 @@
     <table class="table table-striped mt-3" id="supplierUser">
         <thead>
             <tr>
-                <th scope="col">Name</th>
+                <th scope="col"> {{ GoogleTranslate::trans('Name', app()->getLocale()) }} </th>
                 <!-- <th scope="col">Email</th> -->
-                <th scope="col">Role</th>
-                <th scope="col">Status</th>
-                <th scope="col">Actions</th>
+                <th scope="col"> {{ GoogleTranslate::trans('Role', app()->getLocale()) }} </th>
+                <th scope="col"> {{ GoogleTranslate::trans('Status', app()->getLocale()) }} </th>
+                <th scope="col"> {{ GoogleTranslate::trans('Actions', app()->getLocale()) }} </th>
             </tr>
         </thead>
         <!-- <tbody>
@@ -74,14 +77,14 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Delete</h5>
+                        <h5 class="modal-title" id="exampleModalLabel"> {{ GoogleTranslate::trans('Delete', app()->getLocale()) }} </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body delete_content">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary close_btn" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary role_delete btn_primary_color">Delete</button>
+                        <button type="button" class="btn btn-secondary close_btn" data-bs-dismiss="modal"> {{ GoogleTranslate::trans('Close', app()->getLocale()) }} </button>
+                        <button type="submit" class="btn btn-primary role_delete btn_primary_color"> {{ GoogleTranslate::trans('Delete', app()->getLocale()) }} </button>
                     </div>
                 </div>
             </div>
@@ -94,74 +97,83 @@
 @section('js_scripts')
 
 <script>
-$(document).ready(function() {
-    let supplierId = $("#supplierId").val(); 
+    $(document).ready(function() {
+        let supplierId = $("#supplierId").val(); 
 
-    $('#supplierUser').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: {
-            url: `/suppliers/${supplierId}/users`, 
-            type: "GET",
-        },
-        columns: [
-            { data: 'name', name: 'name' },
-            { data: 'role', name: 'role' },
-            { data: 'status', name: 'status', orderable: false, searchable: false },
-            { data: 'actions', name: 'actions', orderable: false, searchable: false },
-        ],
-        columnDefs: [
-            {
-                targets: 0, 
-                className: "username" 
+        $('#supplierUser').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: `/suppliers/${supplierId}/users`, 
+                type: "GET",
             },
-            {
-                targets: 3, 
-                className: "icon-design" 
+            columns: [
+                { data: 'name', name: 'name' },
+                { data: 'role', name: 'role' },
+                { data: 'status', name: 'status', orderable: false, searchable: false },
+                { data: 'actions', name: 'actions', orderable: false, searchable: false },
+            ],
+            language: {
+                sSearch: "{{ GoogleTranslate::trans('Search', app()->getLocale()) }}",
+                sLengthMenu: "{{ GoogleTranslate::trans('Show', app()->getLocale()) }} _MENU_ {{ GoogleTranslate::trans('entries', app()->getLocale()) }}",
+                sInfo: "{{ GoogleTranslate::trans('Showing', app()->getLocale()) }} _START_ {{ GoogleTranslate::trans('to', app()->getLocale()) }} _END_ {{ GoogleTranslate::trans('of', app()->getLocale()) }} _TOTAL_ {{ GoogleTranslate::trans('entries', app()->getLocale()) }}",
+                oPaginate: {
+                    sPrevious: "{{ GoogleTranslate::trans('Previous', app()->getLocale()) }}",
+                    sNext: "{{ GoogleTranslate::trans('Next', app()->getLocale()) }}"
+                }
+            },
+            columnDefs: [
+                {
+                    targets: 0, 
+                    className: "username" 
+                },
+                {
+                    targets: 3, 
+                    className: "icon-design" 
+                }
+            ]
+            
+        });
+        $(document).on('click', '.delete-icon', function(e) {
+            e.preventDefault();
+            var supplierId = $(this).data('supplier-id');
+            var userId = $(this).data('user-id');
+            var username = $(this).closest('tr').find('.username').text();
+            var modal_text =
+                ` {{ GoogleTranslate::trans('Are you sure you want to delete', app()->getLocale()) }} "<strong><span id="append_name">${username}</span></strong>"?`;
+            $('.delete_content').html(modal_text);
+            $('#deleteRoleFormId').attr('action', `/suppliers/${supplierId}/users/${userId}`);
+
+            $('#deleteRoleForm').modal('show');
+        });
+    });
+
+    $(document).on('change', '.status-toggle', function() {
+        const toggleSwitch = $(this);
+        var userId = $(this).data('id');
+        var isActive = $(this).prop('checked') ? 1 : 0;
+
+        $.ajax({
+            url: '{{ route("users.toggleStatus") }}',
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                user_id: userId,
+                is_active: isActive
+            },
+            success: function(response) {
+                if (response.success) {
+                    const label = toggleSwitch.siblings("label");
+                    label.text(isActive ? "Active" : "Inactive");
+                    $('#successMessagea').text(response.message).fadeIn().delay(3000).fadeOut();
+
+                }
+            },
+            error: function(xhr, status, error) {
+                alert('An error occurred while updating the user status.');
             }
-
-        ]
-        
+        });
     });
-    $(document).on('click', '.delete-icon', function(e) {
-        e.preventDefault();
-        var supplierId = $(this).data('supplier-id');
-        var userId = $(this).data('user-id');
-        var username = $(this).closest('tr').find('.username').text();
-        var modal_text =
-            `Are you sure you want to delete  "<strong><span id="append_name">${username}</span></strong>"?`;
-        $('.delete_content').html(modal_text);
-        $('#deleteRoleFormId').attr('action', `/suppliers/${supplierId}/users/${userId}`);
-
-        $('#deleteRoleForm').modal('show');
-    });
-});
-$(document).on('change', '.status-toggle', function() {
-    const toggleSwitch = $(this);
-    var userId = $(this).data('id');
-    var isActive = $(this).prop('checked') ? 1 : 0;
-
-    $.ajax({
-        url: '{{ route("users.toggleStatus") }}',
-        type: 'POST',
-        data: {
-            _token: '{{ csrf_token() }}',
-            user_id: userId,
-            is_active: isActive
-        },
-        success: function(response) {
-            if (response.success) {
-                const label = toggleSwitch.siblings("label");
-                label.text(isActive ? "Active" : "Inactive");
-                $('#successMessagea').text(response.message).fadeIn().delay(3000).fadeOut();
-
-            }
-        },
-        error: function(xhr, status, error) {
-            alert('An error occurred while updating the user status.');
-        }
-    });
-});
 </script>
 
 @endsection

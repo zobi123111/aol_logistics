@@ -1,11 +1,13 @@
 @section('title', 'Load')
-@section('sub-title', 'Load')
+{{-- @section('sub-title', 'Load') --}}
+@section('sub-title', GoogleTranslate::trans('Load', app()->getLocale()))
+
 @extends('layout.app')
 @section('content')
 <div class="main_cont_outer">
     <div class="create_btn">
         <a href="{{ route('loads.index') }}" class="btn btn-primary create-button btn_primary_color"
-            id="createUser"><i class="bi bi-arrow-left-circle-fill"></i> back</a>
+            id="createUser"><i class="bi bi-arrow-left-circle-fill"></i> {{ GoogleTranslate::trans('Back', app()->getLocale()) }} </a>
     </div>
     <div id="successMessagea" class="alert alert-success" style="display: none;" role="alert">
         <i class="bi bi-check-circle me-1"></i>
@@ -13,7 +15,9 @@
     @if(session()->has('message'))
     <div id="successMessage" class="alert alert-success fade show" role="alert">
         <i class="bi bi-check-circle me-1"></i>
-        {{ session()->get('message') }}
+        {{-- {{ session()->get('message') }} --}}
+        {{ GoogleTranslate::trans(session('message'), app()->getLocale()) }}
+
     </div>
     @endif
     <!-- @if ($errors->any())
@@ -32,7 +36,7 @@
         @csrf
 
         <div class="form-group form-group mb-3 mt-3">
-            <label for="service_type" class="form-label">Service Type<span class="text-danger">*</span></label>
+            <label for="service_type" class="form-label"> {{ GoogleTranslate::trans('Service Type', app()->getLocale()) }} <span class="text-danger">*</span></label>
             <select name="service_type" id="service_type" class="form-control">
                 <option value="">Select Service Type</option>
                 <option value="Express" {{ old('service_type') == 'Express' ? 'selected' : '' }}>Express</option>
@@ -40,12 +44,14 @@
                 <option value="Overnight" {{ old('service_type') == 'Overnight' ? 'selected' : '' }}>Overnight</option>
             </select>
             @error('service_type')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
+                <div class="text-danger">
+                    {{ GoogleTranslate::trans($message, app()->getLocale()) }}
+                </div>
+            @enderror
         </div>
 
         <div class="form-group mb-3">
-            <label for="supplier_id" class="form-label">Select Supplier</label>
+            <label for="supplier_id" class="form-label"> {{ GoogleTranslate::trans('Select Supplier', app()->getLocale()) }} </label>
             <select name="supplier_id" id="supplier_id" class="form-control select2">
                 <option value="">Select Supplier</option>
                 @foreach($suppliers as $supplier)
@@ -55,63 +61,74 @@
                 @endforeach
             </select>
             @error('supplier_id')
-                <div class="text-danger">{{ $message }}</div>
+                <div class="text-danger">
+                    {{ GoogleTranslate::trans($message, app()->getLocale()) }}
+                </div>
             @enderror
         </div>
+        
         <div class="form-group mb-3">
-                <label for="origin" class="form-label">Origin<span class="text-danger">*</span></label>
-                <select name="origin" id="origin" class="form-control">
-                    <option value="">Select Origin</option>
-                    @foreach($origins as $origin)
-                        <option value="{{ $origin->id }}" {{ old('origin') == $origin->id ? 'selected' : '' }}>
-                            {{ $origin->street }}, {{ $origin->city }}, {{ $origin->state }}, {{ $origin->zip }}, {{ $origin->country }}
-                        </option>
-                    @endforeach
-                </select>
-                @error('origin')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
-            </div>
-
-            <div class="form-group mb-3">
-                <label for="destination" class="form-label">Destination<span class="text-danger">*</span></label>
-                <select name="destination" id="destination" class="form-control">
-                    <option value="">Select Destination</option>
-                    @foreach($destinations as $destination)
-                        <option value="{{ $destination->id }}" {{ old('destination') == $destination->id ? 'selected' : '' }}>
-                            {{ $destination->street }}, {{ $destination->city }}, {{ $destination->state }}, {{ $destination->zip }}, {{ $destination->country }}
-                        </option>
-                    @endforeach
-                </select>
-                @error('destination')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
-            </div>
-
-        <div class="form-group mb-3">
-            <label for="payer" class="form-label">Who Pays Load<span class="text-danger">*</span></label>
-              <select name="payer" id="payer" class="form-control">
-                    <option value="">Select Payer</option>
-                    <option value="client" {{ old('payer') == 'client' ? 'selected' : '' }}>Client directly</option>
-                    <option value="another_party" {{ old('payer') == 'another_party' ? 'selected' : '' }}>Another party will pay for the load</option>
-                </select>
-                @error('payer')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
+            <label for="origin" class="form-label"> {{ GoogleTranslate::trans('Origin', app()->getLocale()) }} <span class="text-danger">*</span></label>
+            <select name="origin" id="origin" class="form-control">
+                <option value="">Select Origin</option>
+                @foreach($origins as $origin)
+                    <option value="{{ $origin->id }}" {{ old('origin') == $origin->id ? 'selected' : '' }}>
+                        {{ $origin->street }}, {{ $origin->city }}, {{ $origin->state }}, {{ $origin->zip }}, {{ $origin->country }}
+                    </option>
+                @endforeach
+            </select>
+            @error('origin')
+                <div class="text-danger">
+                    {{ GoogleTranslate::trans($message, app()->getLocale()) }}
+                </div>
+            @enderror
         </div>
 
         <div class="form-group mb-3">
-            <label for="equipment_type" class="form-label">Equipment Type<span class="text-danger">*</span></label>
+            <label for="destination" class="form-label"> {{ GoogleTranslate::trans('Destination', app()->getLocale()) }} <span class="text-danger">*</span></label>
+            <select name="destination" id="destination" class="form-control">
+                <option value="">Select Destination</option>
+                @foreach($destinations as $destination)
+                    <option value="{{ $destination->id }}" {{ old('destination') == $destination->id ? 'selected' : '' }}>
+                        {{ $destination->street }}, {{ $destination->city }}, {{ $destination->state }}, {{ $destination->zip }}, {{ $destination->country }}
+                    </option>
+                @endforeach
+            </select>
+            @error('destination')
+                <div class="text-danger">
+                    {{ GoogleTranslate::trans($message, app()->getLocale()) }}
+                </div>
+            @enderror
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="payer" class="form-label"> {{ GoogleTranslate::trans('Who Pays Load', app()->getLocale()) }} <span class="text-danger">*</span></label>
+            <select name="payer" id="payer" class="form-control">
+                <option value="">Select Payer</option>
+                <option value="client" {{ old('payer') == 'client' ? 'selected' : '' }}>Client directly</option>
+                <option value="another_party" {{ old('payer') == 'another_party' ? 'selected' : '' }}>Another party will pay for the load</option>
+            </select>
+            @error('payer')
+                <div class="text-danger">
+                    {{ GoogleTranslate::trans($message, app()->getLocale()) }}
+                </div>
+            @enderror
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="equipment_type" class="form-label"> {{ GoogleTranslate::trans('Equipment Type', app()->getLocale()) }} <span class="text-danger">*</span></label>
             <select name="equipment_type" id="equipment_type" class="form-control">
                 <option value="">Select Equipment</option>
                 <option value="53' Truck" {{ old('equipment_type') == "53' Truck" ? 'selected' : '' }}>53' Truck</option>
                 <option value="48' Truck" {{ old('equipment_type') == "48' Truck" ? 'selected' : '' }}>48' Truck</option>
                 <option value="48' Flatbed" {{ old('equipment_type') == "48' Flatbed" ? 'selected' : '' }}>48' Flatbed</option>
                 <option value="53' R" {{ old('equipment_type') == "53' R" ? 'selected' : '' }}>53' R</option>
-                </select>
-                @error('equipment_type')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
+            </select>
+            @error('equipment_type')
+                <div class="text-danger">
+                    {{ GoogleTranslate::trans($message, app()->getLocale()) }}
+                </div>
+            @enderror
         </div>
 
         <div class="form-group mb-3">
@@ -137,37 +154,45 @@
         </div>
 
         <div class="form-group mb-3">
-            <label for="delivery_deadline" class="form-label">Delivery Deadline<span class="text-danger">*</span></label>
+            <label for="delivery_deadline" class="form-label"> {{ GoogleTranslate::trans('Delivery Deadline', app()->getLocale()) }} <span class="text-danger">*</span></label>
             <input type="date" id="delivery_deadline" name="delivery_deadline" class="form-control" value="{{old('delivery_deadline')}}">
             @error('delivery_deadline')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
+                <div class="text-danger">
+                    {{ GoogleTranslate::trans($message, app()->getLocale()) }}
+                </div>
+            @enderror
         </div>
 
         <div class="form-group mb-3">
-            <label for="customer_po" class="form-label">Customer PO / Reference Number</label>
+            <label for="customer_po" class="form-label"> {{ GoogleTranslate::trans('Customer PO / Reference Number', app()->getLocale()) }} </label>
             <input type="text" id="customer_po" name="customer_po" class="form-control" value="{{old('customer_po')}}">
             @error('customer_po')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
+                <div class="text-danger">
+                    {{ GoogleTranslate::trans($message, app()->getLocale()) }}
+                </div>
+            @enderror
         </div>
         <div class="form-check mb-3">
             <input type="checkbox" name="is_hazmat" id="is_hazmat" class="form-check-input" value="1" {{ old('is_hazmat') ? 'checked' : '' }}>
-            <label class="form-check-label" for="is_hazmat">HazMat (Hazardous)</label>
+            <label class="form-check-label" for="is_hazmat"> {{ GoogleTranslate::trans('HazMat (Hazardous)', app()->getLocale()) }} </label>
             @error('is_hazmat')
-                <div class="text-danger">{{ $message }}</div>
+                <div class="text-danger">
+                    {{ GoogleTranslate::trans($message, app()->getLocale()) }}
+                </div>
             @enderror
         </div>
 
         <div class="form-check mb-3">
             <input type="checkbox" name="is_inbond" id="is_inbond" class="form-check-input" value="1" {{ old('is_inbond') ? 'checked' : '' }}>
-            <label class="form-check-label" for="is_inbond">Inbond Load</label>
+            <label class="form-check-label" for="is_inbond"> {{ GoogleTranslate::trans('Inbond Load', app()->getLocale()) }} </label>
             @error('is_inbond')
-                <div class="text-danger">{{ $message }}</div>
+                <div class="text-danger">
+                    {{ GoogleTranslate::trans($message, app()->getLocale()) }}
+                </div>
             @enderror
         </div>
 
-        <button type="submit" class="btn btn-primary btn_primary_color">Create Load</button>
+        <button type="submit" class="btn btn-primary btn_primary_color"> {{ GoogleTranslate::trans('Create Load', app()->getLocale()) }} </button>
     </form>
         </div>
     </div>
