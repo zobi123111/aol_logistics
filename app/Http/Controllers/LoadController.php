@@ -9,6 +9,7 @@ use Yajra\DataTables\DataTables;
 use App\Models\Origin;
 use App\Models\Destination;
 use App\Models\AssignedService;
+use Illuminate\Support\Facades\Auth;
 
 class LoadController extends Controller
 {
@@ -19,8 +20,24 @@ class LoadController extends Controller
     {
         // $loads = Load::get();
         // return view('loads.index', compact('loads'));
+        $user = auth()->user();
+        $userType = $user->roledata->user_type_id;
         if ($request->ajax()) {
-            $loads = Load::with(['origindata', 'destinationdata', 'supplierdata'])->latest('id')->get(); 
+                    // $loads = Load::with(['origindata', 'destinationdata', 'supplierdata',  'assignedServices.supplier', 'creator'])->latest('id')->get(); 
+                    $loads = Load::with(['origindata', 'destinationdata', 'supplierdata', 'assignedServices.supplier', 'creator'])
+            ->when($userType == 2, function ($query) use ($user) {
+                return $query->where('created_by', $user->id); // Show only loads created by the user
+            })
+            ->when($userType == 3, function ($query) use ($user) {
+                return $query->whereHas('assignedServices', function ($query) use ($user) {
+                    $query->whereHas('supplier', function ($query) use ($user) {
+                        $query->where('id', $user->supplier->id); // Match supplier_id from supplierdata
+                    });
+                });
+            })
+            ->latest('id')
+            ->get();
+
             return DataTables::of($loads)
             ->addColumn('originval', function ($load) {
                 return $load->origindata
@@ -33,8 +50,17 @@ class LoadController extends Controller
                     : 'N/A';
             })
             ->addColumn('suppliercompany', function ($load) {
-                return $load->supplierdata ? $load->supplierdata->company_name : '---';
+                return $load->supplierdata ? $load->supplierdata->company_name: 'N/A';
                     
+            })
+            ->addColumn('supplier_company_name', function ($load) {
+                if ($load->assignedServices->isNotEmpty()) {
+                    return $load->assignedServices->pluck('supplier.company_name')->filter()->join(', ');
+                }
+                return '---';
+            })
+            ->addColumn('created_by', function ($load) {
+                return $load->creator ? $load->creator->fname.' '. $load->creator->lname  : 'N/A';
             })
             ->addColumn('actions', function ($load) {
                 $editUrl = route('loads.edit', encode_id($load->id));
@@ -55,7 +81,7 @@ class LoadController extends Controller
                         </a>';
             })
             
-            ->rawColumns(['originval', 'destinationval', 'actions', 'assign', 'suppliercompany']) 
+            ->rawColumns(['originval', 'destinationval', 'actions', 'assign', 'suppliercompany', 'supplier_company_name']) 
             ->make(true);
         }
 
@@ -94,13 +120,56 @@ class LoadController extends Controller
             'is_hazmat' => 'boolean',
             'is_inbond' => 'boolean',
         ]);
-        $status = $request->filled('supplier_id') ? 'assigned' : 'requested';
 
-        Load::create(array_merge(
-            $request->except('aol_number'), 
-            ['status' => $status]
-        ));    
-        return redirect()->route('loads.index')->with('message', 'Load added successfully.');
+        $status = 'requested'; 
+        $supplier_id = null; 
+        $service_id = null;
+        $message = 'Load added successfully.';
+
+        // Step 1: Create Load with supplier_id = null
+        $load = Load::create(array_merge(
+            $request->except('aol_number', 'supplier_id'), 
+            [
+                'supplier_id' => null, 
+                'status' => $status,
+                'created_by' => Auth::id(),
+            ]
+        ));
+        
+        if ($request->filled('supplier_id')) {
+            $supplier = Supplier::with('services')->find($request->supplier_id);
+        
+            if ($supplier) {
+                $matchingService = $supplier->services
+                    ->where('origin', $request->origin)
+                    ->where('destination', $request->destination)
+                    ->first();
+        
+                if ($matchingService) {
+                    $status = 'assigned';
+                    $service_id = $matchingService->id;
+                    $supplier_id = $supplier->id; 
+        
+                    $load->update([
+                        'supplier_id' => $supplier_id,
+                        // 'supplier_id' => null,
+                        'status' => $status
+                    ]);
+        
+                    AssignedService::create([
+                        'load_id' => $load->id,
+                        'supplier_id' => $supplier_id,
+                        'service_id' => $service_id,
+                    ]);
+                }else{
+                    $message = sprintf(
+                        'Load added successfully. No Matching Service Found With Supplier of company ',
+                        $supplier->company_name
+                    );
+                }
+            }
+        }  
+        return redirect()->route('loads.index')->with('message', $message);
     }
 
     /**
@@ -143,9 +212,37 @@ class LoadController extends Controller
     
         $load = Load::findOrFail($id);
         $status = $load->status; 
+        $supplier_id = $load->supplier_id; 
 
-        if ($request->has('supplier_id')) {
-            $status = $request->filled('supplier_id') ? 'assigned' : 'requested';
+        $message = 'Load updated successfully.';
+      
+        if ($request->filled('supplier_id')) {
+            $supplier = Supplier::with('services')->find($request->supplier_id);
+            // dd($supplier);
+
+            if ($supplier) {
+                $matchingService = $supplier->services
+                    ->where('origin', $request->origin)
+                    ->where('destination', $request->destination)
+                    ->first();
+        
+                if ($matchingService) {
+                    $status = 'assigned';
+                    $service_id = $matchingService->id; 
+        
+                    AssignedService::create([
+                        'load_id' => $load->id,
+                        'supplier_id' => $request->supplier_id,
+                        'service_id' => $service_id,
+                    ]);
+                    $supplier_id = $request->supplier_id; 
+                } else {
+                    $message = sprintf(
+                        'Load updated successfully. No Matching Service Found With Supplier of company ',
+                        $supplier->company_name
+                    );
+                }
+            }
         }
 
         $load->update([
@@ -161,11 +258,12 @@ class LoadController extends Controller
             'is_inbond' => $request->has('is_inbond'),
             'trailer_number' => $request->trailer_number,
             'port_of_entry' => $request->port_of_entry,
-            'supplier_id' => $request->supplier_id,
+            // 'supplier_id' => null,
+            'supplier_id' => $supplier_id,
             'status' => $status,
         ]);
     
-        return redirect()->route('loads.index')->with('meassge', 'Load updated successfully.');
+        return redirect()->route('loads.index')->with('message',$message);
     }
 
     public function destroy($id)
@@ -251,20 +349,38 @@ class LoadController extends Controller
             'supplier_id' => $request->supplier_id,
             'service_id' => $request->service_id,
         ]);
-
+        Load::where('id', $request->load_id)->update(['status' => 'assigned']);
         return redirect()->back()->with('message', 'Service assigned successfully.');
     }
 
-    public function unassignService($id)
+    public function unassignService(Request $request,$id)
     {
         $assignedService = AssignedService::find($id);
-
         if ($assignedService) {
+            $load_id = $assignedService->load_id; 
+            // Capture the reason for unassignment
+            $reason = $request->unassign_reason;
+            if ($reason === 'Other') {
+                $reason = $request->other_reason; // Use custom input if "Other" was selected
+            }
+
+            // Soft delete with cancellation reason
+            $assignedService->update([
+                'cancel_reason' => $reason
+            ]);
+
+            // dd("dsuyfduy");
+
             $assignedService->delete();
-            return back()->with('message', 'Service unassigned successfully.');
-        }
+    
+            $remainingServices = AssignedService::where('load_id', $load_id)->exists();
+    
+            if (!$remainingServices) {
+                Load::where('id', $load_id)->update(['status' => 'requested', 'supplier_id' => null]);
+            }
 
         return back()->with('error', 'Service not found.');
-}
+        }
+    }
 
 }

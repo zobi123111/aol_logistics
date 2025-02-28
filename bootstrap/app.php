@@ -14,7 +14,6 @@
 $app = new Illuminate\Foundation\Application(
     $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
 );
-error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
 
 /*
 |--------------------------------------------------------------------------

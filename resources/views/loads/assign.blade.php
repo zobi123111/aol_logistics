@@ -118,13 +118,16 @@
                     </td>
                     <td>${{ number_format($assigned->service->cost, 2) }}</td>
                     <td>
-                        <form action="{{ route('unassign.service', $assigned->id) }}" method="POST">
+                        <!-- <form action="{{ route('unassign.service', $assigned->id) }}" method="POST">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger">
                                 <i class="fas fa-times"></i> 
                             </button>
-                        </form>
+                        </form> -->
+                        <button type="button" class="btn btn-danger" onclick="showDeleteModal({{ $assigned->id }})">
+        <i class="fas fa-times"></i>
+    </button>
                     </td>
                 </tr>
             @endforeach
@@ -196,6 +199,44 @@
 </tbody>
 
 </table>
+<form method="POST" id="deleteRoleFormId">
+    @csrf
+    @method('DELETE')
+
+    <div class="modal fade" id="deleteRoleForm" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirm Unassignment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to unassign this service?</p>
+
+                    <!-- Reason for Unassigning -->
+                    <div class="mb-3">
+                        <label for="unassign_reason" class="form-label">Reason for Unassigning</label>
+                        <select class="form-select" name="unassign_reason" id="unassign_reason" onchange="toggleOtherReason()">
+                            <option value="Client Requested">Client Requested</option>
+                            <option value="Unable to Offer Service">Unable to Offer Service</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <!-- Other Reason Input (Hidden by Default) -->
+                    <div class="mb-3 d-none" id="other_reason_container">
+                        <label for="other_reason" class="form-label">Please Specify</label>
+                        <input type="text" class="form-control" name="other_reason" id="other_reason">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Unassign</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
         </div>
 
 
@@ -208,6 +249,24 @@ $(document).ready(function() {
     $('#assignedServices').DataTable()
     $('#allServices').DataTable()
 });
+
+function showDeleteModal(assignedId) {
+    let form = document.getElementById("deleteRoleFormId");
+    form.action = `/unassign-service/${assignedId}`; // Update form action dynamically
+    new bootstrap.Modal(document.getElementById('deleteRoleForm')).show();
+}
+
+// Show input field if "Other" is selected
+function toggleOtherReason() {
+    let reasonSelect = document.getElementById('unassign_reason');
+    let otherReasonContainer = document.getElementById('other_reason_container');
+
+    if (reasonSelect.value === "Other") {
+        otherReasonContainer.classList.remove('d-none');
+    } else {
+        otherReasonContainer.classList.add('d-none');
+    }
+}
 </script>
 
 @endsection

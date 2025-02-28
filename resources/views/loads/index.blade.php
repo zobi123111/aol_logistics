@@ -18,25 +18,26 @@
         {{ GoogleTranslate::trans(session('message'), app()->getLocale()) }}
     </div>
     @endif
+    
     <table class="table mt-3" id="loads">
         <thead>
             <tr>
-                <th> {{ GoogleTranslate::trans('AOL Number', app()->getLocale()) }} </th>
-                <th> {{ GoogleTranslate::trans('Service Type', app()->getLocale()) }} </th>
-                <th> {{ GoogleTranslate::trans('Origin', app()->getLocale()) }} </th>
-                <th> {{ GoogleTranslate::trans('Destination', app()->getLocale()) }} </th>
-                <th> {{ GoogleTranslate::trans('Payer', app()->getLocale()) }} </th>
-                <th> {{ GoogleTranslate::trans('Equipment Type', app()->getLocale()) }} </th>
-                <th> {{ GoogleTranslate::trans('Weight', app()->getLocale()) }} </th>
-                <th> {{ GoogleTranslate::trans('Delivery Deadline', app()->getLocale()) }} </th>
-                <th> {{ GoogleTranslate::trans('Customer PO', app()->getLocale()) }} </th>
-                <th> {{ GoogleTranslate::trans('HazMat', app()->getLocale()) }} </th>
-                <th> {{ GoogleTranslate::trans('Inbond', app()->getLocale()) }} </th>
-                <th> {{ GoogleTranslate::trans('Status', app()->getLocale()) }} </th>
-                <th> {{ GoogleTranslate::trans('Supplier Company', app()->getLocale()) }} </th>
-                <th width="160px"> {{ GoogleTranslate::trans('Actions', app()->getLocale()) }} </th>
-                <th> {{ GoogleTranslate::trans('Assign', app()->getLocale()) }} </th>
-
+            <th>AOL Number</th>
+                <th>Service Type</th>
+                <th>Origin</th>
+                <th>Destination</th>
+                <th>Payer</th>
+                <th>Equipment Type</th>
+                <th>Weight</th>
+                <th>Delivery Deadline</th>
+                <th>Customer PO</th>
+                <th>HazMat</th>
+                <th>Inbond</th>
+                <th>Status</th>
+                <th>Supplier Company</th>
+                <th>Created By</th>
+                <th width="160px">Actions</th>
+                <th>Assign</th>
             </tr>
         </thead>
 
@@ -93,7 +94,19 @@ $(document).ready(function() {
             { data: 'is_hazmat', name: 'is_hazmat', orderable: false, searchable: false },
             { data: 'is_inbond', name: 'is_inbond', orderable: false, searchable: false },
             { data: 'status', name: 'status'},
-            { data: 'suppliercompany', name: 'suppliercompany' },
+            {
+            data: 'supplier_company_name',
+            name: 'supplier_company_name',
+            render: function(data) {
+                    if (!data || data === '---') {
+                        return '---';
+                    }
+
+                    let suppliers = data.split(', ');
+                    return suppliers.map(supplier => `<span class="badge bg-primary me-1">${supplier}</span>`).join('');
+                }
+        },
+        { data: 'created_by', name: 'created_by' },
             { data: 'actions', name: 'actions', orderable: false, searchable: false },
             { data: 'assign', name: 'assign', orderable: false, searchable: false },
         ],

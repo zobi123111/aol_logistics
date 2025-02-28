@@ -13,7 +13,7 @@ class Load extends Model
     protected $fillable = [
         'aol_number', 'origin', 'destination', 'payer', 
         'equipment_type', 'weight', 'delivery_deadline', 
-        'customer_po', 'is_hazmat', 'is_inbond', 'status', 'service_type', 'supplier_id', 'trailer_number', 'port_of_entry'
+        'customer_po', 'is_hazmat', 'is_inbond', 'status', 'service_type', 'supplier_id', 'trailer_number', 'port_of_entry', 'created_by'
     ];
 
     protected $casts = [
@@ -64,4 +64,9 @@ class Load extends Model
     {
         return $this->hasMany(AssignedService::class, 'load_id');
     }
+
+    public function creator() {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
 }

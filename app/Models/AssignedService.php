@@ -4,12 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 
 class AssignedService extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
-    protected $fillable = ['load_id', 'supplier_id', 'service_id'];
+
+    protected $fillable = ['load_id', 'supplier_id', 'service_id', 'cancel_reason'];
+
+    protected $dates = ['deleted_at'];
 
     public function loads()
     {

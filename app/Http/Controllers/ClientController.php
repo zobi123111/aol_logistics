@@ -17,8 +17,6 @@ class ClientController extends Controller
 {
     public function index(Request $request )
     {
-        // $clients = User::with('roledata')->where('is_client', 1)->get(); 
-        // return view('client.index', compact('clients'));
         if ($request->ajax()) {
             $clients = User::with('roledata')->where('is_client', 1); 
     

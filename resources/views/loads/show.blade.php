@@ -75,13 +75,114 @@
         </tbody>
     </table>
 </div>
+<div class="container">
+<div class="card mb-4">
+        <div class="card-body text">
+            <div class="card-header blue_icon_color">
+                Current Tariler Position 
+            </div>
+            <div class="mb-3 mt-3 address-container" id="address">
+                <div id="append_address" class="address-box"></div>
+                <div id="append_error" class="text-danger error-message"></div>
+            </div>
+            <!-- <div id="map"></div> -->
+                        <iframe 
+            id="mapFrame"
+            width="800" 
+            height="500" 
+            frameborder="0" 
+            scrolling="no" 
+            marginheight="0" 
+            marginwidth="0" 
+            src=""
+            style="display: none;"
+            >
+            </iframe>
+            <br />
+            <small>
+            <a id="mapLink" 
+                href="#" 
+                style="color:#0000FF;text-align:left; display: none;" 
+                target="_blank">
+                See map bigger
+            </a>
+            </small>
+        </div>
+    </div>
 </div>
 
 @endsection
 @section('js_scripts')
 <script>
+    // $(document).ready(function() {
+    // $('#assigned').DataTable();
+    // });
+
     $(document).ready(function() {
-    $('#assigned').DataTable();
+        $('#append_address').html('');
+        $('#append_error').html('');
+
+        var trailerId = `{{ $load->trailer_number }}`;
+        console.log('Selected Trailer ID:', trailerId);
+
+        if (!trailerId) {
+            $('#append_error').html('No trailer number found.');
+            return;
+        }
+
+        var apiUrl = `https://gemco.forzatrans.app/api/Trailers/lastposition/${trailerId}`;
+        var apiKey = 'pT7#f9@Lk2^bWz8!xQeV3$Mn6*ArYt1&JdF4+Gh9%UzXo7=KpL';
+
+        $.ajax({
+            url: apiUrl,
+            type: 'GET',
+            beforeSend: function() {
+                $('#trailer_no').prop('disabled', true);
+                $('#mapFrame, #mapLink').hide();
+            },
+            headers: {
+                'X-API-Key': apiKey,
+                'Content-Type': 'application/json'
+            },
+            timeout: 30000,
+            success: function(response) {
+                if (!response.length) {
+                    $('#trailer_no').prop('disabled', false);
+                    $('#append_address').html('');
+                    $('#append_error').html('No location data found.');
+                    return;
+                }
+
+                var address = response[0].address;
+                var city = response[0].city;
+                var country = response[0].country;
+                var addressParts = [];
+                if (address) addressParts.push(address);
+                if (city) addressParts.push(city);
+                if (country) addressParts.push(country);
+                var fullAddress = addressParts.join(', ');
+                var latitude = response[0].latitude;
+                var longitude = response[0].longitude;
+
+                $('#append_address').html('Address: ' + fullAddress);
+                $('#append_error').html('');
+
+                // Update Google Maps iframe
+                var mapSrc = `https://maps.google.com/maps?q=${latitude},${longitude}&z=14&output=embed`;
+                var mapHref = `https://maps.google.com/maps?q=${latitude},${longitude}&z=14`;
+
+                $('#mapFrame').attr('src', mapSrc).show(); // Set src and show iframe
+                $('#mapLink').attr('href', mapHref).show();
+
+                $('#trailer_no').prop('disabled', false);
+            },
+            error: function(xhr, status, error) {
+                $('#trailer_no').prop('disabled', false);
+                console.log('Error:', error);
+                $('#append_address').html('');
+                $('#append_error').html('Request failed');
+            }
+        });
     });
 
 </script>
