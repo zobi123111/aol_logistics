@@ -1,12 +1,13 @@
 @section('title', 'Origins')
 {{-- @section('sub-title', 'Origins') --}}
-@section('sub-title', GoogleTranslate::trans('Origins', app()->getLocale()))
+@section('sub-title', __('messages.Origins'))
+
 @extends('layout.app')
 @section('content')
 <div class="main_cont_outer">
     <div class="create_btn">
         <a href="{{ route('origins.index') }}" class="btn btn-primary create-button btn_primary_color" id="createUser"><i
-                class="bi bi-arrow-left-circle-fill"></i> {{ GoogleTranslate::trans('Back', app()->getLocale()) }} </a>
+                class="bi bi-arrow-left-circle-fill"></i> {{ __('messages.Back') }} </a>
     </div>
     <div id="successMessagea" class="alert alert-success" style="display: none;" role="alert">
         <i class="bi bi-check-circle me-1"></i>
@@ -14,8 +15,7 @@
     @if(session()->has('message'))
     <div id="successMessage" class="alert alert-success fade show" role="alert">
         <i class="bi bi-check-circle me-1"></i>
-        {{-- {{ session()->get('message') }} --}}
-        {{ GoogleTranslate::trans(session('message'), app()->getLocale()) }}
+        {{ session()->get('message') }}
     </div>
     @endif
     <div class="card card-container">
@@ -24,58 +24,54 @@
         @csrf
         @method('PUT')
         <div class="mb-3 mt-3">
-            <label for="name" class="form-label">Name for Address</label>
+            <label for="name" class="form-label">{{ __('messages.Name for Address') }} </label>
             <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name', $origin->name) }}" >
             @error('name')
-                <div class="text-danger">{{ $message }}</div>
+                {{ $message }}
             @enderror
         </div>
         <div class="mb-3">
-            <label for="street" class="form-label"> {{ GoogleTranslate::trans('Street', app()->getLocale()) }} </label>
-            <input type="text" name="street" class="form-control @error('street') is-invalid @enderror" 
-                   value="{{ old('street', $origin->street) }}" required>
+            <label for="street" class="form-label"> {{ __('messages.Street') }} </label>
+            <input type="text" name="street" class="form-control @error('street') is-invalid @enderror" value="{{ old('street', $origin->street) }}" required>
             @error('street')
                  <div class="text-danger">
-                    {{ GoogleTranslate::trans($message, app()->getLocale()) }}
+                     {{ $message }}
                 </div>
             @enderror
         </div>
 
         <div class="mb-3">
-            <label for="city" class="form-label"> {{ GoogleTranslate::trans('City', app()->getLocale()) }} </label>
-            <input type="text" name="city" class="form-control @error('city') is-invalid @enderror" 
-                   value="{{ old('city', $origin->city) }}" required>
+            <label for="city" class="form-label"> {{ __('messages.City') }} </label>
+            <input type="text" name="city" class="form-control @error('city') is-invalid @enderror" value="{{ old('city', $origin->city) }}" required>
             @error('city')
                  <div class="text-danger">
-                    {{ GoogleTranslate::trans($message, app()->getLocale()) }}
+                     {{ $message }}
                 </div>
             @enderror
         </div>
 
         <div class="mb-3">
-            <label for="state" class="form-label"> {{ GoogleTranslate::trans('State', app()->getLocale()) }} </label>
-            <input type="text" name="state" class="form-control @error('state') is-invalid @enderror" 
-                   value="{{ old('state', $origin->state) }}" required>
+            <label for="state" class="form-label"> {{ __('messages.State') }} </label>
+            <input type="text" name="state" class="form-control @error('state') is-invalid @enderror" value="{{ old('state', $origin->state) }}" required>
             @error('state')
                  <div class="text-danger">
-                    {{ GoogleTranslate::trans($message, app()->getLocale()) }}
+                     {{ $message }}
                 </div>
             @enderror
         </div>
 
         <div class="mb-3">
-            <label for="zip" class="form-label"> {{ GoogleTranslate::trans('ZIP Code', app()->getLocale()) }} </label>
-            <input type="number" name="zip" class="form-control @error('zip') is-invalid @enderror" 
-                   value="{{ old('zip', $origin->zip) }}" required>
+            <label for="zip" class="form-label"> {{ __('messages.ZIP Code') }} </label>
+            <input type="number" name="zip" class="form-control @error('zip') is-invalid @enderror" value="{{ old('zip', $origin->zip) }}" required>
             @error('zip')
                  <div class="text-danger">
-                    {{ GoogleTranslate::trans($message, app()->getLocale()) }}
+                     {{ $message }}
                 </div>
             @enderror
         </div>
 
         <div class="mb-3">
-            <label for="country" class="form-label"> {{ GoogleTranslate::trans('Country', app()->getLocale()) }} </label>
+            <label for="country" class="form-label"> {{ __('messages.Country') }} </label>
             <select name="country" class="form-control @error('country') is-invalid @enderror" required>
                 <option value="">Select Country</option>
                 @php
@@ -87,12 +83,11 @@
             </select>
             @error('country')
                  <div class="text-danger">
-                    {{ GoogleTranslate::trans($message, app()->getLocale()) }}
+                     {{ $message }}
                 </div>
             @enderror
         </div>
-            <button type="submit" class="btn btn-primary create-button btn_primary_color"> {{ GoogleTranslate::trans('Update', app()->getLocale()) }} </button>
-
+            <button type="submit" class="btn btn-primary create-button btn_primary_color"> {{ __('messages.Update') }} </button>
         </form>
     </div>
     </div>

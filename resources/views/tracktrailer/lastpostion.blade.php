@@ -1,14 +1,15 @@
 @extends('layout.app')
 @section('title', 'Trailers')
-@section('sub-title', 'Trailers')
+@section('sub-title', __('messages.Trailer'))
+
 @section('content')
 <div class="main_cont_outer">
     <div class="card card-container">
         <div class="card-body">
             <div class="mb-3 mt-3 trailer_number">
-                <label class="form-label"> {{ GoogleTranslate::trans('Select Trailer Number', app()->getLocale()) }} </label>
+                <label class="form-label"> {{ __('messages.Select Trailer Number') }} </label>
                 <select id="trailer_no" class="searchable-select">
-                    <option value=""> {{ GoogleTranslate::trans('Select a Trailer', app()->getLocale()) }} </option>
+                    <option value=""> {{ __('messages.Select a Trailer') }} </option>
                     @foreach($trailers as $row)
                         <option value="{{ $row->trailer_num }}">{{ $row->trailer_num }}</option>
                     @endforeach
@@ -22,7 +23,7 @@
             <iframe id="mapFrame" width="800" height="500" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="" style="display: none;"></iframe>
             <br />
             <small>
-                <a id="mapLink" href="#" style="color:#0000FF;text-align:left; display: none;" target="_blank"> {{ GoogleTranslate::trans('See map bigger', app()->getLocale()) }} </a>
+                <a id="mapLink" href="#" style="color:#0000FF;text-align:left; display: none;" target="_blank"> {{ __('messages.See map bigger') }} </a>
             </small>
         </div>
     </div>
@@ -36,7 +37,7 @@
     $(document).ready(function() {
             if ($.fn.select2) { 
         $('.searchable-select').select2({
-            placeholder: "Select a Trailer",
+            placeholder: "{{ __('messages.Select a Trailer') }}",
             allowClear: true // Adds a clear button
         });
     } else {

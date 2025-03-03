@@ -1,6 +1,6 @@
 @section('title', 'Roles')
 {{-- @section('sub-title', 'Roles') --}}
-@section('sub-title', GoogleTranslate::trans('Roles', app()->getLocale()))
+@section('sub-title', __('messages.Role'))
 
 @extends('layout.app')
 @section('content')
@@ -9,7 +9,7 @@
     @if(checkAllowedModule('roles', 'roles.create')->isNotEmpty() && Auth::user()->is_dev)
     <div class="create_btn">
         <a href="{{ route('roles.create') }}" class="btn btn-primary create-button btn_primary_color"
-            id="createrole"> {{ GoogleTranslate::trans('Create Role', app()->getLocale()) }} </a>
+            id="createrole"> {{ __('messages.Create Role') }} </a>
     </div>
     @endif
     <div id="successMessagea" class="alert alert-success" style="display: none;" role="alert">
@@ -18,17 +18,16 @@
     @if(session()->has('message'))
     <div id="successMessage" class="alert alert-success fade show" role="alert">
         <i class="bi bi-check-circle me-1"></i>
-        {{-- {{ session()->get('message') }} --}}
-        {{ GoogleTranslate::trans(session('message'), app()->getLocale()) }}
+        {{ session()->get('message') }}
     </div>
     @endif
     <table class="table table-striped" id="role_table" style="padding-top: 10px;">
         <thead>
             <tr>
-                <th scope="col"> {{ GoogleTranslate::trans('Role', app()->getLocale()) }} </th>
-                <th scope="col"> {{ GoogleTranslate::trans('User Type', app()->getLocale()) }} </th>
+                <th scope="col"> {{ __('messages.Role') }} </th>
+                <th scope="col"> {{ __('messages.User Type') }} </th>
                 @if((checkAllowedModule('roles', 'roles.edit')->isNotEmpty() || checkAllowedModule('roles', 'roles.destroy')->isNotEmpty()) || (Auth::user()->is_dev ||Auth::user()->is_owner))
-                <th scope="col"> {{ GoogleTranslate::trans('Actions', app()->getLocale()) }} </th>
+                <th scope="col"> {{ __('messages.Actions') }} </th>
                 @endif
                 <!-- @if(checkAllowedModule('roles', 'roles.destroy')->isNotEmpty() && Auth::user()->is_dev)
                 <th scope="col">Delete</th>
@@ -68,14 +67,14 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel"> {{ GoogleTranslate::trans('Delete', app()->getLocale()) }} </h5>
+                        <h5 class="modal-title" id="exampleModalLabel"> {{ __('messages.Delete') }} </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body delete_content">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary close_btn" data-bs-dismiss="modal">{{ GoogleTranslate::trans('Close', app()->getLocale()) }} </button>
-                        <button type="submit" class="btn btn-primary role_delete btn_primary_color">{{ GoogleTranslate::trans('Delete', app()->getLocale()) }} </button>
+                        <button type="button" class="btn btn-secondary close_btn" data-bs-dismiss="modal">{{ __('messages.Close') }} </button>
+                        <button type="submit" class="btn btn-primary role_delete btn_primary_color">{{ __('messages.Delete') }} </button>
                     </div>
                 </div>
             </div>
@@ -101,7 +100,7 @@ $(document).ready(function() {
         if (usercountId < 1) {
             var modal_text =
                 // `Are you sure you want to delete this role "<strong><span id="append_name">${fname} </span></strong>" ?`;
-                `{{ GoogleTranslate::trans('Are you sure you want to delete this role', app()->getLocale()) }} "<strong><span id="append_name">${fname} </span></strong>" ?`;
+                `{{ __('messages.Are you sure you want to delete this role') }} "<strong><span id="append_name">${fname} </span></strong>" ?`;
             $(".role_delete").prop("disabled", false)
 
         } else {}

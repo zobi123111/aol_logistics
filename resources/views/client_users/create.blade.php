@@ -86,7 +86,7 @@
                     <label for="profile_photo" class="form-label">Profile Photo</label>
                     <input type="file" name="profile_photo" id="profile_photo" class="form-control">
                     @error('profile_photo')
-                        <div class="text-danger">{{ $message }}</div>
+                        {{ $message }}
                     @enderror
                 </div> -->
 

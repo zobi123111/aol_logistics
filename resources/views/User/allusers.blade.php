@@ -1,12 +1,12 @@
 @section('title', 'Users')
-@section('sub-title', GoogleTranslate::trans('Users', app()->getLocale()))
+@section('sub-title', __('messages.Users'))
 @extends('layout.app')
 @section('content')
 <div class="main_cont_outer">
     @if(checkAllowedModule('users', 'save_user.index')->isNotEmpty())
     <div class="create_btn">
         <a href="#" class="btn btn-primary create-button btn_primary_color" id="createUser" data-toggle="modal"
-            data-target="#userModal">{{ GoogleTranslate::trans('Create User', app()->getLocale()) }}</a>
+            data-target="#userModal"> {{ __('messages.Create User') }}</a>
     </div>
     @endif
     <div id="successMessagea" class="alert alert-success" style="display: none;" role="alert">
@@ -15,8 +15,7 @@
     @if(session()->has('message'))
     <div id="successMessage" class="alert alert-success fade show" role="alert">
         <i class="bi bi-check-circle me-1"></i>
-        {{-- {{ session()->get('message') }} --}}
-        {{ GoogleTranslate::trans(session('message'), app()->getLocale()) }}
+        {{ session()->get('message') }}
 
     </div>
     @endif
@@ -27,7 +26,7 @@
         <div class="d-flex justify-content-start mb-3 bulk_div">
             <!-- Bulk Action Dropdown -->
             <select name="bulk_action" class="form-control w-25" required>
-                <option value="">Select Bulk Action</option>
+                <option value=""> {{ __('messages.Select Bulk Action') }} </option>
                 @if(checkAllowedModule('users', 'user.toggleStatus')->isNotEmpty())
                 <option value="change_status">Change Status</option>
                 @endif
@@ -43,7 +42,7 @@
             </select>
 
             <!-- Submit Button -->
-            <button type="submit" class="btn btn-primary create-button btn_primary_color">{{ GoogleTranslate::trans('Apply Action', app()->getLocale()) }} </button>
+            <button type="submit" class="btn btn-primary create-button btn_primary_color">{{ __('messages.Apply Action') }} </button>
             <div id="bulk_error" class="text-danger error_e"></div>
         </div>
         @endif
@@ -51,17 +50,17 @@
             <thead>
                 <tr>
                     <th scope="col"><input type="checkbox" id="select_all"></th>
-                    <th scope="col"> {{ GoogleTranslate::trans('First Name', app()->getLocale()) }}</th>
-                    <th scope="col"> {{ GoogleTranslate::trans('Last Name', app()->getLocale()) }} </th>
-                    <th scope="col"> {{ GoogleTranslate::trans('Email', app()->getLocale()) }} </th>
-                    <th scope="col"> {{ GoogleTranslate::trans('Role', app()->getLocale()) }}</th>
-                    <th scope="col"> {{ GoogleTranslate::trans('Last Login At', app()->getLocale()) }}</th>
+                    <th scope="col"> {{ __('messages.First Name') }}</th>
+                    <th scope="col"> {{ __('messages.Last Name') }} </th>
+                    <th scope="col"> {{ __('messages.Email') }} </th>
+                    <th scope="col"> {{ __('messages.Role') }}</th>
+                    <th scope="col"> {{ __('messages.Last Login At') }}</th>
                     @if(checkAllowedModule('users', 'users.toggleStatus')->isNotEmpty())
-                    <th scope="col"> {{ GoogleTranslate::trans('Status', app()->getLocale()) }}</th>
+                        <th scope="col"> {{ __('messages.Status') }} </th>
                     @endif
 
                     @if(checkAllowedModule('users', 'user.get')->isNotEmpty() || checkAllowedModule('users', 'user.destroy')->isNotEmpty())
-                    <th scope="col"> {{ GoogleTranslate::trans('Actions', app()->getLocale()) }} </th>
+                    <th scope="col"> {{ __('messages.Actions') }} </th>
                     @endif
                     <!-- @if(checkAllowedModule('users', 'user.destroy')->isNotEmpty())
                     <th scope="col">Delete</th>
@@ -71,7 +70,7 @@
             <tbody>
                 @if($users->isEmpty())
                 <tr>
-                    <td colspan="8" class="text-center">{{ GoogleTranslate::trans('No users found', app()->getLocale()) }} </td>
+                    <td colspan="8" class="text-center">{{ __('messages.No users found') }} </td>
                 </tr>
                 @else
                 @foreach($users as $val)
@@ -120,7 +119,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="userModalLabel"> {{ GoogleTranslate::trans('Create User', app()->getLocale()) }} </h5>
+                <h5 class="modal-title" id="userModalLabel"> {{ __('messages.Create User') }} </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -128,28 +127,28 @@
                     enctype="multipart/form-data">
                     @csrf
                     <div class="form-group">
-                        <label for="firstname" class="form-label"> {{ GoogleTranslate::trans('First Name', app()->getLocale()) }} <span class="text-danger">*</span></label>
+                        <label for="firstname" class="form-label"> {{ __('messages.First Name') }} <span class="text-danger">*</span></label>
                         <input type="text" name="firstname" class="form-control">
                         <div id="firstname_error" class="text-danger error_e"></div>
                     </div>
                     <div class="form-group">
-                        <label for="lastname" class="form-label"> {{ GoogleTranslate::trans('Last Name', app()->getLocale()) }} <span class="text-danger">*</span></label>
+                        <label for="lastname" class="form-label"> {{ __('messages.Last Name') }} <span class="text-danger">*</span></label>
                         <input type="text" name="lastname" class="form-control">
                         <div id="lastname_error" class="text-danger error_e"></div>
                     </div>
                     <div class="form-group">
-                        <label for="email" class="form-label"> {{ GoogleTranslate::trans('Email', app()->getLocale()) }} <span class="text-danger">*</span></label>
+                        <label for="email" class="form-label"> {{ __('messages.Email') }} <span class="text-danger">*</span></label>
                         <input type="email" name="email" class="form-control">
                         <div id="email_error" class="text-danger error_e"></div>
                     </div>
 
                     <div class="form-group">
-                        <label for="password" class="form-label"> {{ GoogleTranslate::trans('Password', app()->getLocale()) }} <span class="text-danger">*</span></label>
+                        <label for="password" class="form-label"> {{ __('messages.Password') }} <span class="text-danger">*</span></label>
                         <input type="password" name="password" class="form-control">
                         <div id="password_error" class="text-danger error_e"></div>
                     </div>
                     <div class="form-group">
-                        <label for="confirmpassword" class="form-label"> {{ GoogleTranslate::trans('Confirm Password', app()->getLocale()) }} <span
+                        <label for="confirmpassword" class="form-label"> {{ __('messages.Confirm Password') }} <span
                                 class="text-danger">*</span></label>
                         <input type="password" name="password_confirmation" class="form-control" id="confirmpassword">
                         <div id="password_confirmation_error" class="text-danger error_e"></div>
@@ -176,9 +175,9 @@
                     </div> -->
 
                     <div class="form-group mt-3">
-                        <label for="role" class="form-label"> {{ GoogleTranslate::trans('Role', app()->getLocale()) }} <span class="text-danger">*</span></label>
+                        <label for="role" class="form-label"> {{ __('messages.Role') }} <span class="text-danger">*</span></label>
                         <select name="role_name" class="form-select" id="role">
-                            <option value=""> {{ GoogleTranslate::trans('Select Role', app()->getLocale()) }} </option>
+                            <option value=""> {{ __('messages.Select Role') }} </option>
                             @foreach($roles as $role)
                             <option value="{{ encode_id($role->id) }}"
                                 data-user-type="{{ encode_id($role->user_type_id) }}">
@@ -191,7 +190,7 @@
 
                     <!-- Profile Photo Upload -->
                     <div class="form-group mt-3">
-                        <label for="profile_photo" class="form-label"> {{ GoogleTranslate::trans('Profile Photo', app()->getLocale()) }} </label>
+                        <label for="profile_photo" class="form-label"> {{ __('messages.Profile Photo') }} </label>
                         <input type="file" name="profile_photo" id="profile_photo" class="form-control">
                         <div id="profile_photo_error" class="text-danger error_e"></div>
                     </div>
@@ -199,10 +198,10 @@
 
                     <div class="modal-footer">
                         <a href="#" type="button" class="btn btn-secondary btn_secondary_color"
-                            data-bs-dismiss="modal"> {{ GoogleTranslate::trans('Close', app()->getLocale()) }} </a>
+                            data-bs-dismiss="modal"> {{ __('messages.Close') }} </a>
                         <a href="#" type="button" id="saveuser" class="btn btn-primary btn_primary_color sbt_btn"><span
                                 class="spinner-border spinner-border-sm show_loader noactive" role="status"
-                                aria-hidden="true"></span><span> {{ GoogleTranslate::trans('Save', app()->getLocale()) }} </span>
+                                aria-hidden="true"></span><span> {{ __('messages.Save') }} </span>
                         </a>
                     </div>
                 </form>
@@ -218,7 +217,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editUserDataModalLabel">{{ GoogleTranslate::trans('Edit Employee', app()->getLocale()) }}</h5>
+                <h5 class="modal-title" id="editUserDataModalLabel">{{ __('messages.Edit Employee') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -227,18 +226,18 @@
                     @csrf
                     <input type="hidden" name="edit_id" value="">
                     <div class="form-group">
-                        <label for="firstname" class="form-label"> {{ GoogleTranslate::trans('First Name', app()->getLocale()) }} <span class="text-danger">*</span></label>
+                        <label for="firstname" class="form-label"> {{ __('messages.First Name') }} <span class="text-danger">*</span></label>
                         <input type="text" name="fname" class="form-control">
                         <div id="fname_error" class="text-danger error_e"></div>
                     </div>
 
                     <div class="form-group">
-                        <label for="lastname" class="form-label"> {{ GoogleTranslate::trans('Last Name', app()->getLocale()) }} <span class="text-danger">*</span></label>
+                        <label for="lastname" class="form-label"> {{ __('messages.Last Name') }} <span class="text-danger">*</span></label>
                         <input type="text" name="lname" class="form-control">
                         <div id="lname_error" class="text-danger error_e"></div>
                     </div>
                     <div class="form-group">
-                        <label for="email" class="form-label"> {{ GoogleTranslate::trans('Email', app()->getLocale()) }} <span class="text-danger">*</span></label>
+                        <label for="email" class="form-label"> {{ __('messages.Email') }} <span class="text-danger">*</span></label>
                         <input type="email" name="email" class="form-control">
                         <div id="email_error" class="text-danger error_e"></div>
                     </div>
@@ -253,9 +252,9 @@
                     </div> -->
 
                     <div class="form-group mt-3">
-                        <label for="edit_role_name" class="form-label"> {{ GoogleTranslate::trans('Role', app()->getLocale()) }} <span class="text-danger">*</span></label>
+                        <label for="edit_role_name" class="form-label"> {{ __('messages.Role') }} <span class="text-danger">*</span></label>
                         <select name="edit_role_name" class="form-select" id="edit_role">
-                            <option value=""> {{ GoogleTranslate::trans('Select Role Type', app()->getLocale()) }} </option>
+                            <option value=""> {{ __('messages.Select Role Type') }} </option>
                             @foreach($roles as $val)
                             <option value="{{ encode_id($val->id) }}"
                                 data-user-type="{{ encode_id($val->user_type_id) }}">{{ $val->role_name }}</option>
@@ -268,7 +267,7 @@
                     <div class="form-group">
                         <div id="current-profile-photo" class="mt-2">
                         </div>
-                        <label for="edit_profile_photo" class="form-label mt-2"> {{ GoogleTranslate::trans('Profile Photo', app()->getLocale()) }} Profile Photo</label>
+                        <label for="edit_profile_photo" class="form-label mt-2"> {{ __('messages.Profile Photo') }} Profile Photo</label>
                         <input type="file" name="edit_profile_photo" class="form-control">
                         <input type="hidden" name="remove_profile_photo" id="remove_profile_photo" value="0">
                         <div id="edit_profile_photo_error" class="text-danger error_e"></div>
@@ -277,21 +276,21 @@
                     <!-- Password Fields (Only for Super Admin) -->
                     @if(isAdminUser())
                     <div class="form-group mt-3">
-                        <label for="edit_password" class="form-label"> {{ GoogleTranslate::trans('New Password', app()->getLocale()) }} </label>
+                        <label for="edit_password" class="form-label"> {{ __('messages.New Password') }} </label>
                         <input type="password" name="edit_password" class="form-control">
                         <div id="edit_password_error" class="text-danger error_e"></div>
                     </div>
 
                     <div class="form-group mt-3">
-                        <label for="edit_password_confirmation" class="form-label"> {{ GoogleTranslate::trans('Confirm New Password', app()->getLocale()) }} </label>
+                        <label for="edit_password_confirmation" class="form-label"> {{ __('messages.Confirm New Password') }} </label>
                         <input type="password" name="edit_password_confirmation" class="form-control">
                         <div id="edit_password_confirmation_error" class="text-danger error_e"></div>
                     </div>
                     @endif
                     <div class="modal-footer">
                         <a href="#" type="button" class="btn btn-secondary btn_secondary_color"
-                            data-bs-dismiss="modal"> {{ GoogleTranslate::trans('Close', app()->getLocale()) }} </a>
-                        <a href="#" type="button" id="edituser" class="btn btn-primary btn_primary_color sbt_btn"> {{ GoogleTranslate::trans('Update', app()->getLocale()) }} 
+                            data-bs-dismiss="modal"> {{ __('messages.Close') }} </a>
+                        <a href="#" type="button" id="edituser" class="btn btn-primary btn_primary_color sbt_btn"> {{ __('messages.Update') }} 
                         </a>
                     </div>
                 </form>
@@ -309,16 +308,16 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel"> {{ GoogleTranslate::trans('Delete', app()->getLocale()) }} </h5>
+                    <h5 class="modal-title" id="exampleModalLabel"> {{ __('messages.Delete') }} </h5>
                     <input type="hidden" name="id" id="userid" value="">
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    {{ GoogleTranslate::trans('Are you sure you want to delete this user', app()->getLocale()) }} "<strong><span id="append_name"> </span></strong>" ?
+                    {{ __('messages.Are you sure you want to delete this user') }} "<strong><span id="append_name"> </span></strong>" ?
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary close_btn" data-bs-dismiss="modal"> {{ GoogleTranslate::trans('Close', app()->getLocale()) }} </button>
-                    <button type="submit" class="btn btn-primary user_delete"> {{ GoogleTranslate::trans('Delete', app()->getLocale()) }} </button>
+                    <button type="button" class="btn btn-secondary close_btn" data-bs-dismiss="modal"> {{ __('messages.Close') }} </button>
+                    <button type="submit" class="btn btn-primary user_delete"> {{ __('messages.Delete') }} </button>
                 </div>
             </div>
         </div>

@@ -13,13 +13,14 @@ class Load extends Model
     protected $fillable = [
         'aol_number', 'origin', 'destination', 'payer', 
         'equipment_type', 'weight', 'delivery_deadline', 
-        'customer_po', 'is_hazmat', 'is_inbond', 'status', 'service_type', 'supplier_id', 'trailer_number', 'port_of_entry', 'created_by'
+        'customer_po', 'is_hazmat', 'is_inbond', 'status', 'service_type', 'supplier_id', 'trailer_number', 'port_of_entry', 'created_by', 'schedule'
     ];
 
     protected $casts = [
         'is_hazmat' => 'boolean',
         'is_inbond' => 'boolean',
         'delivery_deadline' => 'date',
+        'schedule' => 'datetime', 
     ];
 
     protected static function boot()

@@ -1,15 +1,15 @@
 @section('title', 'Supplier Users')
 {{-- @section('sub-title', 'Supplier Users') --}}
-@section('sub-title', GoogleTranslate::trans('Supplier Users', app()->getLocale()))
+@section('sub-title', __('messages.Supplier User'))
 
 @extends('layout.app')
 @section('content')
 <div class="main_cont_outer">
     <div class="create_btn">
     <a href="{{ route('suppliers.index') }}" class="btn btn-primary create-button btn_primary_color"
-    id="createClient"><i class="bi bi-arrow-left-circle-fill"></i> {{ GoogleTranslate::trans('Back', app()->getLocale()) }} </a>
+    id="createClient"><i class="bi bi-arrow-left-circle-fill"></i> {{ __('messages.Back') }} </a>
         <a href="{{ route('supplier_users.create', encode_id($supplier->id)) }}" class="btn btn-primary create-button btn_primary_color"
-            id="createrole"> {{ GoogleTranslate::trans('Create Supplier User', app()->getLocale()) }} </a>
+            id="createrole"> {{ __('messages.Create Supplier User') }} </a>
     </div>
     <div id="successMessagea" class="alert alert-success" style="display: none;" role="alert">
         <i class="bi bi-check-circle me-1"></i>
@@ -17,8 +17,7 @@
     @if(session()->has('message'))
     <div id="successMessage" class="alert alert-success fade show" role="alert">
         <i class="bi bi-check-circle me-1"></i>
-        {{-- {{ session()->get('message') }} --}}
-        {{ GoogleTranslate::trans(session('message'), app()->getLocale()) }}
+        {{ session()->get('message') }}
     </div>
     @endif
     @php
@@ -30,11 +29,11 @@
     <table class="table table-striped mt-3" id="supplierUser">
         <thead>
             <tr>
-                <th scope="col"> {{ GoogleTranslate::trans('Name', app()->getLocale()) }} </th>
+                <th scope="col"> {{ __('messages.Name') }} </th>
                 <!-- <th scope="col">Email</th> -->
-                <th scope="col"> {{ GoogleTranslate::trans('Role', app()->getLocale()) }} </th>
-                <th scope="col"> {{ GoogleTranslate::trans('Status', app()->getLocale()) }} </th>
-                <th scope="col"> {{ GoogleTranslate::trans('Actions', app()->getLocale()) }} </th>
+                <th scope="col"> {{ __('messages.Role') }} </th>
+                <th scope="col"> {{ __('messages.Status') }} </th>
+                <th scope="col"> {{ __('messages.Actions') }} </th>
             </tr>
         </thead>
         <!-- <tbody>
@@ -77,14 +76,14 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel"> {{ GoogleTranslate::trans('Delete', app()->getLocale()) }} </h5>
+                        <h5 class="modal-title" id="exampleModalLabel"> {{ __('messages.Delete') }} </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body delete_content">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary close_btn" data-bs-dismiss="modal"> {{ GoogleTranslate::trans('Close', app()->getLocale()) }} </button>
-                        <button type="submit" class="btn btn-primary role_delete btn_primary_color"> {{ GoogleTranslate::trans('Delete', app()->getLocale()) }} </button>
+                        <button type="button" class="btn btn-secondary close_btn" data-bs-dismiss="modal"> {{ __('messages.Close') }} </button>
+                        <button type="submit" class="btn btn-primary role_delete btn_primary_color"> {{ __('messages.Delete') }} </button>
                     </div>
                 </div>
             </div>
@@ -114,12 +113,12 @@
                 { data: 'actions', name: 'actions', orderable: false, searchable: false },
             ],
             language: {
-                sSearch: "{{ GoogleTranslate::trans('Search', app()->getLocale()) }}",
-                sLengthMenu: "{{ GoogleTranslate::trans('Show', app()->getLocale()) }} _MENU_ {{ GoogleTranslate::trans('entries', app()->getLocale()) }}",
-                sInfo: "{{ GoogleTranslate::trans('Showing', app()->getLocale()) }} _START_ {{ GoogleTranslate::trans('to', app()->getLocale()) }} _END_ {{ GoogleTranslate::trans('of', app()->getLocale()) }} _TOTAL_ {{ GoogleTranslate::trans('entries', app()->getLocale()) }}",
+                sSearch: "{{ __('messages.Search') }}",
+                sLengthMenu: "{{ __('messages.Show') }} _MENU_ {{ __('messages.entries') }}",
+                sInfo: "{{ __('messages.Showing') }} _START_ {{ __('messages.to') }} _END_ {{ __('messages.of') }} _TOTAL_ {{ __('messages.entries') }}",
                 oPaginate: {
-                    sPrevious: "{{ GoogleTranslate::trans('Previous', app()->getLocale()) }}",
-                    sNext: "{{ GoogleTranslate::trans('Next', app()->getLocale()) }}"
+                    sPrevious: "{{ __('messages.Previous') }}",
+                    sNext: "{{ __('messages.Next') }}"
                 }
             },
             columnDefs: [
@@ -140,7 +139,7 @@
             var userId = $(this).data('user-id');
             var username = $(this).closest('tr').find('.username').text();
             var modal_text =
-                ` {{ GoogleTranslate::trans('Are you sure you want to delete', app()->getLocale()) }} "<strong><span id="append_name">${username}</span></strong>"?`;
+                ` {{ __('messages.Are you sure you want to delete') }} "<strong><span id="append_name">${username}</span></strong>"?`;
             $('.delete_content').html(modal_text);
             $('#deleteRoleFormId').attr('action', `/suppliers/${supplierId}/users/${userId}`);
 

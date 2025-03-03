@@ -122,4 +122,18 @@ function isAdminOrDev()
     return ($user->role === 'admin' || $user->is_owner == 1 || $user->is_dev == 1);
 }
 
+function isSupplierUser()
+{
+    $user = auth()->user();
+    
+    if (!$user) {
+        return false;
+    }
+    if (!$user || !$user->roledata || $user->roledata->user_type_id !== 3) {
+        return false;
+    }
+
+    return optional($user->supplier)->id ?: false;
+}
+
 ?>

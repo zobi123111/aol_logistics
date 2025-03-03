@@ -8,7 +8,7 @@
                 <a class="nav-link {{ Request::is($page->route_name) ? 'active' : '' }}" href="{{ url($page->route_name) }}">
                     <i class="{{ $page->icon }}"></i> 
                     {{-- <span>{{ ucfirst($page->name) }}</span> --}}
-                    {{ GoogleTranslate::trans(ucfirst($page->name), app()->getLocale()) }}
+                    <span>{{ ucfirst(__('messages.'.$page->name)) }}</span>
                 </a>
             </li>
         @endif
@@ -26,13 +26,13 @@
     <li class="nav-item">
         <a class="nav-link {{ Request::routeIs('supplier_units.index') ? 'active' : '' }}" href="{{ route('supplier_units.index', encode_id(Auth::user()->supplier->id)) }}">
         <i class="bi bi-truck"></i> 
-            <span> {{ GoogleTranslate::trans('Supplier Equipment', app()->getLocale()) }} </span>
+            <span>  {{ __('messages.Supplier Equipment') }} </span>
         </a>
     </li>   
     <li class="nav-item">
         <a class="nav-link {{ Request::routeIs('services.index') ? 'active' : '' }}" href="{{ route('services.index', encode_id(Auth::user()->supplier->id)) }}">
         <i class="bi bi-gear"></i> 
-            <span> {{ GoogleTranslate::trans('Supplier Services', app()->getLocale()) }}  </span>
+            <span>  {{ __('messages.Supplier Services') }}  </span>
         </a>
     </li>
 @endif
@@ -40,7 +40,7 @@
     <li class="nav-item">
         <a class="nav-link {{ Request::routeIs('client_users.index') ? 'active' : '' }}" href="{{ route('client_users.index', encode_id(Auth::user()->id)) }}">
         <i class="bi bi-people"></i> 
-            <span> {{ GoogleTranslate::trans('Client Users', app()->getLocale()) }} </span>
+            <span>  {{ __('messages.Client Users') }} </span>
         </a>
     </li>
 @endif

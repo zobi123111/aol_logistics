@@ -1,13 +1,13 @@
 @section('title', 'Supplier')
 {{-- @section('sub-title', 'Supplier') --}}
-@section('sub-title', GoogleTranslate::trans('Supplier', app()->getLocale()))
+@section('sub-title', __('messages.Supplier'))
 
 @extends('layout.app')
 @section('content')
 <div class="main_cont_outer">
     <div class="create_btn">
         <a href="{{ route('suppliers.create') }}" class="btn btn-primary create-button btn_primary_color"
-            id="createrole"> {{ GoogleTranslate::trans('Create Supplier', app()->getLocale()) }} </a>
+            id="createrole"> {{ __('messages.Create Supplier') }} </a>
     </div>
 
     <div id="successMessagea" class="alert alert-success" style="display: none;" role="alert">
@@ -17,24 +17,24 @@
     <div id="successMessage" class="alert alert-success fade show" role="alert">
         <i class="bi bi-check-circle me-1"></i>
         {{-- {{ session()->get('message') }} --}}
-        {{ GoogleTranslate::trans(session('message'), app()->getLocale()) }}
+        {{ GoogleTranslate::trans(session('message')) }}
     </div>
     @endif
     @if(checkAllowedModule('suppliers', 'suppliers.index')->isNotEmpty() )
     <table class="table table-striped" id="supplier">
         <thead>
             <tr>
-                <th scope="col"> {{ GoogleTranslate::trans('Company Name', app()->getLocale()) }} </th>
-                <th scope="col"> {{ GoogleTranslate::trans('DBA', app()->getLocale()) }}  </th>
+                <th scope="col"> {{ __('messages.Company Name') }} </th>
+                <th scope="col"> {{ __('messages.DBA') }}  </th>
                 <!-- <th scope="col">Street Address</th>
                 <th scope="col">City</th>
                 <th scope="col">State</th>
                 <th scope="col">Zip Code</th>
                 <th scope="col">Country</th> -->
-                <th scope="col"> {{ GoogleTranslate::trans('Office Phone', app()->getLocale()) }}  </th>
-                <th scope="col"> {{ GoogleTranslate::trans('Email', app()->getLocale()) }}  </th>
-                <th scope="col"> {{ GoogleTranslate::trans('Office Phone', app()->getLocale()) }}  </th>
-                <th scope="col"> {{ GoogleTranslate::trans('Mobile Phone', app()->getLocale()) }}  </th>
+                <th scope="col"> {{ __('messages.Office Phone') }}  </th>
+                <th scope="col"> {{ __('messages.Email') }}  </th>
+                <th scope="col"> {{ __('messages.Office Phone') }}  </th>
+                <th scope="col"> {{ __('messages.Mobile Phone') }}  </th>
                 <!-- <th scope="col">User Role</th>
                 <th scope="col">User Email</th>
                 <th scope="col">User Office Phone</th>
@@ -48,14 +48,14 @@
                 <th scope="col">CAAT Number</th>
                 <th scope="col">CAAT Documents</th> -->
                 @if(checkAllowedModule('suppliers', 'suppliers.toggleStatus')->isNotEmpty())
-                <th> {{ GoogleTranslate::trans('Status', app()->getLocale()) }}  </th>
+                <th> {{ __('messages.Status') }}  </th>
                 @endif
                 @if(checkAllowedModule('suppliers', 'suppliers.edit')->isNotEmpty() || checkAllowedModule('suppliers', 'suppliers.show')->isNotEmpty()|| checkAllowedModule('suppliers', 'suppliers.destroy')->isNotEmpty())
-                <th scope="col" width="100px"> {{ GoogleTranslate::trans('Create', app()->getLocale()) }}  Actions</th>
+                <th scope="col" width="100px"> {{ __('messages.Create') }}  Actions</th>
                 @endif
-                <th scope="col"> {{ GoogleTranslate::trans('User', app()->getLocale()) }}  </th>
-                <th scope="col"> {{ GoogleTranslate::trans('Equipment', app()->getLocale()) }}  </th>
-                <th scope="col"> {{ GoogleTranslate::trans('Service', app()->getLocale()) }}  </th>
+                <th scope="col"> {{ __('messages.User') }}  </th>
+                <th scope="col"> {{ __('messages.Equipment') }}  </th>
+                <th scope="col"> {{ __('messages.Service') }}  </th>
             </tr>
         </thead>
       
@@ -69,14 +69,14 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel"> {{ GoogleTranslate::trans('Delete', app()->getLocale()) }} </h5>
+                        <h5 class="modal-title" id="exampleModalLabel"> {{ __('messages.Delete') }} </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body delete_content">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary close_btn" data-bs-dismiss="modal"> {{ GoogleTranslate::trans('Close', app()->getLocale()) }} </button>
-                        <button type="submit" class="btn btn-primary role_delete btn_primary_color"> {{ GoogleTranslate::trans('Delete', app()->getLocale()) }} </button>
+                        <button type="button" class="btn btn-secondary close_btn" data-bs-dismiss="modal"> {{ __('messages.Close') }} </button>
+                        <button type="submit" class="btn btn-primary role_delete btn_primary_color"> {{ __('messages.Delete') }} </button>
                     </div>
                 </div>
             </div>
@@ -108,12 +108,12 @@
                 { data: 'services', name: 'services', orderable: false, searchable: false }
             ],
             language: {
-                sSearch: "{{ GoogleTranslate::trans('Search', app()->getLocale()) }}",
-                sLengthMenu: "{{ GoogleTranslate::trans('Show', app()->getLocale()) }} _MENU_ {{ GoogleTranslate::trans('entries', app()->getLocale()) }}",
-                sInfo: "{{ GoogleTranslate::trans('Showing', app()->getLocale()) }} _START_ {{ GoogleTranslate::trans('to', app()->getLocale()) }} _END_ {{ GoogleTranslate::trans('of', app()->getLocale()) }} _TOTAL_ {{ GoogleTranslate::trans('entries', app()->getLocale()) }}",
+                sSearch: "{{ __('messages.Search') }}",
+                sLengthMenu: "{{ __('messages.Show') }} _MENU_ {{ __('messages.entries') }}",
+                sInfo: "{{ __('messages.Showing') }} _START_ {{ __('messages.to') }} _END_ {{ __('messages.of') }} _TOTAL_ {{ __('messages.entries') }}",
                 oPaginate: {
-                    sPrevious: "{{ GoogleTranslate::trans('Previous', app()->getLocale()) }}",
-                    sNext: "{{ GoogleTranslate::trans('Next', app()->getLocale()) }}"
+                    sPrevious: "{{ __('messages.Previous') }}",
+                    sNext: "{{ __('messages.Next') }}"
                 }
             },
             columnDefs: [
@@ -132,7 +132,7 @@
             var supplierId = $(this).data('supplier-id');
             var company = $(this).closest('tr').find('.company').text();
             var modal_text =
-                `{{ GoogleTranslate::trans('Are you sure you want to delete this supplier from', app()->getLocale()) }} "<strong><span id="append_name">${company}</span></strong>"?`;
+                `{{ __('messages.Are you sure you want to delete this supplier from') }} "<strong><span id="append_name">${company}</span></strong>"?`;
 
             $('.delete_content').html(modal_text);
             $('#deleteRoleFormId').attr('action', '/suppliers/' + supplierId);

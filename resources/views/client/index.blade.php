@@ -1,40 +1,43 @@
 @section('title', 'Client')
 {{-- @section('sub-title', 'Client') --}}
-@section('sub-title', GoogleTranslate::trans('Client', app()->getLocale()))
+{{-- @section('sub-title', GoogleTranslate::trans('Client')) --}}
+@section('sub-title', __('messages.Client'))
+
 @extends('layout.app')
 @section('content')
 <div class="main_cont_outer">
     @if(checkAllowedModule('client', 'client.create')->isNotEmpty() )
     <div class="create_btn">
-        <a href="{{ route('client.create') }}" class="btn btn-primary create-button btn_primary_color" id="createClient"> {{ GoogleTranslate::trans('Create Client', app()->getLocale()) }} </a>
+        <a href="{{ route('client.create') }}" class="btn btn-primary create-button btn_primary_color" id="createClient"> 
+            {{ __('messages.Create Client') }}
+        </a>
     </div>
     @endif
     <div id="successMessagea" class="alert alert-success" style="display: none;" role="alert">
         <i class="bi bi-check-circle me-1"></i>
     </div>
     @if(session()->has('message'))
-    <div id="successMessage" class="alert alert-success fade show" role="alert">
-        <i class="bi bi-check-circle me-1"></i>
-        {{-- {{ session()->get('message') }} --}}
-        {{ GoogleTranslate::trans(session('message'), app()->getLocale()) }}
-    </div>
+        <div id="successMessage" class="alert alert-success fade show" role="alert">
+            <i class="bi bi-check-circle me-1"></i>
+            {{ session()->get('message') }}
+        </div>
     @endif
     @if(checkAllowedModule('client', 'client.index')->isNotEmpty() )
     <table class="table table-striped" id="client">
         <thead>
             <tr>
-                <th scope="col"> {{ GoogleTranslate::trans('First Name', app()->getLocale()) }} </th>
-                <th scope="col"> {{ GoogleTranslate::trans('Last Name', app()->getLocale()) }} </th>
-                <th scope="col"> {{ GoogleTranslate::trans('Business Name', app()->getLocale()) }} </th>
-                <th scope="col"> {{ GoogleTranslate::trans('Email', app()->getLocale()) }} </th>
-                <th scope="col"> {{ GoogleTranslate::trans('Role', app()->getLocale()) }} </th>
+                <th scope="col"> {{ __('messages.First Name') }} </th>
+                <th scope="col"> {{ __('messages.Last Name') }} </th>
+                <th scope="col"> {{ __('messages.Business Name') }} </th>
+                <th scope="col"> {{ __('messages.Email') }} </th>
+                <th scope="col"> {{ __('messages.Role') }} </th>
                 @if(checkAllowedModule('client', 'client.toggleStatus')->isNotEmpty() )
-                <th scope="col"> {{ GoogleTranslate::trans('Status', app()->getLocale()) }} </th>
+                <th scope="col"> {{ __('messages.Status') }} </th>
                 @endif
                 @if(checkAllowedModule('client', 'client.edit')->isNotEmpty() ||  checkAllowedModule('client', 'client.destroy')->isNotEmpty())
-                <th scope="col"> {{ GoogleTranslate::trans('Actions', app()->getLocale()) }} </th>
+                <th scope="col"> {{ __('messages.Actions') }} </th>
                 @endif
-                <th scope="col"> {{ GoogleTranslate::trans('Users', app()->getLocale()) }} </th>
+                <th scope="col"> {{ __('messages.Users') }} </th>
             </tr>
         </thead>
        
@@ -48,14 +51,14 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel"> {{ GoogleTranslate::trans('Delete', app()->getLocale()) }} </h5>
+                        <h5 class="modal-title" id="exampleModalLabel"> {{ __('messages.Delete') }} </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body delete_content">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary close_btn" data-bs-dismiss="modal"> {{ GoogleTranslate::trans('Close', app()->getLocale()) }} Close</button>
-                        <button type="submit" class="btn btn-primary role_delete btn_primary_color"> {{ GoogleTranslate::trans('Delete', app()->getLocale()) }} </button>
+                        <button type="button" class="btn btn-secondary close_btn" data-bs-dismiss="modal"> {{ __('messages.Close') }} Close</button>
+                        <button type="submit" class="btn btn-primary role_delete btn_primary_color"> {{ __('messages.Delete') }} </button>
                     </div>
                 </div>
             </div>
@@ -82,12 +85,12 @@ $(document).ready(function() {
             { data: 'client_users', name: 'client_users', orderable: false, searchable: false }
         ],
         language: {
-            sSearch: "{{ GoogleTranslate::trans('Search', app()->getLocale()) }}",
-            sLengthMenu: "{{ GoogleTranslate::trans('Show', app()->getLocale()) }} _MENU_ {{ GoogleTranslate::trans('entries', app()->getLocale()) }}",
-            sInfo: "{{ GoogleTranslate::trans('Showing', app()->getLocale()) }} _START_ {{ GoogleTranslate::trans('to', app()->getLocale()) }} _END_ {{ GoogleTranslate::trans('of', app()->getLocale()) }} _TOTAL_ {{ GoogleTranslate::trans('entries', app()->getLocale()) }}",
+            sSearch: "{{ __('messages.Search') }}",
+            sLengthMenu: "{{ __('messages.Show') }} _MENU_ {{ __('messages.entries') }}",
+            sInfo: "{{ __('messages.Showing') }} _START_ {{ __('messages.to') }} _END_ {{ __('messages.of') }} _TOTAL_ {{ __('messages.entries') }}",
             oPaginate: {
-                sPrevious: "{{ GoogleTranslate::trans('Previous', app()->getLocale()) }}",
-                sNext: "{{ GoogleTranslate::trans('Next', app()->getLocale()) }}"
+                sPrevious: "{{ __('messages.Previous') }}",
+                sNext: "{{ __('messages.Next') }}"
             }
         },
         columnDefs: [
@@ -112,7 +115,7 @@ $(document).ready(function() {
         var fname = $(this).closest('tr').find('.fname').text();
         var lname = $(this).closest('tr').find('.lname').text();
         var modal_text =
-            `{{ GoogleTranslate::trans('Are you sure you want to delete this client', app()->getLocale()) }} "<strong><span id="append_name">${fname} ${lname}</span></strong>"?`;
+            `{{ __('messages.Are you sure you want to delete this client') }} "<strong><span id="append_name">${fname} ${lname}</span></strong>"?`;
 
         $('.delete_content').html(modal_text);
         $('#deleteClientFormId').attr('action', '/client/' + clientId);

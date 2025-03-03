@@ -1,7 +1,6 @@
 @section('title', 'Supplier Services')
 {{-- @section('sub-title', 'Supplier Services') --}}
-@section('sub-title', GoogleTranslate::trans('Supplier Services', app()->getLocale()))
-
+@section('sub-title', __('messages.Supplier Service'))
 @extends('layout.app')
 @section('content')
 <div class="main_cont_outer">
@@ -9,7 +8,7 @@
     <a href="{{ route('suppliers.index') }}" class="btn btn-primary create-button btn_primary_color"
     id="createClient"><i class="bi bi-arrow-left-circle-fill"></i> back</a>
         <a href="{{ route('services.create', encode_id($supplier->id)) }}" class="btn btn-primary create-button btn_primary_color"
-            id="createrole"> {{ GoogleTranslate::trans('Add Service', app()->getLocale()) }} </a>
+            id="createrole"> {{ __('messages.Add Service') }} </a>
     </div>
     <div id="successMessagea" class="alert alert-success" style="display: none;" role="alert">
         <i class="bi bi-check-circle me-1"></i>
@@ -17,23 +16,22 @@
     @if(session()->has('message'))
     <div id="successMessage" class="alert alert-success fade show" role="alert">
         <i class="bi bi-check-circle me-1"></i>
-        {{-- {{ session()->get('message') }} --}}
-        {{ GoogleTranslate::trans(session('message'), app()->getLocale()) }}
+        {{ session()->get('message') }}
     </div>
     @endif
     <table class="table mt-3" id="service">
         <thead>
             <tr>
-                <th> {{ GoogleTranslate::trans('Origin', app()->getLocale()) }} </th>
-                <th> {{ GoogleTranslate::trans('Destination', app()->getLocale()) }} </th>
-                <th> {{ GoogleTranslate::trans('Cost', app()->getLocale()) }} </th>
-                <th> {{ GoogleTranslate::trans('Actions', app()->getLocale()) }} </th>
+                <th> {{ __('messages.Origin') }} </th>
+                <th> {{ __('messages.Destination') }} </th>
+                <th> {{ __('messages.Cost') }} </th>
+                <th> {{ __('messages.Actions') }} </th>
             </tr>
         </thead>
         <tbody>
         @if($services->isEmpty())
             <tr>
-                <td colspan="5" class="text-center"> {{ GoogleTranslate::trans('No suppliers found', app()->getLocale()) }}</td>
+                <td colspan="5" class="text-center"> {{ __('messages.No suppliers found') }}</td>
             </tr>
             @else
             @foreach($services as $service)
@@ -71,14 +69,14 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel"> {{ GoogleTranslate::trans('Delete', app()->getLocale()) }} </h5>
+                        <h5 class="modal-title" id="exampleModalLabel"> {{ __('messages.Delete') }} </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body delete_content">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary close_btn" data-bs-dismiss="modal"> {{ GoogleTranslate::trans('Close', app()->getLocale()) }} </button>
-                        <button type="submit" class="btn btn-primary role_delete btn_primary_color"> {{ GoogleTranslate::trans('Delete', app()->getLocale()) }} </button>
+                        <button type="button" class="btn btn-secondary close_btn" data-bs-dismiss="modal"> {{ __('messages.Close') }} </button>
+                        <button type="submit" class="btn btn-primary role_delete btn_primary_color"> {{ __('messages.Delete') }} </button>
                     </div>
                 </div>
             </div>
@@ -99,7 +97,7 @@ $(document).ready(function() {
         var serviceId = $(this).data('service-id');
         // var username = $(this).closest('tr').find('.username').text();
         var modal_text =
-            `{{ GoogleTranslate::trans('Are you sure you want to delete ?', app()->getLocale()) }}`;
+            `{{ __('messages.Are you sure you want to delete ?') }}`;
         $('.delete_content').html(modal_text);
         $('#deleteRoleFormId').attr('action', `/suppliers/${supplierId}/services/${serviceId}`);
 

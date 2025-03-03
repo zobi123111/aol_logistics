@@ -1,12 +1,13 @@
 @section('title', 'Loads')
 {{-- @section('sub-title', 'Loads') --}}
-@section('sub-title', GoogleTranslate::trans('Loads', app()->getLocale()))
+@section('sub-title', __('messages.Loads'))
+
 @extends('layout.app')
 @section('content')
 <div class="main_cont_outer">
     <div class="create_btn">
         <a href="{{ route('loads.create') }}" class="btn btn-primary create-button btn_primary_color"
-            id="createrole"> {{ GoogleTranslate::trans('Add Load', app()->getLocale()) }} </a>
+            id="createrole"> {{ __('messages.Add Load') }} </a>
     </div>
     <div id="successMessagea" class="alert alert-success" style="display: none;" role="alert">
         <i class="bi bi-check-circle me-1"></i>
@@ -14,30 +15,31 @@
     @if(session()->has('message'))
     <div id="successMessage" class="alert alert-success fade show" role="alert">
         <i class="bi bi-check-circle me-1"></i>
-        {{-- {{ session()->get('message') }} --}}
-        {{ GoogleTranslate::trans(session('message'), app()->getLocale()) }}
+        {{ session()->get('message') }}
     </div>
     @endif
     
     <table class="table mt-3" id="loads">
         <thead>
             <tr>
-            <th>AOL Number</th>
-                <th>Service Type</th>
-                <th>Origin</th>
-                <th>Destination</th>
-                <th>Payer</th>
-                <th>Equipment Type</th>
-                <th>Weight</th>
-                <th>Delivery Deadline</th>
-                <th>Customer PO</th>
-                <th>HazMat</th>
-                <th>Inbond</th>
-                <th>Status</th>
-                <th>Supplier Company</th>
-                <th>Created By</th>
-                <th width="160px">Actions</th>
-                <th>Assign</th>
+
+                <th> {{ __('messages.AOL Number') }} </th>
+                <th> {{ __('messages.Service Type') }} </th>
+                <th> {{ __('messages.Origin') }} </th>
+                <th> {{ __('messages.Destination') }} </th>
+                <th> {{ __('messages.Payer') }} </th>
+                <th> {{ __('messages.Equipment Type') }} </th>
+                <th> {{ __('messages.Weight') }} </th>
+                <th>Schedule Date</th>
+                <th> {{ __('messages.Delivery Deadline') }} </th>
+                <th> {{ __('messages.Customer PO') }} </th>
+                <th> {{ __('messages.HazMat') }} </th>
+                <th> {{ __('messages.Inbond') }} </th>
+                <th> {{ __('messages.Status') }} </th>
+                <th> {{ __('messages.Supplier Company') }} </th>
+                <th> {{ __('messages.Created By') }} </th>
+                <th width="160px">{{ __('messages.Actions') }} </th>
+                <th> {{ __('messages.Assign') }} </th>
             </tr>
         </thead>
 
@@ -50,14 +52,14 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel"> {{ GoogleTranslate::trans('Add Load', app()->getLocale()) }} Delete</h5>
+                        <h5 class="modal-title" id="exampleModalLabel"> {{ __('messages.Delete') }} </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body delete_content">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary close_btn" data-bs-dismiss="modal"> {{ GoogleTranslate::trans('Add Load', app()->getLocale()) }} Close</button>
-                        <button type="submit" class="btn btn-primary load_delete btn_primary_color"> {{ GoogleTranslate::trans('Add Load', app()->getLocale()) }} Delete</button>
+                        <button type="button" class="btn btn-secondary close_btn" data-bs-dismiss="modal"> {{ __('messages.Close') }} </button>
+                        <button type="submit" class="btn btn-primary load_delete btn_primary_color"> {{ __('messages.Delete') }} </button>
                     </div>
                 </div>
             </div>
@@ -84,9 +86,15 @@ $(document).ready(function() {
             { data: 'payer', name: 'payer'},
             { data: 'equipment_type', name: 'equipment_type' },
             { data: 'weight', name: 'weight' },
-            { data: 'delivery_deadline', name: 'delivery_deadline',  render: function (data, type, row) {
+            { data: 'schedule', name: 'schedule',  render: function (data, type, row) {
                 if (data) {
                     return moment(data).format('YYYY-MM-DD hh:mm A');
+                }
+                return data; 
+            } },
+            { data: 'delivery_deadline', name: 'delivery_deadline',  render: function (data, type, row) {
+                if (data) {
+                    return moment(data).format('YYYY-MM-DD');
                 }
                 return data; 
             } },
@@ -111,12 +119,12 @@ $(document).ready(function() {
             { data: 'assign', name: 'assign', orderable: false, searchable: false },
         ],
         language: {
-            sSearch: "{{ GoogleTranslate::trans('Search', app()->getLocale()) }}",
-            sLengthMenu: "{{ GoogleTranslate::trans('Show', app()->getLocale()) }} _MENU_ {{ GoogleTranslate::trans('entries', app()->getLocale()) }}",
-            sInfo: "{{ GoogleTranslate::trans('Showing', app()->getLocale()) }} _START_ {{ GoogleTranslate::trans('to', app()->getLocale()) }} _END_ {{ GoogleTranslate::trans('of', app()->getLocale()) }} _TOTAL_ {{ GoogleTranslate::trans('entries', app()->getLocale()) }}",
+            sSearch: "{{ __('messages.Search') }}",
+            sLengthMenu: "{{ __('messages.Show') }} _MENU_ {{ __('messages.entries') }}",
+            sInfo: "{{ __('messages.Showing') }} _START_ {{ __('messages.to') }} _END_ {{ __('messages.of') }} _TOTAL_ {{ __('messages.entries') }}",
             oPaginate: {
-                sPrevious: "{{ GoogleTranslate::trans('Previous', app()->getLocale()) }}",
-                sNext: "{{ GoogleTranslate::trans('Next', app()->getLocale()) }}"
+                sPrevious: "{{ __('messages.Previous') }}",
+                sNext: "{{ __('messages.Next') }}"
             }
         },
         columnDefs: [
@@ -152,7 +160,7 @@ $(document).ready(function() {
         e.preventDefault();
         var loadid = $(this).data('load-id');
         var modal_text =
-            `{{ GoogleTranslate::trans('Are you sure you want to delete ?', app()->getLocale()) }}`;
+            `{{ __('messages.Are you sure you want to delete ?') }}`;
         $('.delete_content').html(modal_text);
         $('#deleteloadFormId').attr('action', `/loads/${loadid}`);
 

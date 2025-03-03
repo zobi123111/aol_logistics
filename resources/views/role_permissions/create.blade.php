@@ -1,12 +1,12 @@
 @section('title', 'Roles')
 {{-- @section('sub-title', 'Roles') --}}
-@section('sub-title', GoogleTranslate::trans('Roles', app()->getLocale()))
+@section('sub-title', __('messages.Role'))
 @extends('layout.app')
 @section('content')
 <div class="main_cont_outer">
     <div class="create_btn">
         <a href="{{ route('roles.index') }}" class="btn btn-primary create-button btn_primary_color" id="createUser"><i
-                class="bi bi-arrow-left-circle-fill"></i> {{ GoogleTranslate::trans('back', app()->getLocale()) }}</a>
+                class="bi bi-arrow-left-circle-fill"></i> {{ __('messages.Back') }}</a>
     </div>
     <div id="successMessagea" class="alert alert-success" style="display: none;" role="alert">
         <i class="bi bi-check-circle me-1"></i>
@@ -14,8 +14,7 @@
     @if(session()->has('message'))
     <div id="successMessage" class="alert alert-success fade show" role="alert">
         <i class="bi bi-check-circle me-1"></i>
-        {{-- {{ session()->get('message') }} --}}
-        {{ GoogleTranslate::trans(session('message'), app()->getLocale()) }}
+        {{ session()->get('message') }}
     </div>
     @endif
     <div class="card card-container">
@@ -24,7 +23,7 @@
                 @csrf
 
                 <div class="mb-3 mt-3">
-                    <label for="user_type" class="form-label"> {{ GoogleTranslate::trans('User Type:', app()->getLocale()) }} </label>
+                    <label for="user_type" class="form-label"> {{ __('messages.User Type') }} : </label>
                     <select name="user_type" id="user_type" class="form-select form-control">
                         @foreach ($userType as $type)
                         <option value="{{ $type->id }}" {{ old('user_type') == $type->id ? 'selected' : '' }}>
@@ -34,32 +33,30 @@
                     </select>
                     @error('user_type')
                         <div class="text-danger">
-                            {{-- {{ $message }} --}}
-                             {{ GoogleTranslate::trans($message, app()->getLocale()) }}
+                            {{ $message }}
                         </div>
                     @enderror
                 </div>
                 <div class="mb-3">
                     <div class="form-group">
-                        <label for="role_name" class="form-label">{{ GoogleTranslate::trans('Role Name', app()->getLocale()) }} <span class="text-danger">*</span></label>
+                        <label for="role_name" class="form-label">{{ __('messages.Role Name') }} <span class="text-danger">*</span></label>
                         <input type="text" name="role_name" class="form-control">
                         <div id="role_name_error" class="text-danger error_e"></div>
                     </div>
 
                     @error('role_name')
                         <div class="text-danger">
-                            {{-- {{ $message }} --}}
-                             {{ GoogleTranslate::trans($message, app()->getLocale()) }}
+                            {{ $message }}
                         </div>
                     @enderror
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">{{ GoogleTranslate::trans('Pages and their Modules:', app()->getLocale()) }} </label>
+                    <label class="form-label">{{ __('messages.Pages and their Modules') }} : </label>
                     <div id="pages-modules-container">
                         @foreach ($pages as $page)
                         <div class="row mb-3">
-                            <legend class="col-form-label col-sm-2 pt-0">{{ $page->name }}</legend>
+                            <legend class="col-form-label col-sm-2 pt-0">{{ ucfirst(__('messages.'.$page->name)) }}</legend>
                             <div class="col-sm-10">
                                 <div class="module_cont">
                                     @foreach ($page->modules as $module)
@@ -69,7 +66,8 @@
                                             id="module-{{ $module->id }}"
                                             {{ in_array($module->id, old('module_ids', [])) ? 'checked' : '' }}>
                                         <label class="form-check-label" for="module-{{ $module->id }}">
-                                            {{ $module->name }}
+                                            {{-- {{ $module->name }} --}}
+                                            {{ ucfirst(__('messages.'.$module->name)) }}
                                         </label><br>
                                     </div>
                                     @endforeach
@@ -80,13 +78,12 @@
                     </div>
                     @error('module_ids')
                     <div class="text-danger">
-                        {{-- {{ $message }} --}}
-                        {{ GoogleTranslate::trans($message, app()->getLocale()) }}
+                        {{ $message }}
                     </div>
                     @enderror
                 </div>
 
-                <button type="submit" class="btn btn-primary create-button btn_primary_color"> {{ GoogleTranslate::trans('Submit', app()->getLocale()) }} </button>
+                <button type="submit" class="btn btn-primary create-button btn_primary_color"> {{ __('messages.Submit') }} </button>
             </form>
         </div>
     </div>

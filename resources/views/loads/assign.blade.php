@@ -1,13 +1,13 @@
 @section('title', 'Assign Load')
 {{-- @section('sub-title', 'Assign Load') --}}
-@section('sub-title', GoogleTranslate::trans('Assign Load', app()->getLocale()))
+@section('sub-title', __('messages.Assign Load'))
 
 @extends('layout.app')
 @section('content')
 <div class="main_cont_outer">
     <div class="create_btn">
         <a href="{{ route('loads.index') }}" class="btn btn-primary create-button btn_primary_color"
-            id="createUser"><i class="bi bi-arrow-left-circle-fill"></i> {{ GoogleTranslate::trans('Back', app()->getLocale()) }} </a>
+            id="createUser"><i class="bi bi-arrow-left-circle-fill"></i> {{ __('messages.Back') }}</a>
     </div>
     <div id="successMessagea" class="alert alert-success" style="display: none;" role="alert">
         <i class="bi bi-check-circle me-1"></i>
@@ -15,8 +15,7 @@
     @if(session()->has('message'))
     <div id="successMessage" class="alert alert-success fade show" role="alert">
         <i class="bi bi-check-circle me-1"></i>
-        {{-- {{ session()->get('message') }} --}}
-        {{ GoogleTranslate::trans(session('message'), app()->getLocale()) }}
+        {{ session()->get('message') }}
 
     </div>
     @endif
@@ -24,16 +23,16 @@
         <!-- <table class="table mt-3" id="assign_loads">
     <thead>
         <tr>
-            <th> {{ GoogleTranslate::trans('Supplier Company Name', app()->getLocale()) }} </th>
-            <th> {{ GoogleTranslate::trans('Service Details', app()->getLocale()) }} </th>
-            <th> {{ GoogleTranslate::trans('Cost', app()->getLocale()) }} </th>
-            <th> {{ GoogleTranslate::trans('Action', app()->getLocale()) }} </th>
+            <th> Supplier Company Name</th>
+            <th> Service Details </th>
+            <th> Cost</th>
+            <th> Action</th>
         </tr>
     </thead>
     <tbody>
     @if($suppliers->isEmpty())
         <tr>
-            <td colspan="4" class="text-center"> {{ GoogleTranslate::trans('No Service found', app()->getLocale()) }} </td>
+            <td colspan="4" class="text-center"> No Service found </td>
         </tr>
         @else
         @foreach ($suppliers as $supplier)
@@ -48,10 +47,10 @@
                     <td>${{ number_format($service->cost, 2) }}</td>
                     <td>
                     @if($load->supplier_id == $supplier->id)
-                 <span class="badge bg-success"> {{ GoogleTranslate::trans('Assigned', app()->getLocale()) }} </span>
+                 <span class="badge bg-success"> Assigned </span>
                 @else
                     <a href="{{ route('loads.assign.supplier', ['load_id' => encode_id($load->id), 'supplier_id' => encode_id($supplier->id), 'service_id' => encode_id($service->id)]) }}" class="btn btn-primary create-button btn_primary_color">
-                        {{ GoogleTranslate::trans('Assign', app()->getLocale()) }} 
+                        Assign
                     </a>
                 @endif
                     </td>
@@ -63,41 +62,41 @@
 </table> -->
 <div class="card mt-3">
     <div class="card-header blue_icon_color">
-        Load Details
+        {{ __('messages.Load Details') }} 
     </div>
     <div class="card-body">
         <div class="row">
             <div class="col-md-6">
-                <p><strong>AOL Number:</strong> {{ $load->aol_number }}</p>
-                <p><strong>Origin:</strong> 
+                <p><strong>{{ __('messages.AOL Number') }} :</strong> {{ $load->aol_number }}</p>
+                <p><strong>{{ __('messages.Origin') }} :</strong> 
                     {{ $load->origindata ? $load->origindata->street . ', ' . $load->origindata->city . ', ' . $load->origindata->state . ', ' . $load->origindata->zip . ', ' . $load->origindata->country : 'N/A' }}
                 </p>
-                <p><strong>Destination:</strong> 
+                <p><strong>{{ __('messages.Destination') }} :</strong> 
                     {{ $load->destinationdata ? $load->destinationdata->street . ', ' . $load->destinationdata->city . ', ' . $load->destinationdata->state . ', ' . $load->destinationdata->zip . ', ' . $load->destinationdata->country : 'N/A' }}
                 </p>
             </div>
             <div class="col-md-6">
-                <p><strong>Weight:</strong> {{ $load->weight ?? 'N/A' }} kg</p>
-                <p><strong>Status:</strong> 
+                <p><strong>{{ __('messages.Weight') }} :</strong> {{ $load->weight ?? 'N/A' }} lbs</p>
+                <p><strong>{{ __('messages.Status') }} :</strong> 
                     <span class="badge 
                         {{ $load->status == 'Pending' ? 'bg-warning' : ($load->status == 'Completed' ? 'bg-success' : 'bg-secondary') }}">
                         {{ $load->status }}
                     </span>
                 </p>
-                <p><strong>Created At:</strong> {{ $load->created_at->format('d M Y, h:i A') }}</p>
+                <p><strong>{{ __('messages.Created At') }} :</strong> {{ $load->created_at->format('d M Y, h:i A') }}</p>
             </div>
         </div>
     </div>
 </div>
 
-<h3 class=" ">Assigned Services</h3>
+<h3 class=" ">{{ __('messages.Assigned Services') }} </h3>
 <table class="table" id="assignedServices">
     <thead>
         <tr>
-            <th>Supplier Company Name</th>
-            <th>Service Details</th>
-            <th>Cost</th>
-            <th>Action</th>
+            <th>{{ __('messages.Supplier Company Name') }} </th>
+            <th>{{ __('messages.Service Details') }} </th>
+            <th>{{ __('messages.Cost') }} </th>
+            <th>{{ __('messages.Action') }} </th>
         </tr>
     </thead>
     <tbody>
@@ -105,7 +104,7 @@
         <!-- Show Assigned Services at the Top -->
         @if($assignedServices->isEmpty())
             <tr>
-                <td colspan="4" class="text-center">No Assigned Services</td>
+                <td colspan="4" class="text-center">{{ __('messages.No Assigned Services') }} </td>
             </tr>
         @else
             @foreach ($assignedServices as $assigned)
@@ -136,15 +135,50 @@
     </tbody>
 </table>
 
+<h3 class="mt-3">Canceled Assigned Services</h3>
+<table class="table" id="assignedServices">
+    <thead>
+        <tr>
+            <th>Supplier Company Name</th>
+            <th>Service Details</th>
+            <th>Cost</th>
+            <th>Reason of cancelation</th>
+        </tr>
+    </thead>
+    <tbody>
 
-<h3 class="mt-3">Services</h3>
+        <!-- Show Assigned Services at the Top -->
+        @if($deletedAssignedServices->isEmpty())
+            <tr>
+                <td colspan="4" class="text-center">No Assigned Services</td>
+            </tr>
+        @else
+            @foreach ($deletedAssignedServices as $assigned)
+                <tr>
+                    <td>{{ $assigned->supplier->company_name }}</td>
+                    <td>
+                        {{ $assigned->service->origindata ? $assigned->service->origindata->street . ', ' . $assigned->service->origindata->city . ', ' . $assigned->service->origindata->state . ', ' . $assigned->service->origindata->zip . ', ' . $assigned->service->origindata->country : 'N/A' }}
+                        →  
+                        {{ $assigned->service->destinationdata ? $assigned->service->destinationdata->street . ', ' . $assigned->service->destinationdata->city . ', ' . $assigned->service->destinationdata->state . ', ' . $assigned->service->destinationdata->zip . ', ' . $assigned->service->destinationdata->country : 'N/A' }}
+                    </td>
+                    <td>${{ number_format($assigned->service->cost, 2) }}</td>
+                    <td>{{ $assigned->cancel_reason }}</td>
+
+                </tr>
+            @endforeach
+        @endif
+
+    </tbody>
+</table>
+
+<h3 class="mt-3">{{ __('messages.Services') }} </h3>
 <table class="table" id="allServices">
     <thead>
         <tr>
-        <th>Supplier Company Name</th>
-            <th>Service Details</th>
-            <th>Cost</th>
-            <th>Action</th>
+        <th>{{ __('messages.Supplier Company Name') }} </th>
+            <th>{{ __('messages.Service Details') }} </th>
+            <th>{{ __('messages.Cost') }} </th>
+            <th>{{ __('messages.Action') }} </th>
         </tr>
     </thead>
     <tbody>
@@ -267,6 +301,7 @@ function toggleOtherReason() {
         otherReasonContainer.classList.add('d-none');
     }
 }
+
 </script>
 
 @endsection

@@ -12,13 +12,14 @@
     </div>
     @endif
         {{-- <p>Welcome to {{ env('PROJECT_NAME')}} dashboard </p> --}}
-        <p>{{ GoogleTranslate::trans('Welcome to ' . env('PROJECT_NAME') . ' dashboard', app()->getLocale()) }}</p>
+        <p>{{ __('messages.Welcome to') . ' ' . env('PROJECT_NAME') . ' ' . __('messages.Dashboard') }}</p>
+
     </div>
     <div class="row">
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">{{GoogleTranslate::trans('User Statistics (Active vs Total)', app()->getLocale()) }}</h5>
+                    <h5 class="card-title"> {{ __('messages.User Statistics (Active vs Total)') }}</h5>
                     <div id="userChart"></div>
                 </div>
             </div>
@@ -33,40 +34,45 @@
 @section('js_scripts')
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    var options = {
-        chart: {
-            type: "bar",
-            height: 350
-        },
-        series: [
-            {
-                name: "Active Users",
-                data: [ {{ $activeTotalAol }}, {{ $activeSuppliers }} , {{ $activeClients }}]
+    document.addEventListener("DOMContentLoaded", function () {
+        var options = {
+            chart: {
+                type: "bar",
+                height: 350
             },
-            {
-                name: "Total Users",
-                data: [{{ $totalAol }}, {{ $totalSuppliers }}, {{ $totalClients }}]
+            series: [
+                {
+                    name: "{{ __('messages.Active Users') }}",
+                    data: [ {{ $activeTotalAol }}, {{ $activeSuppliers }} , {{ $activeClients }}]
+                },
+                {
+                    name: "{{ __('messages.Total Users') }}",
+                    data: [{{ $totalAol }}, {{ $totalSuppliers }}, {{ $totalClients }}]
+                }
+            ],
+            xaxis: {
+                categories: [
+                    // "AOL Users", "Suppliers", "Clients"
+                    "{{ __('messages.AOL Users') }}", 
+                    "{{ __('messages.Suppliers') }}", 
+                    "{{ __('messages.Client Users') }}"
+                ]
+            },
+            colors: ["#28a745", "#007bff"], // Green for active, Blue for total
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                    columnWidth: "45%"
+                }
+            },
+            dataLabels: {
+                enabled: false
             }
-        ],
-        xaxis: {
-            categories: ["AOL Users", "Suppliers", "Clients"]
-        },
-        colors: ["#28a745", "#007bff"], // Green for active, Blue for total
-        plotOptions: {
-            bar: {
-                horizontal: false,
-                columnWidth: "45%"
-            }
-        },
-        dataLabels: {
-            enabled: false
-        }
-    };
+        };
 
-    var chart = new ApexCharts(document.querySelector("#userChart"), options);
-    chart.render();
-});
+        var chart = new ApexCharts(document.querySelector("#userChart"), options);
+        chart.render();
+    });
 </script>
 
 @endsection

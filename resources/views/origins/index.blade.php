@@ -1,12 +1,12 @@
 @section('title', 'Origins')
 {{-- @section('sub-title', 'Origins') --}}
-@section('sub-title', GoogleTranslate::trans('Origins', app()->getLocale()))
+@section('sub-title', __('messages.Origins'))
 @extends('layout.app')
 @section('content')
 <div class="main_cont_outer">
     <div class="create_btn">
         <a href="{{ route('origins.create') }}" class="btn btn-primary create-button btn_primary_color"
-            id="createrole"> {{ GoogleTranslate::trans('Add Origin', app()->getLocale()) }} </a>
+            id="createrole"> {{ __('messages.Add Origin') }} </a>
     </div>
     <div id="successMessagea" class="alert alert-success" style="display: none;" role="alert">
         <i class="bi bi-check-circle me-1"></i>
@@ -14,20 +14,19 @@
     @if(session()->has('message'))
     <div id="successMessage" class="alert alert-success fade show" role="alert">
         <i class="bi bi-check-circle me-1"></i>
-        {{-- {{ session()->get('message') }} --}}
-        {{ GoogleTranslate::trans(session('message'), app()->getLocale()) }}
+        {{ session()->get('message') }}
     </div>
     @endif
         <table class="table mt-3" id="origins">
             <thead>
             <tr>
-                <th> {{ GoogleTranslate::trans('Name', app()->getLocale()) }} </th>
-                <th> {{ GoogleTranslate::trans('Street', app()->getLocale()) }} </th>
-                <th> {{ GoogleTranslate::trans('City', app()->getLocale()) }} </th>
-                <th> {{ GoogleTranslate::trans('State', app()->getLocale()) }} </th>
-                <th> {{ GoogleTranslate::trans('Zip Code', app()->getLocale()) }} </th>
-                <th> {{ GoogleTranslate::trans('Country', app()->getLocale()) }} </th>
-                <th> {{ GoogleTranslate::trans('Actions', app()->getLocale()) }} </th>
+                <th> {{ __('messages.Name') }} </th>
+                <th> {{ __('messages.Street') }} </th>
+                <th> {{ __('messages.City') }} </th>
+                <th> {{ __('messages.State') }} </th>
+                <th> {{ __('messages.Zip Code') }} </th>
+                <th> {{ __('messages.Country') }} </th>
+                <th> {{ __('messages.Actions') }} </th>
 
             </tr>
             </thead>
@@ -64,7 +63,7 @@
     $('#origins').DataTable();
     });
     function confirmDelete(element) {
-        if (confirm("{{ GoogleTranslate::trans('Are you sure you want to delete this origin?', app()->getLocale()) }}")) {
+        if (confirm("{{ __('messages.Are you sure you want to delete this origin?') }}")) {
             element.closest('.delete-form').submit();
         }
     }

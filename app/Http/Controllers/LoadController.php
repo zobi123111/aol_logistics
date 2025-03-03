@@ -10,6 +10,7 @@ use App\Models\Origin;
 use App\Models\Destination;
 use App\Models\AssignedService;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class LoadController extends Controller
 {
@@ -23,18 +24,29 @@ class LoadController extends Controller
         $user = auth()->user();
         $userType = $user->roledata->user_type_id;
         if ($request->ajax()) {
-                    // $loads = Load::with(['origindata', 'destinationdata', 'supplierdata',  'assignedServices.supplier', 'creator'])->latest('id')->get(); 
-                    $loads = Load::with(['origindata', 'destinationdata', 'supplierdata', 'assignedServices.supplier', 'creator'])
+            // $loads = Load::with(['origindata', 'destinationdata', 'supplierdata',  'assignedServices.supplier', 'creator'])->latest('id')->get(); 
+            $loads = Load::with(['origindata', 'destinationdata', 'supplierdata', 'assignedServices.supplier', 'creator'])
             ->when($userType == 2, function ($query) use ($user) {
-                return $query->where('created_by', $user->id); // Show only loads created by the user
+                return $query->where('created_by', $user->id)
+                ->where(function ($q) {
+                    $q->whereNull('schedule')
+                      ->orWhereDate('schedule', '<=', now());
+                });
+            
             })
             ->when($userType == 3, function ($query) use ($user) {
-                return $query->whereHas('assignedServices', function ($query) use ($user) {
-                    $query->whereHas('supplier', function ($query) use ($user) {
-                        $query->where('id', $user->supplier->id); // Match supplier_id from supplierdata
-                    });
-                });
+                return $query->where(function ($q) use ($user) {
+                    $q->whereHas('assignedServices', function ($q) use ($user) {
+                        $q->whereHas('supplier', function ($q) use ($user) {
+                            $q->where('id', $user->supplier->id);
+                        });
+                    })->orWhere('created_by', $user->id);
+                })   ->where(function ($q) {
+                    $q->whereNull('schedule')
+                      ->orWhereDate('schedule', '<=', now());
+                });;
             })
+            
             ->latest('id')
             ->get();
 
@@ -96,7 +108,7 @@ class LoadController extends Controller
         // Fetch origins and destinations
         $origins = Origin::all();
         $destinations = Destination::all();
-        $suppliers = Supplier::all();
+        $suppliers = Supplier::where('is_active', 1)->get();
         return view('loads.create', compact('origins', 'destinations', 'suppliers'));
     }
 
@@ -117,10 +129,10 @@ class LoadController extends Controller
             'weight' => 'nullable|numeric',
             'delivery_deadline' => 'required|date',
             'customer_po' => 'nullable',
+            'schedule' => 'nullable',
             'is_hazmat' => 'boolean',
             'is_inbond' => 'boolean',
         ]);
-
         $status = 'requested'; 
         $supplier_id = null; 
         $service_id = null;
@@ -133,12 +145,18 @@ class LoadController extends Controller
                 'supplier_id' => null, 
                 'status' => $status,
                 'created_by' => Auth::id(),
+                'schedule' => $request->schedule ? Carbon::parse($request->schedule) : null,
+
             ]
         ));
         
-        if ($request->filled('supplier_id')) {
-            $supplier = Supplier::with('services')->find($request->supplier_id);
-        
+        if ($request->filled('supplier_id') || isSupplierUser()) {
+            if(isSupplierUser()){
+                $req_sup_id = isSupplierUser();
+            }else{
+                $req_sup_id =  $request->supplier_id;
+            }
+            $supplier = Supplier::with('services')->find($req_sup_id);
             if ($supplier) {
                 $matchingService = $supplier->services
                     ->where('origin', $request->origin)
@@ -191,7 +209,7 @@ class LoadController extends Controller
         $load = Load::with(['origindata', 'destinationdata'])->findOrFail($de);
         $origins = Origin::all(); 
         $destinations = Destination::all();
-        $suppliers = Supplier::all();
+        $suppliers = Supplier::where('is_active', 1)->get();
         return view('loads.edit', compact('load', 'origins', 'destinations', 'suppliers'));
     }
     
@@ -208,6 +226,7 @@ class LoadController extends Controller
             'supplier_id' => 'nullable',
             'trailer_number' => 'nullable',
             'port_of_entry' => 'nullable',
+            'schedule' => 'nullable',
         ]);
     
         $load = Load::findOrFail($id);
@@ -257,6 +276,7 @@ class LoadController extends Controller
             'is_hazmat' => $request->has('is_hazmat'),
             'is_inbond' => $request->has('is_inbond'),
             'trailer_number' => $request->trailer_number,
+            'schedule' => $request->schedule ? Carbon::parse($request->schedule) : null,
             'port_of_entry' => $request->port_of_entry,
             // 'supplier_id' => null,
             'supplier_id' => $supplier_id,
@@ -296,17 +316,24 @@ class LoadController extends Controller
               ->orderBy('cost', 'asc'); 
     }])->get();
 
+    $deletedAssignedServices = AssignedService::onlyTrashed()
+    ->where('load_id', $load->id)
+    ->with(['supplier', 'service'])
+    ->get();
+
     $assignedServices = AssignedService::where('load_id', $load->id)
     ->with(['supplier', 'service'])
     ->get();
 
-    // Get suppliers that do not have matching services
-    $remainingSuppliers = Supplier::whereDoesntHave('services', function ($query) use ($load) {
-        $query->where('origin', $load->origin)
-            ->where('destination', $load->destination);
-    })->get();
+    $remainingSuppliers = Supplier::whereHas('services')
+    ->with(['services' => function ($query) use ($load) {
+        $query->where('origin', '!=', $load->origin)
+        ->orWhere('destination', '!=', $load->destination)->orderBy('cost', 'asc');       
+    }])->where('is_active', 1)
+    ->get();
 
-    return view('loads.assign', compact('load', 'suppliers','remainingSuppliers', 'assignedServices'));
+    // dd($remainingSuppliers);
+    return view('loads.assign', compact('load', 'suppliers','remainingSuppliers', 'assignedServices', 'deletedAssignedServices'));
 }
 
     // Assign Supplier to Load

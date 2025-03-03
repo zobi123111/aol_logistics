@@ -2,13 +2,14 @@
 
 @section('title', 'Supplier Details')
 {{-- @section('sub-title', 'Supplier') --}}
-@section('sub-title', GoogleTranslate::trans('Edit Supplier', app()->getLocale()))
+@section('sub-title', __('messages.Supplier'))
+
 
 @section('content')
 <div class="main_cont_outer">
 <div class="create_btn mb-3">
         <a href="{{ route('suppliers.index') }}" class="btn btn-primary create-button btn_primary_color" id="createUser">
-            <i class="bi bi-arrow-left-circle-fill"> </i> {{ GoogleTranslate::trans('Back', app()->getLocale()) }}
+            <i class="bi bi-arrow-left-circle-fill"> </i> {{ __('messages.Back') }}
         </a>
     </div>
 <div class="container mt-4">
@@ -16,18 +17,18 @@
     <!-- Supplier Information -->
     <div class="card mb-4 shadow-sm">
         <div class="card-body">
-            <h5 class="card-title"> {{ GoogleTranslate::trans('Company Details', app()->getLocale()) }} </h5>
+            <h5 class="card-title">  {{ __('messages.Company Details') }} </h5>
             <p class="card-text">
-                <strong> {{ GoogleTranslate::trans('Company Name', app()->getLocale()) }} :</strong> {{ $supplier->company_name }} <br>
-                <strong> {{ GoogleTranslate::trans('DBA', app()->getLocale()) }} :</strong> {{ $supplier->dba }} <br>
-                <strong> {{ GoogleTranslate::trans('Address', app()->getLocale()) }} :</strong> {{ $supplier->street_address }}, {{ $supplier->city }}, {{ $supplier->state }} - {{ $supplier->zip_code }} <br>
-                <strong> {{ GoogleTranslate::trans('Country', app()->getLocale()) }} :</strong> {{ $supplier->country }} <br>
-                <strong> {{ GoogleTranslate::trans('Office Phone', app()->getLocale()) }} :</strong> {{ $supplier->office_phone }} <br>
-                <strong> {{ GoogleTranslate::trans('Email', app()->getLocale()) }} :</strong> {{ $supplier->primary_contact_email }} <br>
-                <strong> {{ GoogleTranslate::trans('Primary Contact Office Phone', app()->getLocale()) }} :</strong> {{ $supplier->primary_contact_office_phone }} <br>
-                <strong> {{ GoogleTranslate::trans('Primary Contact Mobile Phone', app()->getLocale()) }} :</strong> {{ $supplier->primary_contact_mobile_phone }} <br>
-                <strong> {{ GoogleTranslate::trans('SCAC Number', app()->getLocale()) }} :</strong> {{ $supplier->scac_number }} <br>
-                <strong> {{ GoogleTranslate::trans('CAAT Number', app()->getLocale()) }} :</strong> {{ $supplier->caat_number }} <br>
+                <strong>  {{ __('messages.Company Name') }} :</strong> {{ $supplier->company_name }} <br>
+                <strong>  {{ __('messages.DBA') }} :</strong> {{ $supplier->dba }} <br>
+                <strong>  {{ __('messages.Address') }} :</strong> {{ $supplier->street_address }}, {{ $supplier->city }}, {{ $supplier->state }} - {{ $supplier->zip_code }} <br>
+                <strong>  {{ __('messages.Country') }} :</strong> {{ $supplier->country }} <br>
+                <strong>  {{ __('messages.Office Phone') }} :</strong> {{ $supplier->office_phone }} <br>
+                <strong>  {{ __('messages.Email') }} :</strong> {{ $supplier->primary_contact_email }} <br>
+                <strong>  {{ __('messages.Primary Contact Office Phone') }} :</strong> {{ $supplier->primary_contact_office_phone }} <br>
+                <strong>  {{ __('messages.Primary Contact Mobile Phone') }} :</strong> {{ $supplier->primary_contact_mobile_phone }} <br>
+                <strong>  {{ __('messages.SCAC Number') }} :</strong> {{ $supplier->scac_number }} <br>
+                <strong>  {{ __('messages.CAAT Number') }} :</strong> {{ $supplier->caat_number }} <br>
             </p>
         </div>
     </div>
@@ -35,15 +36,15 @@
     <!-- User Details Section -->
     <div class="card mb-4">
         <div class="card-body">
-            <h5 class="card-title"> {{ GoogleTranslate::trans('User Details', app()->getLocale()) }} </h5>
+            <h5 class="card-title">  {{ __('messages.User Details') }} </h5>
             <p class="card-text">
-                <strong> {{ GoogleTranslate::trans('User Role', app()->getLocale()) }} :</strong> {{ str_replace('_', ' ', $supplier->user_role) }} <br>
-                <strong> {{ GoogleTranslate::trans('User Email', app()->getLocale()) }} :</strong> {{ $supplier->user_email }} <br>
-                <strong> {{ GoogleTranslate::trans('User Office Phone', app()->getLocale()) }} :</strong> {{ $supplier->user_office_phone }} <br>
-                <strong> {{ GoogleTranslate::trans('User Mobile Phone', app()->getLocale()) }} :</strong> {{ $supplier->user_mobile_phone }} <br>
-                <strong> {{ GoogleTranslate::trans('Service Type', app()->getLocale()) }} :</strong> {{ $supplier->service_type }} <br>
-                <strong> {{ GoogleTranslate::trans('Currency', app()->getLocale()) }} :</strong> {{ $supplier->currency }} <br>
-                <strong> {{ GoogleTranslate::trans('Preferred Language', app()->getLocale()) }} :</strong> {{ $supplier->preferred_language }} <br>
+                <strong>  {{ __('messages.User Role') }} :</strong> {{ str_replace('_', ' ', $supplier->user_role) }} <br>
+                <strong>  {{ __('messages.User Email') }} :</strong> {{ $supplier->user_email }} <br>
+                <strong>  {{ __('messages.User Office Phone') }} :</strong> {{ $supplier->user_office_phone }} <br>
+                <strong>  {{ __('messages.User Mobile Phone') }} :</strong> {{ $supplier->user_mobile_phone }} <br>
+                <strong>  {{ __('messages.Service Type') }} :</strong> {{ $supplier->service_type }} <br>
+                <strong>  {{ __('messages.Currency') }} :</strong> {{ $supplier->currency }} <br>
+                <strong>  {{ __('messages.Preferred Language') }} :</strong> {{ $supplier->preferred_language }} <br>
             </p>
         </div>
     </div>
@@ -52,7 +53,7 @@
     <!-- Documents Section -->
     <div class="card mb-4 shadow-sm">
         <div class="card-body">
-            <h5 class="card-title"> {{ GoogleTranslate::trans('Uploaded Documents', app()->getLocale()) }} </h5>
+            <h5 class="card-title">  {{ __('messages.Uploaded Documents') }} </h5>
 
             @if($supplier->supplierdocuments && json_decode($supplier->supplierdocuments, true))
                 @php
@@ -73,21 +74,21 @@
                                 @endif
                                 <a href="{{ asset('storage/' . $document['file_path']) }}" 
                                     target="_blank" class="text-decoration-none">
-                                    <i class="fa fa-file-pdf-o"></i> {{ GoogleTranslate::trans('DView DocumentBA', app()->getLocale()) }} 
+                                    <i class="fa fa-file-pdf-o"></i>  {{ __('messages.View Document') }} 
                                 </a>
                             </li>
                         @endforeach
                     </ul>
                 @else
-                    <p>{{ GoogleTranslate::trans('No valid documents found', app()->getLocale()) }} </p>
+                    <p> {{ __('messages.No valid documents found') }} </p>
                 @endif
             @else   
-                <p>{{ GoogleTranslate::trans('No documents uploaded', app()->getLocale()) }} </p>
+                <p> {{ __('messages.No documents uploaded') }} </p>
             @endif
 
             <hr>
 
-            <h5 class="card-title"> {{ GoogleTranslate::trans('SCAC Documents', app()->getLocale()) }} </h5>
+            <h5 class="card-title">  {{ __('messages.SCAC Documents') }} </h5>
             @if($supplier->supplierdocuments && json_decode($supplier->supplierdocuments, true))
                 @php
                     $documents = array_filter(json_decode($supplier->supplierdocuments, true), function ($document) {
@@ -107,21 +108,21 @@
                                 @endif
                                 <a href="{{ asset('storage/' . $document['file_path']) }}" 
                                     target="_blank" class="text-decoration-none">
-                                    <i class="fa fa-file-pdf-o"></i> {{ GoogleTranslate::trans('View Document', app()->getLocale()) }}
+                                    <i class="fa fa-file-pdf-o"></i>  {{ __('messages.View Document') }}
                                 </a>
                             </li>
                         @endforeach
                     </ul>
                 @else
-                    <p> {{ GoogleTranslate::trans('No valid documents found', app()->getLocale()) }}</p>
+                    <p>  {{ __('messages.No valid documents found') }}</p>
                 @endif
             @else   
-                <p> {{ GoogleTranslate::trans('No documents uploaded', app()->getLocale()) }} </p>
+                <p>  {{ __('messages.No documents uploaded') }} </p>
             @endif
 
             <hr>
 
-            <h5 class="card-title"> {{ GoogleTranslate::trans('CAAT Documents', app()->getLocale()) }} </h5>
+            <h5 class="card-title">  {{ __('messages.CAAT Documents') }} </h5>
                 @if($supplier->supplierdocuments && json_decode($supplier->supplierdocuments, true))
                     @php
                         $documents = array_filter(json_decode($supplier->supplierdocuments, true), function ($document) {
@@ -141,21 +142,21 @@
                                     @endif
                                     <a href="{{ asset('storage/' . $document['file_path']) }}" 
                                         target="_blank" class="text-decoration-none">
-                                        <i class="fa fa-file-pdf-o"></i> {{ GoogleTranslate::trans('View Document', app()->getLocale()) }} 
+                                        <i class="fa fa-file-pdf-o"></i>  {{ __('messages.View Document') }} 
                                     </a>
                                 </li>
                             @endforeach
                         </ul>
                     @else
-                        <p> {{ GoogleTranslate::trans('No valid documents found', app()->getLocale()) }} </p>
+                        <p>  {{ __('messages.No valid documents found') }} </p>
                     @endif
                 @else   
-                    <p> {{ GoogleTranslate::trans('No documents uploaded', app()->getLocale()) }} </p>
+                    <p>  {{ __('messages.No documents uploaded') }} </p>
                 @endif
         </div>
     </div>
 
-    <a href="{{ route('suppliers.index') }}" class="btn btn-primary create-button btn_primary_color"> {{ GoogleTranslate::trans('Back to Supplier List', app()->getLocale()) }} </a>
+    <a href="{{ route('suppliers.index') }}" class="btn btn-primary create-button btn_primary_color">  {{ __('messages.Back to Supplier List') }} </a>
 </div>
 </div>
 
