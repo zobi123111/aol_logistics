@@ -104,14 +104,13 @@ class ClientController extends Controller
                 'user_id' => auth()->id(), 
             ]);
             return redirect()->route('client.index')
-            ->with('message', 'Client created successfully!');
+            ->with('message', __('messages.Client created successfully!'));
 
         } catch (\Exception $e) {
             return redirect()->back()
             ->withInput()
             ->withErrors(['message' => 'Client creation failed! Please try again later.']);
-                }
-        return redirect()->route('client.index')->with('success', 'Client created successfully!');
+        }
     }
 
     public function destroy($clientId)
@@ -132,7 +131,7 @@ class ClientController extends Controller
                     . ' (' . auth()->user()->email . ')',
                 'user_id' => auth()->id(), 
             ]);
-        Session::flash('message', 'Client deleted successfully.');
+        Session::flash('message', __('messages.Client deleted successfully.'));
         return redirect()->route('client.index')->with('success', 'Client deleted successfully.');
     }
 
@@ -183,7 +182,7 @@ class ClientController extends Controller
             'user_id' => auth()->id(), 
         ]);
          return redirect()->route('client.index', ['supplierId' => $clientId])
-             ->with('message', 'Client updated successfully.');
+             ->with('message', __('messages.Client updated successfully.'));
      }
 
 

@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\UserCreated;
 use App\Models\UserActivityLog;
+use Illuminate\Support\Facades\App;
+
 
 class UserController extends Controller
 {
@@ -29,6 +31,9 @@ class UserController extends Controller
 
     public function save_user(Request $request)
     {
+
+        App::setLocale(session('locale', 'en'));
+
         $validated = $request->validate([
             'firstname' => 'required',
             'lastname' => 'required',
@@ -36,6 +41,8 @@ class UserController extends Controller
             'email' => 'required|email|max:255|unique:users,email',
             'password' => 'required|min:6|confirmed',
             'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ],[
+            'email.unique' => __('validation.unique.string'),
         ]);
 
         // Handle Profile Photo Upload
@@ -79,7 +86,8 @@ class UserController extends Controller
                         . ' (' . $request->email . ')',
                     'user_id' => auth()->id(), 
             ]);
-            Session::flash('message', 'User saved successfully');
+            // Session::flash('message', 'User saved successfully');
+            Session::flash('message', __('messages.user saved successfully'));
             return response()->json(['success' => 'User saved successfully']); 
         }
     }
@@ -103,14 +111,7 @@ class UserController extends Controller
             'edit_role_name' => 'required',
             'edit_profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'edit_password' => 'nullable|min:6|confirmed'
-        ], [
-            'fname.required' => 'The first name field is required.',
-            'lname.required' => 'The last name field is required.',
-            'edit_role_name.required' => 'The role field is required.',
-            'edit_password.confirmed' => 'The password confirmation does not match.'
-        ]
-
-        );
+        ]);
 
         // Find the user by ID
         $user = User::find(decode_id($request->edit_id));
@@ -163,7 +164,7 @@ class UserController extends Controller
         ]);
 
         // Flash message and response
-        Session::flash('message', 'User updated successfully');
+        Session::flash('message', __('messages.User updated successfully'));
         return response()->json(['success' => 'User updated successfully']);
     }
 
@@ -182,7 +183,7 @@ class UserController extends Controller
                 'user_id' => auth()->id(), 
             ]);
             $user->delete();
-            return redirect()->route('users.index')->with('message', 'User deleted successfully');
+            return redirect()->route('users.index')->with('message', __('messages.User deleted successfully'));
         }
     }
 
@@ -212,7 +213,7 @@ class UserController extends Controller
         ]);
         return response()->json([
             'success' => true,
-            'message' => 'User status updated successfully',
+            'message' => __('messages.User status updated successfully'),
             'is_active' => $user->is_active
         ]);
     }

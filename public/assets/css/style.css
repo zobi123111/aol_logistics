@@ -9,15 +9,44 @@
 /*--------------------------------------------------------------
 # General
 --------------------------------------------------------------*/
+
+  /* Light Mode Default Variables */
+  :root {
+    --bg-color: #f4f4f4;
+    --sidebar-bg: #ffffff;
+    --header-bg: #ffffff;
+    --text-color: #333333;
+    --link-color: #00709e;
+    --toggle-bg: #00709e;
+    --toggle-text: #ffffff;
+    --sidebar-width: 250px;
+    --header-height: 60px;
+    --font-color: #00709e;
+    --sidebar-color: #00709e;
+}
+
+/* Dark Mode Variables */
+.dark-mode {
+    --bg-color: #121212;
+    --sidebar-bg: #1f1f1f;
+    --header-bg: #1f1f1f;
+    --text-color: #f59751;
+    --link-color: #00709e;
+    --toggle-bg: #00709e;
+    --toggle-text: #121212;
+    --font-color: #fff;
+    --sidebar-color: #f59751;
+}
 :root {
+
   scroll-behavior: smooth;
 }
 
 body {
   font-family: "Open Sans", sans-serif;
-  background: #f6f9ff;
+  background-color: var(--bg-color);
   color: #444444;
-  /* position: relative; */
+  position: relative;
 }
 
 a {
@@ -65,9 +94,13 @@ h6 {
   font-size: 24px;
   margin-bottom: 0;
   font-weight: 600;
-  color: #00709e;
+  color: var(--text-color);
 }
 
+.dashborad-text p{
+  color: var(--text-color);
+
+}
 /*--------------------------------------------------------------
 # Back to top button
 --------------------------------------------------------------*/
@@ -224,7 +257,13 @@ h6 {
   border-radius: 5px;
   box-shadow: 0px 0 30px rgba(1, 41, 112, 0.1);
 }
-
+.dashboard-card{
+  margin-bottom: 30px;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0px 0 30px rgba(1, 41, 112, 0.1);
+  background-color:var(--header-bg);
+}
 .card-header,
 .card-footer {
   border-color: #ebeef4;
@@ -248,9 +287,8 @@ h6 {
 }
 
 .card-body {
-  padding: 0 20px 20px 20px;
+  padding: 18px 20px 20px 20px;
 }
-
 .card-img-overlay {
   background-color: rgba(255, 255, 255, 0.6);
 }
@@ -382,7 +420,8 @@ h6 {
   z-index: 997;
   height: 80px;
   box-shadow: 0px 2px 20px rgba(1, 41, 112, 0.1);
-  background-color: #fff;
+  /* background-color: #fff; */
+  background-color: var(--header-bg);
   padding-left: 20px;
   /* Toggle Sidebar Button */
   /* Search Bar */
@@ -392,7 +431,7 @@ h6 {
   font-size: 32px;
   padding-left: 10px;
   cursor: pointer;
-  color: #00709e;
+  color: var(--text-color);
 }
 
 .header .search-bar {
@@ -465,6 +504,7 @@ h6 {
 .header-nav>ul {
   margin: 0;
   padding: 0;
+  column-gap: 20px;
 }
 
 .header-nav .nav-icon {
@@ -475,7 +515,7 @@ h6 {
 }
 
 .header-nav .nav-profile {
-  color: #00709e;
+  color: var(--text-color);
 }
 
 .header-nav .nav-profile img {
@@ -611,7 +651,7 @@ h6 {
   scrollbar-width: thin;
   scrollbar-color: #aab7cf transparent;
   box-shadow: 0px 0px 20px rgba(1, 41, 112, 0.1);
-  background-color: #fff;
+  background-color: var(--header-bg);
 }
 
 @media (max-width: 1199px) {
@@ -685,16 +725,20 @@ h6 {
   align-items: center;
   font-size: 15px;
   font-weight: 600;
-  color: #00709e;
+  color: var(--sidebar-color);
   transition: 0.3;
   padding: 10px 15px;
   border-radius: 4px;
 }
 
+/* .dark-mode .sidebar-nav .nav-link{
+  color: var(--text-color);
+} */
+
 .sidebar-nav .nav-link i {
   font-size: 16px;
   margin-right: 10px;
-  color: #00709e;
+  color: var(--sidebar-color);
 }
 
 .sidebar-nav .nav-link.collapsed {
@@ -1272,9 +1316,8 @@ h6 {
   cursor: pointer;
 }
 
-.modal-title,
-.card-title {
-  color: #00709e;
+.modal-title, .card-title {
+  color: var(--font-color);
 }
 
 .card-container {
@@ -1374,4 +1417,341 @@ div#append_error {
 
 td.icon-design a, td.icon-design i {
   padding: 0px 5px 0px 5px;
+}
+
+/* :root {
+  --bg-color: #f4f4f4;
+  --sidebar-bg: #ffffff;
+  --header-bg: #ffffff;
+  --text-color: #333333;
+  --link-color: #00709e;
+  --toggle-bg: #00709e;
+  --toggle-text: #ffffff;
+  --sidebar-width: 250px;
+  --header-height: 60px;
+  --font-color:#00709e;
+  --sidebar-color:#00709e;
+}
+
+.dark-mode {
+  --bg-color: #121212;
+  --sidebar-bg: #1f1f1f;
+  --header-bg: #1f1f1f;
+  --text-color: #f59751;
+  --link-color: #00709e;
+  --toggle-bg: #00709e;
+  --toggle-text: #121212;
+  --font-color: #fff;
+  --sidebar-color:#f59751;
+} */
+
+.toggle-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+ 
+}
+text#SvgjsText1063 tspan#SvgjsTspan1064 {
+  fill: var(--font-color);
+}
+text#SvgjsText1066 {
+  fill: var(--font-color);
+}
+text#SvgjsText1069 tspan#SvgjsTspan1070 {
+  fill: var(--font-color);
+}
+div#supplier_length {
+  color: var(--font-color);
+  margin-bottom: 20px;
+}
+div#supplier_length select {
+  background-color: transparent;
+}
+.dark-mode div#supplier_length select {
+  background-color: var(--font-color);
+}
+div#supplier_filter {
+  color: var(--font-color);
+}
+/* Override overall table background */
+.table {
+  background-color: #f8f9fa !important; /* Your desired background color */
+}
+
+/* Override striped rows */
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: #e9ecef !important; /* Your desired stripe color */
+}
+
+/* Override hover effect (if using .table-hover) */
+.table-hover tbody tr:hover {
+  background-color: #dee2e6 !important;
+}
+
+/* Override table header background */
+
+.dark-mode .table {
+  background-color: var(--header-bg) !important;
+  color: #e0e0e0 !important;
+}
+
+.dark-mode .table-striped tbody tr:nth-of-type(odd) {
+  background-color: var(--header-bg) !important;
+}
+
+.dark-mode .table thead th {
+  background-color: var(--header-bg) !important;
+  color: var(--font-color) !important;
+}
+.dark-mode .table tbody td {
+  background-color: var(--header-bg) !important;
+  color: var(--font-color) !important;
+}
+div#supplier_info {
+  color:  var(--font-color);}
+
+
+
+.dark-mode   div#supplier_paginate a#supplier_previous {
+    color: var(--font-color) !important;
+}
+
+a#supplier_next{
+  color: var(--font-color) !important;
+}
+
+div#user_table_length label {
+  color:var(--font-color);
+}
+div#user_table_info {
+  color: var(--font-color);
+}
+.dark-mode a#user_table_previous{
+  color: var(--font-color) !important;
+}
+.dark-mode a#user_table_next{
+  color: var(--font-color) !important;
+}
+div#user_table_filter label {
+  color: var(--font-color);
+}
+
+div#user_table_length select {
+  background-color: var(--font-color);
+}
+div#user_table_length select {
+  background-color:transparent;
+}
+.dark-mode div#user_table_length select {
+  background-color: var(--font-color);
+}
+div#role_table_info {
+  color: var(--font-color);
+}
+.dark-mode a#role_table_previous {
+  color: var(--font-color) !important;
+
+  
+}
+
+.dark-mode a#role_table_next  {
+  color: var(--font-color) !important;
+}
+div#role_table_length label {
+  color: var(--font-color);
+}
+div#role_table_filter   label {
+  color: var(--font-color);
+}
+.dark-mode div#role_table_length select {
+  background-color: var(--font-color);
+}
+
+.dark-mode div#logs_table_length  select {
+  background-color: var(--font-color);
+}
+div#logs_table_length label{
+  color: var(--font-color);
+}
+div#logs_table_filter label{
+  color: var(--font-color);
+}
+div#logs_table_length {
+  padding-bottom: 20px;
+}
+div#role_table_length {
+  padding-bottom: 20px;
+}
+
+div#logs_table_info {
+  color: var(--font-color);
+}
+
+div#logs_table_paginate  {color: var(--font-color);
+}
+
+.dark-mode #logs_table_previous {
+  color: var(--font-color) !important;
+
+  
+}
+.dark-mode .dataTables_wrapper .dataTables_paginate .paginate_button{
+  color: var(--font-color) !important;
+
+}
+
+.dark-mode .dataTables_wrapper  a.paginate_button.current {
+  color: var(--text-color)!important;
+}
+
+div#client_length label{
+  color: var(--font-color);
+}
+
+.dark-mode #client_length select {
+  background-color: var(--font-color);
+}
+div#client_filter label{
+  color: var(--font-color);
+}
+.dataTables_wrapper .dataTables_filter input{
+  color:var(--font-color);
+}
+div#client_info{
+  color:var(--font-color);
+
+}
+div#client_filter {
+  padding-bottom: 20px;
+}
+.main_cont_outer .card.card-container {
+  background: var(--header-bg);
+  color: var(--text-color);
+}
+div#loads_length label{
+  color: var(--font-color);
+}
+div#loads_filter label{
+  color: var(--font-color);
+}
+div#loads_filter {
+  padding-bottom: 20px;
+}
+.dark-mode #loads_length  select {
+  background-color: var(--font-color);
+}
+div#loads_info {
+  color: var(--font-color);
+}
+
+div#origins_info {
+  color: var(--font-color);
+}
+
+div#origins_length label{
+  color: var(--font-color);
+}
+.dark-mode #origins_length  select {
+  background-color: var(--font-color);
+}
+div#origins_filter label{
+  color: var(--font-color);
+}
+div#origins_filter {
+  padding-bottom: 20px;
+
+}
+
+div#destinations_length label{
+  color: var(--font-color);
+
+}
+div#destinations_filter label{
+  color: var(--font-color);
+}
+div#destinations_filter {
+  padding-bottom: 20px;
+}
+.dark-mode #destinations_length select {
+  background-color: var(--font-color);
+}
+div#destinations_info{
+  color: var(--font-color);
+
+}
+div#assign_loads_length label{
+  color: var(--font-color);
+}
+div#assign_loads_filter label{
+  color: var(--font-color);
+}
+.dark-mode #assign_loads_length select {
+  background-color: var(--font-color);
+}
+
+div#assign_loads_filter {
+  padding-bottom: 20px;
+}
+div#assign_loads_info{
+  columns: var(--font-color);
+}
+div#unit_length label{
+  color: var(--font-color);
+}
+.dark-mode #unit_length select {
+  background-color: var(--font-color);
+}
+div#unit_filter{
+  padding-bottom: 20px;
+
+}
+div#unit_filter label{
+  color: var(--font-color);
+}
+div#unit_info{
+  color: var(--font-color);
+}
+div#supplierUser_length label{
+  color: var(--font-color);
+}
+.dark-mode #supplierUser_length select {
+  background-color: var(--font-color);
+}
+div#supplierUser_info {
+  color: var(--font-color);
+
+}
+div#supplierUser_filter label{
+  color: var(--font-color);
+}
+div#supplierUser_filter {
+  padding-bottom: 20px;
+}
+
+div#service_length label{
+  color: var(--font-color);
+}
+.dark-mode #service_length select {
+  background-color: var(--font-color);
+}
+div#service_filter label{
+  color: var(--font-color);
+}
+div#service_info {
+  color: var(--font-color);
+
+}
+div#service_filter {
+  padding-bottom: 20px;
+}
+.main_cont_outer .card-body.supplier {
+  background: var(--header-bg);
+  color: var(--font-color);
+}
+div#user_table_filter {
+  padding-bottom: 20px;
 }

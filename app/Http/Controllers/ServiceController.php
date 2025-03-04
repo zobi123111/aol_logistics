@@ -54,7 +54,7 @@ class ServiceController extends Controller
         $service->supplier_id = $supplierId;
         $service->save();
 
-        return redirect()->route('services.index', encode_id($supplierId))->with('meassge', 'Service created successfully');
+        return redirect()->route('services.index', encode_id($supplierId))->with('meassge', __('messages.Service created successfully'));
     }
 
     // Show form to edit the service
@@ -87,7 +87,7 @@ class ServiceController extends Controller
         $service = Service::findOrFail($serviceId);
         $service->update($request->all());
 
-        return redirect()->route('services.index', $supplierId)->with('message', 'Service updated successfully');
+        return redirect()->route('services.index', $supplierId)->with('message', __('messages.Service updated successfully'));
     }
 
     // Soft delete a service
@@ -97,7 +97,7 @@ class ServiceController extends Controller
         $service = Service::findOrFail($serviceId);
         $service->delete();
 
-        return redirect()->route('services.index', $supplierId)->with('message', 'Service deleted successfully');
+        return redirect()->route('services.index', $supplierId)->with('message', __('messages.Service deleted successfully'));
     }
 
 }

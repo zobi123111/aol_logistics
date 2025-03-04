@@ -136,7 +136,7 @@ class LoadController extends Controller
         $status = 'requested'; 
         $supplier_id = null; 
         $service_id = null;
-        $message = 'Load added successfully.';
+        $message = __('messages.Load added successfully.');
 
         // Step 1: Create Load with supplier_id = null
         $load = Load::create(array_merge(
@@ -233,7 +233,7 @@ class LoadController extends Controller
         $status = $load->status; 
         $supplier_id = $load->supplier_id; 
 
-        $message = 'Load updated successfully.';
+        $message =  __('messages.Load updated successfully.');
       
         if ($request->filled('supplier_id')) {
             $supplier = Supplier::with('services')->find($request->supplier_id);
@@ -295,46 +295,46 @@ class LoadController extends Controller
             return redirect()->route('loads.index')->with('error', 'Load not found.');
         }
         $load->delete();
-        return redirect()->route('loads.index')->with('meassge', 'Load deleted successfully.');
+        return redirect()->route('loads.index')->with('message',  __('messages.Load deleted successfully.'));
 
     }
 
     public function assignPage($id)
-{
-    $en = $id;
-    $de = decode_id($id);
-    $load = Load::findOrFail($de);
-    $assignedServiceIds = AssignedService::where('load_id', $load->id)->pluck('service_id');
-    $suppliers = Supplier::whereHas('services', function ($query) use ($load, $assignedServiceIds) {
-        $query->where('origin', $load->origin)
-              ->where('destination', $load->destination)
-              ->whereNotIn('id', $assignedServiceIds);
-    })->with(['services' => function ($query) use ($load, $assignedServiceIds) {
-        $query->where('origin', $load->origin)
-              ->where('destination', $load->destination)
-              ->whereNotIn('id', $assignedServiceIds)
-              ->orderBy('cost', 'asc'); 
-    }])->get();
+    {
+        $en = $id;
+        $de = decode_id($id);
+        $load = Load::findOrFail($de);
+        $assignedServiceIds = AssignedService::where('load_id', $load->id)->pluck('service_id');
+        $suppliers = Supplier::whereHas('services', function ($query) use ($load, $assignedServiceIds) {
+            $query->where('origin', $load->origin)
+                ->where('destination', $load->destination)
+                ->whereNotIn('id', $assignedServiceIds);
+        })->with(['services' => function ($query) use ($load, $assignedServiceIds) {
+            $query->where('origin', $load->origin)
+                ->where('destination', $load->destination)
+                ->whereNotIn('id', $assignedServiceIds)
+                ->orderBy('cost', 'asc'); 
+        }])->get();
 
-    $deletedAssignedServices = AssignedService::onlyTrashed()
-    ->where('load_id', $load->id)
-    ->with(['supplier', 'service'])
-    ->get();
+        $deletedAssignedServices = AssignedService::onlyTrashed()
+        ->where('load_id', $load->id)
+        ->with(['supplier', 'service'])
+        ->get();
 
-    $assignedServices = AssignedService::where('load_id', $load->id)
-    ->with(['supplier', 'service'])
-    ->get();
+        $assignedServices = AssignedService::where('load_id', $load->id)
+        ->with(['supplier', 'service'])
+        ->get();
 
-    $remainingSuppliers = Supplier::whereHas('services')
-    ->with(['services' => function ($query) use ($load) {
-        $query->where('origin', '!=', $load->origin)
-        ->orWhere('destination', '!=', $load->destination)->orderBy('cost', 'asc');       
-    }])->where('is_active', 1)
-    ->get();
+        $remainingSuppliers = Supplier::whereHas('services')
+        ->with(['services' => function ($query) use ($load) {
+            $query->where('origin', '!=', $load->origin)
+            ->orWhere('destination', '!=', $load->destination)->orderBy('cost', 'asc');       
+        }])->where('is_active', 1)
+        ->get();
 
-    // dd($remainingSuppliers);
-    return view('loads.assign', compact('load', 'suppliers','remainingSuppliers', 'assignedServices', 'deletedAssignedServices'));
-}
+        // dd($remainingSuppliers);
+        return view('loads.assign', compact('load', 'suppliers','remainingSuppliers', 'assignedServices', 'deletedAssignedServices'));
+    }
 
     // Assign Supplier to Load
     public function assignSupplier($load_id, $supplier_id, $service_id)
@@ -347,7 +347,7 @@ class LoadController extends Controller
 
         $load->save();
 
-        return redirect()->back()->with('message', 'Supplier assigned successfully.');
+        return redirect()->back()->with('message', __('messages.Supplier assigned successfully.'));
     }
     
 
@@ -367,7 +367,7 @@ class LoadController extends Controller
         ])->first();
 
         if ($existingAssignment) {
-            return redirect()->back()->with('error', 'This service is already assigned.');
+            return redirect()->back()->with('error',  __('messages.This service is already assigned.'));
         }
 
         // Assign the service
@@ -377,7 +377,7 @@ class LoadController extends Controller
             'service_id' => $request->service_id,
         ]);
         Load::where('id', $request->load_id)->update(['status' => 'assigned']);
-        return redirect()->back()->with('message', 'Service assigned successfully.');
+        return redirect()->back()->with('message',  __('messages.Service assigned successfully.'));
     }
 
     public function unassignService(Request $request,$id)
@@ -406,7 +406,7 @@ class LoadController extends Controller
                 Load::where('id', $load_id)->update(['status' => 'requested', 'supplier_id' => null]);
             }
 
-        return back()->with('error', 'Service not found.');
+        return back()->with('error',  __('messages.Service not found.'));
         }
     }
 

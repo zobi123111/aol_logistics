@@ -80,7 +80,7 @@ class SupplierUserController extends Controller
 
           $role = Role::where('role_slug', $request->user_role)->first();
           if (!$role) {
-              return redirect()->route('suppliers.index')->with('success', 'Supplier created successfully.');
+              return redirect()->route('suppliers.index')->with('success', __('messages.Supplier created successfully!'));
           }
     
         // Create the user and associate with supplier
@@ -103,7 +103,7 @@ class SupplierUserController extends Controller
             'user_id' => auth()->id(), 
         ]);
         return redirect()->route('supplier_users.index', ['supplierId' => encode_id($supplierId)])
-            ->with('message', 'User added successfully.');
+            ->with('message', __('messages.User added successfully.'));
     }
     // Show form to edit a user
     public function edit($supplier_id, $user_id)
@@ -142,7 +142,7 @@ class SupplierUserController extends Controller
     
         $role = Role::where('role_slug', $request->user_role)->first();
         if (!$role) {
-            return redirect()->route('suppliers.index')->with('success', 'Supplier created successfully.');
+            return redirect()->route('suppliers.index')->with('success', __('messages.Supplier created successfully!'));
         }
 
         $user->fname = $request->firstname;
@@ -163,7 +163,7 @@ class SupplierUserController extends Controller
         ]);
     
         return redirect()->route('supplier_users.index', ['supplierId' => $supplier_id])
-            ->with('message', 'User updated successfully.');
+            ->with('message', __('messages.User updated successfully.'));
     }
     
     // Delete a user
@@ -187,6 +187,6 @@ class SupplierUserController extends Controller
             ]);
 
         return redirect()->route('supplier_users.index', ['supplierId' => $supplier_id])
-        ->with('message', 'User deteted successfully.');
+        ->with('message', __('messages.User deteted successfully.'));
     }
 }

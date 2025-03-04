@@ -31,10 +31,47 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <!-- Custom Styles (Should be Last) -->
-    <link href="{{ url('assets/css/style.css') }}" rel="stylesheet">
+   
     
+    <link href="{{ url('assets/css/style.css') }}" rel="stylesheet">
+ 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <script>
+        (function() {
+            const savedMode = localStorage.getItem('darkMode');
+
+            if (savedMode === 'enabled') {
+                document.documentElement.classList.add('dark-mode');
+                
+            } else {
+                document.documentElement.classList.remove('dark-mode');
+            }
+        })();
+  
+        function toggleMode () {
+            const modeIcon = document.getElementById('mode-icon');
+
+            const currentMode = document.documentElement.classList.contains('dark-mode') ? 'enabled' : 'disabled';
+
+            console.log(currentMode);
+            if (currentMode === 'enabled') {
+
+                document.documentElement.classList.remove('dark-mode');
+                localStorage.setItem('darkMode', 'disabled');
+            } else {
+                document.documentElement.classList.add('dark-mode');
+                localStorage.setItem('darkMode', 'enabled');
+            }
+        }
+
+        window.onload = function() {
+            const modeButton = document.getElementById('mode-button');
+            if (modeButton) {
+                modeButton.addEventListener('click', toggleMode);
+            }
+        };
+    </script>
 
 </head>

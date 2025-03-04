@@ -70,7 +70,7 @@ class RolePermissionController extends Controller
             ]);
 
             // Success flash message
-            return redirect()->to('/roles')->with('message', 'Role Created successfully');
+            return redirect()->to('/roles')->with('message', __('messages.Role Created successfully'));
 
         } catch (\Exception $e) {
             return redirect()->back()
@@ -142,7 +142,7 @@ class RolePermissionController extends Controller
                         . ' (' . auth()->user()->email . ')',
                     'user_id' => auth()->id(), 
             ]);
-        Session::flash('message', 'Role Updated successfully');
+        Session::flash('message', __('messages.Role Updated successfully'));
         return redirect()->route('roles.edit', $en);
     }
 
@@ -154,7 +154,7 @@ class RolePermissionController extends Controller
         $role = Role::withCount('users')->findOrFail($roleId);
 
         if ($role->users_count > 0) {
-            return redirect()->route('roles.index')->withErrors('You cannot delete this role because it is assigned to ' . $role->users_count . ' users.');
+            return redirect()->route('roles.index')->withErrors(__('messages.You cannot delete this role because it is assigned to') . $role->users_count . __('messages.users'));
         }
         // add log
         UserActivityLog::create([
@@ -167,7 +167,7 @@ class RolePermissionController extends Controller
         ]);
         $role->rolePermissions()->delete();
         $role->delete();
-        Session::flash('message', 'Role deleted successfully.');
+        Session::flash('message', __('messages.Role deleted successfully.'));
         return redirect()->route('roles.index');
     }
 }

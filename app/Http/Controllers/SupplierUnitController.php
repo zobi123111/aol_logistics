@@ -47,7 +47,7 @@ class SupplierUnitController extends Controller
         $supplier = Supplier::findOrFail($supplierId);
         $supplier->units()->create($request->all());
 
-        return redirect()->route('supplier_units.index', encode_id($supplierId))->with('message', 'Equipment added successfully');
+        return redirect()->route('supplier_units.index', encode_id($supplierId))->with('message', __('messages.Equipment added successfully'));
     }
 
     // Show the form for editing the specified supplier unit
@@ -82,7 +82,7 @@ class SupplierUnitController extends Controller
         $unit = SupplierUnit::findOrFail($unitId);
         $unit->update($request->all());
 
-        return redirect()->route('supplier_units.index', encode_id($supplierId))->with('message', 'Equipment updated successfully');
+        return redirect()->route('supplier_units.index', encode_id($supplierId))->with('message', __('messages.Equipment updated successfully'));
     }
 
     // Remove the specified supplier unit
@@ -93,7 +93,7 @@ class SupplierUnitController extends Controller
         $unit = SupplierUnit::findOrFail($de_user_id);
         $unit->delete();
 
-        return redirect()->route('supplier_units.index', $supplier_id)->with('message', 'Equipment deleted successfully');
+        return redirect()->route('supplier_units.index', $supplier_id)->with('message', __('messages.Equipment deleted successfully'));
     }
 }
 

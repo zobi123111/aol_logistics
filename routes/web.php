@@ -126,3 +126,6 @@ Route::middleware(['auth.user', 'otp.verified', 'check.client'])->group(function
         Route::delete('/{userId}', [ClientUserController::class, 'destroy'])->name('client_users.destroy');
     });
 });
+Route::get('/csrf-token', function () {
+    return response()->json(['csrfToken' => csrf_token()]);
+});

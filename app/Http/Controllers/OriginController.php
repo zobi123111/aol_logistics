@@ -31,7 +31,7 @@ class OriginController extends Controller
 
         Origin::create($request->all());
 
-        return redirect()->route('origins.index')->with('success', 'Origin added successfully.');
+        return redirect()->route('origins.index')->with('success', __('messages.Origin added successfully.'));
     }
 
     public function edit(Origin $origin)
@@ -52,14 +52,14 @@ class OriginController extends Controller
 
         $origin->update($request->all());
 
-        return redirect()->route('origins.index')->with('success', 'Origin updated successfully.');
+        return redirect()->route('origins.index')->with('success', __('messages.Origin updated successfully.'));
     }
 
     public function destroy(Origin $origin)
     {
         $origin->delete();
 
-        return redirect()->route('origins.index')->with('success', 'Origin deleted successfully.');
+        return redirect()->route('origins.index')->with('success', __('messages.Origin deleted successfully.'));
     }
 }
 

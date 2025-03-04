@@ -32,7 +32,7 @@ class DestinationController extends Controller
         ]);
 
         Destination::create($request->all());
-        return redirect()->route('destinations.index')->with('success', 'Destination added successfully.');
+        return redirect()->route('destinations.index')->with('success', __('messages.Destination added successfully.'));
     }
 
     public function show(Destination $destination)
@@ -57,12 +57,12 @@ class DestinationController extends Controller
         ]);
 
         $destination->update($request->all());
-        return redirect()->route('destinations.index')->with('success', 'Destination updated successfully.');
+        return redirect()->route('destinations.index')->with('success', __('messages.Destination updated successfully.'));
     }
 
     public function destroy(Destination $destination)
     {
         $destination->delete();
-        return redirect()->route('destinations.index')->with('success', 'Destination deleted successfully.');
+        return redirect()->route('destinations.index')->with('success', __('messages.Destination deleted successfully.'));
     }
 }

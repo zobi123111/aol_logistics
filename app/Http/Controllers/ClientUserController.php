@@ -47,7 +47,7 @@ class ClientUserController extends Controller
         DB::beginTransaction();
         try {
             if (User::where('email', $request->email)->exists()) {
-                return redirect()->back()->withInput()->withErrors(['email' => 'The email is already registered.']);
+                return redirect()->back()->withInput()->withErrors(['email' => __('messages.The email is already registered.')]);
             }
             $role = Role::where('role_slug', config('constants.roles.CLIENT_SERVICE_EXECUTIVE'))->first();
         
@@ -72,12 +72,12 @@ class ClientUserController extends Controller
                 'user_id' => auth()->id(), 
             ]);
             return redirect()->route('client_users.index', encode_id($id))
-            ->with('message', 'Client created successfully!');
+            ->with('message',  __('messages.Client created successfully!'));
 
         } catch (\Exception $e) {
             return redirect()->back()
             ->withInput()
-            ->withErrors(['message' => 'Client creation failed! Please try again later.']);
+            ->withErrors(['message' => __('messages.Client creation failed! Please try again later.')]);
                 }
         return redirect()->route('client_users.index', encode_id($id))->with('success', 'Client created successfully!');
     }
@@ -101,7 +101,7 @@ class ClientUserController extends Controller
                 'user_id' => auth()->id(), 
             ]);
 
-        Session::flash('message', 'Client deleted successfully.');
+        Session::flash('message', __('messages.Client deleted successfully.'));
         return redirect()->route('client_users.index',$master_client )->with('success', 'Client deleted successfully.');
     }
 
@@ -152,7 +152,7 @@ class ClientUserController extends Controller
                 'user_id' => auth()->id(), 
             ]);
          return redirect()->route('client_users.index',  $master_id)
-             ->with('message', 'Client updated successfully.');
+             ->with('message', __('messages.Client updated successfully.'));
      }
 
 }

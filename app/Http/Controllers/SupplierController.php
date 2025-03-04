@@ -193,12 +193,12 @@ class SupplierController extends Controller
         
             DB::commit();
             return redirect()->route('suppliers.index')
-            ->with('message', 'Supplier created successfully!');
+            ->with('message', __('messages.Supplier created successfully!'));
 
         } catch (\Exception $e) {
             return redirect()->back()
             ->withInput()
-            ->withErrors(['message' => 'Supplier creation failed! Please try again later.']);
+            ->withErrors(['message' => __('messages.Supplier creation failed! Please try again later.')]);
                 }
         
         // Redirect with success message
@@ -426,7 +426,7 @@ class SupplierController extends Controller
         ]);
 
         return redirect()->route('suppliers.edit', encode_id($supplier->id))
-        ->with('message', 'Supplier updated successfully!');
+        ->with('message', __('messages.Supplier updated successfully!'));
     }
 
 
@@ -448,7 +448,7 @@ class SupplierController extends Controller
                 . ' (' . auth()->user()->email . ')',
             'user_id' => auth()->id(), 
         ]);
-        Session::flash('message', 'Supplier deleted successfully.');
+        Session::flash('message', __('messages.Supplier deleted successfully.'));
         return redirect()->route('suppliers.index')->with('success', 'Supplier deleted successfully.');
     }
 
@@ -508,7 +508,7 @@ class SupplierController extends Controller
         ]);
         return response()->json([
             'success' => true,
-            'message' => 'Supplier status updated successfully',
+            'message' => __('messages.Supplier status updated successfully'),
             'is_active' => $supplier->is_active
         ]);
     }
