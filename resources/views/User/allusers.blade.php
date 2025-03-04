@@ -267,7 +267,7 @@
                     <div class="form-group">
                         <div id="current-profile-photo" class="mt-2">
                         </div>
-                        <label for="edit_profile_photo" class="form-label mt-2"> {{ __('messages.Profile Photo') }} Profile Photo</label>
+                        <label for="edit_profile_photo" class="form-label mt-2"> {{ __('messages.Profile Photo') }}</label>
                         <input type="file" name="edit_profile_photo" class="form-control">
                         <input type="hidden" name="remove_profile_photo" id="remove_profile_photo" value="0">
                         <div id="edit_profile_photo_error" class="text-danger error_e"></div>
@@ -406,7 +406,7 @@ $(document).ready(function() {
                 if (response.user.profile_photo) {
                     // Display the profile photo
                     $('#current-profile-photo').html(
-                        '<div class="image-cont" style="position:relative;"><label>Current Profile Photo</label><br><img src="/storage/' +
+                        '<div class="image-cont" style="position:relative;"><label> @json(__('messages.Current Profile Photo')) </label><br><img src="/storage/' +
                         response.user.profile_photo +
                         '" width="100" height="100" class="rounded-circle" alt="Profile Photo"><button type="button" class="btn btn-danger btn-sm position-absolute remove-photo">x</button></div>'
                     );

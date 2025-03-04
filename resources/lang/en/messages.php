@@ -48,6 +48,7 @@ return [
     'Status' => 'Status',
     'Actions' => 'Actions',
     'No users found' => 'No users found',
+    'Current Profile Photo' => 'Current Profile Photo',
 
     // Role
 
@@ -158,6 +159,7 @@ return [
     'Cost' => 'Cost',
     'Create Service' => 'Create Service',
     'Are you sure you want to delete ?' => 'Are you sure you want to delete ?',
+    'Update Service' => 'Update Service',
 
 
     // Supplier Unit
@@ -229,6 +231,7 @@ return [
     'Current Trailer Position' => 'Current Trailer Position',
     'No trailer number found' => 'No trailer number found',
     'No location data found' => 'No location data found',
+    'Update Load' => 'Update Load',
 
 
     // Origins
@@ -252,6 +255,7 @@ return [
     'Business Name' => 'Business Name',
     'Are you sure you want to delete this client' => 'Are you sure you want to delete this client',
     'Save Client' => 'Save Client',
+    'Client Customer Service Executive' => 'Client Customer Service Executive',
 
 
     // Trailer

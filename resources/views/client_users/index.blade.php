@@ -1,14 +1,18 @@
 
 @section('title', 'Client Customer Service Executve')
 {{-- @section('sub-title', 'Client Customer Service Executve') --}}
-@section('sub-title', GoogleTranslate::trans('Client Customer Service Executve', app()->getLocale()))
+@section('sub-title', __('messages.Client Customer Service Executive'))
 @extends('layout.app')
 @section('content')
 <div class="main_cont_outer">
     <div class="create_btn">
     <a href="{{ route('client.index') }}" class="btn btn-primary create-button btn_primary_color"
-    id="createClient"><i class="bi bi-arrow-left-circle-fill"></i> {{ GoogleTranslate::trans('Back', app()->getLocale()) }} </a>
-        <a href="{{ route('client_users.create', $id ) }}" class="btn btn-primary create-button btn_primary_color" id="createClient"> {{ GoogleTranslate::trans('Create', app()->getLocale()) }} </a>
+    id="createClient"><i class="bi bi-arrow-left-circle-fill"></i> 
+    <!-- {{ __('messages.Back') }} -->
+    {{ __('messages.Back') ?: __('messages.Back', [], 'en') }}
+
+ </a>
+        <a href="{{ route('client_users.create', $id ) }}" class="btn btn-primary create-button btn_primary_color" id="createClient"> {{ __('messages.Create') }} </a>
     </div>
     <div id="successMessagea" class="alert alert-success" style="display: none;" role="alert">
         <i class="bi bi-check-circle me-1"></i>
@@ -16,25 +20,24 @@
     @if(session()->has('message'))
     <div id="successMessage" class="alert alert-success fade show" role="alert">
         <i class="bi bi-check-circle me-1"></i>
-        {{-- {{ session()->get('message') }} --}}
-        {{ GoogleTranslate::trans(session('message'), app()->getLocale()) }}
+        {{ session()->get('message') }}
     </div>
     @endif
     <table class="table table-striped" id="client">
         <thead>
             <tr>
-                <th scope="col"> {{ GoogleTranslate::trans('First Name', app()->getLocale()) }} </th>
-                <th scope="col"> {{ GoogleTranslate::trans('Last Name', app()->getLocale()) }} </th>
-                <th scope="col"> {{ GoogleTranslate::trans('Email', app()->getLocale()) }} </th>
-                <th scope="col"> {{ GoogleTranslate::trans('Role', app()->getLocale()) }} </th>
-                <th scope="col"> {{ GoogleTranslate::trans('Status', app()->getLocale()) }} </th>
-                <th scope="col"> {{ GoogleTranslate::trans('Actions', app()->getLocale()) }} </th>
+                <th scope="col"> {{ __('messages.First Name') }} </th>
+                <th scope="col"> {{ __('messages.Last Name') }} </th>
+                <th scope="col"> {{ __('messages.Email') }} </th>
+                <th scope="col"> {{ __('messages.Role') }} </th>
+                <th scope="col"> {{ __('messages.Status') }} </th>
+                <th scope="col"> {{ __('messages.Actions') }} </th>
             </tr>
         </thead>
         <tbody>
             @if($clients->isEmpty())
             <tr>
-                <td colspan="8" class="text-center"> {{ GoogleTranslate::trans('No clients found', app()->getLocale()) }} </td>
+                <td colspan="8" class="text-center"> {{ __('messages.No clients found') }} </td>
             </tr>
             @else
             @foreach($clients as $clientdata)
@@ -75,14 +78,14 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel"> {{ GoogleTranslate::trans('Delete', app()->getLocale()) }} </h5>
+                        <h5 class="modal-title" id="exampleModalLabel"> {{ __('messages.Delete') }} </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body delete_content">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary close_btn" data-bs-dismiss="modal"> {{ GoogleTranslate::trans('Close', app()->getLocale()) }} </button>
-                        <button type="submit" class="btn btn-primary role_delete btn_primary_color"> {{ GoogleTranslate::trans('Delete', app()->getLocale()) }} </button>
+                        <button type="button" class="btn btn-secondary close_btn" data-bs-dismiss="modal"> {{ __('messages.Close') }} </button>
+                        <button type="submit" class="btn btn-primary role_delete btn_primary_color"> {{ __('messages.Delete') }} </button>
                     </div>
                 </div>
             </div>
@@ -102,7 +105,7 @@ $(document).ready(function() {
             var fname = $(this).closest('tr').find('.fname').text();
             var lname = $(this).closest('tr').find('.lname').text();
             var modal_text =
-                `{{ GoogleTranslate::trans('Are you sure you want to delete this client', app()->getLocale()) }}"<strong><span id="append_name">${fname} ${lname}</span></strong>"?`;
+                `{{ __('messages.Are you sure you want to delete this client') }}"<strong><span id="append_name">${fname} ${lname}</span></strong>"?`;
 
             $('.delete_content').html(modal_text);
             $('#deleteClientFormId').attr('action', `/clients/${clientId}/users/${clientmaster}`);

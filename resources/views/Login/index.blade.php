@@ -111,7 +111,13 @@ $(document).ready(function() {
 
         $('.error_e').html('');
         var formData = new FormData(this);
-
+          // Refresh CSRF token before submitting OTP form
+    $.get('/sanctum/csrf-cookie').then(() => {
+        $.get('/csrf-token').then(response => {
+            $('meta[name="csrf-token"]').attr('content', response.csrfToken);
+            $.ajaxSetup({
+                headers: { 'X-CSRF-TOKEN': response.csrfToken }
+            });
         $.ajax({
             type: 'POST',
             url: "{{ route('login') }}",
@@ -148,6 +154,11 @@ $(document).ready(function() {
                 button.prop("disabled", false).find("span:last").text("Login");
             }
         });
+    });
+    }).catch(error => {
+        console.error("CSRF token refresh failed", error);
+        button.prop("disabled", false).text("Submit OTP");
+    });
 
     });
 

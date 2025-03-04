@@ -49,6 +49,7 @@ return [
     'Status' => 'Estado',
     'Actions' => 'Acciones',
     'No users found' => 'No se encontraron usuarios',
+    'Current Profile Photo' => 'Foto de perfil actual',
 
 
     // Role
@@ -163,6 +164,7 @@ return [
     'Cost' => 'Costo',
     'Create Service' => 'Crear Servicio',
     'Are you sure you want to delete ?' => '¿Estás seguro de que deseas eliminarlo?',
+    'Update Service' => 'Servicio de actualización',
 
 
     // Supplier Unit
@@ -233,6 +235,7 @@ return [
     'Current Trailer Position' => 'Posición actual del remolque',
     'No trailer number found' => 'No se encontró número de remolque',
     'No location data found' => 'No se encontraron datos de ubicación',
+    'Update Load' => 'Cargar actualización',
 
 
     // Orígenes
@@ -257,6 +260,7 @@ return [
     'Business Name' => 'Nombre comercial',
     'Are you sure you want to delete this client' => '¿Estás seguro de que deseas eliminar este cliente?',
     'Save Client' => 'Guardar cliente',
+    'Client Customer Service Executive' => 'Ejecutivo de Servicio al Cliente',  // Spanish
 
 
     // Trailer

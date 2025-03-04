@@ -6,7 +6,7 @@
 <div class="main_cont_outer">
     <div class="create_btn">
     <a href="{{ route('suppliers.index') }}" class="btn btn-primary create-button btn_primary_color"
-    id="createClient"><i class="bi bi-arrow-left-circle-fill"></i> back</a>
+    id="createClient"><i class="bi bi-arrow-left-circle-fill"></i> {{ __('messages.Back') }}</a>
         <a href="{{ route('services.create', encode_id($supplier->id)) }}" class="btn btn-primary create-button btn_primary_color"
             id="createrole"> {{ __('messages.Add Service') }} </a>
     </div>

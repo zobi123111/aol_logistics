@@ -48,6 +48,7 @@ return [
     'Status' => 'Statut',
     'Actions' => 'Actions',
     'No users found' => 'Aucun utilisateur trouvé',
+    'Current Profile Photo' => 'Photo de profil actuelle',
 
     
     // Role
@@ -185,6 +186,7 @@ return [
     'Create Supplier User' => 'Créer un Utilisateur du Fournisseur',
     'Name' => 'Nom',
     'Are you sure you want to delete' => 'Êtes-vous sûr de vouloir supprimer ?',
+    'Update Service' => 'Service de mise à jour',
 
 
     // Load
@@ -231,6 +233,7 @@ return [
     'Current Trailer Position' => 'Position actuelle du remorque',
     'No trailer number found' => 'Numéro de remorque introuvable',
     'No location data found' => 'Aucune donnée de localisation trouvée',
+    'Update Load' => 'Charger la mise à jour',
 
 
     // Origines
@@ -255,6 +258,8 @@ return [
     'Business Name' => "Nom de l'entreprise",
     'Are you sure you want to delete this client' => 'Êtes-vous sûr de vouloir supprimer ce client',
     'Save Client' => 'Enregistrer le client',
+    'Client Customer Service Executive' => 'Exécutif du service clientèle',
+
 
 
     // Trailer
