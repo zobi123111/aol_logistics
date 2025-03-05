@@ -21,7 +21,7 @@
     </div>
     @endif
     @if(checkAllowedModule('suppliers', 'suppliers.index')->isNotEmpty() )
-    <table class="table table-striped" id="supplier">
+    <table class="table table-striped respo_table" id="supplier">
         <thead>
             <tr>
                 <th scope="col"> {{ __('messages.Company Name') }} </th>

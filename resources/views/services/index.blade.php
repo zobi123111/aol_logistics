@@ -19,7 +19,7 @@
         {{ session()->get('message') }}
     </div>
     @endif
-    <table class="table mt-3" id="service">
+    <table class="table mt-3 respo_table" id="service">
         <thead>
             <tr>
                 <th> {{ __('messages.Origin') }} </th>

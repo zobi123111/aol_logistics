@@ -26,7 +26,7 @@
 @endphp
 
 <input type="hidden" id="supplierId" value="{{ $supplierId }}">
-    <table class="table table-striped mt-3" id="supplierUser">
+    <table class="table table-striped respo_table mt-3" id="supplierUser">
         <thead>
             <tr>
                 <th scope="col"> {{ __('messages.Name') }} </th>

@@ -170,21 +170,23 @@ class LoginController extends Controller
     public function logOut()
     {
         $user = Auth::user(); // Get the current authenticated user
-    
+
         if ($user) {
-            $user->otp_verified = false; 
+            $user->otp_verified = false;
             $user->session_id = null;
             // $user->last_activity = null;
             $user->save();
         }
-    
+
         Session::flush();
         Auth::logout(); 
         session()->invalidate(); 
         session()->regenerateToken();
         
-        return Redirect('/');
+        // Pass 'logout' session variable
+        return redirect('/')->with('logout', true);
     }
+
 
     public function forgotPasswordView()
     {

@@ -53,6 +53,8 @@
         @yield('content')
         <!--end::Main-->
 
+        
+
     </main>
 
     @include('layout.sections.footer')
@@ -82,6 +84,9 @@
         // });
     </script>
     
+
+    
+
 
 </body>
 

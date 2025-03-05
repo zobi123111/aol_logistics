@@ -406,7 +406,7 @@ $(document).ready(function() {
                 if (response.user.profile_photo) {
                     // Display the profile photo
                     $('#current-profile-photo').html(
-                        '<div class="image-cont" style="position:relative;"><label> @json(__('messages.Current Profile Photo')) </label><br><img src="/storage/' +
+                        '<div class="image-cont" style="position:relative;"><label for="edit_profile_photo" class="form-label mt-2"> @json(__('messages.Current Profile Photo')) </label><br><img src="/storage/' +
                         response.user.profile_photo +
                         '" width="100" height="100" class="rounded-circle" alt="Profile Photo"><button type="button" class="btn btn-danger btn-sm position-absolute remove-photo">x</button></div>'
                     );

@@ -23,6 +23,8 @@
     --header-height: 60px;
     --font-color: #00709e;
     --sidebar-color: #00709e;
+    --btn-color:#00709e;
+    --btn-text:#ffffff;
 }
 
 /* Dark Mode Variables */
@@ -34,8 +36,104 @@
     --link-color: #00709e;
     --toggle-bg: #00709e;
     --toggle-text: #121212;
-    --font-color: #fff;
+    --font-color: #c1bdbd;
     --sidebar-color: #f59751;
+    --btn-color:#f59751;
+    --btn-text:#ffffff;
+}
+
+
+/* Apply colors to input fields and select dropdown */
+.filter-container .form-control {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  border: 1px solid var(--link-color);
+}
+
+/* Placeholder text color */
+.filter-container .form-control::placeholder {
+  color: #ffffff; /* White color for placeholder */
+}
+
+/* Input fields on focus */
+.filter-container .form-control:focus {
+  border-color: var(--btn-color);
+  box-shadow: 0 0 5px var(--btn-color);
+}
+
+/* Styles for the select dropdown */
+.filter-container select.form-control {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  border: 1px solid var(--link-color);
+}
+
+/* Select options hover effect */
+.filter-container select.form-control option:hover {
+  background-color: #ffffff; /* White background on hover */
+  color: var(--text-color);  /* Keep text color as per the current theme */
+}
+
+/* Dark Mode Specific */
+.dark-mode .filter-container .form-control {
+  background-color: var(--sidebar-bg);
+  color: var(--font-color);
+  border: 1px solid var(--sidebar-color);
+}
+
+/* Dark mode placeholder text color */
+.dark-mode .filter-container .form-control::placeholder {
+  color: #ffffff; /* White color for placeholder in dark mode */
+}
+
+/* Dark mode input fields on focus */
+.dark-mode .filter-container .form-control:focus {
+  border-color: var(--btn-color);
+  box-shadow: 0 0 5px var(--btn-color);
+}
+
+/* Dark mode select dropdown */
+.dark-mode .filter-container select.form-control {
+  background-color: var(--sidebar-bg);
+  color: var(--font-color);
+  border: 1px solid var(--sidebar-color);
+}
+
+/* Dark mode select options hover effect */
+.dark-mode .filter-container select.form-control option:hover {
+  background-color: #ffffff; /* White background on hover in dark mode */
+  color: var(--font-color);  /* Keep text color as per dark mode */
+}
+
+
+.dark-mode label.form-label {
+  color: var( --font-color);
+}
+
+.dark-mode .modal-content {
+  background-color: var(--header-bg);
+}
+#editUserDataModalLabel .dark-mode .modal-header button.btn-close {
+  color:#fff !important;
+  background-color: transparent !important;
+  border: none !important;
+}
+.dark-mode .form-check.form-switch  .form-check-input:checked {
+  background-color:var(--text-color);
+  border-color: #000;
+}
+.dark-mode .blue_icon_color {
+  color: var(--btn-color);
+}
+.dark-mode .btn-secondary.btn_secondary_color {
+  color: var(--btn-text);
+  background: var(--btn-color);
+  border-color: var(--btn-color);
+  padding: 8px;
+}
+
+.dark-mode .form-select.changeLang {
+  background-color: #c1bdbd;
 }
 :root {
 
@@ -414,7 +512,6 @@ h6 {
   color: #012970;
   font-family: "Nunito", sans-serif;
 }
-
 .header {
   transition: all 0.5s;
   z-index: 997;
@@ -422,11 +519,19 @@ h6 {
   box-shadow: 0px 2px 20px rgba(1, 41, 112, 0.1);
   /* background-color: #fff; */
   background-color: var(--header-bg);
-  padding-left: 20px;
-  /* Toggle Sidebar Button */
-  /* Search Bar */
+  /* padding-left: 20px; */
+  padding: 0px 30px;
 }
+section.section.dashboard p {
+  color:  var(--font-color);
+}
+/* .dark-mode .section.dashboard p {
+  color:  var(--font-color);
+} */
 
+.dark-mode span.apexcharts-legend-text {
+  color: var(--font-color) !important;
+}
 .header .toggle-sidebar-btn {
   font-size: 32px;
   padding-left: 10px;
@@ -725,7 +830,7 @@ h6 {
   align-items: center;
   font-size: 15px;
   font-weight: 600;
-  color: var(--sidebar-color);
+  color: var(--font-color);
   transition: 0.3;
   padding: 10px 15px;
   border-radius: 4px;
@@ -738,7 +843,7 @@ h6 {
 .sidebar-nav .nav-link i {
   font-size: 16px;
   margin-right: 10px;
-  color: var(--sidebar-color);
+  color: var(--font-color);
 }
 
 .sidebar-nav .nav-link.collapsed {
@@ -1285,10 +1390,9 @@ h6 {
 }
 
 .btn-primary.btn_primary_color {
-  background: #00709e;
-  border-color: #00709e;
+  background: var(--btn-color);
+  border-color: var(--btn-color);
   padding: 8px;
-
 }
 
 .btn-secondary.btn_secondary_color {
@@ -1754,4 +1858,115 @@ div#service_filter {
 }
 div#user_table_filter {
   padding-bottom: 20px;
+}
+
+/* @media (max-width:767px) {
+  .header-nav .nav-icon {
+    font-size: 22px;
+    color: #ffffff;
+    margin-right: 0px;
+    position: relative;
+}
+
+  .header-nav>ul {
+      margin: 0 !important;
+      padding: 0;
+      column-gap: 4px;
+  
+  }
+  .header .toggle-sidebar-btn {
+    font-size: 26px;
+    padding-left: 0px;
+    cursor: pointer;
+    color: var(--text-color);
+}
+.logo img {
+  max-height: 39px;
+  margin-right: -2px;
+}
+.header {
+  transition: all 0.5s;
+  z-index: 997;
+  height: 80px;
+  box-shadow: 0px 2px 20px rgba(1, 41, 112, 0.1);
+  background-color: var(--header-bg);
+  overflow: hidden;
+  padding: 0px 15px;
+}
+nav.header-nav.ms-auto.d-flex.align-items-center {
+  margin-left: unset !important;
+}
+li.nav-item.dropdown.pe-5{
+  padding-right: 0!important;
+}
+.table {
+  background-color: var(--header-bg) !important;
+  color: #e0e0e0 !important;
+  display: block;
+  overflow-x: auto;
+}
+table#logs-table {
+  width:  !important;
+}
+div#logs_table_filter{
+  padding-bottom: 20px;
+}
+} */
+
+@media (max-width: 767px) {
+  .header-nav .nav-icon {
+    font-size: 22px;
+    color: #ffffff;
+    margin-right: 0;
+    position: relative;
+  }
+
+  .header-nav > ul {
+    margin: 0 !important;
+    padding: 0;
+    column-gap: 4px;
+  }
+
+  .header .toggle-sidebar-btn {
+    font-size: 26px;
+    padding-left: 0;
+    cursor: pointer;
+    color: var(--text-color);
+  }
+
+  .logo img {
+    max-height: 39px;
+    margin-right: -2px;
+  }
+
+  .header {
+    transition: all 0.5s;
+    z-index: 997;
+    height: 80px;
+    box-shadow: 0px 2px 20px rgba(1, 41, 112, 0.1);
+    background-color: var(--header-bg);
+    overflow: hidden;
+    padding: 0 15px;
+  }
+
+  nav.header-nav.ms-auto.d-flex.align-items-center {
+    margin-left: unset !important;
+  }
+
+  li.nav-item.dropdown.pe-5 {
+    padding-right: 0 !important;
+  }
+
+  .table {
+    background-color: var(--header-bg) !important;
+    color: #e0e0e0 !important;
+    display: block;
+    overflow-x: auto;
+  }
+  .dark-mode table.respo_table {
+    width: auto !important;
+  }
+  div#logs_table_filter{
+    padding-bottom: 20px;
+  }
 }

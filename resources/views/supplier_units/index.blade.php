@@ -20,7 +20,7 @@
         {{ session()->get('message') }}
     </div>
     @endif
-    <table class="table mt-3" id="unit">
+    <table class="table mt-3 respo_table" id="unit">
         <thead>
             <tr>
                 <th> {{ __('messages.Unit Type') }} </th>

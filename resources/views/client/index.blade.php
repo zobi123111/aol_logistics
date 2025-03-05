@@ -23,7 +23,7 @@
         </div>
     @endif
     @if(checkAllowedModule('client', 'client.index')->isNotEmpty() )
-    <table class="table table-striped" id="client">
+    <table class="table table-striped respo_table" id="client">
         <thead>
             <tr>
                 <th scope="col"> {{ __('messages.First Name') }} </th>

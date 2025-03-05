@@ -17,7 +17,7 @@
         {{ session()->get('message') }}
     </div>
     @endif
-        <table class="table mt-3" id="destinations">
+        <table class="table mt-3 respo_table" id="destinations">
             <thead>
             <tr>
 

@@ -14,7 +14,7 @@
         </div>
     @endif
     @if(checkAllowedModule('activity-logs', 'activityLogs.all')->isNotEmpty())
-    <table class="table table-striped" id="logs_table" style="padding-top: 10px;">
+    <table class="table table-striped respo_table" id="logs_table" style="padding-top: 10px;">
         <thead>
             <tr>
                 <th scope="col"> {{ __('messages.User Name') }}  </th>

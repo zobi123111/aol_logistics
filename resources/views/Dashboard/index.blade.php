@@ -17,7 +17,7 @@
     </div>
     <div class="row">
         <div class="col-lg-6">
-            <div class="card">
+            <div class="card dashboard-card">
                 <div class="card-body">
                     <h5 class="card-title"> {{ __('messages.User Statistics (Active vs Total)') }}</h5>
                     <div id="userChart"></div>
@@ -43,10 +43,12 @@
             series: [
                 {
                     name: "{{ __('messages.Active Users') }}",
+                    className: "users_class",
                     data: [ {{ $activeTotalAol }}, {{ $activeSuppliers }} , {{ $activeClients }}]
                 },
                 {
                     name: "{{ __('messages.Total Users') }}",
+                    className: "users_class",
                     data: [{{ $totalAol }}, {{ $totalSuppliers }}, {{ $totalClients }}]
                 }
             ],

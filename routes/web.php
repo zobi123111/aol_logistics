@@ -35,6 +35,8 @@ use App\Http\Controllers\LangController;
     Route::match(['get', 'post'], '/', [LoginController::class, 'index']);
     Route::match(['get', 'post'], '/login', [LoginController::class, 'login'])->name('login');
     Route::get('lang/change', [LangController::class, 'change'])->name('changeLang');
+    Route::get('/loads/filtered', [LoadController::class, 'getFilteredLoads'])->name('loads.filtered');
+
 // });
 
 Route::post('/verify-otp', [LoginController::class, 'verifyOtp'])->name('verifyotp');

@@ -1,6 +1,25 @@
 @section('title', 'Login')
 @include('layout.includes.head')
 <main>
+
+@if(session('logout'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.body.classList.remove('dark-mode');
+            
+            const modeIcon = document.getElementById('mode-icon');
+            if (modeIcon) {
+                modeIcon.classList.remove('bi-sun');
+                modeIcon.classList.add('bi-moon');
+            }
+
+            localStorage.removeItem('darkMode');
+            
+            document.cookie = "alpha_omega_logistcs_session=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+        });
+    </script>
+@endif
+
     <div class="container">
         <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
             <div class="container">

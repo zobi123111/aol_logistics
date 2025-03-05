@@ -117,6 +117,81 @@ class LoadController extends Controller
         return view('loads.index');
     }
 
+    public function getFilteredLoads(Request $request)
+    {
+        $user = auth()->user();
+        $userType = $user->roledata->user_type_id;
+        
+        $aolNumber = $request->input('aol_number');
+        $status = $request->input('status');
+        
+        $loads = Load::with(['origindata', 'destinationdata', 'supplierdata', 'assignedServices.supplier', 'creator'])
+            ->when($userType == 2, function ($query) use ($user) {
+                return $query->where('created_by', $user->id)
+                            ->where(function ($q) {
+                                $q->whereNull('schedule')
+                                ->orWhereDate('schedule', '<=', now());
+                            });
+            })
+            ->when($userType == 3, function ($query) use ($user) {
+                return $query->where(function ($q) use ($user) {
+                            $q->whereHas('assignedServices', function ($q) use ($user) {
+                                $q->whereHas('supplier', function ($q) use ($user) {
+                                    $q->where('id', $user->supplier->id);
+                                });
+                            })->orWhere('created_by', $user->id);
+                        })
+                        ->where(function ($q) {
+                            $q->whereNull('schedule')
+                            ->orWhereDate('schedule', '<=', now());
+                        });
+            })
+            ->when($aolNumber, function ($query) use ($aolNumber) {
+                return $query->where('aol_number', 'like', '%' . $aolNumber . '%');
+            })
+            ->when($status, function ($query) use ($status) {
+                return $query->where('status', $status);
+            })
+            ->latest('id')
+            ->get();
+
+        return DataTables::of($loads)
+            ->addColumn('originval', function ($load) {
+                return $load->origindata ? $load->origindata->street . ', ' . $load->origindata->city . ', ' . $load->origindata->state . ', ' . $load->origindata->country : 'N/A';
+            })
+            ->addColumn('destinationval', function ($load) {
+                return $load->destinationdata ? $load->destinationdata->street . ', ' . $load->destinationdata->city . ', ' . $load->destinationdata->state . ', ' . $load->destinationdata->country : 'N/A';
+            })
+            ->addColumn('supplier_company_name', function ($load) {
+                if ($load->assignedServices->isNotEmpty()) {
+                    return $load->assignedServices->pluck('supplier.company_name')->filter()->join(', ');
+                }
+                return '---';
+            })
+            ->addColumn('actions', function ($load) {
+                $editUrl = route('loads.edit', encode_id($load->id));
+                $deleteId = encode_id($load->id);
+                $showUrl = route('loads.show', $deleteId);
+                return '<a href="' . $showUrl . '" class="">
+                            <i class="fa fa-eye table_icon_style blue_icon_color"></i>
+                        </a>
+                        <a href="' . $editUrl . '" class="">
+                            <i class="fa fa-edit edit-user-icon table_icon_style blue_icon_color"></i>
+                        </a>
+                        <a href="#" class="delete-icon table_icon_style blue_icon_color" data-load-id="' . $deleteId . '">
+                            <i class="fa-solid fa-trash"></i>
+                        </a>';
+            })
+            ->addColumn('assign', function ($load) {
+                return '<a href="' . route('loads.assign', encode_id($load->id)) . '" class="btn btn-primary create-button btn_primary_color">
+                            <i class="fa-solid fa-user"></i> Assign
+                        </a>';
+            })
+            ->rawColumns(['originval', 'destinationval', 'actions', 'assign', 'suppliercompany', 'supplier_company_name']) 
+            
+            ->make(true);
+    }
+
     /**
      * Show the form for creating a new resource.
      */
