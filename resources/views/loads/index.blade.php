@@ -40,6 +40,8 @@
                 <th> {{ __('messages.Created By') }} </th>
                 <th width="160px">{{ __('messages.Actions') }} </th>
                 <th> {{ __('messages.Assign') }} </th>
+                <th>{{ __('messages.shipment_status') }}</th>
+                <th>{{ __('messages.update_truck_details') }}</th>
             </tr>
         </thead>
 
@@ -65,6 +67,39 @@
             </div>
         </div>
     </form>
+
+
+    <form method="POST" id="changeStatusForm">
+    @csrf
+    @method('PUT')
+    <div class="modal fade" id="changeStatusModal" tabindex="-1" aria-labelledby="changeStatusLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="changeStatusLabel">{{ __('messages.change_shipment_status') }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <label for="status">{{ __('messages.select_status') }}</label>
+                    <select name="status" id="statusSelect" class="form-select">
+                        <option value="pending">{{ __('messages.pending') }}</option>
+                        <option value="in_transit">{{ __('messages.in_transit') }}</option>
+                        <option value="delivered">{{ __('messages.delivered') }}</option>
+                        <option value="cancelled">{{ __('messages.cancelled') }}</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('messages.close') }}</button>
+                    <button type="submit" class="changeStatusBtn btn btn-primary create-button btn_primary_color">
+                        {{ __('messages.update_status') }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
 </div>
 <!-- End of Delete Model -->
 @endsection
@@ -117,6 +152,8 @@ $(document).ready(function() {
         { data: 'created_by', name: 'created_by' },
             { data: 'actions', name: 'actions', orderable: false, searchable: false },
             { data: 'assign', name: 'assign', orderable: false, searchable: false },
+            { data: 'shipment_status', name: 'shipment_status', orderable: false, searchable: false },
+            { data: 'update_details', name: 'update_details', orderable: false, searchable: false },
         ],
         language: {
             sSearch: "{{ __('messages.Search') }}",
@@ -156,6 +193,7 @@ $(document).ready(function() {
         }
         ]
     });
+
     $(document).on('click', '.delete-icon', function(e) {
         e.preventDefault();
         var loadid = $(this).data('load-id');
@@ -167,6 +205,28 @@ $(document).ready(function() {
         $('#deleteloadForm').modal('show');
     });
 });
+function changeStatusModal(loadId, currentStatus) {
+    if (!loadId) {
+        alert("Load ID is missing!");
+        return;
+    }
+
+    // Set form action dynamically
+    var formAction = "/loads/" + loadId + "/change-status";
+    $('#changeStatusForm').attr('action', formAction);
+
+    // Check if the current status exists in the dropdown
+    var statusSelect = $('#statusSelect');
+    if (statusSelect.find('option[value="' + currentStatus + '"]').length > 0) {
+        statusSelect.val(currentStatus);
+    } else {
+        statusSelect.val(statusSelect.find('option:first').val());
+    }
+
+    // Show modal
+    $('#changeStatusModal').modal('show');
+}
+  
 </script>
 
 @endsection

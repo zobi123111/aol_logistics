@@ -50,28 +50,63 @@
             }
         })();
   
-        function toggleMode () {
+        // function toggleMode () {
+        //     const modeIcon = document.getElementById('mode-icon');
+
+        //     const currentMode = document.documentElement.classList.contains('dark-mode') ? 'enabled' : 'disabled';
+
+        //     console.log(currentMode);
+        //     if (currentMode === 'enabled') {
+
+        //         document.documentElement.classList.remove('dark-mode');
+        //         localStorage.setItem('darkMode', 'disabled');
+        //     } else {
+        //         document.documentElement.classList.add('dark-mode');
+        //         localStorage.setItem('darkMode', 'enabled');
+        //     }
+        // }
+
+        // window.onload = function() {
+        //     const modeButton = document.getElementById('mode-button');
+        //     if (modeButton) {
+        //         modeButton.addEventListener('click', toggleMode);
+        //     }
+        // };
+
+        function toggleMode() {
             const modeIcon = document.getElementById('mode-icon');
-
-            const currentMode = document.documentElement.classList.contains('dark-mode') ? 'enabled' : 'disabled';
-
-            console.log(currentMode);
-            if (currentMode === 'enabled') {
-
-                document.documentElement.classList.remove('dark-mode');
-                localStorage.setItem('darkMode', 'disabled');
-            } else {
-                document.documentElement.classList.add('dark-mode');
+            
+            document.documentElement.classList.toggle('dark-mode');
+            
+            if (document.documentElement.classList.contains('dark-mode')) {
+                modeIcon.classList.remove('bi-moon');
+                modeIcon.classList.add('bi-sun');
                 localStorage.setItem('darkMode', 'enabled');
+            } else {
+                modeIcon.classList.remove('bi-sun');
+                modeIcon.classList.add('bi-moon');
+                localStorage.setItem('darkMode', 'disabled');
             }
         }
 
         window.onload = function() {
+            const modeIcon = document.getElementById('mode-icon');
+            if (localStorage.getItem('darkMode') === 'enabled') {
+                document.documentElement.classList.add('dark-mode');
+                modeIcon.classList.remove('bi-moon');
+                modeIcon.classList.add('bi-sun');
+            } else {
+                document.documentElement.classList.remove('dark-mode');
+                modeIcon.classList.remove('bi-sun');
+                modeIcon.classList.add('bi-moon');
+            }
+
             const modeButton = document.getElementById('mode-button');
             if (modeButton) {
                 modeButton.addEventListener('click', toggleMode);
             }
         };
+
     </script>
 
 </head>

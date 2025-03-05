@@ -8,6 +8,7 @@ use App\Models\Supplier;
 use Yajra\DataTables\DataTables;
 use App\Models\Origin;
 use App\Models\Destination;
+use App\Models\LoadsDocument;
 use App\Models\AssignedService;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -88,12 +89,28 @@ class LoadController extends Controller
                             data-load-id="' . $deleteId . '"></i>';
             })
             ->addColumn('assign', function ($load) {
-                return '<a href="'.route('loads.assign', encode_id($load->id)).'" class="btn btn-primary create-button btn_primary_color">
-                            <i class="fa-solid fa-user"></i> Assign
+                return '<a href="'.route('loads.assign', encode_id($load->id)).'" 
+                            class="btn btn-primary create-button btn_primary_color">
+                            <i class="fa-solid fa-user"></i> ' . __('messages.assign') . '
                         </a>';
             })
             
-            ->rawColumns(['originval', 'destinationval', 'actions', 'assign', 'suppliercompany', 'supplier_company_name']) 
+            ->addColumn('shipment_status', function ($load) {
+                return '<a href="javascript:void(0);" 
+                            class="btn btn-primary create-button btn_primary_color" 
+                            onclick="changeStatusModal(\'' . encode_id($load->id) . '\', \'' . e($load->shipment_status) . '\')">
+                            ' . __('messages.change_status') . '
+                        </a>';
+            })
+            
+            ->addColumn('update_details', function ($load) {
+                return '<a href="' . route('loads.editTruckDetails', encode_id($load->id)) . '" 
+                            class="btn btn-primary create-button btn_primary_color">
+                            ' . __('messages.update_truck_details') . '
+                        </a>';
+            })
+            
+            ->rawColumns(['originval', 'destinationval', 'actions', 'assign', 'suppliercompany', 'supplier_company_name', 'shipment_status', 'update_details']) 
             ->make(true);
         }
 
@@ -388,15 +405,13 @@ class LoadController extends Controller
             // Capture the reason for unassignment
             $reason = $request->unassign_reason;
             if ($reason === 'Other') {
-                $reason = $request->other_reason; // Use custom input if "Other" was selected
+                $reason = $request->other_reason;
             }
 
             // Soft delete with cancellation reason
             $assignedService->update([
                 'cancel_reason' => $reason
             ]);
-
-            // dd("dsuyfduy");
 
             $assignedService->delete();
     
@@ -409,5 +424,65 @@ class LoadController extends Controller
         return back()->with('error',  __('messages.Service not found.'));
         }
     }
+    public function changeStatus(Request $request, $encodedId)
+    {
+        $id = decode_id($encodedId); 
+    
+        $request->validate([
+            'status' => 'required',
+        ]);
+    
+        $load = Load::findOrFail($id);
+        $load->shipment_status = $request->status;
+        $load->save();
+    
+        return redirect()->back()->with('message', __('messages.load_status_updated'));
+    }
+
+    public function editTruckDetails($id)
+{
+    $id = decode_id($id); 
+    $load = Load::findOrFail($id);
+    return view('loads.edit_truck_details', compact('load'));
+}
+
+public function updateTruckDetails(Request $request, $id)
+{
+    $request->validate([
+        'truck_number' => 'required|string|max:255',
+        'driver_name' => 'required|string|max:255',
+        'driver_contact_no' => 'required|string|max:20',
+        'documents.*' => 'file|mimes:pdf,jpg,png|max:2048',
+    ]);
+
+    $load = Load::findOrFail($id);
+    $load->truck_number = $request->truck_number;
+    $load->driver_name = $request->driver_name;
+    $load->driver_contact_no = $request->driver_contact_no;
+    $load->save();
+
+    if ($request->hasFile('documents')) {
+        foreach ($request->file('documents') as $document) {
+            $path = $document->store('load_documents', 'public');
+
+            LoadsDocument::create([
+                'load_id' => $load->id,
+                'document_type' => 'truck_document',
+                'path' => $path,
+            ]);
+        }
+    }
+
+    return redirect()->back()->with('message', __('messages.truck_updated'));
+}
+
+public function deleteDocument($id)
+{
+    $id = decode_id($id); 
+    $document = LoadsDocument::findOrFail($id);
+    $document->delete();
+    return redirect()->back()->with('message', __('messages.document_deleted'));
+}
+
 
 }

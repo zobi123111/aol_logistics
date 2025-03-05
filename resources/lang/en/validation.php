@@ -13,6 +13,8 @@ return [
         'string' => 'The :attribute has already been taken.',
     ],
     'confirmed' => 'The :attribute confirmation does not match.',
+    'file' => 'The :attribute must be a valid file.',
+    'mimes' => 'The :attribute must be a file of type: :values.',
     'attributes' => [
         'firstname' => 'First Name',
         'lastname' => 'Last Name',
@@ -28,5 +30,10 @@ return [
         'module_ids' => 'module',
         'client_Fname' => 'First Name',
         'client_Lname' =>  'Last Name',
+        'shipment_status' => 'Shipment Status',
+        'truck_number' => 'Truck Number',
+        'driver_name' => 'Driver Name',
+        'driver_contact_no' => 'Driver Contact No',
+        'documents' => 'Documents',
     ],
 ];

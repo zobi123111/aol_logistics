@@ -13,7 +13,7 @@ class Load extends Model
     protected $fillable = [
         'aol_number', 'origin', 'destination', 'payer', 
         'equipment_type', 'weight', 'delivery_deadline', 
-        'customer_po', 'is_hazmat', 'is_inbond', 'status', 'service_type', 'supplier_id', 'trailer_number', 'port_of_entry', 'created_by', 'schedule'
+        'customer_po', 'is_hazmat', 'is_inbond', 'status', 'service_type', 'supplier_id', 'trailer_number', 'port_of_entry', 'created_by', 'schedule', 'truck_number', 'driver_name', 'driver_contact_no', 'shipment_status'
     ];
 
     protected $casts = [
@@ -69,5 +69,10 @@ class Load extends Model
     public function creator() {
         return $this->belongsTo(User::class, 'created_by');
     }
+
+    public function documents()
+{
+    return $this->hasMany(LoadsDocument::class);
+}
 
 }

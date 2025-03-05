@@ -325,9 +325,35 @@ return [
     'Equipment deleted successfully' => '¡Equipo eliminado con éxito!',
     'User added successfully.' => '¡Usuario agregado con éxito!',
     'User updated successfully.' => '¡Usuario actualizado con éxito!',
-    'User deleted successfully.' => '¡Usuario eliminado con éxito!'
+    'User deleted successfully.' => '¡Usuario eliminado con éxito!',
+    'change_shipment_status' => 'Cambiar estado del envío',
+    'select_status' => 'Seleccionar estado:',
+    'pending' => 'Pendiente',
+    'in_transit' => 'En tránsito',
+    'delivered' => 'Entregado',
+    'cancelled' => 'Cancelado',
+    'close' => 'Cerrar',
+    'update_status' => 'Actualizar estado',
+    'update_truck_details' => 'Actualizar detalles del camión',
+    'assign' => 'Asignar',
+    'change_status' => 'Cambiar estado',
+    'update_truck_details' => 'Actualizar detalles del camión',
+    'shipment_status' => 'Estado del envío',
+    'update_truck_details' => 'Actualizar detalles del camión',
+    'load_status_updated' => '¡Estado de carga actualizado con éxito!',
+    'change_shipment_status' => 'Cambiar estado del envío',
+    'update_truck_details' => 'Actualizar detalles del camión',
+    'truck_number' => 'Número de camión',
+    'driver_name' => 'Nombre del conductor',
+    'driver_contact_no' => 'Número de contacto del conductor',
+    'uploaded_documents' => 'Documentos cargados',
+    'upload_documents' => 'Subir documentos',
+    'update' => 'Actualizar',
+    'delete' => 'Eliminar',
+    'view_document' => 'Ver documento',
+    'truck_updated' => '¡Los detalles del camión se actualizaron con éxito!',
+    'document_deleted' => '¡El documento se eliminó con éxito!',
+    'delete_document_confirmation' => '¿Estás seguro de que deseas eliminar este documento?',
 
 
-
-    
 ];

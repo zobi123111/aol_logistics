@@ -13,6 +13,8 @@ return [
         'string' => 'Le :attribute a déjà été pris.',
     ],
     'confirmed' => 'La confirmation de :attribute ne correspond pas.',
+    'file' => 'Le champ :attribute doit être un fichier valide.',
+    'mimes' => 'Le champ :attribute doit être un fichier de type: :values.',
     'attributes' => [
         'firstname' => 'Prénom',
         'lastname' => 'Nom de Famille',
@@ -28,5 +30,10 @@ return [
         'module_ids' => 'module',
         'client_Fname' => 'Prénom',
         'client_Lname' =>  'Nom de Famille',
+        'truck_number' => 'Numéro du camion',
+        'driver_name' => 'Nom du conducteur',
+        'driver_contact_no' => 'Numéro de contact du conducteur',
+        'documents' => 'Documents',
+        'shipment_status' => 'Statut de l\'expédition',
     ],
 ];
