@@ -10,6 +10,7 @@ use App\Models\Origin;
 use App\Models\Destination;
 use App\Models\LoadsDocument;
 use App\Models\AssignedService;
+use App\Models\Service;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
@@ -18,183 +19,108 @@ class LoadController extends Controller
     /**
      * Display a listing of the resource.
      */
+    
     public function index(Request $request)
     {
-        // $loads = Load::get();
-        // return view('loads.index', compact('loads'));
         $user = auth()->user();
         $userType = $user->roledata->user_type_id;
+
         if ($request->ajax()) {
-            // $loads = Load::with(['origindata', 'destinationdata', 'supplierdata',  'assignedServices.supplier', 'creator'])->latest('id')->get(); 
+            $aolNumber = $request->input('aol_number');
+            $status = $request->input('status');
+
             $loads = Load::with(['origindata', 'destinationdata', 'supplierdata', 'assignedServices.supplier', 'creator'])
-            ->when($userType == 2, function ($query) use ($user) {
-                return $query->where('created_by', $user->id)
-                ->where(function ($q) {
-                    $q->whereNull('schedule')
-                      ->orWhereDate('schedule', '<=', now());
-                });
-            
-            })
-            ->when($userType == 3, function ($query) use ($user) {
-                return $query->where(function ($q) use ($user) {
-                    $q->whereHas('assignedServices', function ($q) use ($user) {
-                        $q->whereHas('supplier', function ($q) use ($user) {
-                            $q->where('id', $user->supplier->id);
+                ->when($userType == 2, function ($query) use ($user) {
+                    return $query->where('created_by', $user->id)
+                        ->where(function ($q) {
+                            $q->whereNull('schedule')
+                                ->orWhereDate('schedule', '<=', now());
                         });
-                    })->orWhere('created_by', $user->id);
-                })   ->where(function ($q) {
-                    $q->whereNull('schedule')
-                      ->orWhereDate('schedule', '<=', now());
-                });;
-            })
-            
-            ->latest('id')
-            ->get();
+                })
+                ->when($userType == 3, function ($query) use ($user) {
+                    return $query->where(function ($q) use ($user) {
+                        $q->whereHas('assignedServices', function ($q) use ($user) {
+                            $q->whereHas('supplier', function ($q) use ($user) {
+                                $q->where('id', $user->supplier->id);
+                            });
+                        })->orWhere('created_by', $user->id);
+                    })
+                        ->where(function ($q) {
+                            $q->whereNull('schedule')
+                                ->orWhereDate('schedule', '<=', now());
+                        });
+                })
+                ->when($aolNumber, function ($query) use ($aolNumber) {
+                    return $query->where('aol_number', 'like', '%' . $aolNumber . '%');
+                })
+                ->when($status, function ($query) use ($status) {
+                    return $query->where('status', $status);
+                })
+                ->latest('id')
+                ->get();
 
             return DataTables::of($loads)
-            ->addColumn('originval', function ($load) {
-                return $load->origindata
-                    ? $load->origindata->street . ', ' . $load->origindata->city . ', ' . $load->origindata->state . ', ' . $load->origindata->country
-                    : 'N/A';
-            })
-            ->addColumn('destinationval', function ($load) {
-                return $load->destinationdata
-                    ? $load->destinationdata->street . ', ' . $load->destinationdata->city . ', ' . $load->destinationdata->state . ', ' . $load->destinationdata->country
-                    : 'N/A';
-            })
-            ->addColumn('suppliercompany', function ($load) {
-                return $load->supplierdata ? $load->supplierdata->company_name: 'N/A';
-                    
-            })
-            ->addColumn('supplier_company_name', function ($load) {
-                if ($load->assignedServices->isNotEmpty()) {
-                    return $load->assignedServices->pluck('supplier.company_name')->filter()->join(', ');
-                }
-                return '---';
-            })
-            ->addColumn('created_by', function ($load) {
-                return $load->creator ? $load->creator->fname.' '. $load->creator->lname  : 'N/A';
-            })
-            ->addColumn('actions', function ($load) {
-                $editUrl = route('loads.edit', encode_id($load->id));
-                $deleteId = encode_id($load->id);
-                $showUrl = route('loads.show', $deleteId);
-                return '<a href="' . $showUrl . '" class="">
-                            <i class="fa fa-eye table_icon_style blue_icon_color"></i>
-                        </a>
-                        <a href="' . $editUrl . '" class="">
-                            <i class="fa fa-edit edit-user-icon table_icon_style blue_icon_color"></i>
-                        </a>
-                        <i class="fa-solid fa-trash delete-icon table_icon_style blue_icon_color"
-                            data-load-id="' . $deleteId . '"></i>';
-            })
-            ->addColumn('assign', function ($load) {
-                return '<a href="'.route('loads.assign', encode_id($load->id)).'" 
-                            class="btn btn-primary create-button btn_primary_color">
-                            <i class="fa-solid fa-user"></i> ' . __('messages.assign') . '
-                        </a>';
-            })
-            
-            ->addColumn('shipment_status', function ($load) {
-                return '<a href="javascript:void(0);" 
-                            class="btn btn-primary create-button btn_primary_color" 
-                            onclick="changeStatusModal(\'' . encode_id($load->id) . '\', \'' . e($load->shipment_status) . '\')">
-                            ' . __('messages.change_status') . '
-                        </a>';
-            })
-            
-            ->addColumn('update_details', function ($load) {
-                return '<a href="' . route('loads.editTruckDetails', encode_id($load->id)) . '" 
-                            class="btn btn-primary create-button btn_primary_color">
-                            ' . __('messages.update_truck_details') . '
-                        </a>';
-            })
-            
-            ->rawColumns(['originval', 'destinationval', 'actions', 'assign', 'suppliercompany', 'supplier_company_name', 'shipment_status', 'update_details']) 
-            ->make(true);
+                ->addColumn('originval', function ($load) {
+                    return $load->origindata
+                        ? $load->origindata->street . ', ' . $load->origindata->city . ', ' . $load->origindata->state . ', ' . $load->origindata->country
+                        : 'N/A';
+                })
+                ->addColumn('destinationval', function ($load) {
+                    return $load->destinationdata
+                        ? $load->destinationdata->street . ', ' . $load->destinationdata->city . ', ' . $load->destinationdata->state . ', ' . $load->destinationdata->country
+                        : 'N/A';
+                })
+                ->addColumn('supplier_company_name', function ($load) {
+                    if ($load->assignedServices->isNotEmpty()) {
+                        return $load->assignedServices->pluck('supplier.company_name')->filter()->join(', ');
+                    }
+                    return '---';
+                })
+                ->addColumn('actions', function ($load) {
+                    $editUrl = route('loads.edit', encode_id($load->id));
+                    $deleteId = encode_id($load->id);
+                    $showUrl = route('loads.show', $deleteId);
+                    return '<a href="' . $showUrl . '" class="">
+                                <i class="fa fa-eye table_icon_style blue_icon_color"></i>
+                            </a>
+                            <a href="' . $editUrl . '" class="">
+                                <i class="fa fa-edit edit-user-icon table_icon_style blue_icon_color"></i>
+                            </a>
+                            <a href="#" class="delete-icon table_icon_style blue_icon_color" data-load-id="' . $deleteId . '">
+                                <i class="fa-solid fa-trash"></i>
+                            </a>';
+                })
+                ->addColumn('assign', function ($load) {
+                    return '<a href="' . route('loads.assign', encode_id($load->id)) . '" class="btn btn-primary create-button btn_primary_color">
+                                <i class="fa-solid fa-user"></i> Assign
+                            </a>';
+                })
+                ->addColumn('shipment_status', function ($load) {
+                    return '<a href="javascript:void(0);" 
+                                class="btn btn-primary create-button btn_primary_color" 
+                                onclick="changeStatusModal(\'' . encode_id($load->id) . '\', \'' . e($load->shipment_status) . '\')">
+                                ' . __('messages.change_status') . '
+                            </a>';
+                })
+                
+                ->addColumn('update_details', function ($load) {
+                    return '<a href="' . route('loads.editTruckDetails', encode_id($load->id)) . '" 
+                                class="btn btn-primary create-button btn_primary_color">
+                                ' . __('messages.update_truck_details') . '
+                            </a>';
+                })
+                ->rawColumns(['originval', 'destinationval', 'actions', 'assign', 'suppliercompany', 'supplier_company_name', 'shipment_status', 'update_details']) 
+
+                ->make(true);
         }
 
         return view('loads.index');
     }
 
-    public function getFilteredLoads(Request $request)
-    {
-        $user = auth()->user();
-        $userType = $user->roledata->user_type_id;
-        
-        $aolNumber = $request->input('aol_number');
-        $status = $request->input('status');
-        
-        $loads = Load::with(['origindata', 'destinationdata', 'supplierdata', 'assignedServices.supplier', 'creator'])
-            ->when($userType == 2, function ($query) use ($user) {
-                return $query->where('created_by', $user->id)
-                            ->where(function ($q) {
-                                $q->whereNull('schedule')
-                                ->orWhereDate('schedule', '<=', now());
-                            });
-            })
-            ->when($userType == 3, function ($query) use ($user) {
-                return $query->where(function ($q) use ($user) {
-                            $q->whereHas('assignedServices', function ($q) use ($user) {
-                                $q->whereHas('supplier', function ($q) use ($user) {
-                                    $q->where('id', $user->supplier->id);
-                                });
-                            })->orWhere('created_by', $user->id);
-                        })
-                        ->where(function ($q) {
-                            $q->whereNull('schedule')
-                            ->orWhereDate('schedule', '<=', now());
-                        });
-            })
-            ->when($aolNumber, function ($query) use ($aolNumber) {
-                return $query->where('aol_number', 'like', '%' . $aolNumber . '%');
-            })
-            ->when($status, function ($query) use ($status) {
-                return $query->where('status', $status);
-            })
-            ->latest('id')
-            ->get();
-
-        return DataTables::of($loads)
-            ->addColumn('originval', function ($load) {
-                return $load->origindata ? $load->origindata->street . ', ' . $load->origindata->city . ', ' . $load->origindata->state . ', ' . $load->origindata->country : 'N/A';
-            })
-            ->addColumn('destinationval', function ($load) {
-                return $load->destinationdata ? $load->destinationdata->street . ', ' . $load->destinationdata->city . ', ' . $load->destinationdata->state . ', ' . $load->destinationdata->country : 'N/A';
-            })
-            ->addColumn('supplier_company_name', function ($load) {
-                if ($load->assignedServices->isNotEmpty()) {
-                    return $load->assignedServices->pluck('supplier.company_name')->filter()->join(', ');
-                }
-                return '---';
-            })
-            ->addColumn('actions', function ($load) {
-                $editUrl = route('loads.edit', encode_id($load->id));
-                $deleteId = encode_id($load->id);
-                $showUrl = route('loads.show', $deleteId);
-                return '<a href="' . $showUrl . '" class="">
-                            <i class="fa fa-eye table_icon_style blue_icon_color"></i>
-                        </a>
-                        <a href="' . $editUrl . '" class="">
-                            <i class="fa fa-edit edit-user-icon table_icon_style blue_icon_color"></i>
-                        </a>
-                        <a href="#" class="delete-icon table_icon_style blue_icon_color" data-load-id="' . $deleteId . '">
-                            <i class="fa-solid fa-trash"></i>
-                        </a>';
-            })
-            ->addColumn('assign', function ($load) {
-                return '<a href="' . route('loads.assign', encode_id($load->id)) . '" class="btn btn-primary create-button btn_primary_color">
-                            <i class="fa-solid fa-user"></i> Assign
-                        </a>';
-            })
-            ->rawColumns(['originval', 'destinationval', 'actions', 'assign', 'suppliercompany', 'supplier_company_name']) 
-            
-            ->make(true);
-    }
-
     /**
      * Show the form for creating a new resource.
      */
+
     public function create()
     {
         // Fetch origins and destinations
@@ -207,6 +133,7 @@ class LoadController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+
     public function store(Request $request)
     {
         $request->validate([
@@ -285,6 +212,7 @@ class LoadController extends Controller
     /**
      * Display the specified resource.
      */
+
     public function show($id)
     {
         $en = $id;
@@ -391,22 +319,44 @@ class LoadController extends Controller
 
     }
 
-    public function assignPage($id)
+    public function assignPage($id, Request $request)
     {
         $en = $id;
         $de = decode_id($id);
         $load = Load::findOrFail($de);
         $assignedServiceIds = AssignedService::where('load_id', $load->id)->pluck('service_id');
-        $suppliers = Supplier::whereHas('services', function ($query) use ($load, $assignedServiceIds) {
+        // $suppliers = Supplier::whereHas('services', function ($query) use ($load, $assignedServiceIds) {
+        //     $query->where('origin', $load->origin)
+        //         ->where('destination', $load->destination)
+        //         ->whereNotIn('id', $assignedServiceIds);
+        // })->with(['services' => function ($query) use ($load, $assignedServiceIds) {
+        //     $query->where('origin', $load->origin)
+        //         ->where('destination', $load->destination)
+        //         ->whereNotIn('id', $assignedServiceIds)
+        //         ->orderBy('cost', 'asc'); 
+        // }])->get();
+
+          // Get Supplier ID from request (if provided)
+    $supplierId = $request->input('supplier_id');
+         // Adjust supplier query based on supplier_id presence
+    $suppliers = Supplier::when($supplierId, function ($query) use ($supplierId) {
+        return $query->where('id', $supplierId);
+    }, function ($query) use ($load, $assignedServiceIds) {
+        return $query->whereHas('services', function ($subQuery) use ($load, $assignedServiceIds) {
+            $subQuery->where('origin', $load->origin)
+                ->where('destination', $load->destination)
+                ->whereNotIn('id', $assignedServiceIds);
+        });
+    })
+    ->with(['services' => function ($query) use ($load, $assignedServiceIds, $supplierId) {
+        if (!$supplierId) {
             $query->where('origin', $load->origin)
                 ->where('destination', $load->destination)
                 ->whereNotIn('id', $assignedServiceIds);
-        })->with(['services' => function ($query) use ($load, $assignedServiceIds) {
-            $query->where('origin', $load->origin)
-                ->where('destination', $load->destination)
-                ->whereNotIn('id', $assignedServiceIds)
-                ->orderBy('cost', 'asc'); 
-        }])->get();
+        }
+        $query->orderBy('cost', 'asc');
+    }])
+    ->get();
 
         $deletedAssignedServices = AssignedService::onlyTrashed()
         ->where('load_id', $load->id)
@@ -417,18 +367,21 @@ class LoadController extends Controller
         ->with(['supplier', 'service'])
         ->get();
 
-        $remainingSuppliers = Supplier::whereHas('services')
-        ->with(['services' => function ($query) use ($load) {
-            $query->where('origin', '!=', $load->origin)
-            ->orWhere('destination', '!=', $load->destination)->orderBy('cost', 'asc');       
-        }])->where('is_active', 1)
-        ->get();
-
+        // $remainingSuppliers = Supplier::whereHas('services')
+        // ->with(['services' => function ($query) use ($load) {
+        //     $query->where('origin', '!=', $load->origin)
+        //     ->orWhere('destination', '!=', $load->destination)->orderBy('cost', 'asc');       
+        // }])->where('is_active', 1)
+        // ->get();
+        $allSuppliers = Supplier::with('services')->where('is_active', 1)->get();
         // dd($remainingSuppliers);
-        return view('loads.assign', compact('load', 'suppliers','remainingSuppliers', 'assignedServices', 'deletedAssignedServices'));
+        // return view('loads.assign', compact('load', 'suppliers','remainingSuppliers', 'assignedServices', 'deletedAssignedServices', 'allSuppliers'));
+        return view('loads.assign', compact('load', 'suppliers', 'assignedServices', 'deletedAssignedServices', 'allSuppliers'));
+
     }
 
     // Assign Supplier to Load
+
     public function assignSupplier($load_id, $supplier_id, $service_id)
     {
         $enload = $load_id;
@@ -499,6 +452,7 @@ class LoadController extends Controller
         return back()->with('error',  __('messages.Service not found.'));
         }
     }
+
     public function changeStatus(Request $request, $encodedId)
     {
         $id = decode_id($encodedId); 
@@ -515,49 +469,106 @@ class LoadController extends Controller
     }
 
     public function editTruckDetails($id)
-{
-    $id = decode_id($id); 
-    $load = Load::findOrFail($id);
-    return view('loads.edit_truck_details', compact('load'));
-}
-
-public function updateTruckDetails(Request $request, $id)
-{
-    $request->validate([
-        'truck_number' => 'required|string|max:255',
-        'driver_name' => 'required|string|max:255',
-        'driver_contact_no' => 'required|string|max:20',
-        'documents.*' => 'file|mimes:pdf,jpg,png|max:2048',
-    ]);
-
-    $load = Load::findOrFail($id);
-    $load->truck_number = $request->truck_number;
-    $load->driver_name = $request->driver_name;
-    $load->driver_contact_no = $request->driver_contact_no;
-    $load->save();
-
-    if ($request->hasFile('documents')) {
-        foreach ($request->file('documents') as $document) {
-            $path = $document->store('load_documents', 'public');
-
-            LoadsDocument::create([
-                'load_id' => $load->id,
-                'document_type' => 'truck_document',
-                'path' => $path,
-            ]);
-        }
+    {
+        $id = decode_id($id); 
+        $load = Load::findOrFail($id);
+        return view('loads.edit_truck_details', compact('load'));
     }
 
-    return redirect()->back()->with('message', __('messages.truck_updated'));
-}
+    public function updateTruckDetails(Request $request, $id)
+    {
+        $request->validate([
+            'truck_number' => 'required|string|max:255',
+            'driver_name' => 'required|string|max:255',
+            'driver_contact_no' => 'required|string|max:20',
+            'documents.*' => 'file|mimes:pdf,jpg,png|max:2048',
+        ]);
 
-public function deleteDocument($id)
-{
-    $id = decode_id($id); 
-    $document = LoadsDocument::findOrFail($id);
-    $document->delete();
-    return redirect()->back()->with('message', __('messages.document_deleted'));
-}
+        $load = Load::findOrFail($id);
+        $load->truck_number = $request->truck_number;
+        $load->driver_name = $request->driver_name;
+        $load->driver_contact_no = $request->driver_contact_no;
+        $load->save();
 
+        if ($request->hasFile('documents')) {
+            foreach ($request->file('documents') as $document) {
+                $path = $document->store('load_documents', 'public');
 
+                LoadsDocument::create([
+                    'load_id' => $load->id,
+                    'document_type' => 'truck_document',
+                    'path' => $path,
+                ]);
+            }
+        }
+
+        return redirect()->back()->with('message', __('messages.truck_updated'));
+    }
+
+    public function deleteDocument($id)
+    {
+        $id = decode_id($id); 
+        $document = LoadsDocument::findOrFail($id);
+        $document->delete();
+        return redirect()->back()->with('message', __('messages.document_deleted'));
+    }
+
+    public function createLoad($loadId)
+    {
+        $load = Load::findOrFail($loadId);
+        $suppliers = Supplier::all();
+        $serviceTypes = Service::select('service_type')->distinct()->get(); // Fetch service types
+    
+        if (request()->ajax()) {
+            return view('loads.partials.create-form', compact('load', 'suppliers', 'serviceTypes'));
+        }
+    
+        return view('loads.assign', compact('load', 'suppliers', 'serviceTypes'));
+    }
+
+    public function getServices(Request $request)
+    {
+        $query = Service::query();
+
+        if ($request->has('supplier_id')) {
+            $query->where('supplier_id', $request->supplier_id);
+        }
+
+        if ($request->has('service_type')) {
+            $query->where('service_type', $request->service_type);
+        }
+
+        $services = $query->get();
+        return response()->json($services);
+    }
+
+    public function storeLoad(Request $request, $loadId)
+    {
+        $request->validate([
+            'service_ids' => 'required|array',
+            'service_ids.*' => 'exists:services,id',
+        ]);
+
+        foreach ($request->service_ids as $service_id) {
+            $service = Service::findOrFail($service_id);
+
+            AssignedService::create([
+                'load_id' => $loadId,
+                'supplier_id' => $service->supplier_id,
+                'service_id' => $service_id,
+            ]);
+        }
+
+        return response()->json(['success' => 'Services assigned successfully.']);
+    }
+
+    public function getLoadModalData($loadId)
+    {
+        $load = Load::findOrFail($loadId);
+        $suppliers = Supplier::all();
+        $serviceTypes = Service::select('service_type')->distinct()->get();
+
+        return view('loads.partials.create-form', compact('load', 'suppliers', 'serviceTypes'));
+    }
+    
 }

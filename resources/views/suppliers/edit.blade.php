@@ -331,7 +331,7 @@
                                     <li>
                                         <a href="{{ asset('storage/' . $document['file_path']) }}" target="_blank"> {{ __('messages.View Document') }}</a>
                                         <label>
-                                        <input type="checkbox" name="delete_documents[]" value="{{ $document['file_path'] }}">  {{ __('messages.Delete') }} Delete
+                                        <input type="checkbox" name="delete_documents[]" value="{{ $document['file_path'] }}">  {{ __('messages.Delete') }}
                                         </label>
                                     </li>
                                 @endforeach

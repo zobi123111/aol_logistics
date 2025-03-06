@@ -119,7 +119,8 @@
                 oPaginate: {
                     sPrevious: "{{ __('messages.Previous') }}",
                     sNext: "{{ __('messages.Next') }}"
-                }
+                },
+                emptyTable: "{{ __('messages.No data available') }}" ,
             },
             columnDefs: [
                 {

@@ -50,6 +50,8 @@ return [
     'Actions' => 'Acciones',
     'No users found' => 'No se encontraron usuarios',
     'Current Profile Photo' => 'Foto de perfil actual',
+    'Activate' => 'Activar',
+    'Deactivate' => 'Desactivar',
 
 
     // Role
@@ -104,7 +106,8 @@ return [
     'Currency' => 'Moneda',
     'Address' => 'Dirección',
     'Back to Supplier List' => 'Volver a la Lista de Proveedores',
-
+    'No data available' => 'No hay datos disponibles',
+    'No suppliers found' => 'No se encontraron proveedores',
 
 
     // Supplier Create
@@ -260,7 +263,8 @@ return [
     'Business Name' => 'Nombre comercial',
     'Are you sure you want to delete this client' => '¿Estás seguro de que deseas eliminar este cliente?',
     'Save Client' => 'Guardar cliente',
-    'Client Customer Service Executive' => 'Ejecutivo de Servicio al Cliente',  // Spanish
+    'Client Customer Service Executive' => 'Ejecutivo de Servicio al Cliente',
+    'No clients found' => 'No se encontraron clientes',
 
 
     // Trailer

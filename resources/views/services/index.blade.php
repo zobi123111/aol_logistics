@@ -22,44 +22,16 @@
     <table class="table mt-3 respo_table" id="service">
         <thead>
             <tr>
+            <th> Service Type  </th>
+
                 <th> {{ __('messages.Origin') }} </th>
                 <th> {{ __('messages.Destination') }} </th>
+                <th>Location</th>
                 <th> {{ __('messages.Cost') }} </th>
                 <th> {{ __('messages.Actions') }} </th>
             </tr>
         </thead>
-        <tbody>
-        @if($services->isEmpty())
-            <tr>
-                <td colspan="5" class="text-center"> {{ __('messages.No suppliers found') }}</td>
-            </tr>
-            @else
-            @foreach($services as $service)
-                <tr>
-                <td>
-                    {{ $service->origindata ? $service->origindata->street . ', ' . $service->origindata->city . ', ' . $service->origindata->state . ', ' . $service->origindata->zip . ', ' . $service->origindata->country : 'N/A' }}
-                </td>
-                <td>
-                    {{ $service->destinationdata ? $service->destinationdata->street . ', ' . $service->destinationdata->city . ', ' . $service->destinationdata->state . ', ' . $service->destinationdata->zip . ', ' . $service->destinationdata->country : 'N/A' }}
-                </td>                   
-                <td>{{ $service->cost }}</td>
-                    <td class="icon-design">
-                        <!-- <a href="{{ route('services.edit', [$supplier->id, $service->id]) }}" class="btn btn-warning">Edit</a>
-                        <form action="{{ route('services.destroy', [$supplier->id, $service->id]) }}" method="POST" style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Delete</button>
-                        </form> -->
-                        <a href="{{ route('services.edit', [encode_id($supplier->id), encode_id($service->id)]) }}" class=""><i
-                            class="fa fa-edit edit-user-icon table_icon_style blue_icon_color"></i></a>
-                    <i class="fa-solid fa-trash delete-icon table_icon_style blue_icon_color"
-                        data-supplier-id="{{ encode_id($supplier->id) }}" data-service-id="{{ encode_id($service->id) }}"></i>
-                    </td>
-                </tr>
-            @endforeach
-    @endif
-
-        </tbody>
+        <tbody></tbody>
     </table>
     <form method="POST" id="deleteRoleFormId">
         @csrf
@@ -90,7 +62,20 @@
 
 <script>
 $(document).ready(function() {
-    $('#service').DataTable();
+    // $('#service').DataTable();
+    $('#service').DataTable({
+    processing: true,
+    serverSide: true,
+    ajax: "{{ route('services.index', ['supplierId' => encode_id($supplier->id)]) }}",
+    columns: [
+        { data: 'service_type', name: 'service_type' },
+        { data: 'origin', name: 'origin' },
+        { data: 'destination', name: 'destination' },
+        { data: 'warehouse', name: 'warehouse', orderable: false, searchable: false },
+        { data: 'cost', name: 'cost' },
+        { data: 'actions', name: 'actions', orderable: false, searchable: false }
+    ]
+});
     $(document).on('click', '.delete-icon', function(e) {
         e.preventDefault();
         var supplierId = $(this).data('supplier-id');

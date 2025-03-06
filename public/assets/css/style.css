@@ -22,6 +22,8 @@
     --sidebar-width: 250px;
     --header-height: 60px;
     --font-color: #00709e;
+    --bg-card:#f4f4f4;
+    --card-font: #333333;
     --sidebar-color: #00709e;
     --btn-color:#00709e;
     --btn-text:#ffffff;
@@ -37,6 +39,8 @@
     --toggle-bg: #00709e;
     --toggle-text: #121212;
     --font-color: #c1bdbd;
+    --bg-card:#1a1a1a;
+    --card-font: #ffffff;
     --sidebar-color: #f59751;
     --btn-color:#f59751;
     --btn-text:#ffffff;
@@ -52,7 +56,7 @@
 
 /* Placeholder text color */
 .filter-container .form-control::placeholder {
-  color: #ffffff; /* White color for placeholder */
+  color: var(--text-color);
 }
 
 /* Input fields on focus */
@@ -112,6 +116,9 @@
 
 .dark-mode .modal-content {
   background-color: var(--header-bg);
+}
+.dark-mode .modal-body {
+  color: var(--font-color);
 }
 #editUserDataModalLabel .dark-mode .modal-header button.btn-close {
   color:#fff !important;
@@ -350,10 +357,16 @@ h6 {
 
 /* Card */
 .card {
+  background-color: var(--bg-card);
+  color: var(--font-color);
   margin-bottom: 30px;
   border: none;
   border-radius: 5px;
   box-shadow: 0px 0 30px rgba(1, 41, 112, 0.1);
+}
+.card .card-header{
+  background-color: var(--bg-card);
+  color: var(--font-color);
 }
 .dashboard-card{
   margin-bottom: 30px;
@@ -854,14 +867,31 @@ section.section.dashboard p {
 .sidebar-nav .nav-link.collapsed i {
   color: #00709e;
 }
+.dropdown .dropdown-toggle:after {
+  color: var(--font-color) !important;
+}
+.dropdown .dropdown-toggle {
+  background-color: var(--sidebar-bg);
+  border: var(--sidebar-bg);
+}
+.dropdown .dropdown-menu {
+  background-color: var(--sidebar-bg);
+}
+.dropdown .dropdown-item {
+  color: var(--font-color);
+}
+.dropdown .dropdown-item:hover {
+  background-color: var(--btn-color) !important;
+  color: var(--btn-text);
+}
 
 .sidebar-nav .nav-link:hover {
-  color: #f58634;
-  background: #f6f9ff;
+  background: var(--btn-color);
+  color: var(--btn-text);
 }
 
 .sidebar-nav .nav-link:hover i {
-  color: #f58634;
+  color: var(--btn-text);
 }
 
 .sidebar-nav .nav-link .bi-chevron-down {
@@ -1403,12 +1433,12 @@ section.section.dashboard p {
 }
 
 .sidebar-nav .nav-link.active {
-  background: #f6f9ff;
-  color: #f58634;
+  background: var(--btn-color);
+  color: var(--btn-text);
 }
 
 .sidebar-nav .nav-link.active i {
-  color: #f58634;
+  color: var(--btn-text);
 }
 
 .blue_icon_color {

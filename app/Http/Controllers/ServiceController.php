@@ -12,17 +12,59 @@ use Illuminate\Support\Facades\Validator;
 class ServiceController extends Controller
 {
     // Show all services for the supplier
-    public function index($supplier_id)
-    {
-        $de_supplier_id = decode_id($supplier_id);
-        $supplier = Supplier::findOrFail($de_supplier_id);
+    // public function index($supplier_id)
+    // {
+    //     $de_supplier_id = decode_id($supplier_id);
+    //     $supplier = Supplier::findOrFail($de_supplier_id);
+    //     $services = Service::where('supplier_id', $de_supplier_id)
+    //     ->with(['origindata', 'destinationdata'])
+    //     ->get();
+    //     $origins = Origin::all();
+    //     $destinations = Destination::all();
+    //     return view('services.index', compact('supplier', 'services', 'origins', 'destinations'));
+    // }
+
+    public function index(Request $request, $supplier_id)
+{
+    $de_supplier_id = decode_id($supplier_id);
+    $supplier = Supplier::findOrFail($de_supplier_id);
+
+    if ($request->ajax()) {
         $services = Service::where('supplier_id', $de_supplier_id)
-        ->with(['origindata', 'destinationdata'])
-        ->get();
-        $origins = Origin::all();
-        $destinations = Destination::all();
-        return view('services.index', compact('supplier', 'services', 'origins', 'destinations'));
+            ->with(['origindata', 'destinationdata'])
+            ->select('services.*');
+
+        return datatables()->eloquent($services)
+            ->addColumn('origin', function ($service) {
+                return $service->service_type !== 'warehouse' && $service->origindata
+                    ? "{$service->origindata->street}, {$service->origindata->city}, {$service->origindata->state}, {$service->origindata->zip}, {$service->origindata->country}"
+                    : '-';
+            })
+            ->addColumn('destination', function ($service) {
+                return $service->service_type !== 'warehouse' && $service->destinationdata
+                    ? "{$service->destinationdata->street}, {$service->destinationdata->city}, {$service->destinationdata->state}, {$service->destinationdata->zip}, {$service->destinationdata->country}"
+                    : '-';
+            })
+            ->addColumn('warehouse', function ($service) {
+                if ($service->service_type === 'warehouse') {
+                    return "{$service->street}, {$service->city}, {$service->state}, {$service->zip}, {$service->country}";
+                }
+                return '-';
+            })
+            ->addColumn('actions', function ($service) use ($supplier) {
+                return '<a href="' . route('services.edit', [encode_id($supplier->id), encode_id($service->id)]) . '"   >
+                            <i class="fa fa-edit edit-user-icon table_icon_style blue_icon_color"></i>
+                        </a>
+                        <i class="fa-solid fa-trash delete-icon table_icon_style blue_icon_color"
+                        data-supplier-id="' . encode_id($supplier->id) . '" data-service-id="' . encode_id($service->id) . '"></i>';
+            })
+            ->rawColumns(['actions'])
+            ->make(true);
     }
+
+    return view('services.index', compact('supplier'));
+}
+
 
     // Show form to create a new service
     public function create($supplier_id)
@@ -39,8 +81,14 @@ class ServiceController extends Controller
     public function store(Request $request, $supplierId)
     {
         $validator = Validator::make($request->all(), [
-            'origin' => 'required|string|max:255',
-            'destination' => 'required|string|max:255',
+            'service_type' => 'required',
+            'origin' => $request->service_type === 'freight' ? 'required|string|max:255' : 'nullable',
+            'destination' => $request->service_type === 'freight' ? 'required|string|max:255' : 'nullable',
+            'street' => $request->service_type === 'warehouse' ? 'required|string|max:255' : 'nullable',
+            'city' => $request->service_type === 'warehouse' ? 'required|string|max:255' : 'nullable',
+            'state' => $request->service_type === 'warehouse' ? 'required|string|max:255' : 'nullable',
+            'zip' => $request->service_type === 'warehouse' ? 'required|string|max:20' : 'nullable',
+            'country' => $request->service_type === 'warehouse' ? 'required|string|max:255' : 'nullable',
             'cost' => 'required|numeric',
         ]);
     
@@ -52,6 +100,18 @@ class ServiceController extends Controller
         }
         $service = new Service($request->all());
         $service->supplier_id = $supplierId;
+        $service->service_type = $request->service_type;
+        $service->cost = $request->cost;
+        if ($request->service_type === 'warehouse') {
+            $service->street = $request->street;
+            $service->city = $request->city;
+            $service->state = $request->state;
+            $service->zip = $request->zip;
+            $service->country = $request->country;
+        } else {
+            $service->origin = $request->origin;
+            $service->destination = $request->destination;
+        }
         $service->save();
 
         return redirect()->route('services.index', encode_id($supplierId))->with('meassge', __('messages.Service created successfully'));
@@ -72,8 +132,14 @@ class ServiceController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'origin' => 'required|string|max:255',
-            'destination' => 'required|string|max:255',
+            'service_type' => 'required',
+            'origin' => $request->service_type === 'freight' ? 'required|string|max:255' : 'nullable',
+            'destination' => $request->service_type === 'freight' ? 'required|string|max:255' : 'nullable',
+            'street' => $request->service_type === 'warehouse' ? 'required|string|max:255' : 'nullable',
+            'city' => $request->service_type === 'warehouse' ? 'required|string|max:255' : 'nullable',
+            'state' => $request->service_type === 'warehouse' ? 'required|string|max:255' : 'nullable',
+            'zip' => $request->service_type === 'warehouse' ? 'required|string|max:20' : 'nullable',
+            'country' => $request->service_type === 'warehouse' ? 'required|string|max:255' : 'nullable',
             'cost' => 'required|numeric',
         ]);
     
@@ -85,6 +151,30 @@ class ServiceController extends Controller
         }
 
         $service = Service::findOrFail($serviceId);
+        $service->service_type = $request->service_type;
+        $service->cost = $request->cost;
+        // Update fields based on shipping type
+        if ($request->shipping_type === 'freight') {
+            $service->shipping_type = 'freight';
+            $service->origin_id = $request->origin;
+            $service->destination_id = $request->destination;
+            // Reset warehouse fields
+            $service->street = null; 
+            $service->city = null;
+            $service->state = null;
+            $service->zip = null;
+            $service->country = null;
+        } elseif ($request->shipping_type === 'warehouse') {
+            $service->shipping_type = 'warehouse';
+            $service->origin_id = null;
+            $service->destination_id = null;
+            // Set warehouse details
+            $service->street = $request->street;
+            $service->city = $request->city;
+            $service->state = $request->state;
+            $service->zip = $request->zip;
+            $service->country = $request->country;
+        }
         $service->update($request->all());
 
         return redirect()->route('services.index', $supplierId)->with('message', __('messages.Service updated successfully'));

@@ -28,8 +28,7 @@
                 <select id="status_filter" class="form-control">
                     <option value="">Filter by Status</option>
                     <option value="assigned">Assigned</option>
-                    <option value="unassigned">Unassigned</option>
-                    <!-- Add other statuses if needed -->
+                    <option value="requested">Requested</option>
                 </select>
             </div>
         </div>
@@ -126,210 +125,109 @@
 @section('js_scripts')
 
 <script>
-       
-    // $(document).ready(function() {
-    //     var table = $('#loads').DataTable({
-    //         processing: true,
-    //         serverSide: true,
-    //         ajax: function(data, callback, settings) {
-    //             var aolNumber = $('#aol_number_filter').val();
-    //             var status = $('#status_filter').val();
-
-    //             $.ajax({
-    //                 url: "{{ route('loads.filtered') }}",
-    //                 data: {
-    //                     aol_number: aolNumber,
-    //                     status: status,
-    //                     page: settings.page,
-    //                     length: settings.length
-    //                 },
-    //                 success: function(response) {
-    //                     callback({
-    //                         draw: settings.draw,
-    //                         recordsTotal: response.recordsTotal,
-    //                         recordsFiltered: response.recordsFiltered,
-    //                         data: response.data
-    //                     });
-    //                 }
-    //             });
-    //         },
-    //         columns: [
-    //             { data: 'aol_number', name: 'aol_number' },
-    //             { data: 'service_type', name: 'service_type' },
-    //             { data: 'originval', name: 'origin' },
-    //             { data: 'destinationval', name: 'destination' },
-    //             { data: 'payer', name: 'payer' },
-    //             { data: 'equipment_type', name: 'equipment_type' },
-    //             { data: 'weight', name: 'weight' },
-    //             { data: 'schedule', name: 'schedule', render: function(data) { return moment(data).format('YYYY-MM-DD hh:mm A'); } },
-    //             { data: 'delivery_deadline', name: 'delivery_deadline', render: function(data) { return moment(data).format('YYYY-MM-DD'); } },
-    //             { data: 'customer_po', name: 'customer_po' },
-    //             { data: 'is_hazmat', name: 'is_hazmat', orderable: false, searchable: false },
-    //             { data: 'is_inbond', name: 'is_inbond', orderable: false, searchable: false },
-    //             { data: 'status', name: 'status' },
-    //             { data: 'supplier_company_name', name: 'supplier_company_name' },
-    //             { data: 'created_by', name: 'created_by' },
-    //             { data: 'actions', name: 'actions', orderable: false, searchable: false },
-    //             { data: 'assign', name: 'assign', orderable: false, searchable: false }
-    //         ]
-    //     });
-
-    //     $('#aol_number_filter, #status_filter').on('change', function() {
-    //         table.draw();
-    //     });
-
-    //     $('#aol_number_filter').on('keyup', function() {
-    //         table.draw();
-    //     });
-    // });
-
-
     $(document).ready(function() {
-    // Initialize the DataTable
-    var table = $('#loads').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: function(data, callback, settings) {
-            // Show the loader before sending the request
-            $('#loader').show();
+        var table = $('#loads').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: function(data, callback, settings) {
+                $('#loader').show();
 
-            var aolNumber = $('#aol_number_filter').val();
-            var status = $('#status_filter').val();
+                var aolNumber = $('#aol_number_filter').val();
+                var status = $('#status_filter').val();
 
-            $.ajax({
-                url: "{{ route('loads.filtered') }}",  // Update this route if needed
-                data: {
-                    aol_number: aolNumber,
-                    status: status,
-                    page: settings.page,
-                    length: settings.length
-                },
-                success: function(response) {
-                    // Hide the loader once the data is loaded
-                    $('#loader').hide();
+                $.ajax({
+                    url: "{{ route('loads.index') }}",
+                    data: {
+                        aol_number: aolNumber,
+                        status: status,
+                        page: settings.page,
+                        length: settings.length
+                    },
+                    success: function(response) {
+                        $('#loader').hide();
 
-                    callback({
-                        draw: settings.draw,
-                        recordsTotal: response.recordsTotal,
-                        recordsFiltered: response.recordsFiltered,
-                        data: response.data
-                    });
-                },
-                error: function() {
-                    // Hide the loader in case of error
-                    $('#loader').hide();
+                        callback({
+                            draw: settings.draw,
+                            recordsTotal: response.recordsTotal,
+                            recordsFiltered: response.recordsFiltered,
+                            data: response.data
+                        });
+                    },
+                    error: function() {
+                        $('#loader').hide();
+                    }
+                });
+            },
+            columns: [
+                { data: 'aol_number', name: 'aol_number' },
+                { data: 'service_type', name: 'service_type' },
+                { data: 'originval', name: 'origin' },
+                { data: 'destinationval', name: 'destination' },
+                { data: 'payer', name: 'payer' },
+                { data: 'equipment_type', name: 'equipment_type' },
+                { data: 'weight', name: 'weight' },
+                { data: 'schedule', name: 'schedule', render: function(data) { return moment(data).format('YYYY-MM-DD hh:mm A'); } },
+                { data: 'delivery_deadline', name: 'delivery_deadline', render: function(data) { return moment(data).format('YYYY-MM-DD'); } },
+                { data: 'customer_po', name: 'customer_po' },
+                { data: 'is_hazmat', name: 'is_hazmat', orderable: false, searchable: false },
+                { data: 'is_inbond', name: 'is_inbond', orderable: false, searchable: false },
+                { data: 'status', name: 'status' },
+                { data: 'supplier_company_name', name: 'supplier_company_name' },
+                { data: 'created_by', name: 'created_by' },
+                { data: 'actions', name: 'actions', orderable: false, searchable: false },
+                { data: 'assign', name: 'assign', orderable: false, searchable: false },
+                { data: 'shipment_status', name: 'shipment_status', orderable: false, searchable: false },
+                { data: 'update_details', name: 'update_details', orderable: false, searchable: false },
+            ],
+            language: {
+                sSearch: "{{ __('messages.Search') }}",
+                sLengthMenu: "{{ __('messages.Show') }} _MENU_ {{ __('messages.entries') }}",
+                sInfo: "{{ __('messages.Showing') }} _START_ {{ __('messages.to') }} _END_ {{ __('messages.of') }} _TOTAL_ {{ __('messages.entries') }}",
+                oPaginate: {
+                    sPrevious: "{{ __('messages.Previous') }}",
+                    sNext: "{{ __('messages.Next') }}"
                 }
-            });
-        },
-        columns: [
-            { data: 'aol_number', name: 'aol_number' },
-            { data: 'service_type', name: 'service_type' },
-            { data: 'originval', name: 'origin' },
-            { data: 'destinationval', name: 'destination' },
-            { data: 'payer', name: 'payer' },
-            { data: 'equipment_type', name: 'equipment_type' },
-            { data: 'weight', name: 'weight' },
-            { data: 'schedule', name: 'schedule', render: function(data) { return moment(data).format('YYYY-MM-DD hh:mm A'); } },
-            { data: 'delivery_deadline', name: 'delivery_deadline', render: function(data) { return moment(data).format('YYYY-MM-DD'); } },
-            { data: 'customer_po', name: 'customer_po' },
-            { data: 'is_hazmat', name: 'is_hazmat', orderable: false, searchable: false },
-            { data: 'is_inbond', name: 'is_inbond', orderable: false, searchable: false },
-            { data: 'status', name: 'status' },
-            { data: 'supplier_company_name', name: 'supplier_company_name' },
-            { data: 'created_by', name: 'created_by' },
-            { data: 'actions', name: 'actions', orderable: false, searchable: false },
-            { data: 'assign', name: 'assign', orderable: false, searchable: false },
-            { data: 'shipment_status', name: 'shipment_status', orderable: false, searchable: false },
-            { data: 'update_details', name: 'update_details', orderable: false, searchable: false },
-        ],
-        language: {
-            sSearch: "{{ __('messages.Search') }}",
-            sLengthMenu: "{{ __('messages.Show') }} _MENU_ {{ __('messages.entries') }}",
-            sInfo: "{{ __('messages.Showing') }} _START_ {{ __('messages.to') }} _END_ {{ __('messages.of') }} _TOTAL_ {{ __('messages.entries') }}",
-            oPaginate: {
-                sPrevious: "{{ __('messages.Previous') }}",
-                sNext: "{{ __('messages.Next') }}"
-            }
-        },
-        columnDefs: [
-            {
-            targets: 4, 
-            className: 'text-center',
-            render: function(data, type, row, meta) {
-               return data=='another_party'? 'Another party will pay for the load':'Client'
-            }
-        },
-            {
-            targets: 9, 
-            className: 'text-center',
-            render: function(data, type, row) {
-                return '<input type="checkbox" ' + (row.is_hazmat ? 'checked' : '') + ' disabled>';
-            }
-        },
-        {
-            targets: 10, 
-            className: 'text-center',
-            render: function(data, type, row) {
-                return '<input type="checkbox" ' + (row.is_inbond ? 'checked' : '') + ' disabled>';
-            }
-        },
-        {
-            targets: 13, 
-            className: 'icon-design',
-           
-        }
-        ]
+            },
+            columnDefs: [
+                {
+                    targets: 4, 
+                    className: 'text-center',
+                    render: function(data, type, row) {
+                        return data == 'another_party' ? 'Another party will pay for the load' : 'Client';
+                    }
+                },
+                {
+                    targets: 10, 
+                    className: 'text-center',
+                    render: function(data, type, row) {
+                        return '<input type="checkbox" ' + (row.is_hazmat ? 'checked' : '') + ' disabled>';
+                    }
+                },
+                {
+                    targets: 11, 
+                    className: 'text-center',
+                    render: function(data, type, row) {
+                        return '<input type="checkbox" ' + (row.is_inbond ? 'checked' : '') + ' disabled>';
+                    }
+                },
+                {
+                    targets: 14, 
+                    className: 'icon-design',
+                }
+            ]
+        });
+
+        // Filter change event
+        var delayTimer;
+        $('#aol_number_filter, #status_filter').on('change keyup', function() {
+            clearTimeout(delayTimer);
+            delayTimer = setTimeout(function() {
+                table.draw();
+            }, 200);
+        });
     });
 
-    $(document).on('click', '.delete-icon', function(e) {
-        e.preventDefault();
-        var loadid = $(this).data('load-id');
-        var modal_text =
-            `{{ __('messages.Are you sure you want to delete ?') }}`;
-        $('.delete_content').html(modal_text);
-        $('#deleteloadFormId').attr('action', `/loads/${loadid}`);
 
-        $('#deleteloadForm').modal('show');
-    });
-
-     var delayTimer;
-
-    $('#aol_number_filter, #status_filter').on('change', function() {
-        clearTimeout(delayTimer);
-        delayTimer = setTimeout(function() {
-            table.draw();
-        }, 200); 
-    });
-
-    $('#aol_number_filter').on('keyup', function() {
-        clearTimeout(delayTimer);
-        delayTimer = setTimeout(function() {
-            table.draw();
-        }, 200);
-    });
-});
-function changeStatusModal(loadId, currentStatus) {
-    if (!loadId) {
-        alert("Load ID is missing!");
-        return;
-    }
-
-    // Set form action dynamically
-    var formAction = "/loads/" + loadId + "/change-status";
-    $('#changeStatusForm').attr('action', formAction);
-
-    // Check if the current status exists in the dropdown
-    var statusSelect = $('#statusSelect');
-    if (statusSelect.find('option[value="' + currentStatus + '"]').length > 0) {
-        statusSelect.val(currentStatus);
-    } else {
-        statusSelect.val(statusSelect.find('option:first').val());
-    }
-
-    // Show modal
-    $('#changeStatusModal').modal('show');
-}
-  
 </script>
 
 @endsection

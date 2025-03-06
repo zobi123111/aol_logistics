@@ -34,12 +34,15 @@
         @csrf
 
         <div class="form-group form-group mb-3 mt-3">
-            <label for="service_type" class="form-label">{{ __('messages.Service Type') }} <span class="text-danger">*</span></label>
+            <label for="service_type" class="form-label">Transportation Type <span class="text-danger">*</span></label>
             <select name="service_type" id="service_type" class="form-control">
-                <option value="">{{ __('messages.Select Service Type') }} </option>
-                <option value="Express" {{ old('service_type') == 'Express' ? 'selected' : '' }}>Express</option>
-                <option value="Standard" {{ old('service_type') == 'Standard' ? 'selected' : '' }}>Standard</option>
-                <option value="Overnight" {{ old('service_type') == 'Overnight' ? 'selected' : '' }}>Overnight</option>
+                <!-- <option value="">{{ __('messages.Select Service Type') }} </option> -->
+                <option value="Land Freight" {{ old('service_type') == 'Land Freight' ? 'selected' : '' }}>Land
+                            Freight</option>
+                        <option value="Air Freight" {{ old('service_type') == 'Air Freight' ? 'selected' : '' }}>Air
+                            Freight</option>
+                        <option value="Ocean Freight" {{ old('service_type') == 'Ocean Freight' ? 'selected' : '' }}>
+                            Ocean Freight</option>
             </select>
             @error('service_type')
                 <div class="text-danger">
@@ -48,7 +51,7 @@
             @enderror
         </div>
         @if(!isSupplierUser())
-        <div class="form-group mb-3">
+        <!-- <div class="form-group mb-3">
             <label for="supplier_id" class="form-label">{{ __('messages.Select Supplier') }} </label>
             <select name="supplier_id" id="supplier_id" class="form-control select2">
                 <option value="">{{ __('messages.Select Supplier') }} </option>
@@ -63,7 +66,7 @@
                      {{ $message }}
                 </div>
             @enderror
-        </div>
+        </div> -->
         @endif
         
         <div class="form-group mb-3">

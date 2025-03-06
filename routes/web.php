@@ -86,6 +86,14 @@ Route::middleware(['auth.user', 'otp.verified', 'role.permission'])->group(funct
     Route::post('/loads/{id}/update-truck-details', [LoadController::class, 'updateTruckDetails'])->name('loads.updateTruckDetails');
     Route::delete('/loads/document/{id}', [LoadController::class, 'deleteDocument'])->name('loads.deleteDocument');
 
+
+
+    Route::get('/loads/{loadId}/assign-service', [LoadController::class, 'createLoad'])->name('assign.service.create');
+Route::post('/loads/{loadId}/assign-service', [LoadController::class, 'storeLoad'])->name('assign.service.store');
+Route::get('/get-services', [LoadController::class, 'getServices'])->name('assign.service.getServices');
+Route::get('/load/modal/{loadId}', [LoadController::class, 'getLoadModalData'])->name('load.modal');
+
+
 });
 
 Route::middleware(['auth.user', 'otp.verified', 'check.supplier'])->group(function () {

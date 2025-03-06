@@ -24,8 +24,19 @@
         <div class="card-body">
         <form action="{{ route('services.store', $supplier->id) }}" method="POST">
             @csrf
-
             <div class="form-group mb-3 mt-3">
+                    <label for="service_type" class="form-label">Service Type <span class="text-danger">*</span></label>
+            <select name="service_type" id="service_type" class="form-control" >
+                <option value="">Select Service Type</option>
+                <option value="freight" {{ old('service_type') == 'freight' ? 'selected' : '' }}>Freight</option>
+                <option value="warehouse" {{ old('service_type') == 'warehouse' ? 'selected' : '' }}>Warehouse</option>
+            </select>
+            @error('service_type')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
+            </div>
+            <div id="freight_fields" style="display: none;">
+            <div class="form-group mb-3">
                 <label for="origin" class="form-label"> {{ __('messages.Origin') }} <span class="text-danger">*</span></label>
                 <select name="origin" id="origin" class="form-control">
                     <option value="">Select Origin</option>
@@ -58,6 +69,58 @@
                     </div>
                 @enderror
             </div>
+            </div>
+            <div id="warehouse_fields" style="display: none;">
+    <div class="form-group mb-3">
+        <label for="street" class="form-label">Street Address <span class="text-danger">*</span></label>
+        <input type="text" name="street" id="street" class="form-control" value="{{ old('street') }}">
+        @error('street')
+            <div class="text-danger">{{ $message }}</div>
+        @enderror
+    </div>
+    <div class="form-group mb-3">
+        <label for="city" class="form-label">City <span class="text-danger">*</span></label>
+        <input type="text" name="city" id="city" class="form-control" value="{{ old('city') }}">
+        @error('city')
+            <div class="text-danger">{{ $message }}</div>
+        @enderror
+    </div>
+    <div class="form-group mb-3">
+        <label for="state" class="form-label">State <span class="text-danger">*</span></label>
+        <input type="text" name="state" id="state" class="form-control" value="{{ old('state') }}">
+        @error('state')
+            <div class="text-danger">{{ $message }}</div>
+        @enderror
+    </div>
+    <div class="form-group mb-3">
+        <label for="zip" class="form-label">ZIP Code <span class="text-danger">*</span></label>
+        <input type="text" name="zip" id="zip" class="form-control" value="{{ old('zip') }}">
+        @error('zip')
+            <div class="text-danger">{{ $message }}</div>
+        @enderror
+    </div>
+    <div class="mb-3">
+            <label for="country" class="form-label"> {{ __('messages.Country') }} <span class="text-danger">*</span></label>
+            <select name="country" class="form-control @error('country') is-invalid @enderror" >
+                <option value=""> {{ __('messages.Select Country') }} </option>
+                <option value="USA" {{ old('country') == 'USA' ? 'selected' : '' }}>United States</option>
+                <option value="Canada" {{ old('country') == 'Canada' ? 'selected' : '' }}>Canada</option>
+                <option value="UK" {{ old('country') == 'UK' ? 'selected' : '' }}>United Kingdom</option>
+                <option value="Germany" {{ old('country') == 'Germany' ? 'selected' : '' }}>Germany</option>
+                <option value="France" {{ old('country') == 'France' ? 'selected' : '' }}>France</option>
+                <option value="Australia" {{ old('country') == 'Australia' ? 'selected' : '' }}>Australia</option>
+                <option value="India" {{ old('country') == 'India' ? 'selected' : '' }}>India</option>
+                <option value="China" {{ old('country') == 'China' ? 'selected' : '' }}>China</option>
+                <option value="Japan" {{ old('country') == 'Japan' ? 'selected' : '' }}>Japan</option>
+                <option value="Brazil" {{ old('country') == 'Brazil' ? 'selected' : '' }}>Brazil</option>
+            </select>
+            @error('country')
+                <div class="text-danger">
+                    {{ $message }}
+                </div>
+            @enderror
+        </div>
+</div>
 
             <div class="form-group mb-3">
                 <label for="cost" class="form-label"> {{ __('messages.Cost') }} (USD) <span class="text-danger">*</span></label>
@@ -82,7 +145,16 @@
 
 <script>
     $(document).ready(function() {
+        function toggleFields() {
+            let serviceType = $('#service_type').val();
+            $('#freight_fields').toggle(serviceType === 'freight');
+            $('#warehouse_fields').toggle(serviceType === 'warehouse');
+        }
+        toggleFields(); // Run on page load to retain values
 
+        $('#service_type').change(function() {
+            toggleFields();
+        });
     });
 </script>
 

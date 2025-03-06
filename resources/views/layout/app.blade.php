@@ -60,28 +60,28 @@
     @include('layout.sections.footer')
 
     @include('layout.includes.js')
-    <script type="text/javascript">
-    $(document).ready(function() {});
-    </script>
+
+        <script type="text/javascript">
+            $(document).ready(function() {});
+        </script>
+        
     @yield('js_scripts')
 
 
     <div class="loader" id="loader" style="display: none;"></div>
 
-
     <script>
-        var url = "{{ route('changeLang') }}";
-    
-        $(".changeLang").change(function() {
-            // Show loader
-            $("#loader").show();
-    
-            window.location.href = url + "?lang=" + $(this).val();
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll(".changeLang").forEach(item => {
+                item.addEventListener("click", function(event) {
+                    event.preventDefault();
+                    let lang = this.getAttribute("data-lang");
+
+                    // Redirect to change language route
+                    window.location.href = "{{ route('changeLang') }}?lang=" + lang;
+                });
+            });
         });
-    
-        // $(window).on('load', function() {
-        //     // $("#loader").hide();
-        // });
     </script>
     
 

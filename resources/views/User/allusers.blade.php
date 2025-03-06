@@ -28,17 +28,17 @@
             <select name="bulk_action" class="form-control w-25" required>
                 <option value=""> {{ __('messages.Select Bulk Action') }} </option>
                 @if(checkAllowedModule('users', 'user.toggleStatus')->isNotEmpty())
-                <option value="change_status">Change Status</option>
+                <option value="change_status">{{ __('messages.Change Status') }}</option>
                 @endif
                 @if(checkAllowedModule('users', 'user.destroy')->isNotEmpty())
-                <option value="delete">Delete</option>
+                <option value="delete">{{ __('messages.Delete') }}</option>
                 @endif
             </select>
 
             <!-- Change Status Dropdown for selected users -->
             <select name="status" class="form-control w-25 ml-3" id="status_dropdown" style="display: none;">
-                <option value="active">Activate</option>
-                <option value="deactivated">Deactivate</option>
+                <option value="active"> {{ __('messages.Activate') }} </option>
+                <option value="deactivated"> {{ __('messages.Deactivate') }} </option>
             </select>
 
             <!-- Submit Button -->
@@ -317,7 +317,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary close_btn" data-bs-dismiss="modal"> {{ __('messages.Close') }} </button>
-                    <button type="submit" class="btn btn-primary user_delete"> {{ __('messages.Delete') }} </button>
+                    <button type="submit" class="btn btn-primary user_delete btn_primary_color"> {{ __('messages.Delete') }} </button>
                 </div>
             </div>
         </div>

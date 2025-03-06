@@ -49,6 +49,8 @@ return [
     'Actions' => 'Actions',
     'No users found' => 'No users found',
     'Current Profile Photo' => 'Current Profile Photo',
+    'Activate' => 'Activate',
+    'Deactivate' => 'Deactivate',
 
     // Role
 
@@ -101,6 +103,9 @@ return [
     'Currency' => 'Currency',
     'Address' => 'Address',
     'Back to Supplier List' => 'Back to Supplier List ',
+    'No data available' => 'No data available',
+    'No suppliers found' => 'No suppliers found',
+
 
     // Supplier Create
 
@@ -256,6 +261,7 @@ return [
     'Are you sure you want to delete this client' => 'Are you sure you want to delete this client',
     'Save Client' => 'Save Client',
     'Client Customer Service Executive' => 'Client Customer Service Executive',
+    'No clients found' => 'No clients found',
 
 
     // Trailer
