@@ -43,7 +43,7 @@ class LoadController extends Controller
                             $q->whereHas('supplier', function ($q) use ($user) {
                                 $q->where('id', $user->supplier->id);
                             });
-                        })->orWhere('created_by', $user->id);
+                        })->orWhere('created_by', $user->id)->orWhere('status', 'requested');;
                     })
                         ->where(function ($q) {
                             $q->whereNull('schedule')
@@ -74,7 +74,7 @@ class LoadController extends Controller
                     if ($load->assignedServices->isNotEmpty()) {
                         return $load->assignedServices->pluck('supplier.company_name')->filter()->join(', ');
                     }
-                    return '---';
+                    return 'N/A';
                 })
                 ->addColumn('actions', function ($load) {
                     $editUrl = route('loads.edit', encode_id($load->id));
@@ -102,7 +102,10 @@ class LoadController extends Controller
                                 ' . __('messages.change_status') . '
                             </a>';
                 })
-                
+                ->addColumn('created_by_user', function ($load) {
+                    return optional($load->creator)->fname . ' ' . optional($load->creator)->lname;
+                        
+                })
                 ->addColumn('update_details', function ($load) {
                     return '<a href="' . route('loads.editTruckDetails', encode_id($load->id)) . '" 
                                 class="btn btn-primary create-button btn_primary_color">
@@ -344,18 +347,18 @@ class LoadController extends Controller
     }, function ($query) use ($load, $assignedServiceIds) {
         return $query->whereHas('services', function ($subQuery) use ($load, $assignedServiceIds) {
             $subQuery->where('origin', $load->origin)
-                ->where('destination', $load->destination)
-                ->whereNotIn('id', $assignedServiceIds);
+                ->where('destination', $load->destination);
+                // ->whereNotIn('id', $assignedServiceIds);
         });
     })
     ->with(['services' => function ($query) use ($load, $assignedServiceIds, $supplierId) {
         if (!$supplierId) {
             $query->where('origin', $load->origin)
-                ->where('destination', $load->destination)
-                ->whereNotIn('id', $assignedServiceIds);
+                ->where('destination', $load->destination);
+                // ->whereNotIn('id', $assignedServiceIds);
         }
         $query->orderBy('cost', 'asc');
-    }])
+    }])->where('is_active', 1)
     ->get();
 
         $deletedAssignedServices = AssignedService::onlyTrashed()
@@ -398,28 +401,31 @@ class LoadController extends Controller
 
     public function assign(Request $request)
     {
+        // dd( $request);
         // Validate input
         $request->validate([
             'load_id' => 'required|exists:loads,id',
             'supplier_id' => 'required|exists:suppliers,id',
             'service_id' => 'required|exists:services,id',
+            'quantity' => 'nullable|numeric',
         ]);
 
         // Check if service is already assigned to the load
         $existingAssignment = AssignedService::where([
-            'load_id' => $request->load_id,
+            'load_id' => $request->load_id, 
             'service_id' => $request->service_id
         ])->first();
 
-        if ($existingAssignment) {
-            return redirect()->back()->with('error',  __('messages.This service is already assigned.'));
-        }
+        // if ($existingAssignment) {
+        //     return redirect()->back()->with('error',  __('messages.This service is already assigned.'));
+        // }
 
         // Assign the service
         AssignedService::create([
             'load_id' => $request->load_id,
             'supplier_id' => $request->supplier_id,
             'service_id' => $request->service_id,
+            'quantity' => $request->quantity ?? 1
         ]);
         Load::where('id', $request->load_id)->update(['status' => 'assigned']);
         return redirect()->back()->with('message',  __('messages.Service assigned successfully.'));
@@ -511,64 +517,6 @@ class LoadController extends Controller
         $document = LoadsDocument::findOrFail($id);
         $document->delete();
         return redirect()->back()->with('message', __('messages.document_deleted'));
-    }
-
-    public function createLoad($loadId)
-    {
-        $load = Load::findOrFail($loadId);
-        $suppliers = Supplier::all();
-        $serviceTypes = Service::select('service_type')->distinct()->get(); // Fetch service types
-    
-        if (request()->ajax()) {
-            return view('loads.partials.create-form', compact('load', 'suppliers', 'serviceTypes'));
-        }
-    
-        return view('loads.assign', compact('load', 'suppliers', 'serviceTypes'));
-    }
-
-    public function getServices(Request $request)
-    {
-        $query = Service::query();
-
-        if ($request->has('supplier_id')) {
-            $query->where('supplier_id', $request->supplier_id);
-        }
-
-        if ($request->has('service_type')) {
-            $query->where('service_type', $request->service_type);
-        }
-
-        $services = $query->get();
-        return response()->json($services);
-    }
-
-    public function storeLoad(Request $request, $loadId)
-    {
-        $request->validate([
-            'service_ids' => 'required|array',
-            'service_ids.*' => 'exists:services,id',
-        ]);
-
-        foreach ($request->service_ids as $service_id) {
-            $service = Service::findOrFail($service_id);
-
-            AssignedService::create([
-                'load_id' => $loadId,
-                'supplier_id' => $service->supplier_id,
-                'service_id' => $service_id,
-            ]);
-        }
-
-        return response()->json(['success' => 'Services assigned successfully.']);
-    }
-
-    public function getLoadModalData($loadId)
-    {
-        $load = Load::findOrFail($loadId);
-        $suppliers = Supplier::all();
-        $serviceTypes = Service::select('service_type')->distinct()->get();
-
-        return view('loads.partials.create-form', compact('load', 'suppliers', 'serviceTypes'));
     }
     
 }

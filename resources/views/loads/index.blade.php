@@ -166,14 +166,16 @@
                 { data: 'payer', name: 'payer' },
                 { data: 'equipment_type', name: 'equipment_type' },
                 { data: 'weight', name: 'weight' },
-                { data: 'schedule', name: 'schedule', render: function(data) { return moment(data).format('YYYY-MM-DD hh:mm A'); } },
+                { data: 'schedule', name: 'schedule', render: function(data) { 
+                    return data ? moment(data).format('YYYY-MM-DD hh:mm A') : 'N/A'; 
+                }  },
                 { data: 'delivery_deadline', name: 'delivery_deadline', render: function(data) { return moment(data).format('YYYY-MM-DD'); } },
                 { data: 'customer_po', name: 'customer_po' },
                 { data: 'is_hazmat', name: 'is_hazmat', orderable: false, searchable: false },
                 { data: 'is_inbond', name: 'is_inbond', orderable: false, searchable: false },
                 { data: 'status', name: 'status' },
                 { data: 'supplier_company_name', name: 'supplier_company_name' },
-                { data: 'created_by', name: 'created_by' },
+                { data: 'created_by_user', name: 'created_by' },
                 { data: 'actions', name: 'actions', orderable: false, searchable: false },
                 { data: 'assign', name: 'assign', orderable: false, searchable: false },
                 { data: 'shipment_status', name: 'shipment_status', orderable: false, searchable: false },

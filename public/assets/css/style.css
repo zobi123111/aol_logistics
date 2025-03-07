@@ -1975,7 +1975,7 @@ div#logs_table_filter{
     height: 80px;
     box-shadow: 0px 2px 20px rgba(1, 41, 112, 0.1);
     background-color: var(--header-bg);
-    overflow: hidden;
+    /* overflow: hidden; */
     padding: 0 15px;
   }
 

@@ -171,6 +171,7 @@
                     <div class="text-danger">{{ $message }}</div>
                 @enderror
         </div>
+        
         <div class="form-group mb-3">
             <label for="customer_po" class="form-label">{{ __('messages.Customer PO / Reference Number') }} </label>
             <input type="text" id="customer_po" name="customer_po" class="form-control" value="{{old('customer_po')}}">

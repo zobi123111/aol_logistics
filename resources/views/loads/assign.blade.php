@@ -90,17 +90,13 @@
 </div>
 
 <h3 class=" ">{{ __('messages.Assigned Services') }} </h3> 
-<!-- <button class="btn btn-primary create-load-btn" 
-        data-toggle="modal" 
-        data-target="#createLoadModal" 
-        data-url="{{ route('load.modal', ['loadId' => $load->id]) }}">
-    Add Service
-</button> -->
-
 <table class="table" id="assignedServices">
     <thead>
         <tr>
             <th>{{ __('messages.Supplier Company Name') }} </th>
+            <th>{{ __('messages.supplier_transport_type') }}</th>
+            <th>{{ __('messages.service_type') }}</th>
+            <th>{{ __('messages.quantity') }}</th>
             <th>{{ __('messages.Service Details') }} </th>
             <th>{{ __('messages.Cost') }} </th>
             <th>{{ __('messages.Action') }} </th>
@@ -111,12 +107,16 @@
         <!-- Show Assigned Services at the Top -->
         @if($assignedServices->isEmpty())
             <tr>
-                <td colspan="4" class="text-center">{{ __('messages.No Assigned Services') }} </td>
+                <td colspan="6" class="text-center">{{ __('messages.No Assigned Services') }} </td>
             </tr>
         @else
             @foreach ($assignedServices as $assigned)
                 <tr>
                     <td>{{ $assigned->supplier->company_name }}</td>
+                    <td>{{ $assigned->supplier->service_type }}</td>
+
+                    <td>{{ $assigned->service->service_type }}</td>
+                    <td>{{ $assigned->quantity }}</td>
                     <td>
                     @if ($assigned->service->service_type === 'warehouse')
                       
@@ -130,13 +130,6 @@
                     </td>
                     <td>${{ number_format($assigned->service->cost, 2) }}</td>
                     <td>
-                        <!-- <form action="{{ route('unassign.service', $assigned->id) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">
-                                <i class="fas fa-times"></i> 
-                            </button>
-                        </form> -->
                         <button type="button" class="btn btn-danger" onclick="showDeleteModal({{ $assigned->id }})">
         <i class="fas fa-times"></i>
     </button>
@@ -160,20 +153,27 @@
 <table class="table" id="allServices">
     <thead>
         <tr>
-        <th>{{ __('messages.Supplier Company Name') }} </th>
-        <th>Service Type </th>
-
+            <th>{{ __('messages.Supplier Company Name') }} </th>
+            <th>{{ __('messages.supplier_transport_type') }}</th>
+            <th>{{ __('messages.service_type') }}</th>
             <th>{{ __('messages.Service Details') }} </th>
             <th>{{ __('messages.Cost') }} </th>
             <th>{{ __('messages.Action') }} </th>
         </tr>
     </thead>
     <tbody>
+    @if($suppliers->isEmpty())
+            <tr>
+                <td colspan="6" class="text-center">No Services</td>
+            </tr> 
+        @else
     @foreach ($suppliers as $supplier)
         @foreach ($supplier->services as $service)
             <tr>
                 <td>{{ $supplier->company_name }}</td>
-                <td>{{ $supplier->service_type }}</td>
+            <td>{{ $supplier->service_type }}</td>
+
+                <td>{{ $service->service_type }}</td>
 
                 <td>
 
@@ -189,7 +189,7 @@
                 </td>
                 <td>${{ number_format($service->cost, 2) }}</td>
                 <td>
-                    <form action="{{ route('assign.service') }}" method="POST">
+                    <!-- <form action="{{ route('assign.service') }}" method="POST">
                         @csrf
                         <input type="hidden" name="load_id" value="{{ $load->id }}">
                         <input type="hidden" name="supplier_id" value="{{ $supplier->id }}">
@@ -197,12 +197,19 @@
                         <button type="submit" class="btn btn-primary role_delete btn_primary_color">
                             <i class="fas fa-plus"></i> 
                         </button>
-                    </form>
+                    </form> -->
+                    <button type="button" 
+                        class="btn btn-primary btn_primary_color open-modal-btn" 
+                        data-load_id="{{ $load->id }}"
+                        data-supplier_id="{{ $supplier->id }}"
+                        data-service_id="{{ $service->id }}">
+                        <i class="fas fa-plus"></i> 
+                    </button>
                 </td>
             </tr>
         @endforeach
     @endforeach
-       
+       @endif
 </tbody>
 
 </table>
@@ -210,10 +217,12 @@
 <table class="table" id="assignedServices">
     <thead>
         <tr>
-            <th>Supplier Company Name</th>
-            <th>Service Details</th>
-            <th>Cost</th>
-            <th>Reason of cancelation</th>
+            <th>{{ __('messages.Supplier Company Name') }} </th>
+             <th>{{ __('messages.supplier_transport_type') }}</th>
+            <th>{{ __('messages.service_type') }}</th>
+            <th>{{ __('messages.service_details') }}</th>
+            <th>{{ __('messages.Cost') }} </th> 
+            <th>{{ __('messages.reason_of_cancellation') }}</th>
         </tr>
     </thead>
     <tbody>
@@ -221,16 +230,30 @@
         <!-- Show Assigned Services at the Top -->
         @if($deletedAssignedServices->isEmpty())
             <tr>
-                <td colspan="4" class="text-center">No Canceled Services</td>
+                <td colspan="6" class="text-center">No Canceled Services</td>
             </tr>
         @else
             @foreach ($deletedAssignedServices as $assigned)
                 <tr>
                     <td>{{ $assigned->supplier->company_name }}</td>
+                    <td>{{ $assigned->supplier->service_type }}</td>
+
+                    <td>{{ $assigned->service->service_type }}</td>
+
                     <td>
-                        {{ $assigned->service->origindata ? $assigned->service->origindata->street . ', ' . $assigned->service->origindata->city . ', ' . $assigned->service->origindata->state . ', ' . $assigned->service->origindata->zip . ', ' . $assigned->service->origindata->country : 'N/A' }}
+                        <!-- {{ $assigned->service->origindata ? $assigned->service->origindata->street . ', ' . $assigned->service->origindata->city . ', ' . $assigned->service->origindata->state . ', ' . $assigned->service->origindata->zip . ', ' . $assigned->service->origindata->country : 'N/A' }}
                         →  
-                        {{ $assigned->service->destinationdata ? $assigned->service->destinationdata->street . ', ' . $assigned->service->destinationdata->city . ', ' . $assigned->service->destinationdata->state . ', ' . $assigned->service->destinationdata->zip . ', ' . $assigned->service->destinationdata->country : 'N/A' }}
+                        {{ $assigned->service->destinationdata ? $assigned->service->destinationdata->street . ', ' . $assigned->service->destinationdata->city . ', ' . $assigned->service->destinationdata->state . ', ' . $assigned->service->destinationdata->zip . ', ' . $assigned->service->destinationdata->country : 'N/A' }} -->
+
+                        @if ($assigned->service->service_type === 'warehouse')
+                      
+                      {{$assigned->service->street . ', ' . $assigned->service->city . ', ' . $assigned->service->state . ', ' . $assigned->service->zip . ', ' . $assigned->service->country}}
+ 
+                       @else
+                       {{ $assigned->service->origindata ? $assigned->service->origindata->street . ', ' . $assigned->service->origindata->city . ', ' . $assigned->service->origindata->state . ', ' . $assigned->service->origindata->zip . ', ' . $assigned->service->origindata->country : 'N/A' }}
+                     →
+                     {{ $assigned->service->destinationdata ? $assigned->service->destinationdata->street . ', ' . $assigned->service->destinationdata->city . ', ' . $assigned->service->destinationdata->state . ', ' . $assigned->service->destinationdata->zip . ', ' . $assigned->service->destinationdata->country : 'N/A' }}
+                       @endif
                     </td>
                     <td>${{ number_format($assigned->service->cost, 2) }}</td>
                     <td>{{ $assigned->cancel_reason }}</td>
@@ -251,52 +274,65 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel">Confirm Unassignment</h5>
+                    <h5 class="modal-title" id="deleteModalLabel">{{ __('messages.confirm_unassignment') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>Are you sure you want to unassign this service?</p>
+                    <p>{{ __('messages.are_you_sure_unassign') }}</p>
 
                     <!-- Reason for Unassigning -->
                     <div class="mb-3">
-                        <label for="unassign_reason" class="form-label">Reason for Unassigning</label>
+                        <label for="unassign_reason" class="form-label">{{ __('messages.reason_for_unassigning') }}</label>
                         <select class="form-select" name="unassign_reason" id="unassign_reason" onchange="toggleOtherReason()">
-                            <option value="Client Requested">Client Requested</option>
-                            <option value="Unable to Offer Service">Unable to Offer Service</option>
-                            <option value="Other">Other</option>
+                            <option value="Client Requested">{{ __('messages.client_requested') }}</option>
+                            <option value="Unable to Offer Service">{{ __('messages.unable_to_offer_service') }}</option>
+                            <option value="Other">{{ __('messages.other') }}</option>
                         </select>
                     </div>
 
                     <!-- Other Reason Input (Hidden by Default) -->
                     <div class="mb-3 d-none" id="other_reason_container">
-                        <label for="other_reason" class="form-label">Please Specify</label>
+                        <label for="other_reason" class="form-label">{{ __('messages.please_specify') }}</label>
                         <input type="text" class="form-control" name="other_reason" id="other_reason">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-danger">Unassign</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('messages.close') }}</button>
+                    <button type="submit" class="btn btn-danger">{{ __('messages.unassign') }}</button>
                 </div>
             </div>
         </div>
     </div>
 </form>
 
-
-<div class="modal fade" id="createLoadModal" tabindex="-1" aria-labelledby="assignServiceModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="assignServiceModalLabel">Assign Services</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
+<!-- Modal -->
+<div class="modal fade" id="assignServiceModalN" tabindex="-1" aria-labelledby="assignServiceModalNLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="assignServiceModalNLabel">{{ __('messages.assign_service') }}</h5>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('assign.service') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="load_id" id="modal_load_id">
+                    <input type="hidden" name="supplier_id" id="modal_supplier_id">
+                    <input type="hidden" name="service_id" id="modal_service_id">
                     
-                </div>
+                    <div class="form-group">
+                        <label for="quantity" class="form-label">{{ __('messages.quantity') }}</label>
+                        <input type="number" class="form-control" name="quantity" id="modal_quantity">
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('messages.close') }}</button>
+                        <button type="submit" class="btn btn-primary btn_primary_color">{{ __('messages.assign') }}</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-        </div>
+</div>
 
 
 @endsection
@@ -307,6 +343,8 @@
 $(document).ready(function() {
     // $('#assignedServices').DataTable()
     // $('#allServices').DataTable()
+
+  
     $('#supplierFilter').select2({
             placeholder: "Select a Supplier",
             allowClear: true,
@@ -328,77 +366,6 @@ $(document).ready(function() {
             }
         });
     });
-    $(document).ready(function () {
-    $('.create-load-btn').on('click', function () {
-        var url = $(this).data('url');
-
-        $.get(url, function (data) {
-            $('#createLoadModal .modal-body').html(data);
-            $('#createLoadModal').modal('show'); // Manually open the modal
-        }).fail(function(xhr) {
-            console.error("Error loading modal:", xhr.responseText);
-            $('#createLoadModal .modal-body').html('<p class="text-danger">Failed to load the form. Please try again.</p>');
-        });
-    });
-});
-
-    function fetchServices() {
-        let supplierId = $('#supplier').val();
-        let serviceType = $('#service_type').val();
-
-        if (supplierId && serviceType) {
-            $.ajax({
-                url: "{{ route('assign.service.getServices') }}",
-                type: "GET",
-                data: { supplier_id: supplierId, service_type: serviceType },
-                success: function(data) {
-                    $('#service_id').empty();
-                    if (data.length > 0) {
-                        $.each(data, function(index, service) {
-                            $('#service_id').append(`<option value="${service.id}">${service.service_type} ($${service.cost})</option>`);
-                        });
-                    } else {
-                        $('#service_id').append('<option value="">No services available</option>');
-                    }
-                }
-            });
-        } else {
-            $('#service_id').empty().append('<option value="">-- Select a Supplier and Service Type First --</option>');
-        }
-    }
-
-    $('#supplier, #service_type').change(fetchServices);
-
-    // Handle Form Submission
-    $('#assignServiceForm').submit(function(e) {
-        e.preventDefault();
-
-        $.ajax({
-            url: "{{ route('assign.service.store', $load->id) }}",
-            type: "POST",
-            data: $(this).serialize(),
-            success: function(response) {
-                alert("Services assigned successfully!");
-                $('#assignServiceModal').modal('hide');
-                $('#assignServiceForm')[0].reset();
-            },
-            error: function(response) {
-                alert("Failed to assign services.");
-            }
-        });
-    });
-
-    $('#assignServiceModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget); 
-        var url = button.data('url'); 
-
-        $.get(url, function (data) {
-            $('#assignServiceModal .modal-body').html(data);
-        }).fail(function(xhr) {
-            console.error("Error loading modal content:", xhr.responseText);
-            $('#assignServiceModal .modal-body').html('<p class="text-danger">Failed to load the form. Please try again.</p>');
-        });
-    });
 });
 
 function showDeleteModal(assignedId) {
@@ -418,7 +385,19 @@ function toggleOtherReason() {
         otherReasonContainer.classList.add('d-none');
     }
 }
+$(document).on('click', '.open-modal-btn', function () {
+    let loadId = $(this).data('load_id');
+    let supplierId = $(this).data('supplier_id');
+    let serviceId = $(this).data('service_id');
 
+    // Set modal input values
+    $('#modal_load_id').val(loadId);
+    $('#modal_supplier_id').val(supplierId);
+    $('#modal_service_id').val(serviceId);
+
+    // Manually open the modal
+    $('#assignServiceModalN').modal('show');
+});
 </script>
 
 @endsection
