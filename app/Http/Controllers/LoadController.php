@@ -322,66 +322,120 @@ class LoadController extends Controller
 
     }
 
-    public function assignPage($id, Request $request)
-    {
-        $en = $id;
-        $de = decode_id($id);
-        $load = Load::findOrFail($de);
-        $assignedServiceIds = AssignedService::where('load_id', $load->id)->pluck('service_id');
-        // $suppliers = Supplier::whereHas('services', function ($query) use ($load, $assignedServiceIds) {
-        //     $query->where('origin', $load->origin)
-        //         ->where('destination', $load->destination)
-        //         ->whereNotIn('id', $assignedServiceIds);
-        // })->with(['services' => function ($query) use ($load, $assignedServiceIds) {
-        //     $query->where('origin', $load->origin)
-        //         ->where('destination', $load->destination)
-        //         ->whereNotIn('id', $assignedServiceIds)
-        //         ->orderBy('cost', 'asc'); 
-        // }])->get();
+    // public function assignPage($id, Request $request)
+    // {
+    //     $en = $id;
+    //     $de = decode_id($id);
+    //     $load = Load::findOrFail($de);
+    //     $assignedServiceIds = AssignedService::where('load_id', $load->id)->pluck('service_id');
+    //     // $suppliers = Supplier::whereHas('services', function ($query) use ($load, $assignedServiceIds) {
+    //     //     $query->where('origin', $load->origin)
+    //     //         ->where('destination', $load->destination)
+    //     //         ->whereNotIn('id', $assignedServiceIds);
+    //     // })->with(['services' => function ($query) use ($load, $assignedServiceIds) {
+    //     //     $query->where('origin', $load->origin)
+    //     //         ->where('destination', $load->destination)
+    //     //         ->whereNotIn('id', $assignedServiceIds)
+    //     //         ->orderBy('cost', 'asc'); 
+    //     // }])->get();
 
-          // Get Supplier ID from request (if provided)
+    //       // Get Supplier ID from request (if provided)
+    // $supplierId = $request->input('supplier_id');
+    //      // Adjust supplier query based on supplier_id presence
+    // $suppliers = Supplier::when($supplierId, function ($query) use ($supplierId) {
+    //     return $query->where('id', $supplierId);
+    // }, function ($query) use ($load, $assignedServiceIds) {
+    //     return $query->whereHas('services', function ($subQuery) use ($load, $assignedServiceIds) {
+    //         $subQuery->where('origin', $load->origin)
+    //             ->where('destination', $load->destination);
+    //             // ->whereNotIn('id', $assignedServiceIds);
+    //     });
+    // })
+    // ->with(['services' => function ($query) use ($load, $assignedServiceIds, $supplierId) {
+    //     if (!$supplierId) {
+    //         $query->where('origin', $load->origin)
+    //             ->where('destination', $load->destination);
+    //             // ->whereNotIn('id', $assignedServiceIds);
+    //     }
+    //     $query->orderBy('cost', 'asc');
+    // }])->where('is_active', 1)
+    // ->get();
+
+    //     $deletedAssignedServices = AssignedService::onlyTrashed()
+    //     ->where('load_id', $load->id)
+    //     ->with(['supplier', 'service'])
+    //     ->get();
+
+    //     $assignedServices = AssignedService::where('load_id', $load->id)
+    //     ->with(['supplier', 'service'])
+    //     ->get();
+
+    //     // $remainingSuppliers = Supplier::whereHas('services')
+    //     // ->with(['services' => function ($query) use ($load) {
+    //     //     $query->where('origin', '!=', $load->origin)
+    //     //     ->orWhere('destination', '!=', $load->destination)->orderBy('cost', 'asc');       
+    //     // }])->where('is_active', 1)
+    //     // ->get();
+    //     $allSuppliers = Supplier::with('services')->where('is_active', 1)->get();
+    //     // dd($remainingSuppliers);
+    //     // return view('loads.assign', compact('load', 'suppliers','remainingSuppliers', 'assignedServices', 'deletedAssignedServices', 'allSuppliers'));
+    //     return view('loads.assign', compact('load', 'suppliers', 'assignedServices', 'deletedAssignedServices', 'allSuppliers'));
+
+    // }
+
+
+    public function assignPage($id, Request $request)
+{
+    $en = $id;
+    $de = decode_id($id);
+    $load = Load::findOrFail($de);
+    $assignedServiceIds = AssignedService::where('load_id', $load->id)->pluck('service_id');
+
+    // Get filter inputs
     $supplierId = $request->input('supplier_id');
-         // Adjust supplier query based on supplier_id presence
+    $serviceType = $request->input('service_type');
+
+    // Query suppliers with optional filters
     $suppliers = Supplier::when($supplierId, function ($query) use ($supplierId) {
+
         return $query->where('id', $supplierId);
-    }, function ($query) use ($load, $assignedServiceIds) {
-        return $query->whereHas('services', function ($subQuery) use ($load, $assignedServiceIds) {
-            $subQuery->where('origin', $load->origin)
-                ->where('destination', $load->destination);
-                // ->whereNotIn('id', $assignedServiceIds);
-        });
+    }, function ($query) use ($load, $assignedServiceIds,$serviceType) {
+        if (!$serviceType) {
+
+            return $query->whereHas('services', function ($subQuery) use ($load, $assignedServiceIds) {
+                $subQuery->where('origin', $load->origin)
+                    ->where('destination', $load->destination);
+            });
+        }
     })
-    ->with(['services' => function ($query) use ($load, $assignedServiceIds, $supplierId) {
-        if (!$supplierId) {
+    ->with(['services' => function ($query) use ($load, $assignedServiceIds, $supplierId, $serviceType) {
+        if (!$serviceType &&  !$supplierId) {
             $query->where('origin', $load->origin)
                 ->where('destination', $load->destination);
-                // ->whereNotIn('id', $assignedServiceIds);
+        }else{
+            if ($serviceType) {
+
+                $query->where('service_type', $serviceType); 
+            }
         }
         $query->orderBy('cost', 'asc');
     }])->where('is_active', 1)
     ->get();
+// dd($suppliers, "sdbjcfjh");
 
-        $deletedAssignedServices = AssignedService::onlyTrashed()
+    $deletedAssignedServices = AssignedService::onlyTrashed()
         ->where('load_id', $load->id)
         ->with(['supplier', 'service'])
         ->get();
 
-        $assignedServices = AssignedService::where('load_id', $load->id)
+    $assignedServices = AssignedService::where('load_id', $load->id)
         ->with(['supplier', 'service'])
         ->get();
 
-        // $remainingSuppliers = Supplier::whereHas('services')
-        // ->with(['services' => function ($query) use ($load) {
-        //     $query->where('origin', '!=', $load->origin)
-        //     ->orWhere('destination', '!=', $load->destination)->orderBy('cost', 'asc');       
-        // }])->where('is_active', 1)
-        // ->get();
-        $allSuppliers = Supplier::with('services')->where('is_active', 1)->get();
-        // dd($remainingSuppliers);
-        // return view('loads.assign', compact('load', 'suppliers','remainingSuppliers', 'assignedServices', 'deletedAssignedServices', 'allSuppliers'));
-        return view('loads.assign', compact('load', 'suppliers', 'assignedServices', 'deletedAssignedServices', 'allSuppliers'));
+    $allSuppliers = Supplier::with('services')->where('is_active', 1)->get();
 
-    }
+    return view('loads.assign', compact('load', 'suppliers', 'assignedServices', 'deletedAssignedServices', 'allSuppliers'));
+}
 
     // Assign Supplier to Load
 

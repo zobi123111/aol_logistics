@@ -128,7 +128,14 @@
                         {{ $assigned->service->destinationdata ? $assigned->service->destinationdata->street . ', ' . $assigned->service->destinationdata->city . ', ' . $assigned->service->destinationdata->state . ', ' . $assigned->service->destinationdata->zip . ', ' . $assigned->service->destinationdata->country : 'N/A' }}
                         @endif
                     </td>
-                    <td>${{ number_format($assigned->service->cost, 2) }}</td>
+                    <td>
+                        ${{ number_format($assigned->service->cost * $assigned->quantity, 2) }}  
+                        @if($assigned->quantity > 1)
+                            <br>
+                            <small class="text-muted">(${{ number_format($assigned->service->cost, 2) }} per unit)</small>
+                        @endif
+                    </td>
+
                     <td>
                         <button type="button" class="btn btn-danger" onclick="showDeleteModal({{ $assigned->id }})">
         <i class="fas fa-times"></i>
@@ -141,13 +148,26 @@
     </tbody>
 </table>
 <h3 class="mt-3">{{ __('messages.Services') }} </h3>
-<div class="d-flex justify-content-start mb-3" style="width:20%;">
-<select id="supplierFilter" class="form-control select2">
+<div class="d-flex justify-content-start" style="width:20%; column-gap: 10px;">
+<div class="form-group mb-3">
+    <label for="supplierFilter" class="form-label">Serach by Supplier </label>
+<select id="supplierFilter" class="form-control select2 mr-3">
     <option value="">All Suppliers</option>
     @foreach ($allSuppliers as $supplier)
         <option value="{{ $supplier->id }}">{{ $supplier->company_name }}</option>
     @endforeach
 </select>
+</div>
+<div class="form-group mb-3">
+
+<label for="ServicesFilter" class="form-label">Serach by Service </label>
+<select id="ServicesFilter" class="form-control ml-2">
+    <option value="">All Services</option>
+    <option value="">Select Service Type</option>
+        <option value="freight">Freight</option>
+        <option value="warehouse">Warehouse</option>
+</select>
+</div>
 </div>
 <input type="hidden" id="loadId" value="{{ encode_id($load->id) }}">
 <table class="table" id="allServices">
@@ -349,23 +369,64 @@ $(document).ready(function() {
             placeholder: "Select a Supplier",
             allowClear: true,
             width: '100%'
-        });
-    $('#supplierFilter').on('change', function () {
-        var supplierId = $(this).val();
-        var loadId = $('#loadId').val(); // Assuming the load ID is in a hidden input
-
-        $.ajax({
-            url: '/loads/' + loadId + '/assign',
-            type: 'GET',
-            data: { supplier_id: supplierId },
-            success: function (data) {
-                $('#allServices tbody').html($(data).find('#allServices tbody').html());
-            },
-            error: function () {
-                console.error("Failed to filter services.");
-            }
-        });
     });
+
+    $('#ServicesFilter').select2({
+        placeholder: "Select a Service",
+        allowClear: true,
+        width: '100%'
+    });
+
+    // $('#supplierFilter').on('change', function () {
+    //     var supplierId = $(this).val();
+    //     var loadId = $('#loadId').val();
+
+    //     $.ajax({
+    //         url: '/loads/' + loadId + '/assign',
+    //         type: 'GET',
+    //         data: { supplier_id: supplierId },
+    //         success: function (data) {
+    //             $('#allServices tbody').html($(data).find('#allServices tbody').html());
+    //         },
+    //         error: function () {
+    //             console.error("Failed to filter services.");
+    //         }
+    //     });
+    // });
+    function filterServices() {
+    var supplierId = $('#supplierFilter').val();
+    var serviceType = $('#ServicesFilter').val();
+    var loadId = $('#loadId').val();
+
+    $.ajax({
+        url: '/loads/' + loadId + '/assign',
+        type: 'GET',
+        data: { 
+            supplier_id: supplierId,
+            service_type: serviceType 
+        },
+        success: function (data) {
+            // $('#allServices tbody').html($(data).find('#allServices tbody').html());
+            var content = $(data).find('#allServices tbody').html().trim();
+            
+            if (content === '') {
+                $('#allServices tbody').html('<tr><td colspan="6" class="text-center">No Services</td></tr>');
+            } else {
+                $('#allServices tbody').html(content);
+            }
+        },
+        error: function () {
+            console.error("Failed to filter services.");
+        }
+    });
+}
+
+// Event listeners for both filters
+$('#supplierFilter, #ServicesFilter').on('change', function () {
+    filterServices();
+});
+
+ 
 });
 
 function showDeleteModal(assignedId) {
