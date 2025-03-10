@@ -46,11 +46,6 @@
                 <button class="toggle-btn" onclick="toggleMode()">
                     <i class="bi bi-moon" id="mode-icon"></i>
                 </button>
-                
-                <li class="nav-item d-block d-lg-none">
-                    <a class="nav-link nav-icon search-bar-toggle" href="#">
-                        <i class="bi bi-search"></i>
-                    </a>
                 </li><!-- End Search Icon-->
                 
                 <li class="nav-item dropdown pe-5">

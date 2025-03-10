@@ -89,7 +89,7 @@
     </div>
 </div>
 
-<h3 class=" ">{{ __('messages.Assigned Services') }} </h3> 
+<h3 class="services-text">{{ __('messages.Assigned Services') }} </h3> 
 <table class="table" id="assignedServices">
     <thead>
         <tr>
@@ -107,7 +107,7 @@
         <!-- Show Assigned Services at the Top -->
         @if($assignedServices->isEmpty())
             <tr>
-                <td colspan="6" class="text-center">{{ __('messages.No Assigned Services') }} </td>
+                <td colspan="7" class="text-center">{{ __('messages.No Assigned Services') }} </td>
             </tr>
         @else
             @foreach ($assignedServices as $assigned)
@@ -147,10 +147,10 @@
 
     </tbody>
 </table>
-<h3 class="mt-3">{{ __('messages.Services') }} </h3>
-<div class="d-flex justify-content-start" style="width:20%; column-gap: 10px;">
+<h3 class="mt-3 services-text">{{ __('messages.Services') }} </h3>
+<div class="d-flex justify-content-start assign-service" style="column-gap: 10px;">
 <div class="form-group mb-3">
-    <label for="supplierFilter" class="form-label">Serach by Supplier </label>
+    <label for="supplierFilter" class="form-label">Search by Supplier </label>
 <select id="supplierFilter" class="form-control select2 mr-3">
     <option value="">All Suppliers</option>
     @foreach ($allSuppliers as $supplier)
@@ -160,7 +160,7 @@
 </div>
 <div class="form-group mb-3">
 
-<label for="ServicesFilter" class="form-label">Serach by Service </label>
+<label for="ServicesFilter" class="form-label">Search by Service </label>
 <select id="ServicesFilter" class="form-control ml-2">
     <option value="">All Services</option>
     <option value="">Select Service Type</option>
@@ -233,7 +233,7 @@
 </tbody>
 
 </table>
-<h3 class="mt-3">Canceled Assigned Services</h3>
+<h3 class="mt-3 services-text">Canceled Assigned Services</h3>
 <table class="table" id="assignedServices">
     <thead>
         <tr>
