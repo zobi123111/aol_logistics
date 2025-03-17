@@ -341,7 +341,7 @@
                     
                     <div class="form-group">
                         <label for="quantity" class="form-label">{{ __('messages.quantity') }}</label>
-                        <input type="number" class="form-control" name="quantity" id="modal_quantity">
+                        <input type="number" class="form-control" name="quantity" value="1" id="modal_quantity">
                     </div>
                     
                     <div class="modal-footer">

@@ -265,7 +265,7 @@
                         </div>
                     @enderror
                 </div>
-
+                <div class="upload-design">
                 <div class="mb-3">
                     <label class="form-label">  {{ __('messages.Uploaded Documents') }} </label>
                     <ul>
@@ -295,6 +295,7 @@
                     @endif
                     </ul>
                 </div>
+
                 <div class="mb-3">
                     <label class="form-label">  {{ __('messages.Upload New Documents') }} </label>
                     <input type="file" name="document_path[]" class="form-control" multiple>
@@ -311,8 +312,10 @@
                     <div class="text-danger">{{ $message[0] }}</div>
                     @endforeach
                 </div>
+                </div>
 
                 <!-- SCAC Documents -->
+                <div class="upload-design">
           
                 <div class="mb-3">
                     <label class="form-label">  {{ __('messages.Uploaded SCAC Documents') }} </label>
@@ -344,6 +347,7 @@
                     @endif
                     </ul>
                 </div>
+                
                 <div class="mb-3">
                     <label class="form-label">  {{ __('messages.Upload New SCAC Documents') }} </label>
                     <input type="file" name="scac_documents[]" class="form-control" multiple>
@@ -359,6 +363,8 @@
                     <div class="text-danger">{{ $message[0] }}</div>
                     @endforeach
                 </div>
+                </div>
+                <div class="upload-design">
 
                 <div class="mb-3">
                     <label class="form-label">  {{ __('messages.Uploaded CAAT Documents') }} </label>
@@ -402,6 +408,7 @@
                     @foreach ($errors->get('caat_documents.*') as $message)
                     <div class="text-danger">{{ $message[0] }}</div>
                     @endforeach
+                </div>
                 </div>
                     <button type="submit" class="btn btn-primary btn_primary_color">  {{ __('messages.Update Supplier') }} </button>
             </form>

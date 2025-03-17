@@ -106,7 +106,6 @@
         <div class="form-group mb-3">
             <label for="payer" class="form-label">{{ __('messages.Who Pays Load') }} <span class="text-danger">*</span></label>
             <select name="payer" id="payer" class="form-control">
-                <option value="">{{ __('messages.Select Payer') }} </option>
                 <option value="client" {{ old('payer') == 'client' ? 'selected' : '' }}>Client directly</option>
                 <option value="another_party" {{ old('payer') == 'another_party' ? 'selected' : '' }}>Another party will pay for the load</option>
             </select>
@@ -140,15 +139,26 @@
                     {{ $message }}
                 @enderror
         </div>
-        <div class="form-group mb-3">
-            <label for="port_of_entry" class="form-label">{{ __('messages.Port of Entry') }} </label>
-            <input type="text" id="port_of_entry" name="port_of_entry" class="form-control" value="{{old('port_of_entry')}}">
+       <div class="form-group mb-3">
+            <label for="port_of_entry" class="form-label">{{ __('messages.Port of Entry') }}</label>
+            <select id="port_of_entry" name="port_of_entry" class="form-select">
+                <option value="Nuevo Laredo, Tamps." {{ old('port_of_entry') == 'Nuevo Laredo, Tamps.' ? 'selected' : '' }}>
+                    Nuevo Laredo, Tamps.
+                </option>
+                <option value="Colombia, N.L." {{ old('port_of_entry') == 'Colombia, N.L.' ? 'selected' : '' }}>
+                    Colombia, N.L.
+                </option>
+            </select>
             @error('port_of_entry')
-                    {{ $message }}
-                @enderror
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
         </div>
+
         <div class="form-group mb-3">
-            <label for="weight" class="form-label">{{ __('messages.Weight') }} </label>
+        <div style="display: flex; column-gap: 10px; padding-bottom: 10px;"> <label for="weight" class="form-label">{{ __('messages.Weight') }} </label> <select name="weight_unit" id="weight_unit" class="form-select form-select-sm" style="max-width: 80px;">
+            <option value="kg" {{ old('weight_unit') == 'kg' ? 'selected' : '' }}>kg</option>
+            <option value="lbs" {{ old('weight_unit') == 'lbs' ? 'selected' : '' }}>lbs</option>
+        </select>     </div>
             <input type="text" name="weight" id="weight" class="form-control"  value="{{old('weight')}}">
             @error('weight')
                     {{ $message }}
@@ -166,7 +176,7 @@
         </div>
         <div class="form-group mb-3">
             <label for="schedule" class="form-label">Schedule Date</label>
-            <input type="datetime-local" id="schedule" name="schedule" class="form-control" value="{{old('schedule')}}">
+            <input type="datetime-local" id="schedule" name="schedule" class="form-control" value="{{ old('schedule', date('Y-m-d\T09:00')) }}">
             @error('schedule')
                     <div class="text-danger">{{ $message }}</div>
                 @enderror

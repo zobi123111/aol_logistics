@@ -95,6 +95,13 @@ class LoadController extends Controller
                                 <i class="fa-solid fa-user"></i> Assign
                             </a>';
                 })
+                ->addColumn('aol', function ($load) {
+                    $deleteId = encode_id($load->id);
+                    $showUrl = route('loads.show', $deleteId);
+                    return '<a href="' . $showUrl . '" target="_blank" >
+                                '.$load->aol_number.'
+                            </a>';
+                })
                 ->addColumn('shipment_status', function ($load) {
                     return '<a href="javascript:void(0);" 
                                 class="btn btn-primary create-button btn_primary_color" 
@@ -112,7 +119,7 @@ class LoadController extends Controller
                                 ' . __('messages.update_truck_details') . '
                             </a>';
                 })
-                ->rawColumns(['originval', 'destinationval', 'actions', 'assign', 'suppliercompany', 'supplier_company_name', 'shipment_status', 'update_details']) 
+                ->rawColumns(['originval', 'destinationval', 'actions', 'assign', 'suppliercompany', 'supplier_company_name', 'shipment_status', 'update_details', 'aol']) 
 
                 ->make(true);
         }
@@ -149,6 +156,7 @@ class LoadController extends Controller
             'port_of_entry' => 'nullable',
             'supplier_id' => 'nullable',
             'weight' => 'nullable|numeric',
+            'weight_unit' => 'nullable',
             'delivery_deadline' => 'required|date',
             'customer_po' => 'nullable',
             'schedule' => 'nullable',
@@ -250,6 +258,7 @@ class LoadController extends Controller
             'trailer_number' => 'nullable',
             'port_of_entry' => 'nullable',
             'schedule' => 'nullable',
+            'weight_unit' => 'nullable',
         ]);
     
         $load = Load::findOrFail($id);
@@ -304,6 +313,7 @@ class LoadController extends Controller
             // 'supplier_id' => null,
             'supplier_id' => $supplier_id,
             'status' => $status,
+            'weight_unit' => $request->weight_unit ,
         ]);
     
         return redirect()->route('loads.index')->with('message',$message);

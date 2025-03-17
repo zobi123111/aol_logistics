@@ -7,14 +7,28 @@
     @if(session()->has('message'))
     <div id="successMessage" class="alert alert-success fade show" role="alert">
         <i class="bi bi-check-circle me-1"></i>
-        {{-- {{ session()->get('message') }} --}}
-        {{ GoogleTranslate::trans(session('message'), app()->getLocale()) }}
+      {{ session()->get('message') }} 
     </div>
     @endif
-        {{-- <p>Welcome to {{ env('PROJECT_NAME')}} dashboard </p> --}}
-        <p>{{ __('messages.Welcome to') . ' ' . env('PROJECT_NAME') . ' ' . __('messages.Dashboard') }}</p>
+        <!-- {{-- <p>Welcome to {{ env('PROJECT_NAME')}} dashboard </p> --}} -->
+        <!-- <p>{{ __('messages.Welcome to') . ' ' . env('PROJECT_NAME') . ' ' . __('messages.Dashboard') }}</p> -->
 
     </div>
+    <div class="row">
+    <div class="col-lg-6">
+        <div class="card dashboard-card">
+            <div class="card-body">
+                <h5 class="card-title">Welcome to {{ env('PROJECT_NAME') }}, {{ Auth::user()->fname }} {{ Auth::user()->fname }}! 🎉</h5>
+                <p class="card-text">
+                    <strong>Email:</strong> {{ Auth::user()->email }} <br>
+                    <strong>User Type:</strong> {{ Auth::user()->roledata->userType->name ?? 'Not Assigned' }} <br>
+                    <strong>Role:</strong> {{ Auth::user()->roledata->role_name ?? 'Not Assigned' }} <br>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
     <div class="row">
         <div class="col-lg-6">
             <div class="card dashboard-card">

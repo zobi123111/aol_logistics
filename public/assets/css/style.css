@@ -2012,6 +2012,20 @@ div#logs_table_filter{
   div#role_table_filter {
     margin-bottom: 20px;
   }
+  td.edit-links a {
+    display: inline-flex; 
+    align-items: center;
+    justify-content: end;
+    width: 30px; 
+    height: 30px;
+    margin: 0px auto; 
+    text-decoration: none;
+}
+
+td.edit-links  i {
+    font-size: 20px;
+}
+
 
 }
 @media (max-width: 767px) {
@@ -2119,4 +2133,46 @@ h3.services-text {
 }
 .dark-mode .card p strong {
   color: var(--link-color);
+}
+
+.social-links i {
+  color: #000;
+}
+.social-links {
+  display: flex;
+  gap: 15px;
+}
+
+/* .social-links i {
+  font-size: 20px;
+  color: var(--btn-color);
+  cursor: pointer;
+}
+
+.social-links i:hover {
+  color: var(--text-color);
+} */
+
+
+.social-media {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.social-links img {
+  width: 25px;
+}
+.upload-design {
+  margin-bottom: 15px;
+}
+
+.upload-design {
+  background: var(--bg-color);
+  padding: 10px;
+}
+.toogle-btn-login{
+  display: flex;
+  padding: 15px 0px;
+  width: 100%;
+  justify-content: end;
 }

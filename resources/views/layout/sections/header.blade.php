@@ -18,20 +18,20 @@
                 <div class="dropdown">
                     <button class="dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                         @if($currentLang == 'en')
-                            <img src="{{ asset('assets/img/usa-flag.jpg') }}" alt="English Flag" style="width: 40px; height: 25px; vertical-align: middle;">
+                            <img src="{{ asset('assets/img/usa-flag.jpg') }}" alt="English Flag" style="width: 30px; height: 20px; vertical-align: middle;">
                         @else
-                            <img src="{{ asset('assets/img/mexican-flag.png') }}" alt="Spanish Flag" style="width: 40px; height: 25px; vertical-align: middle;">
+                            <img src="{{ asset('assets/img/mexican-flag.png') }}" alt="Spanish Flag" style="width: 30px; height: 20px; vertical-align: middle;">
                         @endif
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <li>
                             <a class="dropdown-item changeLang" href="#" data-lang="en">
-                                <img src="{{ asset('assets/img/usa-flag.jpg') }}" alt="English Flag" style="width: 30%; height: 15%; vertical-align: middle;"> English
+                                <img src="{{ asset('assets/img/usa-flag.jpg') }}" alt="English Flag" style="width: 20%; height: 10%; vertical-align: middle;"> English
                             </a>
                         </li>
                         <li>
                             <a class="dropdown-item changeLang" href="#" data-lang="es">
-                                <img src="{{ asset('assets/img/mexican-flag.png') }}" alt="Spanish Flag" style="width: 30%; height: 15%; vertical-align: middle;"> Spanish
+                                <img src="{{ asset('assets/img/mexican-flag.png') }}" alt="Spanish Flag" style="width: 20%; height: 10%; vertical-align: middle;"> Spanish
                             </a>
                         </li>
                     </ul>

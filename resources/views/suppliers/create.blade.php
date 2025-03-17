@@ -279,6 +279,7 @@
                 </div>
 
                 <!-- File Uploads -->
+                 <div class="upload-design">
                 <div class="mb-3">
                     <label class="form-label"> {{ __('messages.Upload Documents') }} </label>
                     <input type="file" name="document_path[]" class="form-control" multiple>
@@ -295,7 +296,9 @@
                         <div class="text-danger">{{ $message[0] }}</div>
                     @endforeach
                 </div>
+                </div>
 
+                <div class="upload-design">
                 <!-- SCAC Number and File Upload -->
                 <div class="mb-3">
                     <label class="form-label"> {{ __('messages.SCAC Number') }} </label><span class="text-danger">*</span>
@@ -322,7 +325,9 @@
                         <div class="text-danger">{{ $message[0] }}</div>
                     @endforeach
                 </div>
+                </div>
 
+                <div class="upload-design">
                 <!-- CAAT Number and File Upload -->
                 <div class="mb-3">
                     <label class="form-label"> {{ __('messages.CAAT Number') }} </label><span class="text-danger">*</span>
@@ -349,6 +354,8 @@
                         <div class="text-danger">{{ $message[0] }}</div>
                     @endforeach
                 </div>
+                </div>
+
                 @if($errors->has('error'))
                 <div class="error-message">{{ $errors->first('error') }}</div>
                 @endif

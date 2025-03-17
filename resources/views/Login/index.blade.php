@@ -21,11 +21,17 @@
 @endif
 
     <div class="container">
-        <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
 
+        <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+     
+            <div class="container">
+         
+                <div class="row justify-content-center">
+                <button class="toggle-btn toogle-btn-login" onclick="toggleMode()">
+                    <i class="bi bi-moon" id="mode-icon"></i>
+                </button>
+                    <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+                  
                         <div class="d-flex justify-content-center py-4">
                             <a href="index.html" class="logo d-flex align-items-center w-auto">
                                 <img src="{{env('PROJECT_LOGO')}}" alt="">
@@ -36,6 +42,7 @@
                         <div class="card mb-3">
 
                             <div class="card-body">
+                       
 
                                 <div class="pt-4 pb-2">
                                     <h5 class="card-title text-center pb-0 fs-4">Login to Your Account</h5>
@@ -80,9 +87,17 @@
                                             type="submit"><span>Login</span></button>
                                     </div>
                                     <div class="col-12">
+                                    <div class="social-media">        
                                         <p class="small mb-0"><a href="{{ url('forgot-password') }} ">Forgot Password ?
                                             </a></p>
+                                            <div class="social-links">
+
+                                            <img src="/assets/img/instagram.png">
+                                            <img src="/assets/img/twitter.png">
+                                        </div>
                                     </div>
+                                    </div>
+
                                 </form>
 
                                 <!-- OTP Form (Initially Hidden) -->
@@ -114,7 +129,6 @@
         </section>
     </div>
 </main><!-- End #main -->
-@include('layout.sections.footer')
 @include('layout.includes.js')
 
 <script>

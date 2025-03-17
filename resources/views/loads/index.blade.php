@@ -159,13 +159,15 @@
                 });
             },
             columns: [
-                { data: 'aol_number', name: 'aol_number' },
+                { data: 'aol', name: 'aol_number' },
                 { data: 'service_type', name: 'service_type' },
                 { data: 'originval', name: 'origin' },
                 { data: 'destinationval', name: 'destination' },
                 { data: 'payer', name: 'payer' },
                 { data: 'equipment_type', name: 'equipment_type' },
-                { data: 'weight', name: 'weight' },
+                { data: 'weight', name: 'weight', render: function(data, type, row) {
+                    return row.weight ? `${row.weight} ${row.weight_unit}` : 'N/A';
+                } },
                 { data: 'schedule', name: 'schedule', render: function(data) { 
                     return data ? moment(data).format('YYYY-MM-DD hh:mm A') : 'N/A'; 
                 }  },
@@ -213,8 +215,8 @@
                     }
                 },
                 {
-                    targets: 14, 
-                    className: 'icon-design',
+                    targets: 15, 
+                    className: 'edit-links',
                 }
             ]
         });
@@ -227,6 +229,17 @@
                 table.draw();
             }, 200);
         });
+
+        $(document).on('click', '.delete-icon', function(e) {
+         e.preventDefault();
+         var loadid = $(this).data('load-id');
+         var modal_text =
+             `{{ __('messages.Are you sure you want to delete ?') }}`;
+         $('.delete_content').html(modal_text);
+         $('#deleteloadFormId').attr('action', `/loads/${loadid}`);
+ 
+         $('#deleteloadForm').modal('show');
+     });
     });
 
 

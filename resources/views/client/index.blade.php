@@ -1,6 +1,5 @@
 @section('title', 'Client')
-{{-- @section('sub-title', 'Client') --}}
-{{-- @section('sub-title', GoogleTranslate::trans('Client')) --}}
+ <!-- @section('sub-title', 'Client') -->
 @section('sub-title', __('messages.Client'))
 
 @extends('layout.app')

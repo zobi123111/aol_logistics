@@ -13,7 +13,7 @@ class Load extends Model
     protected $fillable = [
         'aol_number', 'origin', 'destination', 'payer', 
         'equipment_type', 'weight', 'delivery_deadline', 
-        'customer_po', 'is_hazmat', 'is_inbond', 'status', 'service_type', 'supplier_id', 'trailer_number', 'port_of_entry', 'created_by', 'schedule', 'truck_number', 'driver_name', 'driver_contact_no', 'shipment_status'
+        'customer_po', 'is_hazmat', 'is_inbond', 'status', 'service_type', 'supplier_id', 'trailer_number', 'port_of_entry', 'created_by', 'schedule', 'truck_number', 'driver_name', 'driver_contact_no', 'shipment_status', 'weight_unit'
     ];
 
     protected $casts = [
@@ -34,14 +34,9 @@ class Load extends Model
 
     public static function generateUniqueAOL()
     {
-        do {
-            $numbers = substr(str_shuffle('0123456789'), 0, 6); 
-            $letters = strtoupper(substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 4));
-            
-            $aol = str_shuffle($numbers . $letters);
-        } while (self::where('aol_number', $aol)->exists());
-    
-        return $aol;
+        $lastAOL = self::orderBy('aol_number', 'desc')->value('aol_number');
+        $newAOL = is_numeric($lastAOL) ? intval($lastAOL) + 1 : 1001;
+        return (string) $newAOL;
     }
     
     // Relationship with Origin (Address)
