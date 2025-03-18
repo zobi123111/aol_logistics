@@ -48,7 +48,7 @@
         <div class="col-lg-12">
             <div class="card shadow-sm dashboard-design">
                 <div class="card-body">
-                    <h5 class="card-title">🚀 Active Users <span class="badge bg-success">{{ $activeUsers->count() }}</span></h5>
+                    <h5 class="card-title">🚀 {{ __('messages.Active Users')}} <span class="badge bg-success" style="color:white">{{ $activeUsers->count() }}</span></h5>
                     <ul class="list-group mt-3">
                         @forelse($activeUsers as $user)
                             <li class="list-group-item d-flex justify-content-between align-items-center">

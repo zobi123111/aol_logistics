@@ -1961,7 +1961,7 @@ div#logs_table_filter{
 
   .header .toggle-sidebar-btn {
     font-size: 26px;
-    padding-left: 0;
+    padding-left: 15px;
     cursor: pointer;
     color: var(--text-color);
   }
@@ -1981,9 +1981,7 @@ div#logs_table_filter{
     padding: 0 15px;
   }
 
-  nav.header-nav.ms-auto.d-flex.align-items-center {
-    margin-left: unset !important;
-  }
+ 
 
   li.nav-item.dropdown.pe-5 {
     padding-right: 0 !important;
@@ -2192,7 +2190,7 @@ a.logo.d-flex.align-items-center.w-auto {
 .register {
   padding-top: 0 !important;
   padding-bottom: 0 !important;
-  height: max-content;
+  min-height: max-content;
 }
 .role-container {
   width: 100%;
@@ -2232,5 +2230,5 @@ p.text-muted.lead {
 .register {
   padding-top: 0 !important;
   padding-bottom: 0 !important;
-  height: 100vh;
+  min-height: 100vh;
 }
