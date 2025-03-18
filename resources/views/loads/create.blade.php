@@ -75,7 +75,7 @@
                 <option value="">{{ __('messages.Select Origin') }} </option>
                 @foreach($origins as $origin)
                     <option value="{{ $origin->id }}" {{ old('origin') == $origin->id ? 'selected' : '' }}>
-                        {{ $origin->street }}, {{ $origin->city }}, {{ $origin->state }}, {{ $origin->zip }}, {{ $origin->country }}
+                    {{ $origin->name ? $origin->name : ($origin->street . ', ' . $origin->city . ', ' . $origin->state . ', ' . $origin->zip . ', ' . $origin->country) }}
                     </option>
                 @endforeach
             </select>
@@ -92,7 +92,7 @@
                 <option value="">{{ __('messages.Select Destination') }} </option>
                 @foreach($destinations as $destination)
                     <option value="{{ $destination->id }}" {{ old('destination') == $destination->id ? 'selected' : '' }}>
-                        {{ $destination->street }}, {{ $destination->city }}, {{ $destination->state }}, {{ $destination->zip }}, {{ $destination->country }}
+                        {{$destination->name ? $destination->name :  $destination->street.', '. $destination->city.', '. $destination->state.', '. $destination->zip.', '. $destination->country }}
                     </option>
                 @endforeach
             </select>
@@ -223,11 +223,16 @@
 
 <script>
 $(document).ready(function() {
+    console.log("Document is ready!");
     $('#supplier_id').select2({
             placeholder: "{{ __('messages.Select a Supplier') }}",
             allowClear: true
         });
+
 });
+
+
+
 </script>
 
 @endsection

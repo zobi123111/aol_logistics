@@ -128,7 +128,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label"> {{ __('messages.Primary Contact Office Phone') }} </label>
+                    <label class="form-label"> {{ __('messages.Primary Contact Office Phone') }} </label><span class="text-danger">*</span>
                     <input type="text" name="primary_contact_office_phone" class="form-control"
                         value="{{ old('primary_contact_office_phone') }}">
                     @error('primary_contact_office_phone')

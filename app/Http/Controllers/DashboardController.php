@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Models\User;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -37,11 +39,24 @@ class DashboardController extends Controller
             $query->where('user_type_id', 1);
         })->where('is_active', 1)
         ->count();
-// dd($activeClients);
+
+        $sessionPath = storage_path('framework/sessions');
+        $activeUserIds = [];
+        
+        foreach (File::files($sessionPath) as $file) {
+            $contents = File::get($file->getRealPath());
+        
+            if (preg_match('/"login_web_[^"]+";i:(\d+)/', $contents, $matches)) {
+                $activeUserIds[] = (int) $matches[1];
+            }
+        }
+        
+        $activeUsers = User::whereIn('id', array_unique($activeUserIds))->with('roledata')->get();
         return view('Dashboard.index', compact(
             'totalClients', 'activeClients',
             'totalSuppliers', 'activeSuppliers',
-            'totalAol', 'activeTotalAol'
+            'totalAol', 'activeTotalAol',
+            'activeUsers'
         ));
     }
 }

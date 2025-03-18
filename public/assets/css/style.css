@@ -27,6 +27,7 @@
     --sidebar-color: #00709e;
     --btn-color:#00709e;
     --btn-text:#ffffff;
+    --card-bg-color:#fff;
 }
 
 /* Dark Mode Variables */
@@ -44,6 +45,7 @@
     --sidebar-color: #f59751;
     --btn-color:#f59751;
     --btn-text:#ffffff;
+    --card-bg-color:#000;
 }
 
 
@@ -2175,4 +2177,60 @@ h3.services-text {
   padding: 15px 0px;
   width: 100%;
   justify-content: end;
+}
+
+a.logo.d-flex.align-items-center.w-auto {
+  padding-bottom: 15px;
+}
+
+@media (max-width: 992px) {
+  .module_cont {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0px;
+}
+.register {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  height: max-content;
+}
+.role-container {
+  width: 100%;
+  margin: unset;
+}
+.module_cont {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+}
+@media (max-width: 475px) {
+.module_cont {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 10px;
+}
+}
+li.list-group-item.d-flex.justify-content-between.align-items-center {
+  background: var(--card-bg-color);
+  color: var(--card-font);
+}
+
+li.list-group-item small.text-muted {
+  color: var(--text-color)!important;
+}
+.dashboard-design{
+background-color: var(--card-bg-color)!important;
+}
+.border-bottom h3.fw-bold {
+  color: var(--font-color);
+}
+
+p.text-muted.lead {
+ color: var(--text-color)!important;
+}
+.register {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  height: 100vh;
 }

@@ -34,7 +34,7 @@ class Load extends Model
 
     public static function generateUniqueAOL()
     {
-        $lastAOL = self::orderBy('aol_number', 'desc')->value('aol_number');
+        $lastAOL = self::withTrashed()->orderBy('aol_number', 'desc')->value('aol_number');
         $newAOL = is_numeric($lastAOL) ? intval($lastAOL) + 1 : 1001;
         return (string) $newAOL;
     }

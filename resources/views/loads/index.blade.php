@@ -129,6 +129,7 @@
         var table = $('#loads').DataTable({
             processing: true,
             serverSide: true,
+            order: [[0, 'desc']],
             ajax: function(data, callback, settings) {
                 $('#loader').show();
 
@@ -141,7 +142,9 @@
                         aol_number: aolNumber,
                         status: status,
                         page: settings.page,
-                        length: settings.length
+                        length: settings.length,
+                        order: data.order, 
+                        columns: data.columns
                     },
                     success: function(response) {
                         $('#loader').hide();

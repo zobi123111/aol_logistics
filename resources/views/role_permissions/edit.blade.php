@@ -18,7 +18,7 @@
         {{ session()->get('message') }}
     </div>
     @endif
-    <div class="card card-container">
+    <div class="card card-container role-container">
     <div class="card-body">
     <form action="{{ route('roles.update', ['role' => encode_id($role->id)]) }}" method="POST">
     @csrf

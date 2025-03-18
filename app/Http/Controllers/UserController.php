@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\UserCreated;
 use App\Models\UserActivityLog;
 use Illuminate\Support\Facades\App;
+use Illuminate\Validation\Rule;
 
 
 class UserController extends Controller
@@ -38,7 +39,12 @@ class UserController extends Controller
             'firstname' => 'required',
             'lastname' => 'required',
             'role_name' => 'required',
-            'email' => 'required|email|max:255|unique:users,email',
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                Rule::unique('users')->whereNull('deleted_at'), 
+            ],
             'password' => 'required|min:6|confirmed',
             'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ],[

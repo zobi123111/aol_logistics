@@ -22,7 +22,7 @@
 
     <div class="container">
 
-        <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+        <section class="section register  d-flex flex-column align-items-center justify-content-center ">
      
             <div class="container">
          
@@ -33,7 +33,7 @@
                     <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
                   
                         <div class="d-flex justify-content-center py-4">
-                            <a href="index.html" class="logo d-flex align-items-center w-auto">
+                            <a href="#" class="logo d-flex align-items-center w-auto">
                                 <img src="{{env('PROJECT_LOGO')}}" alt="">
                                 <!-- <span class="d-none d-lg-block">{{ env('PROJECT_NAME') }}</span> -->
                             </a>
@@ -92,8 +92,13 @@
                                             </a></p>
                                             <div class="social-links">
 
-                                            <img src="/assets/img/instagram.png">
-                                            <img src="/assets/img/twitter.png">
+                                            <a href="https://www.instagram.com/alphaomega_log" target="_blank">
+                                                <img src="/assets/img/instagram.png" alt="Instagram">
+                                            </a>
+
+                                            <a href="https://x.com/alphaomega_log" target="_blank">
+                                                <img src="/assets/img/twi.jpeg" alt="Twitter">
+                                            </a>
                                         </div>
                                     </div>
                                     </div>
