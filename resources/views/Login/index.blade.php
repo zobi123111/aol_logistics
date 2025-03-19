@@ -97,7 +97,7 @@
                                             </a>
 
                                             <a href="https://x.com/alphaomega_log" target="_blank">
-                                                <img src="/assets/img/twi.jpeg" alt="Twitter">
+                                                <img src="/assets/img/twitter.png" alt="Twitter">
                                             </a>
                                         </div>
                                     </div>

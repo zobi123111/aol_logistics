@@ -243,8 +243,14 @@
  
          $('#deleteloadForm').modal('show');
      });
-    });
 
+    });
+    function changeStatusModal(loadId, shipmentStatus) {
+        $('#statusSelect').val(shipmentStatus || 'pending');
+        $('#changeStatusForm').attr('action', `/loads/${loadId}/change-status`);
+        // Show the modal
+        $('#changeStatusModal').modal('show');
+    }
 
 </script>
 

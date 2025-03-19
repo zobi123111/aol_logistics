@@ -13,6 +13,7 @@ use App\Models\AssignedService;
 use App\Models\Service;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use App\Models\UserActivityLog;
 
 class LoadController extends Controller
 {
@@ -217,6 +218,15 @@ class LoadController extends Controller
                 }
             }
         }  
+            // add log
+            UserActivityLog::create([
+                'log_type' => UserActivityLog::LOG_TYPE_ADD_LOAD,
+                'description' => 'A load request with AOL number'. ' (' .$load->aol_number . ') has been created by ' 
+                        . auth()->user()->fname . ' ' 
+                        . auth()->user()->lname 
+                        . ' (' . auth()->user()->email . ')',
+                'user_id' => auth()->id(), 
+            ]);
         return redirect()->route('loads.index')->with('message', $message);
     }
 
@@ -491,7 +501,21 @@ class LoadController extends Controller
             'service_id' => $request->service_id,
             'quantity' => $request->quantity ?? 1
         ]);
-        Load::where('id', $request->load_id)->update(['status' => 'assigned']);
+        $load = Load::where('id', $request->load_id)->update(['status' => 'assigned']);
+        $email = Supplier::where('id', $request->supplier_id,)->value('user_email');
+        $aol_number = Load::where('id', $request->load_id,)->value('aol_number');
+
+         // add log
+         UserActivityLog::create([
+            'log_type' => UserActivityLog::LOG_TYPE_ASSIGN_LOAD,
+            'description' => 'A load request with AOL number'. ' (' .$aol_number . ') assigned to  ' 
+                    . $email .' by '
+                    . auth()->user()->fname . ' ' 
+                        . auth()->user()->lname 
+                        . ' (' . auth()->user()->email . ')',
+            'user_id' => auth()->id(), 
+        ]);
+
         return redirect()->back()->with('message',  __('messages.Service assigned successfully.'));
     }
 
@@ -512,12 +536,26 @@ class LoadController extends Controller
             ]);
 
             $assignedService->delete();
-    
+
+            $email = Supplier::where('id', $assignedService->supplier_id,)->value('user_email');
+            $aol_number = Load::where('id', $load_id,)->value('aol_number');
+
+            // add log
+            UserActivityLog::create([
+                'log_type' => UserActivityLog::LOG_TYPE_UNASSIGN_LOAD,
+                'description' => 'A load request with AOL number'. ' (' .$aol_number . ') unssigned to  ' 
+                        . $email .' by'. auth()->user()->fname . ' ' 
+                        . auth()->user()->lname 
+                        . ' (' . auth()->user()->email . ')',
+                'user_id' => auth()->id(), 
+            ]);
+
             $remainingServices = AssignedService::where('load_id', $load_id)->exists();
     
             if (!$remainingServices) {
                 Load::where('id', $load_id)->update(['status' => 'requested', 'supplier_id' => null]);
             }
+
 
         return back()->with('error',  __('messages.Service not found.'));
         }
@@ -532,9 +570,21 @@ class LoadController extends Controller
         ]);
     
         $load = Load::findOrFail($id);
+        $old_status = $load->shipment_status;
         $load->shipment_status = $request->status;
         $load->save();
-    
+
+        $aol_number = Load::where('id', $load->id,)->value('aol_number');
+
+        // add log
+        UserActivityLog::create([
+            'log_type' => UserActivityLog::LOG_TYPE_LOAD_STATUS_CHANGE,
+            'description' => 'A load request with AOL number'. ' (' .$aol_number . ') shipment status changed from '. $old_status .' to '. $load->shipment_status .' by ' 
+                    . auth()->user()->fname . ' ' 
+                        . auth()->user()->lname 
+                        . ' (' . auth()->user()->email . ')' ,
+            'user_id' => auth()->id(), 
+        ]);
         return redirect()->back()->with('message', __('messages.load_status_updated'));
     }
 
