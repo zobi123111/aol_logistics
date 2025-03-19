@@ -230,12 +230,10 @@
                 <div class="mb-3">
                     <label class="form-label"> {{ __('messages.Type of Service Authorized') }} </label><span class="text-danger">*</span>
                     <select name="service_type" class="form-select">
-                        <option value="Land Freight" {{ old('service_type') == 'Land Freight' ? 'selected' : '' }}>Land
-                            Freight</option>
-                        <option value="Air Freight" {{ old('service_type') == 'Air Freight' ? 'selected' : '' }}>Air
-                            Freight</option>
+                        <option value="Land Freight" {{ old('service_type') == 'Land Freight' ? 'selected' : '' }}>{{ __('messages.Land Freight') }}</option>
+                        <option value="Air Freight" {{ old('service_type') == 'Air Freight' ? 'selected' : '' }}>{{ __('messages.Air Freight') }}</option>
                         <option value="Ocean Freight" {{ old('service_type') == 'Ocean Freight' ? 'selected' : '' }}>
-                            Ocean Freight</option>
+                        {{ __('messages.Ocean Freight') }}</option>
                     </select>
                     @error('service_type')
                         <div class="text-danger">
