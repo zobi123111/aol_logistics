@@ -22,13 +22,13 @@
     <div class="filter-container">
         <div class="row mb-3">
             <div class="col-md-3">
-                <input type="text" id="aol_number_filter" class="form-control" placeholder="Enter AOL Number">
+                <input type="text" id="aol_number_filter" class="form-control" placeholder="{{ __('messages.Enter AOL Number') }}">
             </div>
             <div class="col-md-3">
                 <select id="status_filter" class="form-control">
-                    <option value="">Filter by Status</option>
-                    <option value="assigned">Assigned</option>
-                    <option value="requested">Requested</option>
+                    <option value="">{{ __('messages.Filter by Status') }}</option>
+                    <option value="assigned">{{ __('messages.Assigned') }}</option>
+                    <option value="requested">{{ __('messages.Requested') }}</option>
                 </select>
             </div>
         </div>
@@ -46,7 +46,7 @@
                     <th> {{ __('messages.Payer') }} </th>
                     <th> {{ __('messages.Equipment Type') }} </th>
                     <th> {{ __('messages.Weight') }} </th>
-                    <th>Schedule Date</th>
+                    <th>{{ __('messages.Schedule Date') }}</th>
                     <th> {{ __('messages.Delivery Deadline') }} </th>
                     <th> {{ __('messages.Customer PO') }} </th>
                     <th> {{ __('messages.HazMat') }} </th>

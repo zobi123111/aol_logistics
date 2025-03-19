@@ -330,7 +330,19 @@
 
 <script>
 $(document).ready(function() {
-    $('#user_table').DataTable();
+    $('#user_table').DataTable(
+        {
+    language: {
+                sSearch: "{{ __('messages.Search') }}",
+                sLengthMenu: "{{ __('messages.Show') }} _MENU_ {{ __('messages.entries') }}",
+                sInfo: "{{ __('messages.Showing') }} _START_ {{ __('messages.to') }} _END_ {{ __('messages.of') }} _TOTAL_ {{ __('messages.entries') }}",
+                oPaginate: {
+                    sPrevious: "{{ __('messages.Previous') }}",
+                    sNext: "{{ __('messages.Next') }}"
+                }
+            },
+    }
+    );
 
     $('#createUser').on('click', function() {
         $('.error_e').html('');

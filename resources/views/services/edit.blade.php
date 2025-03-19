@@ -26,11 +26,11 @@
                 @csrf
                 @method('PUT')
                 <div class="form-group mb-3 mt-3">
-                    <label for="service_type" class="form-label">Service Type <span class="text-danger">*</span></label>
+                    <label for="service_type" class="form-label">{{ __('messages.Service Type') }} <span class="text-danger">*</span></label>
                     <select name="service_type" id="service_type" class="form-control">
-                        <option value="">Select Service Type</option>
-                        <option value="freight" {{ (old('service_type', $service->service_type ?? '') == 'freight') ? 'selected' : '' }}>Freight</option>
-                        <option value="warehouse" {{ (old('service_type', $service->service_type ?? '') == 'warehouse') ? 'selected' : '' }}>Warehouse</option>
+                        <option value="">{{ __('messages.Select Service Type') }}</option>
+                        <option value="freight" {{ (old('service_type', $service->service_type ?? '') == 'freight') ? 'selected' : '' }}>{{ __('messages.Freight') }}</option>
+                        <option value="warehouse" {{ (old('service_type', $service->service_type ?? '') == 'warehouse') ? 'selected' : '' }}>{{ __('messages.Warehouse') }}Warehouse</option>
                     </select>
                     @error('service_type')
                         <div class="text-danger">{{ $message }}</div>
@@ -41,7 +41,7 @@
     <div class="form-group mb-3">
         <label for="origin" class="form-label"> {{ __('messages.Origin') }} <span class="text-danger">*</span></label>
         <select name="origin" id="origin" class="form-control">
-            <option value="">Select Origin</option>
+        <option value="">{{ __('messages.Select Origin') }}</option>
             @foreach($origins as $origin)
                 <option value="{{ $origin->id }}" 
                     {{ (isset($service) && $service->origin == $origin->id) || old('origin') == $origin->id ? 'selected' : '' }}>
@@ -57,8 +57,8 @@
     <div class="form-group mb-3">
         <label for="destination" class="form-label"> {{ __('messages.Destination') }} <span class="text-danger">*</span></label>
         <select name="destination" id="destination" class="form-control">
-            <option value="">Select Destination</option>
-            @foreach($destinations as $destination)
+        <option value="">{{ __('messages.Select Destination') }}</option>
+        @foreach($destinations as $destination)
                 <option value="{{ $destination->id }}" 
                     {{ (isset($service) && $service->destination == $destination->id) || old('destination') == $destination->id ? 'selected' : '' }}>
                     {{ $destination->street }}, {{ $destination->city }}, {{ $destination->state }}, {{ $destination->zip }}, {{ $destination->country }}
@@ -73,7 +73,7 @@
 
 <div id="warehouse_fields" style="display: {{ isset($service) && $service->service_type == 'warehouse' ? 'block' : 'none' }};">
     <div class="form-group mb-3">
-        <label for="street" class="form-label">Street Address <span class="text-danger">*</span></label>
+        <label for="street" class="form-label">{{ __('messages.Street Address') }} <span class="text-danger">*</span></label>
         <input type="text" name="street" id="street" class="form-control" value="{{ isset($service) ? $service->street : old('street') }}">
         @error('street')
             <div class="text-danger">{{ $message }}</div>
@@ -81,7 +81,7 @@
     </div>
 
     <div class="form-group mb-3">
-        <label for="city" class="form-label">City <span class="text-danger">*</span></label>
+        <label for="city" class="form-label">{{ __('messages.City') }} <span class="text-danger">*</span></label>
         <input type="text" name="city" id="city" class="form-control" value="{{ isset($service) ? $service->city : old('city') }}">
         @error('city')
             <div class="text-danger">{{ $message }}</div>
@@ -89,7 +89,7 @@
     </div>
 
     <div class="form-group mb-3">
-        <label for="state" class="form-label">State <span class="text-danger">*</span></label>
+        <label for="state" class="form-label">{{ __('messages.State') }} <span class="text-danger">*</span></label>
         <input type="text" name="state" id="state" class="form-control" value="{{ isset($service) ? $service->state : old('state') }}">
         @error('state')
             <div class="text-danger">{{ $message }}</div>
@@ -97,7 +97,7 @@
     </div>
 
     <div class="form-group mb-3">
-        <label for="zip" class="form-label">ZIP Code <span class="text-danger">*</span></label>
+        <label for="zip" class="form-label">{{ __('messages.Zip Code') }} <span class="text-danger">*</span></label>
         <input type="text" name="zip" id="zip" class="form-control" value="{{ isset($service) ? $service->zip : old('zip') }}">
         @error('zip')
             <div class="text-danger">{{ $message }}</div>

@@ -32,7 +32,7 @@ class ClientController extends Controller
             })
             ->addColumn('client_users', function ($client) {
                 return '<a href="'.route('client_users.index', encode_id($client->id)).'" class="btn btn-primary create-button btn_primary_color">
-                            <i class="fa-solid fa-user"></i> Manage
+                            <i class="fa-solid fa-user"></i> '. __('messages.Manage').'
                         </a>';
             })
             ->rawColumns(['status', 'actions', 'client_users']) 

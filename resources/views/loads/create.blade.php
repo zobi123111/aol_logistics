@@ -34,15 +34,13 @@
         @csrf
 
         <div class="form-group form-group mb-3 mt-3">
-            <label for="service_type" class="form-label">Transportation Type <span class="text-danger">*</span></label>
+            <label for="service_type" class="form-label">{{ __('messages.Transportation Type') }} <span class="text-danger">*</span></label>
             <select name="service_type" id="service_type" class="form-control">
                 <!-- <option value="">{{ __('messages.Select Service Type') }} </option> -->
-                <option value="Land Freight" {{ old('service_type') == 'Land Freight' ? 'selected' : '' }}>Land
-                            Freight</option>
-                        <option value="Air Freight" {{ old('service_type') == 'Air Freight' ? 'selected' : '' }}>Air
-                            Freight</option>
+                <option value="Land Freight" {{ old('service_type') == 'Land Freight' ? 'selected' : '' }}>{{ __('messages.Land Freight') }}</option>
+                        <option value="Air Freight" {{ old('service_type') == 'Air Freight' ? 'selected' : '' }}>{{ __('messages.Air Freight') }}</option>
                         <option value="Ocean Freight" {{ old('service_type') == 'Ocean Freight' ? 'selected' : '' }}>
-                            Ocean Freight</option>
+                        {{ __('messages.Ocean Freight') }}</option>
             </select>
             @error('service_type')
                 <div class="text-danger">
@@ -106,8 +104,8 @@
         <div class="form-group mb-3">
             <label for="payer" class="form-label">{{ __('messages.Who Pays Load') }} <span class="text-danger">*</span></label>
             <select name="payer" id="payer" class="form-control">
-                <option value="client" {{ old('payer') == 'client' ? 'selected' : '' }}>Client directly</option>
-                <option value="another_party" {{ old('payer') == 'another_party' ? 'selected' : '' }}>Another party will pay for the load</option>
+                <option value="client" {{ old('payer') == 'client' ? 'selected' : '' }}>{{ __('messages.Client directly') }}</option>
+                <option value="another_party" {{ old('payer') == 'another_party' ? 'selected' : '' }}>{{ __('messages.Another party will pay for the load') }}</option>
             </select>
             @error('payer')
                 <div class="text-danger">

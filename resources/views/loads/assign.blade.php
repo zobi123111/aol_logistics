@@ -150,7 +150,7 @@
 <h3 class="mt-3 services-text">{{ __('messages.Services') }} </h3>
 <div class="d-flex justify-content-start assign-service" style="column-gap: 10px;">
 <div class="form-group mb-3">
-    <label for="supplierFilter" class="form-label">Search by Supplier </label>
+    <label for="supplierFilter" class="form-label">{{ __('messages.Search by Supplier') }} </label>
 <select id="supplierFilter" class="form-control select2 mr-3">
     <option value="">All Suppliers</option>
     @foreach ($allSuppliers as $supplier)
@@ -160,7 +160,7 @@
 </div>
 <div class="form-group mb-3">
 
-<label for="ServicesFilter" class="form-label">Search by Service </label>
+<label for="ServicesFilter" class="form-label">{{ __('messages.Search by Service') }} </label>
 <select id="ServicesFilter" class="form-control ml-2">
     <option value="">All Services</option>
     <option value="">Select Service Type</option>
@@ -233,7 +233,7 @@
 </tbody>
 
 </table>
-<h3 class="mt-3 services-text">Canceled Assigned Services</h3>
+<h3 class="mt-3 services-text">{{ __('messages.Canceled Assigned Services') }}</h3>
 <table class="table" id="assignedServices">
     <thead>
         <tr>
@@ -250,7 +250,7 @@
         <!-- Show Assigned Services at the Top -->
         @if($deletedAssignedServices->isEmpty())
             <tr>
-                <td colspan="6" class="text-center">No Canceled Services</td>
+                <td colspan="6" class="text-center">{{ __('messages.No Canceled Services') }}</td>
             </tr>
         @else
             @foreach ($deletedAssignedServices as $assigned)
@@ -366,13 +366,13 @@ $(document).ready(function() {
 
   
     $('#supplierFilter').select2({
-            placeholder: "Select a Supplier",
+            placeholder: "{{ __('messages.Select a Supplier') }}",
             allowClear: true,
             width: '100%'
     });
 
     $('#ServicesFilter').select2({
-        placeholder: "Select a Service",
+        placeholder: "{{ __('messages.Select a Service') }}",
         allowClear: true,
         width: '100%'
     });

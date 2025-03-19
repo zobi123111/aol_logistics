@@ -33,17 +33,17 @@ class SupplierController extends Controller
             })
             ->addColumn('supplier_users', function ($supplier) {
                 return '<a href="'.route('supplier_users.index', encode_id($supplier->id)).'" class="btn btn-primary create-button btn_primary_color">
-                            <i class="fa-solid fa-user"></i> Manage
+                            <i class="fa-solid fa-user"></i>'. __('messages.Manage').'
                         </a>';
             })
             ->addColumn('supplier_units', function ($supplier) {
                 return '<a href="'.route('supplier_units.index', encode_id($supplier->id)).'" class="btn btn-secondary create-button btn_secondary_color">
-                            <i class="fa-solid fa-truck"></i> Manage
+                            <i class="fa-solid fa-truck"></i> '. __('messages.Manage').'
                         </a>';
             })
             ->addColumn('services', function ($supplier) {
                 return '<a href="'.route('services.index', encode_id($supplier->id)).'" class="btn btn-primary create-button btn_primary_color">
-                            <i class="fa-solid fa-gear"></i> Manage
+                            <i class="fa-solid fa-gear"></i> '. __('messages.Manage').'
                         </a>';
             })
             ->rawColumns(['status', 'actions', 'supplier_users', 'supplier_units', 'services']) 

@@ -93,7 +93,7 @@ class LoadController extends Controller
                 })
                 ->addColumn('assign', function ($load) {
                     return '<a href="' . route('loads.assign', encode_id($load->id)) . '" class="btn btn-primary create-button btn_primary_color">
-                                <i class="fa-solid fa-user"></i> Assign
+                                <i class="fa-solid fa-user"></i> ' . __("messages.Assign").'
                             </a>';
                 })
                 ->addColumn('aol', function ($load) {
@@ -174,6 +174,7 @@ class LoadController extends Controller
             $request->except('aol_number', 'supplier_id'), 
             [
                 'supplier_id' => null, 
+                'status' => $status,
                 'status' => $status,
                 'created_by' => Auth::id(),
                 'schedule' => $request->schedule ? Carbon::parse($request->schedule) : null,

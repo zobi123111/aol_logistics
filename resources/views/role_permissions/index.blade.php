@@ -88,7 +88,19 @@
 
 <script>
 $(document).ready(function() {
-    $('#role_table').DataTable();
+    $('#role_table').DataTable(
+        {
+    language: {
+                sSearch: "{{ __('messages.Search') }}",
+                sLengthMenu: "{{ __('messages.Show') }} _MENU_ {{ __('messages.entries') }}",
+                sInfo: "{{ __('messages.Showing') }} _START_ {{ __('messages.to') }} _END_ {{ __('messages.of') }} _TOTAL_ {{ __('messages.entries') }}",
+                oPaginate: {
+                    sPrevious: "{{ __('messages.Previous') }}",
+                    sNext: "{{ __('messages.Next') }}"
+                }
+            },
+    }
+    );
     $(document).on('click', '.delete-icon', function(e) {
         e.preventDefault();
         var roleId = $(this).data('role-id');

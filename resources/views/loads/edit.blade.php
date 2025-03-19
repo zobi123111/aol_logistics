@@ -25,15 +25,15 @@
     @method('PUT')
 
     <div class="form-group mb-3 mt-3">
-    <label for="service_type" class="form-label">Transportation Type <span class="text-danger">*</span></label>
+    <label for="service_type" class="form-label">{{ __('messages.Transportation Type') }} <span class="text-danger">*</span></label>
     <select name="service_type" id="service_type" class="form-control">
         <!-- <option value="">{{ __('messages.Select Service Type') }} </option>
         <option value="Express" {{ old('service_type', $load->service_type) == 'Express' ? 'selected' : '' }}>Express</option>
         <option value="Standard" {{ old('service_type', $load->service_type) == 'Standard' ? 'selected' : '' }}>Standard</option>
         <option value="Overnight" {{ old('service_type', $load->service_type) == 'Overnight' ? 'selected' : '' }}>Overnight</option> -->
-        <option value="Land Freight" {{ old('service_type', $load->service_type) == 'Land Freight' ? 'selected' : '' }}>Land Freight</option>
-        <option value="Air Freight" {{ old('service_type', $load->service_type) == 'Air Freight' ? 'selected' : '' }}>Air Freight</option>
-        <option value="Ocean Freight" {{ old('service_type', $load->service_type) == 'Ocean Freight' ? 'selected' : '' }}>Ocean Freight</option>
+        <option value="Land Freight" {{ old('service_type', $load->service_type) == 'Land Freight' ? 'selected' : '' }}>{{ __('messages.Land Freight') }}</option>
+        <option value="Air Freight" {{ old('service_type', $load->service_type) == 'Air Freight' ? 'selected' : '' }}>{{ __('messages.Air Freight') }}</option>
+        <option value="Ocean Freight" {{ old('service_type', $load->service_type) == 'Ocean Freight' ? 'selected' : '' }}>{{ __('messages.Ocean Freight') }}</option>
         
     </select>
     @error('service_type')
@@ -92,8 +92,8 @@
     <div class="form-group mb-3">
         <label for="payer" class="form-label">{{ __('messages.Who Pays Load') }} <span class="text-danger">*</span></label>
         <select name="payer" id="payer" class="form-control">
-            <option value="client" {{ $load->payer == 'client' ? 'selected' : '' }}>Client directly</option>
-            <option value="another_party" {{ $load->payer == 'another_party' ? 'selected' : '' }}>Another party will pay for the load</option>
+            <option value="client" {{ $load->payer == 'client' ? 'selected' : '' }}>{{ __('messages.Client directly') }}</option>
+            <option value="another_party" {{ $load->payer == 'another_party' ? 'selected' : '' }}>{{ __('messages.Another party will pay for the load') }}</option>
         </select>
         @error('payer')
             <div class="text-danger">{{ $message }}</div>

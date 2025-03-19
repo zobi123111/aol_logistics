@@ -61,7 +61,19 @@
 @section('js_scripts')
 <script>
     $(document).ready(function() {
-    $('#destinations').DataTable();
+    $('#destinations').DataTable(
+        {
+    language: {
+                sSearch: "{{ __('messages.Search') }}",
+                sLengthMenu: "{{ __('messages.Show') }} _MENU_ {{ __('messages.entries') }}",
+                sInfo: "{{ __('messages.Showing') }} _START_ {{ __('messages.to') }} _END_ {{ __('messages.of') }} _TOTAL_ {{ __('messages.entries') }}",
+                oPaginate: {
+                    sPrevious: "{{ __('messages.Previous') }}",
+                    sNext: "{{ __('messages.Next') }}"
+                }
+            },
+    }
+    );
     });
     function confirmDelete(element) {
         if (confirm("{{ __('messages.Are you sure you want to delete this destination?') }}")) {

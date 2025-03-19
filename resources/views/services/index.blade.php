@@ -22,11 +22,10 @@
     <table class="table mt-3 respo_table" id="service">
         <thead>
             <tr>
-            <th> Service Type  </th>
-
+                <th> {{ __('messages.Service Type') }}  </th>
                 <th> {{ __('messages.Origin') }} </th>
                 <th> {{ __('messages.Destination') }} </th>
-                <th>Location</th>
+                <th>{{ __('messages.Location') }}</th>
                 <th> {{ __('messages.Cost') }} </th>
                 <th> {{ __('messages.Actions') }} </th>
             </tr>
@@ -74,7 +73,16 @@ $(document).ready(function() {
         { data: 'warehouse', name: 'warehouse', orderable: false, searchable: false },
         { data: 'cost', name: 'cost' },
         { data: 'actions', name: 'actions', orderable: false, searchable: false }
-    ]
+    ],
+    language: {
+                sSearch: "{{ __('messages.Search') }}",
+                sLengthMenu: "{{ __('messages.Show') }} _MENU_ {{ __('messages.entries') }}",
+                sInfo: "{{ __('messages.Showing') }} _START_ {{ __('messages.to') }} _END_ {{ __('messages.of') }} _TOTAL_ {{ __('messages.entries') }}",
+                oPaginate: {
+                    sPrevious: "{{ __('messages.Previous') }}",
+                    sNext: "{{ __('messages.Next') }}"
+                }
+            },
 });
     $(document).on('click', '.delete-icon', function(e) {
         e.preventDefault();
