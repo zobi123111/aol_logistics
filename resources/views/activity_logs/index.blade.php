@@ -69,12 +69,11 @@ $(document).ready(function() {
             data: 'created_at', 
             name: 'created_at',
             render: function (data, type, row) {
-                // If data is available, format the date
                 if (data) {
-                    // Using moment.js or native JavaScript to format date
-                    return moment(data).format('YYYY-MM-DD hh:mm A');
+                    let userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone; 
+                    return moment(data).tz(userTimezone).format('YYYY-MM-DD hh:mm A'); 
                 }
-                return data; // Return raw data if date is missing
+                return data; 
             }
         }
 

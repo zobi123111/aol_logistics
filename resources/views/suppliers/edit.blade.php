@@ -196,17 +196,28 @@
                     @enderror
                 </div>
 
-
                 <div class="mb-3">
-                    <label class="form-label">  {{ __('messages.Service Type') }} </label><span class="text-danger">*</span>
-                    <select name="service_type" class="form-select">
-                        <option value="Land Freight" {{ old('service_type', $supplier->service_type) == 'Land Freight' ? 'selected' : '' }}>{{ __('messages.Land Freight') }}</option>
-                        <option value="Air Freight" {{ old('service_type', $supplier->service_type) == 'Air Freight' ? 'selected' : '' }}>{{ __('messages.Air Freight') }}</option>
-                        <option value="Ocean Freight" {{ old('service_type', $supplier->service_type) == 'Ocean Freight' ? 'selected' : '' }}>{{ __('messages.Ocean Freight') }}</option>
+                    <label class="form-label" for="service_type">  {{ __('messages.Type of Service Authorized') }} </label><span class="text-danger">*</span>
+                    <select id="service_type" name="service_type[]" class="form-select select2" multiple>
+                        @php
+                            $oldServices = old('service_type', $supplier->service_type ?? []);
+                            $selectedServices = is_array($oldServices) ? $oldServices : explode(',', $oldServices);
+                        @endphp
+
+                        <option value="Land Freight" {{ in_array('Land Freight', $selectedServices) ? 'selected' : '' }}>
+                            {{ __('messages.Land Freight') }}
+                        </option>
+                        <option value="Air Freight" {{ in_array('Air Freight', $selectedServices) ? 'selected' : '' }}>
+                            {{ __('messages.Air Freight') }}
+                        </option>
+                        <option value="Ocean Freight" {{ in_array('Ocean Freight', $selectedServices) ? 'selected' : '' }}>
+                            {{ __('messages.Ocean Freight') }}
+                        </option>
                     </select>
+
                     @error('service_type')
                         <div class="text-danger">
-                           {{ $message }}
+                            {{ $message }}
                         </div>
                     @enderror
                 </div>
@@ -415,4 +426,12 @@
         </div>
     </div>
 </div>
+@endsection
+@section('js_scripts')
+
+<script>
+    // Enable Select2 for multi-select dropdowns (Optional)
+    $('#service_type').select2({ width: '100%' });
+</script>
+
 @endsection

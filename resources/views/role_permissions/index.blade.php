@@ -41,7 +41,7 @@
                 <td>{{$role->userType->name}}</td>
 
                 @if((checkAllowedModule('roles', 'roles.edit')->isNotEmpty() || checkAllowedModule('roles', 'roles.destroy')->isNotEmpty()) || (Auth::user()->is_dev || Auth::user()->is_owner))
-                <td>
+                <td class="icon-design">
                 @if(checkAllowedModule('roles', 'roles.edit')->isNotEmpty() || (Auth::user()->is_dev ||Auth::user()->is_owner))
                 <a href="{{ route('roles.edit', ['role' => encode_id($role->id)]) }}"><i
                             class="fa fa-edit edit-user-icon table_icon_style blue_icon_color"

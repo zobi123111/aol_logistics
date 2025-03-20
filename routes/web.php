@@ -18,6 +18,8 @@ use App\Http\Controllers\LoadController;
 use App\Http\Controllers\OriginController;
 use App\Http\Controllers\DestinationController;
 use App\Http\Controllers\LangController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 /*
 |--------------------------------------------------------------------------
@@ -136,3 +138,7 @@ Route::middleware(['auth.user', 'otp.verified', 'check.client'])->group(function
 Route::get('/csrf-token', function () {
     return response()->json(['csrfToken' => csrf_token()]);
 });
+Route::post('/set-timezone', function (Request $request) {
+    Session::put('timezone', $request->timezone);
+    return response()->json(['success' => true]);
+})->name('set.timezone');

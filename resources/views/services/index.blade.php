@@ -74,6 +74,12 @@ $(document).ready(function() {
         { data: 'cost', name: 'cost' },
         { data: 'actions', name: 'actions', orderable: false, searchable: false }
     ],
+    columnDefs: [
+                {
+                    targets:  5, 
+                    className: 'icon-design',
+                }
+            ],
     language: {
                 sSearch: "{{ __('messages.Search') }}",
                 sLengthMenu: "{{ __('messages.Show') }} _MENU_ {{ __('messages.entries') }}",

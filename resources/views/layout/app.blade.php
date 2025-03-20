@@ -81,13 +81,20 @@
                     window.location.href = "{{ route('changeLang') }}?lang=" + lang;
                 });
             });
+
+            let timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            console.log(timezone);
+
+            fetch("{{ route('set.timezone') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({ timezone: timezone })
+            });
         });
     </script>
-    
-
-    
-
-
 </body>
 
 </html>

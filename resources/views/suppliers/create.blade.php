@@ -170,7 +170,7 @@
 
                 <!-- User Email -->
                 <div class="mb-3">
-                    <label class="form-label"> {{ __('messages.User Email') }}  <small> {{ __('messages.(Used for login)') }} </small></label>
+                    <label class="form-label"> {{ __('messages.User Email') }}  <small> {{ __('messages.(Used for login)') }} </small><span class="text-danger">*</span></label>
                     <input type="email" name="user_email" class="form-control" value="{{ old('user_email') }}">
                     @error('user_email')
                         <div class="text-danger">
@@ -228,18 +228,28 @@
 
                 <!-- Service Type (Select) -->
                 <div class="mb-3">
-                    <label class="form-label"> {{ __('messages.Type of Service Authorized') }} </label><span class="text-danger">*</span>
-                    <select name="service_type" class="form-select">
-                        <option value="Land Freight" {{ old('service_type') == 'Land Freight' ? 'selected' : '' }}>{{ __('messages.Land Freight') }}</option>
-                        <option value="Air Freight" {{ old('service_type') == 'Air Freight' ? 'selected' : '' }}>{{ __('messages.Air Freight') }}</option>
-                        <option value="Ocean Freight" {{ old('service_type') == 'Ocean Freight' ? 'selected' : '' }}>
-                        {{ __('messages.Ocean Freight') }}</option>
+                    <label class="form-label" for="service_type"> {{ __('messages.Type of Service Authorized') }} </label><span class="text-danger">*</span>
+                    <select name="service_type[]" class="form-select" id="service_type" multiple>
+                        @php
+                            $oldServices = old('service_type' ?? []);
+                            $selectedServices = is_array($oldServices) ? $oldServices : explode(',', $oldServices);
+                        @endphp
+                        <option value="Land Freight" {{ in_array('Land Freight', $selectedServices) ? 'selected' : '' }}>
+                            {{ __('messages.Land Freight') }}
+                        </option>
+                        <option value="Air Freight" {{ in_array('Air Freight', $selectedServices) ? 'selected' : '' }}>
+                            {{ __('messages.Air Freight') }}
+                        </option>
+                        <option value="Ocean Freight" {{ in_array('Ocean Freight', $selectedServices) ? 'selected' : '' }}>
+                            {{ __('messages.Ocean Freight') }}
+                        </option>
                     </select>
+
+
                     @error('service_type')
-                        <div class="text-danger">
-                           {{ $message }}
-                        </div>
+                        <div class="text-danger">{{ $message }}</div>
                     @enderror
+
                 </div>
 
                 <!-- Currency Selection (Radio) -->
@@ -370,9 +380,8 @@
 @section('js_scripts')
 
 <script>
-    $(document).ready(function() {
+       $('#service_type').select2({ width: '100%' });
 
-    });
 </script>
 
 @endsection

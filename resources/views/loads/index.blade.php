@@ -126,6 +126,7 @@
 
 <script>
     $(document).ready(function() {
+        let userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;    
         var table = $('#loads').DataTable({
             processing: true,
             serverSide: true,
@@ -172,9 +173,9 @@
                     return row.weight ? `${row.weight} ${row.weight_unit}` : 'N/A';
                 } },
                 { data: 'schedule', name: 'schedule', render: function(data) { 
-                    return data ? moment(data).format('YYYY-MM-DD hh:mm A') : 'N/A'; 
+                    return data ? moment(data).tz(userTimezone).format('YYYY-MM-DD hh:mm A') : 'N/A'; 
                 }  },
-                { data: 'delivery_deadline', name: 'delivery_deadline', render: function(data) { return moment(data).format('YYYY-MM-DD'); } },
+                { data: 'delivery_deadline', name: 'delivery_deadline', render: function(data) { return moment(data).tz(userTimezone).format('YYYY-MM-DD'); } },
                 { data: 'customer_po', name: 'customer_po' },
                 { data: 'is_hazmat', name: 'is_hazmat', orderable: false, searchable: false },
                 { data: 'is_inbond', name: 'is_inbond', orderable: false, searchable: false },
@@ -219,7 +220,7 @@
                 },
                 {
                     targets: 15, 
-                    className: 'edit-links',
+                    className: 'icon-design',
                 }
             ]
         });

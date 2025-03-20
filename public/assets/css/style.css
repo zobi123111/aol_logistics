@@ -2029,6 +2029,12 @@ td.edit-links  i {
 
 }
 @media (max-width: 767px) {
+  td.icon-design a, td.icon-design i {
+    padding: 0px 5px 15px 5px;
+}
+td.icon-design {
+    padding: 10px 2px !important;
+}
     .table {
         background-color: var(--header-bg) !important;
         color: #e0e0e0 !important;

@@ -69,11 +69,11 @@
         
         <div class="form-group mb-3">
             <label for="origin" class="form-label">{{ __('messages.Origin') }} <span class="text-danger">*</span></label>
-            <select name="origin" id="origin" class="form-control">
+            <select name="origin" id="origin" class="form-control select2">
                 <option value="">{{ __('messages.Select Origin') }} </option>
                 @foreach($origins as $origin)
                     <option value="{{ $origin->id }}" {{ old('origin') == $origin->id ? 'selected' : '' }}>
-                    {{ $origin->name ? $origin->name : ($origin->street . ', ' . $origin->city . ', ' . $origin->state . ', ' . $origin->zip . ', ' . $origin->country) }}
+                        {{ $origin->name ? $origin->name : ($origin->street . ', ' . $origin->city . ', ' . $origin->state . ', ' . $origin->zip . ', ' . $origin->country) }}
                     </option>
                 @endforeach
             </select>
@@ -86,7 +86,7 @@
 
         <div class="form-group mb-3">
             <label for="destination" class="form-label">{{ __('messages.Destination') }} <span class="text-danger">*</span></label>
-            <select name="destination" id="destination" class="form-control">
+            <select name="destination" id="destination" class="form-control select2">
                 <option value="">{{ __('messages.Select Destination') }} </option>
                 @foreach($destinations as $destination)
                     <option value="{{ $destination->id }}" {{ old('destination') == $destination->id ? 'selected' : '' }}>
@@ -224,6 +224,15 @@ $(document).ready(function() {
     console.log("Document is ready!");
     $('#supplier_id').select2({
             placeholder: "{{ __('messages.Select a Supplier') }}",
+            allowClear: true
+        });
+
+        $('#origin').select2({
+            placeholder: "{{ __('messages.Select Origin') }}",
+            allowClear: true
+        });
+        $('#destination').select2({
+            placeholder: "{{ __('messages.Select Destination') }}",
             allowClear: true
         });
 

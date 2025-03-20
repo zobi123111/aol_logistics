@@ -135,8 +135,8 @@ class LoadController extends Controller
     public function create()
     {
         // Fetch origins and destinations
-        $origins = Origin::all();
-        $destinations = Destination::all();
+        $origins = Origin::orderBy('name', 'asc')->get();
+        $destinations = Destination::orderBy('name', 'asc')->get();
         $suppliers = Supplier::where('is_active', 1)->get();
         return view('loads.create', compact('origins', 'destinations', 'suppliers'));
     }
@@ -249,8 +249,8 @@ class LoadController extends Controller
         $en = $id;
         $de = decode_id($id);
         $load = Load::with(['origindata', 'destinationdata'])->findOrFail($de);
-        $origins = Origin::all(); 
-        $destinations = Destination::all();
+        $origins = Origin::orderBy('name', 'asc')->get();
+        $destinations = Destination::orderBy('name', 'asc')->get();
         $suppliers = Supplier::where('is_active', 1)->get();
         return view('loads.edit', compact('load', 'origins', 'destinations', 'suppliers'));
     }

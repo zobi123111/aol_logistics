@@ -81,7 +81,14 @@
                     <td scope="row" class="lname">{{ $val->lname }}</td>
                     <td>{{ $val->email }}</td>
                     <td>{{$val->roledata->role_name}}</td>
-                    <td>{{ $val->last_login_at ? $val->last_login_at : '--' }}</td>
+                    <!-- <td>{{ $val->last_login_at ? $val->last_login_at : '--' }}</td> -->
+                    <td>
+                        {{ $val->last_login_at 
+                            ? \Carbon\Carbon::parse($val->last_login_at)->timezone(session('timezone', 'UTC'))->format('Y-m-d H:i:s')
+                            : '--' 
+                        }}
+                    </td>
+
                     @if(checkAllowedModule('users', 'users.toggleStatus')->isNotEmpty())
                     <td>
                         <!-- Bootstrap switch to toggle status -->
@@ -96,7 +103,7 @@
                     </td>
                     @endif
                     @if(checkAllowedModule('users', 'user.get')->isNotEmpty() || checkAllowedModule('users', 'user.destroy')->isNotEmpty())
-                    <td>
+                    <td class="icon-design">
                     @if(checkAllowedModule('users', 'user.get')->isNotEmpty())
                     <i class="fa fa-edit edit-user-icon table_icon_style blue_icon_color"
                             data-user-id="{{ encode_id($val->id) }}"></i>
