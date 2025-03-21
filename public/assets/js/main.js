@@ -316,56 +316,122 @@
     }, 200);
   }
   document.addEventListener("DOMContentLoaded", function () {
-    function handleDateInput(event, inputField, isDateTime = false) {
-        if (!inputField.value) {
-            inputField.value = formatDate(new Date(), isDateTime); // Default to now if empty
-        }
+    // function handleDateInput(event, inputField, isDateTime = false) {
+    //     if (!inputField.value) {
+    //         inputField.value = formatDate(new Date(), isDateTime); // Default to now if empty
+    //     }
 
-        let currentDate = new Date(inputField.value);
+    //     let currentDate = new Date(inputField.value);
 
-        if (event.key === "+" || event.key === "=") {
-            event.preventDefault();
-            currentDate.setDate(currentDate.getDate() + 1);
-        } else if (event.key === "-" || event.key === "_") {
-            event.preventDefault();
-            currentDate.setDate(currentDate.getDate() - 1);
-        } else if (event.key.toLowerCase() === "t") {
-            event.preventDefault();
-            currentDate = new Date(); 
-        }
+    //     if (event.key === "+" || event.key === "=") {
+    //         event.preventDefault();
+    //         currentDate.setDate(currentDate.getDate() + 1);
+    //     } else if (event.key === "-" || event.key === "_") {
+    //         event.preventDefault();
+    //         currentDate.setDate(currentDate.getDate() - 1);
+    //     } else if (event.key.toLowerCase() === "t") {
+    //         event.preventDefault();
+    //         currentDate = new Date(); 
+    //     }
 
-        inputField.value = formatDate(currentDate, isDateTime);
-    }
+    //     inputField.value = formatDate(currentDate, isDateTime);
+    // }
 
-    function formatDate(date, isDateTime = false) {
-        let year = date.getFullYear();
-        let month = String(date.getMonth() + 1).padStart(2, '0');
-        let day = String(date.getDate()).padStart(2, '0');
+    // function formatDate(date, isDateTime = false) {
+    //     let year = date.getFullYear();
+    //     let month = String(date.getMonth() + 1).padStart(2, '0');
+    //     let day = String(date.getDate()).padStart(2, '0');
 
-        if (isDateTime) {
-            let hours = String(date.getHours()).padStart(2, '0');
-            let minutes = String(date.getMinutes()).padStart(2, '0');
-            return `${year}-${month}-${day}T${hours}:${minutes}`;
-        }
+    //     if (isDateTime) {
+    //         let hours = String(date.getHours()).padStart(2, '0');
+    //         let minutes = String(date.getMinutes()).padStart(2, '0');
+    //         return `${year}-${month}-${day}T${hours}:${minutes}`;
+    //     }
 
-        return `${year}-${month}-${day}`;
-    }
+    //     return `${year}-${month}-${day}`;
+    // }
 
-    const dateInput = document.getElementById("delivery_deadline");
-    const dateTimeInput = document.getElementById("schedule");
+    // const dateInput = document.getElementById("delivery_deadline");
+    // const dateTimeInput = document.getElementById("schedule");
 
-    if (dateInput) {
-        dateInput.addEventListener("keydown", function (event) {
-            handleDateInput(event, dateInput, false);
-        });
-    }
+    // if (dateInput) {
+    //     dateInput.addEventListener("keydown", function (event) {
+    //         handleDateInput(event, dateInput, false);
+    //     });
+    // }
 
-    if (dateTimeInput) {
-        dateTimeInput.addEventListener("keydown", function (event) {
-            handleDateInput(event, dateTimeInput, true);
-        });
-    }
+    // if (dateTimeInput) {
+    //     dateTimeInput.addEventListener("keydown", function (event) {
+    //         handleDateInput(event, dateTimeInput, true);
+    //     });
+    // }
+
+    
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+  if (typeof flatpickr !== "undefined") {
+      const datePicker = flatpickr("#delivery_deadline", {
+          dateFormat: "d/m/Y", // Format to dd/mm/yyyy
+          allowInput: true
+      });
+
+      flatpickr("#schedule", {
+        enableTime: true,
+        dateFormat: "d/m/Y H:i",
+        time_24hr: true,
+        defaultHour: 9
+    });
+
+      function adjustDate(inputField, increase = true) {
+          let instance = inputField._flatpickr;
+          if (!instance) return;
+
+          let selectedDate = instance.selectedDates[0] || new Date();
+          selectedDate.setDate(selectedDate.getDate() + (increase ? 1 : -1));
+
+          instance.setDate(selectedDate, true);
+      }
+
+      function setToday(inputField) {
+          let instance = inputField._flatpickr;
+          if (!instance) return;
+
+          let today = new Date();
+          instance.setDate(today, true);
+      }
+
+      document.getElementById("delivery_deadline").addEventListener("keydown", function (event) {
+          if (event.key === "+" || event.key === "=") { // Increase date
+              event.preventDefault();
+              adjustDate(this, true);
+          } else if (event.key === "-" || event.key === "_") { // Decrease date
+              event.preventDefault();
+              adjustDate(this, false);
+          } else if (event.key.toLowerCase() === "t") { // Set to today
+              event.preventDefault();
+              setToday(this);
+          }
+      });
+
+      document.getElementById("schedule").addEventListener("keydown", function (event) {
+          if (event.key === "+" || event.key === "=") { // Increase date
+              event.preventDefault();
+              adjustDate(this, true);
+          } else if (event.key === "-" || event.key === "_") { // Decrease date
+              event.preventDefault();
+              adjustDate(this, false);
+          } else if (event.key.toLowerCase() === "t") { // Set to today
+              event.preventDefault();
+              setToday(this);
+          }
+      });
+
+  } else {
+      console.error("Flatpickr failed to load.");
+  }
+});
+
 })();
 
 

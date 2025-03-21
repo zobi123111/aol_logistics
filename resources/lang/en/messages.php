@@ -413,5 +413,7 @@ return [
     'supplier' => 'Supplier',
     'created_by' => 'Created By',
     'status' => 'Status',
-    
+    'Filter by Creator' => 'Filter by Creator',
+    'filter_by_client' => 'Filter by Client',
+
 ];

@@ -29,6 +29,8 @@ class LoadController extends Controller
         if ($request->ajax()) {
             $aolNumber = $request->input('aol_number');
             $status = $request->input('status');
+            $creatorFilter = $request->input('creator_filter');
+            $clientFilter = $request->input('client_filter');
 
             $loads = Load::with(['origindata', 'destinationdata', 'supplierdata', 'assignedServices.supplier', 'creator'])
                 ->when($userType == 2, function ($query) use ($user) {
@@ -56,6 +58,12 @@ class LoadController extends Controller
                 })
                 ->when($status, function ($query) use ($status) {
                     return $query->where('status', $status);
+                })
+                ->when(!empty($creatorFilter), function ($query) use ($creatorFilter) {
+                    return $query->whereIn('created_by', (array) $creatorFilter); 
+                })
+                ->when(!empty($clientFilter), function ($query) use ($clientFilter) {
+                    return $query->whereIn('created_by', (array) $clientFilter); 
                 })
                 ->latest('id')
                 ->get();
@@ -125,7 +133,21 @@ class LoadController extends Controller
                 ->make(true);
         }
 
-        return view('loads.index');
+        $creators = Load::with('creator')
+        ->selectRaw('DISTINCT created_by')
+        ->whereNotNull('created_by') 
+        ->get();
+
+        $creatorsclients = Load::with('creator') 
+        ->whereHas('creator', function ($query) {
+            $query->whereNotNull('client_id')
+                ->orWhere('is_client', 1);
+        })
+        ->selectRaw('DISTINCT created_by')
+        ->whereNotNull('created_by')
+        ->get();
+
+        return view('loads.index', compact('creators', 'creatorsclients'));
     }
 
     /**
@@ -147,6 +169,10 @@ class LoadController extends Controller
 
     public function store(Request $request)
     {
+        $request->merge([
+            'delivery_deadline' => Carbon::createFromFormat('d/m/Y', $request->delivery_deadline)->format('Y-m-d'),
+            'schedule' => Carbon::createFromFormat('d/m/Y H:i', $request->schedule)->format('Y-m-d H:i'),
+        ]);
         $request->validate([
             'origin' => 'required',
             'destination' => 'required',
@@ -257,6 +283,18 @@ class LoadController extends Controller
     
     public function update(Request $request, $id)
     {
+        if ($request->filled('delivery_deadline')) {
+            $request->merge([
+                'delivery_deadline' => Carbon::createFromFormat('d/m/Y', $request->delivery_deadline)->format('Y-m-d'),
+            ]);
+        }
+        
+        if ($request->filled('schedule')) {
+            $request->merge([
+                'schedule' => Carbon::createFromFormat('d/m/Y H:i', $request->schedule)->format('Y-m-d H:i'),
+            ]);
+        }
+    
         $request->validate([
             'origin' => 'required|string',
             'destination' => 'required|string',

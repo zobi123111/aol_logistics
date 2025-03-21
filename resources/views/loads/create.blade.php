@@ -163,7 +163,7 @@
                 @enderror
         </div>
 
-        <div class="form-group mb-3">
+        <!-- <div class="form-group mb-3">
             <label for="delivery_deadline" class="form-label">{{ __('messages.Delivery Deadline') }} <span class="text-danger">*</span></label>
             <input type="date" id="delivery_deadline" name="delivery_deadline" class="form-control" value="{{old('delivery_deadline')}}">
             @error('delivery_deadline')
@@ -179,7 +179,24 @@
                     <div class="text-danger">{{ $message }}</div>
                 @enderror
         </div>
-        
+         -->
+         <div class="form-group mb-3">
+            <label for="delivery_deadline" class="form-label">
+                {{ __('messages.Delivery Deadline') }} <span class="text-danger">*</span>
+            </label>
+            <input type="text" id="delivery_deadline" name="delivery_deadline" class="form-control" value="{{ old('delivery_deadline') }}" placeholder="Select a date">
+            @error('delivery_deadline')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
+        </div>
+
+<div class="form-group mb-3">
+    <label for="schedule" class="form-label">Schedule Date</label>
+    <input type="text" id="schedule" name="schedule" class="form-control" value="{{ old('schedule', date('d/m/Y 09:00')) }}" placeholder="Select date & time">
+    @error('schedule')
+        <div class="text-danger">{{ $message }}</div>
+    @enderror
+</div>
         <div class="form-group mb-3">
             <label for="customer_po" class="form-label">{{ __('messages.Customer PO / Reference Number') }} </label>
             <input type="text" id="customer_po" name="customer_po" class="form-control" value="{{old('customer_po')}}">

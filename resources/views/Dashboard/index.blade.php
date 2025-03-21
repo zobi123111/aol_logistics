@@ -115,7 +115,17 @@
                     <label for="creatorFilter">{{ __('messages.filter_by_creator') }}</label>
                     <select id="creatorFilter" class="form-control" multiple>
                         @foreach($creators as $creator)
-                            <option value="{{ $creator->creator->id }}">{{ $creator->creator->fname }}</option>
+                            <option value="{{ $creator->creator->id }}">{{ isset($creator->creator->fname) ? $creator->creator->fname. ' '. $creator->creator->lname : $creator->creator->email }} 
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                <label for="client_filter">{{ __('messages.filter_by_client') }}</label>
+                    <select id="client_filter" class="form-control select2" multiple>
+                        @foreach($creatorsclients as $client)
+                            <option value="{{ $client->creator->id }}">{{ $client->creator->fname }} {{ $client->creator->lname }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -125,6 +135,7 @@
                     <button id="applyFilters" class="btn btn-primary mt-4">{{ __('messages.apply_filters') }}</button>
                     <button id="clearFilters" class="btn btn-secondary mt-4">{{ __('messages.clear_filters') }}</button>
                 </div>
+                
 
                 <h2 class="mt-4">{{ __('messages.pending_loads') }}</h2>
                 <table id="pendingLoadsTablefilter" class="table table-striped respo_table">
@@ -236,14 +247,14 @@
      
     });
 
-    function loadTable(suppliers = [], creators = []) {
+    function loadTable(suppliers = [], creators = [] , clients = []) {
         // Destroy previous instance if exists
         if ($.fn.DataTable.isDataTable("#pendingLoadsTablefilter")) {
             $("#pendingLoadsTablefilter").DataTable().destroy();
         }
 
         // Don't load table if no filters are applied
-        if (suppliers.length === 0 && creators.length === 0) {
+        if (suppliers.length === 0 && creators.length === 0 && clients.length === 0) {
             $("#pendingLoadsTablefilter tbody").html(
                 `<tr><td colspan="7" class="text-center">{{ __('messages.no_data') }}</td></tr>`
             );
@@ -259,7 +270,8 @@
                 url: "{{ route('dashboard', ['type' => 'filter']) }}",
                 data: {
                     supplier_ids: suppliers,
-                    creator_ids: creators
+                    creator_ids: creators,
+                    client_ids: clients
                 }
             },
             columns: [
@@ -282,14 +294,16 @@
     $('#applyFilters').click(function () {
         let selectedSuppliers = $('#supplierFilter').val() || [];
         let selectedCreators = $('#creatorFilter').val() || [];
+        let selectedClient = $('#client_filter').val() || [];
 
-        loadTable(selectedSuppliers, selectedCreators);
+        loadTable(selectedSuppliers, selectedCreators, selectedClient);
     });
 
     // Handle clear filters
     $('#clearFilters').click(function () {
         $('#supplierFilter').val([]).trigger('change');
         $('#creatorFilter').val([]).trigger('change');
+        $('#client_filter').val([]).trigger('change');
 
         // Show message instead of table
         $("#pendingLoadsTablefilter tbody").html(
@@ -298,7 +312,7 @@
     });
 
     // Enable Select2 for multi-select dropdowns (Optional)
-    $('#supplierFilter, #creatorFilter').select2({ width: '100%' });
+    $('#supplierFilter, #creatorFilter, #client_filter').select2({ width: '100%' });
 </script>
 
 @endsection

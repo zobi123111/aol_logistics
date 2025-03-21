@@ -31,6 +31,24 @@
                     <option value="requested">{{ __('messages.Requested') }}</option>
                 </select>
             </div>
+            <div class="col-md-3">
+            <select id="creator_filter" class="form-control select2" multiple>
+                <option value="">{{ __('messages.Filter by Creator') }}</option>
+                @foreach($creators as $creator)
+                            <option value="{{ $creator->creator->id }}">{{ isset($creator->creator->fname) ? $creator->creator->fname. ' '. $creator->creator->lname : $creator->creator->email }} </option>
+                        @endforeach
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <select id="client_filter" class="form-control select2" multiple>
+                <option value="">{{ __('messages.filter_by_client') }}</option>
+                @foreach($creatorsclients as $client)
+                    <option value="{{ $client->creator->id }}">{{ $client->creator->fname }} {{ $client->creator->lname }}</option>
+                @endforeach
+            </select>
+        </div>
+       
         </div>
     </div>
 
@@ -136,7 +154,9 @@
 
                 var aolNumber = $('#aol_number_filter').val();
                 var status = $('#status_filter').val();
-
+                var creator_filter = $('#creator_filter').val() || [];
+                var client_filter = $('#client_filter').val() || [];
+                console.log(creator_filter);
                 $.ajax({
                     url: "{{ route('loads.index') }}",
                     data: {
@@ -145,6 +165,8 @@
                         page: settings.page,
                         length: settings.length,
                         order: data.order, 
+                        creator_filter: creator_filter,
+                        client_filter: client_filter,
                         columns: data.columns
                     },
                     success: function(response) {
@@ -234,6 +256,14 @@
             }, 200);
         });
 
+        $('#creator_filter, #client_filter').on('change', function() {
+
+            clearTimeout(delayTimer);
+            delayTimer = setTimeout(function() {
+                table.draw();
+            }, 200);
+        });
+
         $(document).on('click', '.delete-icon', function(e) {
          e.preventDefault();
          var loadid = $(this).data('load-id');
@@ -252,6 +282,15 @@
         // Show the modal
         $('#changeStatusModal').modal('show');
     }
+    $('#creator_filter').select2({
+            placeholder: "{{ __('messages.Filter by Creator') }}",
+            allowClear: true
+        });
+
+         $('#client_filter').select2({
+            placeholder: "{{ __('messages.filter_by_client') }}",
+            allowClear: true
+        });
 
 </script>
 

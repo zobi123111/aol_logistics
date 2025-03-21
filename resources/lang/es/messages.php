@@ -415,5 +415,7 @@ return [
     'supplier' => 'Proveedor',
     'created_by' => 'Creado por',
     'status' => 'Estado',
+    'Filter by Creator' => 'Filtrar por Creador',
+    'filter_by_client' => 'Filtrar por Cliente',
 
 ];

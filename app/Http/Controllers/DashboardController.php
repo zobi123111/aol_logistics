@@ -90,6 +90,9 @@ class DashboardController extends Controller
                 if (!empty($request->creator_ids)) {
                     $query->whereIn('created_by', $request->creator_ids);
                 }
+                if (!empty($request->client_ids)) {
+                    $query->whereIn('created_by', $request->client_ids);
+                }
         
                 return DataTables::of($query)
                     ->addIndexColumn()
@@ -130,19 +133,28 @@ class DashboardController extends Controller
 
         $suppliers = Load::with('supplierdata')
         ->selectRaw('DISTINCT supplier_id')
-        ->whereNotNull('supplier_id') // Exclude null supplier IDs
+        ->whereNotNull('supplier_id') 
         ->get();
 
-    $creators = Load::with('creator')
+        $creators = Load::with('creator')
         ->selectRaw('DISTINCT created_by')
-        ->whereNotNull('created_by') // Exclude null creator IDs
+        ->whereNotNull('created_by') 
+        ->get();
+
+        $creatorsclients = Load::with('creator') 
+        ->whereHas('creator', function ($query) {
+            $query->whereNotNull('client_id')
+                ->orWhere('is_client', 1);
+        })
+        ->selectRaw('DISTINCT created_by')
+        ->whereNotNull('created_by')
         ->get();
 
         return view('Dashboard.index', compact(
             'totalClients', 'activeClients',
             'totalSuppliers', 'activeSuppliers',
             'totalAol', 'activeTotalAol',
-            'activeUsers', 'pendingLoads','suppliers', 'creators'
+            'activeUsers', 'pendingLoads','suppliers', 'creators', 'creatorsclients'
         ));
     }
 }
