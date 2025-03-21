@@ -226,6 +226,18 @@ $(document).ready(function() {
         placeholder: "{{ __('messages.Select Supplier') }}",
         allowClear: true
     });
+
+    $('#origin').select2({
+            placeholder: "{{ __('messages.Select Origin') }}",
+            allowClear: true
+        });
+        $('#destination').select2({
+            placeholder: "{{ __('messages.Select Destination') }}",
+            allowClear: true
+        });
+        $('#origin, #destination').on('select2:open', function() {
+            $('.select2-results__options').scrollTop(0);
+        });
 });
 
 </script>

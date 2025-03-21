@@ -237,8 +237,9 @@
 @section('js_scripts')
 
 <script>
+    
 $(document).ready(function() {
-    console.log("Document is ready!");
+   
     $('#supplier_id').select2({
             placeholder: "{{ __('messages.Select a Supplier') }}",
             allowClear: true
@@ -252,7 +253,9 @@ $(document).ready(function() {
             placeholder: "{{ __('messages.Select Destination') }}",
             allowClear: true
         });
-
+        $('#origin, #destination').on('select2:open', function() {
+            $('.select2-results__options').scrollTop(0);
+        });
 });
 
 
