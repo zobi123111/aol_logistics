@@ -219,7 +219,7 @@ return [
     'Customer PO' => 'Pedido del Cliente',
     'Customer' => 'Cliente',
     'HazMat' => 'Material Peligroso',
-    'Inbond' => 'En Tránsito',
+    'Inbond' => 'Inbond',
     'Supplier' => 'Proveedor',
     'Assign' => 'Asignar',
     'Created By' => 'Creado por',
@@ -236,7 +236,7 @@ return [
     'Port of Entry' => 'Puerto de Entrada',
     'Customer PO / Reference Number' => 'Pedido del Cliente / Número de Referencia',
     'HazMat (Hazardous)' => 'HazMat (Peligroso)',
-    'Inbond Load' => 'Carga en Tránsito',
+    'Inbond Load' => 'Inbond Carga',
     'Create Load' => 'Crear carga',
     'No assigned services' => 'No hay servicios asignados',
     'Current Trailer Position' => 'Posición actual del remolque',
@@ -417,5 +417,7 @@ return [
     'status' => 'Estado',
     'Filter by Creator' => 'Filtrar por Creador',
     'filter_by_client' => 'Filtrar por Cliente',
+    'Hazmat' => 'Material Peligroso',
+
 
 ];

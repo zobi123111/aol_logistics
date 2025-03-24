@@ -415,5 +415,5 @@ return [
     'status' => 'Status',
     'Filter by Creator' => 'Filter by Creator',
     'filter_by_client' => 'Filter by Client',
-
+    'Hazmat' => 'Hazardous Material',
 ];

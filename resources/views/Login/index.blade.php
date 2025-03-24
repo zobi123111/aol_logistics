@@ -99,6 +99,9 @@
                                             <a href="https://x.com/alphaomega_log" target="_blank">
                                                 <img src="/assets/img/twitter.png" alt="Twitter">
                                             </a>
+                                            <a href="https://www.facebook.com/alphaomegalog" target="_blank">
+                                                <img src="/assets/img/facebook.png" alt="Twitter">
+                                            </a>
                                         </div>
                                     </div>
                                     </div>
