@@ -8,6 +8,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -66,5 +68,16 @@ class User extends Authenticatable
 public function supplier()
 {
     return $this->hasOne(Supplier::class, 'user_id');
+}
+
+public function client(): BelongsTo
+{
+    return $this->belongsTo(User::class, 'client_id');
+}
+
+
+public function clients(): HasMany
+{
+    return $this->hasMany(User::class, 'client_id');
 }
 }

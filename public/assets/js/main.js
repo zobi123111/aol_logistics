@@ -372,15 +372,16 @@
 document.addEventListener("DOMContentLoaded", function () {
   if (typeof flatpickr !== "undefined") {
       const datePicker = flatpickr("#delivery_deadline", {
-          dateFormat: "d/m/Y", // Format to dd/mm/yyyy
-          allowInput: true
+        dateFormat: "F/j/Y", // Format to dd/mm/yyyy
+          allowInput: false
       });
 
       flatpickr("#schedule", {
         enableTime: true,
-        dateFormat: "d/m/Y H:i",
+        dateFormat: "F/j/Y H:i",
         time_24hr: true,
-        defaultHour: 9
+        defaultHour: 9,
+        allowInput: false   
     });
 
       function adjustDate(inputField, increase = true) {

@@ -141,7 +141,7 @@ class DashboardController extends Controller
         ->whereNotNull('created_by') 
         ->get();
 
-        $creatorsclients = Load::with('creator') 
+        $creatorsclients = Load::with('creator.client') 
         ->whereHas('creator', function ($query) {
             $query->whereNotNull('client_id')
                 ->orWhere('is_client', 1);

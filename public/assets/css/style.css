@@ -184,11 +184,6 @@ h6 {
   transition: all 0.3s;
 }
 
-@media (max-width: 1199px) {
-  #main {
-    padding: 20px;
-  }
-}
 
 /*--------------------------------------------------------------
 # Page Title
@@ -2250,4 +2245,28 @@ p.text-muted.lead {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+div#pendingLoadsTable_length select {
+  background-color: #c1bdbd;
+}
+div#pendingLoadsTable_length {
+  padding-bottom: 20px;
+}
+button#applyFilters {
+  background: var(--btn-color);
+  border-color: var(--btn-color);
+  padding: 8px;
+}
+
+span.select2.select2-container.select2-container--default.select2-container--below.select2-container--open.select2-container--focus {
+  width: 100%;
+}
+
+span.select2.select2-container.select2-container--default.select2-container--below {
+  width: 100%;
+}
+
+.select2-dropdown {
+  z-index: 1 !important
 }

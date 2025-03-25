@@ -44,7 +44,9 @@
             <select id="client_filter" class="form-control select2" multiple>
                 <option value="">{{ __('messages.filter_by_client') }}</option>
                 @foreach($creatorsclients as $client)
-                    <option value="{{ $client->creator->id }}">{{ $client->creator->business_name ?? $client->creator->fname . ' ' . $client->creator->lname }}</option>
+                    <option value="{{ $client->creator->id }}"> {{ optional($client->creator->client)->business_name 
+                                ?? $client->creator->business_name 
+                                ?? $client->creator->fname . ' ' . $client->creator->lname }}</option>
                 @endforeach
             </select>
         </div>
@@ -148,6 +150,7 @@
         var table = $('#loads').DataTable({
             processing: true,
             serverSide: true,
+            
             order: [[0, 'desc']],
             ajax: function(data, callback, settings) {
                 $('#loader').show();
@@ -184,6 +187,8 @@
                     }
                 });
             },
+            scrollY: '550px',        
+            scrollCollapse: true,  
             columns: [
                 { data: 'aol', name: 'aol_number' },
                 { data: 'service_type', name: 'service_type' },

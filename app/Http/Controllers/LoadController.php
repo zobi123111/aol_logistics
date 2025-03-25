@@ -138,7 +138,7 @@ class LoadController extends Controller
         ->whereNotNull('created_by') 
         ->get();
 
-        $creatorsclients = Load::with('creator') 
+        $creatorsclients = Load::with('creator.client') 
         ->whereHas('creator', function ($query) {
             $query->whereNotNull('client_id')
                 ->orWhere('is_client', 1);
@@ -169,10 +169,18 @@ class LoadController extends Controller
 
     public function store(Request $request)
     {
-        $request->merge([
-            'delivery_deadline' => Carbon::createFromFormat('d/m/Y', $request->delivery_deadline)->format('Y-m-d'),
-            'schedule' => Carbon::createFromFormat('d/m/Y H:i', $request->schedule)->format('Y-m-d H:i'),
-        ]);
+       
+        if ($request->filled('delivery_deadline')) {
+            $request->merge([
+                'delivery_deadline' => Carbon::createFromFormat('F/j/Y', $request->delivery_deadline)->format('Y-m-d'),
+            ]);
+        }
+        
+        if ($request->filled('schedule')) {
+            $request->merge([
+                'schedule' => Carbon::createFromFormat('F/j/Y H:i', $request->schedule)->format('Y-m-d H:i'),
+            ]);
+        }
         $request->validate([
             'origin' => 'required',
             'destination' => 'required',
@@ -285,13 +293,13 @@ class LoadController extends Controller
     {
         if ($request->filled('delivery_deadline')) {
             $request->merge([
-                'delivery_deadline' => Carbon::createFromFormat('d/m/Y', $request->delivery_deadline)->format('Y-m-d'),
+                'delivery_deadline' => Carbon::createFromFormat('F/j/Y', $request->delivery_deadline)->format('Y-m-d'),
             ]);
         }
         
         if ($request->filled('schedule')) {
             $request->merge([
-                'schedule' => Carbon::createFromFormat('d/m/Y H:i', $request->schedule)->format('Y-m-d H:i'),
+                'schedule' => Carbon::createFromFormat('F/j/Y H:i', $request->schedule)->format('Y-m-d H:i'),
             ]);
         }
     
@@ -672,4 +680,12 @@ class LoadController extends Controller
         return redirect()->back()->with('message', __('messages.document_deleted'));
     }
     
+    public function markAsDelivered($loadId)
+{
+    $load = Load::findOrFail($loadId);
+    $load->update(['status' => 'delivered']);
+
+    // Sync invoice to QuickBooks
+    return app(QuickBooksController::class)->syncLoadInvoice($loadId);
+}
 }
