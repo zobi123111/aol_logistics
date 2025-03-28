@@ -75,7 +75,7 @@
             <select name="country" class="form-control @error('country') is-invalid @enderror" required>
                 <option value="">Select Country</option>
                 @php
-                    $countries = ['USA', 'Canada', 'UK', 'Germany', 'France', 'Australia', 'India', 'China', 'Japan', 'Brazil'];
+                    $countries = ['USA', 'Mexico'];
                 @endphp
                 @foreach($countries as $country)
                     <option value="{{ $country }}" {{ old('country', $origin->country) == $country ? 'selected' : '' }}>{{ $country }}</option>

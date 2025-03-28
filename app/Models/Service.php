@@ -15,7 +15,7 @@ class Service extends Model
         'destination',
         'cost',
         'supplier_id',
-        'service_type','street', 'city', 'state', 'zip', 'country', 
+        'service_type','street', 'city', 'state', 'zip', 'country', 'service_name', 
     ];
 
     public function supplier()

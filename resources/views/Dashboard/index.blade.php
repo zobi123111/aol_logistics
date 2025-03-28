@@ -19,8 +19,8 @@
 <div class="container">
     <!-- Welcome Section -->
     <div class="text-center py-4 mb-4 border-bottom">
-        <h3 class="fw-bold">🎉 {{ __('messages.Welcome to').' '. env('PROJECT_NAME') }}!</h3>
-        <p class="text-muted lead">{{ __('messages.Hey') }} <strong>{{ Auth::user()->fname }} {{ Auth::user()->lname }}</strong>, {{ __("messages.we're excited to have you on board") }}! 😊</p>
+        <h3 class="fw-bold">{{ __('messages.Welcome') }} {{ Auth::user()->fname }} {{ Auth::user()->lname }} !</h3>
+        <!-- <p class="text-muted lead">{{ __('messages.Hey') }} <strong>{{ Auth::user()->fname }} {{ Auth::user()->lname }}</strong>, {{ __("messages.we're excited to have you on board") }}! 😊</p> -->
     </div>
 
     <div class="row">

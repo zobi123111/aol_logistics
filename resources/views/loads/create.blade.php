@@ -180,25 +180,25 @@
                 @enderror
         </div>
          -->
-         <div class="form-group mb-3">
+
+        <div class="form-group mb-3">
+            <label for="schedule" class="form-label">{{ __('messages.Schedule Date') }}</label>
+            <input type="text" id="schedule" name="schedule" class="form-control"
+       value="{{ old('schedule') ? \Carbon\Carbon::createFromFormat('Y-m-d H:i', old('schedule'))->format('M. j, Y H:i') : now()->format('M. j, Y 09:00') }}"
+       placeholder="Select date & time">
+
+            @error('schedule')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
+        </div>
+        <div class="form-group mb-3">
             <label for="delivery_deadline" class="form-label">
                 {{ __('messages.Delivery Deadline') }} <span class="text-danger">*</span>
             </label>
             <input type="text" id="delivery_deadline" name="delivery_deadline" class="form-control"
-                value="{{ old('delivery_deadline') ? \Carbon\Carbon::createFromFormat('Y-m-d', old('delivery_deadline'))->format('F/j/Y') : now()->format('F/j/Y') }}"
+                value="{{ old('delivery_deadline') ? \Carbon\Carbon::createFromFormat('Y-m-d', old('delivery_deadline'))->format('M. j, Y') : now()->format('M. j, Y') }}"
                 placeholder="Select a date">
             @error('delivery_deadline')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <div class="form-group mb-3">
-            <label for="schedule" class="form-label">Schedule Date</label>
-            <input type="text" id="schedule" name="schedule" class="form-control"
-       value="{{ old('schedule') ? \Carbon\Carbon::createFromFormat('Y-m-d H:i', old('schedule'))->format('F/j/Y H:i') : now()->format('F/j/Y 09:00') }}"
-       placeholder="Select date & time">
-
-            @error('schedule')
                 <div class="text-danger">{{ $message }}</div>
             @enderror
         </div>
@@ -223,7 +223,7 @@
 
         <div class="form-check mb-3">
             <input type="checkbox" name="is_inbond" id="is_inbond" class="form-check-input" value="1" {{ old('is_inbond') ? 'checked' : '' }}>
-            <label class="form-check-label" for="is_inbond">{{ __('messages.Inbond Load') }} </label>
+            <label class="form-check-label" for="is_inbond">{{ __('messages.Inbond') }} </label>
             @error('is_inbond')
                 <div class="text-danger">
                      {{ $message }}

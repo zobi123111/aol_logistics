@@ -276,6 +276,17 @@
                         </div>
                     @enderror
                 </div>
+
+                <div class="mb-3">
+                    <label class="form-label">  ctpat_number </label><span class="text-danger">*</span>
+                    <input type="text" name="ctpat_number" class="form-control" value="{{ old('ctpat_number', $supplier->ctpat_number) }}">
+                    @error('ctpat_number')
+                        <div class="text-danger">
+                           {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+
                 <div class="upload-design">
                 <div class="mb-3">
                     <label class="form-label">  {{ __('messages.Uploaded Documents') }} </label>
@@ -299,10 +310,10 @@
                                 @endforeach
                             </ul>
                         @else
-                            <p>  {{ __('messages.No documents found with type documents') }} </p>
+                            <p>  {{ __('messages.No documents found') }}  </p>
                         @endif
                     @else
-                        <p>  {{ __('messages.No documents available') }} </p>
+                        <p>  {{ __('messages.No documents found') }}  </p>
                     @endif
                     </ul>
                 </div>
@@ -354,7 +365,7 @@
                             <p>  {{ __('messages.No documents found') }} </p>
                         @endif
                     @else
-                        <p>  {{ __('messages.No documents available') }} </p>
+                        <p>  {{ __('messages.No documents found') }}  </p>
                     @endif
                     </ul>
                 </div>
@@ -402,7 +413,7 @@
                             <p>  {{ __('messages.No documents found') }} </p>
                         @endif
                     @else
-                        <p>  {{ __('messages.No documents available') }} </p>
+                        <p>  {{ __('messages.No documents found') }}  </p>
                     @endif
                 </div>
                 <div class="mb-3">
@@ -417,6 +428,53 @@
 
                     <!-- Loop to show individual errors for each document -->
                     @foreach ($errors->get('caat_documents.*') as $message)
+                    <div class="text-danger">{{ $message[0] }}</div>
+                    @endforeach
+                </div>
+                </div>
+
+                <div class="upload-design">
+
+                <div class="mb-3">
+                    <label class="form-label">  {{ __('messages.Uploaded CTPAT Documents') }}</label>
+
+                    @if($supplier->supplierdocuments && $decodedDocuments = json_decode($supplier->supplierdocuments, true))
+                        @php
+                            $filteredDocuments = collect($decodedDocuments)->filter(function($document) {
+                                return isset($document['document_type']) && $document['document_type'] === 'ctpat_documents';
+                            });
+                        @endphp
+
+                        @if($filteredDocuments->isNotEmpty())
+                            <ul>
+                                @foreach($filteredDocuments as $index => $document)
+                                    <li>
+                                        <a href="{{ asset('storage/' . $document['file_path']) }}" target="_blank">  {{ __('messages.View Document') }} </a>
+                                        <label>
+                                        <input type="checkbox" name="delete_documents[]" value="{{ $document['file_path'] }}">  {{ __('messages.Delete') }} 
+                                        </label>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @else
+                            <p>  {{ __('messages.No documents found') }} </p>
+                        @endif
+                    @else
+                        <p>  {{ __('messages.No documents found') }}  </p>
+                    @endif
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">  {{ __('messages.Upload New CTPAT Documents') }} </label>
+                    <input type="file" name="ctpat_documents[]" class="form-control" multiple>
+                    <small class="text-muted">  {{ __('messages.You can upload multiple legal documents') }} </small>
+                    @error('ctpat_documents')
+                        <div class="text-danger">
+                        {{ $message }}
+                        </div>
+                    @enderror
+
+                    <!-- Loop to show individual errors for each document -->
+                    @foreach ($errors->get('ctpat_documents.*') as $message)
                     <div class="text-danger">{{ $message[0] }}</div>
                     @endforeach
                 </div>

@@ -36,90 +36,97 @@
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
-
+                <div class="form-group mb-3">
+                    <label for="service_name" class="form-label"> {{ __('messages.Service Name') }}</label>
+                    <input type="text" name="service_name" id="service_name" class="form-control"  value="{{ isset($service) ? $service->service_name : old('service_name') }}">
+                    @error('service_name')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
                 <div id="freight_fields" style="display: {{ isset($service) && $service->service_type == 'freight' ? 'block' : 'none' }};">
-    <div class="form-group mb-3">
-        <label for="origin" class="form-label"> {{ __('messages.Origin') }} <span class="text-danger">*</span></label>
-        <select name="origin" id="origin" class="form-control">
-        <option value="">{{ __('messages.Select Origin') }}</option>
-            @foreach($origins as $origin)
-                <option value="{{ $origin->id }}" 
-                    {{ (isset($service) && $service->origin == $origin->id) || old('origin') == $origin->id ? 'selected' : '' }}>
-                    {{ $origin->street }}, {{ $origin->city }}, {{ $origin->state }}, {{ $origin->zip }},   {{ $origin->country }}
-                </option>
-            @endforeach
-        </select>
-        @error('origin')
-            <div class="text-danger">{{ $message }}</div>
-        @enderror
-    </div>
+                <div class="form-group mb-3">
+                    <label for="origin" class="form-label"> {{ __('messages.Origin') }} <span class="text-danger">*</span></label>
+                    <select name="origin" id="origin" class="form-control">
+                    <option value="">{{ __('messages.Select Origin') }}</option>
+                        @foreach($origins as $origin)
+                            <option value="{{ $origin->id }}" 
+                                {{ (isset($service) && $service->origin == $origin->id) || old('origin') == $origin->id ? 'selected' : '' }}>
+                                {{ $origin->name ? $origin->name : ($origin->street . ', ' . $origin->city . ', ' . $origin->state . ', ' . $origin->zip . ', ' . $origin->country) }}
+                                </option>
+                        @endforeach
+                    </select>
+                    @error('origin')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
 
-    <div class="form-group mb-3">
-        <label for="destination" class="form-label"> {{ __('messages.Destination') }} <span class="text-danger">*</span></label>
-        <select name="destination" id="destination" class="form-control">
-        <option value="">{{ __('messages.Select Destination') }}</option>
-        @foreach($destinations as $destination)
-                <option value="{{ $destination->id }}" 
-                    {{ (isset($service) && $service->destination == $destination->id) || old('destination') == $destination->id ? 'selected' : '' }}>
-                    {{ $destination->street }}, {{ $destination->city }}, {{ $destination->state }}, {{ $destination->zip }}, {{ $destination->country }}
-                </option>
-            @endforeach
-        </select>
-        @error('destination')
-            <div class="text-danger">{{ $message }}</div>
-        @enderror
-    </div>
-</div>
+                <div class="form-group mb-3">
+                    <label for="destination" class="form-label"> {{ __('messages.Destination') }} <span class="text-danger">*</span></label>
+                    <select name="destination" id="destination" class="form-control">
+                    <option value="">{{ __('messages.Select Destination') }}</option>
+                    @foreach($destinations as $destination)
+                            <option value="{{ $destination->id }}" 
+                                {{ (isset($service) && $service->destination == $destination->id) || old('destination') == $destination->id ? 'selected' : '' }}>
+                                {{$destination->name ? $destination->name :  $destination->street.', '. $destination->city.', '. $destination->state.', '. $destination->zip.', '. $destination->country }}
 
-<div id="warehouse_fields" style="display: {{ isset($service) && $service->service_type == 'warehouse' ? 'block' : 'none' }};">
-    <div class="form-group mb-3">
-        <label for="street" class="form-label">{{ __('messages.Street Address') }} <span class="text-danger">*</span></label>
-        <input type="text" name="street" id="street" class="form-control" value="{{ isset($service) ? $service->street : old('street') }}">
-        @error('street')
-            <div class="text-danger">{{ $message }}</div>
-        @enderror
-    </div>
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('destination')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
 
-    <div class="form-group mb-3">
-        <label for="city" class="form-label">{{ __('messages.City') }} <span class="text-danger">*</span></label>
-        <input type="text" name="city" id="city" class="form-control" value="{{ isset($service) ? $service->city : old('city') }}">
-        @error('city')
-            <div class="text-danger">{{ $message }}</div>
-        @enderror
-    </div>
+            <div id="warehouse_fields" style="display: {{ isset($service) && $service->service_type == 'warehouse' ? 'block' : 'none' }};">
+                <div class="form-group mb-3">
+                    <label for="street" class="form-label">{{ __('messages.Street Address') }} <span class="text-danger">*</span></label>
+                    <input type="text" name="street" id="street" class="form-control" value="{{ isset($service) ? $service->street : old('street') }}">
+                    @error('street')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
 
-    <div class="form-group mb-3">
-        <label for="state" class="form-label">{{ __('messages.State') }} <span class="text-danger">*</span></label>
-        <input type="text" name="state" id="state" class="form-control" value="{{ isset($service) ? $service->state : old('state') }}">
-        @error('state')
-            <div class="text-danger">{{ $message }}</div>
-        @enderror
-    </div>
+                <div class="form-group mb-3">
+                    <label for="city" class="form-label">{{ __('messages.City') }} <span class="text-danger">*</span></label>
+                    <input type="text" name="city" id="city" class="form-control" value="{{ isset($service) ? $service->city : old('city') }}">
+                    @error('city')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
 
-    <div class="form-group mb-3">
-        <label for="zip" class="form-label">{{ __('messages.Zip Code') }} <span class="text-danger">*</span></label>
-        <input type="text" name="zip" id="zip" class="form-control" value="{{ isset($service) ? $service->zip : old('zip') }}">
-        @error('zip')
-            <div class="text-danger">{{ $message }}</div>
-        @enderror
-    </div>
+                <div class="form-group mb-3">
+                    <label for="state" class="form-label">{{ __('messages.State') }} <span class="text-danger">*</span></label>
+                    <input type="text" name="state" id="state" class="form-control" value="{{ isset($service) ? $service->state : old('state') }}">
+                    @error('state')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
 
-    <div class="mb-3">
-        <label for="country" class="form-label">{{ __('messages.Country') }} <span class="text-danger">*</span></label>
-        <select name="country" class="form-control @error('country') is-invalid @enderror">
-            <option value=""> {{ __('messages.Select Country') }} </option>
-            @foreach(['USA', 'Canada', 'UK', 'Germany', 'France', 'Australia', 'India', 'China', 'Japan', 'Brazil'] as $country)
-                <option value="{{ $country }}" 
-                    {{ (isset($service) && $service->country == $country) || old('country') == $country ? 'selected' : '' }}>
-                    {{ $country }}
-                </option>
-            @endforeach
-        </select>
-        @error('country')
-            <div class="text-danger">{{ $message }}</div>
-        @enderror
-    </div>
-</div>
+                <div class="form-group mb-3">
+                    <label for="zip" class="form-label">{{ __('messages.Zip Code') }} <span class="text-danger">*</span></label>
+                    <input type="text" name="zip" id="zip" class="form-control" value="{{ isset($service) ? $service->zip : old('zip') }}">
+                    @error('zip')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="mb-3">
+                    <label for="country" class="form-label">{{ __('messages.Country') }} <span class="text-danger">*</span></label>
+                    <select name="country" class="form-control @error('country') is-invalid @enderror">
+                        <option value=""> {{ __('messages.Select Country') }} </option>
+                        @foreach(['USA', 'Canada', 'UK', 'Germany', 'France', 'Australia', 'India', 'China', 'Japan', 'Brazil'] as $country)
+                            <option value="{{ $country }}" 
+                                {{ (isset($service) && $service->country == $country) || old('country') == $country ? 'selected' : '' }}>
+                                {{ $country }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('country')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
 
                 <!-- Cost -->
                 <div class="form-group mb-3">

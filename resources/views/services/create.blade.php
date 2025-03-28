@@ -35,6 +35,13 @@
                 <div class="text-danger">{{ $message }}</div>
             @enderror
             </div>
+            <div class="form-group mb-3">
+                <label for="service_name" class="form-label"> {{ __('messages.Service Name') }}</label>
+                <input type="text" name="service_name" id="service_name" class="form-control" value="{{ old('service_name') }}">
+                @error('service_name')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
             <div id="freight_fields" style="display: none;">
             <div class="form-group mb-3">
                 <label for="origin" class="form-label"> {{ __('messages.Origin') }} <span class="text-danger">*</span></label>
@@ -42,7 +49,7 @@
                     <option value="">{{ __('messages.Select Origin') }}</option>
                     @foreach($origins as $origin)
                         <option value="{{ $origin->id }}" {{ old('origin') == $origin->id ? 'selected' : '' }}>
-                            {{ $origin->street }}, {{ $origin->city }}, {{ $origin->state }}, {{ $origin->zip }}, {{ $origin->country }}
+                        {{ $origin->name ? $origin->name : ($origin->street . ', ' . $origin->city . ', ' . $origin->state . ', ' . $origin->zip . ', ' . $origin->country) }}
                         </option>
                     @endforeach
                 </select>
@@ -59,7 +66,7 @@
                     <option value="">{{ __('messages.Select Destination') }}</option>
                     @foreach($destinations as $destination)
                         <option value="{{ $destination->id }}" {{ old('destination') == $destination->id ? 'selected' : '' }}>
-                            {{ $destination->street }}, {{ $destination->city }}, {{ $destination->state }}, {{ $destination->zip }}, {{ $destination->country }}
+                        {{$destination->name ? $destination->name :  $destination->street.', '. $destination->city.', '. $destination->state.', '. $destination->zip.', '. $destination->country }}
                         </option>
                     @endforeach
                 </select>

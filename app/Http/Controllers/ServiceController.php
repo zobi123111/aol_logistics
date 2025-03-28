@@ -37,13 +37,13 @@ class ServiceController extends Controller
         return datatables()->eloquent($services)
             ->addColumn('origin', function ($service) {
                 return $service->service_type !== 'warehouse' && $service->origindata
-                    ? "{$service->origindata->street}, {$service->origindata->city}, {$service->origindata->state}, {$service->origindata->zip}, {$service->origindata->country}"
-                    : '-';
+                ? ($service->origindata->name ?: ($service->origindata->street . ', ' . $service->origindata->city . ', ' . $service->origindata->state . ', ' . $service->origindata->country))
+                : 'NA';
             })
             ->addColumn('destination', function ($service) {
                 return $service->service_type !== 'warehouse' && $service->destinationdata
-                    ? "{$service->destinationdata->street}, {$service->destinationdata->city}, {$service->destinationdata->state}, {$service->destinationdata->zip}, {$service->destinationdata->country}"
-                    : '-';
+                ? ($service->destinationdata->name ?: ($service->destinationdata->street . ', ' . $service->destinationdata->city . ', ' . $service->destinationdata->state . ', ' . $service->destinationdata->country))
+                : 'NA';
             })
             ->addColumn('warehouse', function ($service) {
                 if ($service->service_type === 'warehouse') {
@@ -90,6 +90,7 @@ class ServiceController extends Controller
             'zip' => $request->service_type === 'warehouse' ? 'required|string|max:20' : 'nullable',
             'country' => $request->service_type === 'warehouse' ? 'required|string|max:255' : 'nullable',
             'cost' => 'required|numeric',
+            'service_name' => 'nullable',
         ]);
     
         // Check if validation fails
@@ -102,6 +103,7 @@ class ServiceController extends Controller
         $service->supplier_id = $supplierId;
         $service->service_type = $request->service_type;
         $service->cost = $request->cost;
+        $service->service_name = $request->service_name;
         if ($request->service_type === 'warehouse') {
             $service->street = $request->street;
             $service->city = $request->city;
@@ -141,6 +143,7 @@ class ServiceController extends Controller
             'zip' => $request->service_type === 'warehouse' ? 'required|string|max:20' : 'nullable',
             'country' => $request->service_type === 'warehouse' ? 'required|string|max:255' : 'nullable',
             'cost' => 'required|numeric',
+            'service_name' => 'nullable',
         ]);
     
         // Check if validation fails
@@ -153,6 +156,7 @@ class ServiceController extends Controller
         $service = Service::findOrFail($serviceId);
         $service->service_type = $request->service_type;
         $service->cost = $request->cost;
+        $service->service_name = $request->service_name;
         // Update fields based on shipping type
         if ($request->shipping_type === 'freight') {
             $service->shipping_type = 'freight';

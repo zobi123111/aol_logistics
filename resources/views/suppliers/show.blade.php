@@ -29,6 +29,7 @@
                 <strong>  {{ __('messages.Primary Contact Mobile Phone') }} :</strong> {{ $supplier->primary_contact_mobile_phone }} <br>
                 <strong>  {{ __('messages.SCAC Number') }} :</strong> {{ $supplier->scac_number }} <br>
                 <strong>  {{ __('messages.CAAT Number') }} :</strong> {{ $supplier->caat_number }} <br>
+                <strong>  {{ __('messages.CTPAT Number') }} :</strong> {{ $supplier->ctpat_number }} <br>
             </p>
         </div>
     </div>

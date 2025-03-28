@@ -3,7 +3,7 @@
 return [
 
     'Sign Out' => 'Sign Out',
-    'Welcome to' => 'Welcome to',
+    'Welcome' => 'Welcome',
     'Dashboard' => 'dashboard',
     'User Statistics (Active vs Total)' => 'Estadísticas de usuario (activo vs total)',
     'Users' => 'User',
@@ -103,6 +103,7 @@ return [
     'User Details' => 'User Details',
     'SCAC Documents' => 'SCAC Documents',
     'CAAT Documents' => 'CAAT Documents',
+    'CTPAT Documents' => 'CTPAT Documents',
     'User Role' => 'User Role',
     'Currency' => 'Currency',
     'Address' => 'Address',
@@ -137,6 +138,8 @@ return [
     'You can upload multiple legal documents' => 'You can upload multiple legal documents',
     'CAAT Number' => 'CAAT Number',
     'CAAT Legal Documents' => 'CAAT Legal Documents',
+    'CTPAT Number' => 'CTPAT Number',
+    'CTPAT Legal Documents' => 'CTPAT Legal Documents',
     'You can upload multiple legal documents' => 'You can upload multiple legal documents',
     'Save Supplier' => 'Save Supplier',
 
@@ -157,6 +160,9 @@ return [
     'Upload New SCAC Documents' => 'Upload New SCAC Documents',
     'Uploaded CAAT Documents' => 'Uploaded CAAT Documents',
     'Upload New CAAT Documents' => 'Upload New CAAT Documents',
+    'Uploaded CTPAT Documents' => 'Uploaded CTPAT Documents',
+    'Upload New CTPAT Documents' => 'Upload New CTPAT Documents',
+
 
 
     // Supplier Service
@@ -235,7 +241,7 @@ return [
     'Port of Entry' => 'Port of Entry',
     'Customer PO / Reference Number' => 'Customer PO / Reference Number',
     'HazMat (Hazardous)' => 'HazMat (Hazardous)',
-    'Inbond Load' => 'Inbond Load',
+    'Inbond' => 'Inbond',
     'Create Load' => 'Create Load',
     'No assigned services' => 'No assigned services',
     'Current Trailer Position' => 'Current Trailer Position',
@@ -416,4 +422,6 @@ return [
     'Filter by Creator' => 'Filter by Creator',
     'filter_by_client' => 'Filter by Client',
     'Hazmat' => 'Hazardous Material',
+    'Service Name' => 'Service Name',
+    'No documents found' => 'No documents found',
 ];

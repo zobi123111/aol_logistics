@@ -23,6 +23,7 @@
         <thead>
             <tr>
                 <th> {{ __('messages.Service Type') }}  </th>
+                <th> {{ __('messages.Service Name') }}  </th>
                 <th> {{ __('messages.Origin') }} </th>
                 <th> {{ __('messages.Destination') }} </th>
                 <th>{{ __('messages.Location') }}</th>
@@ -68,6 +69,7 @@ $(document).ready(function() {
     ajax: "{{ route('services.index', ['supplierId' => encode_id($supplier->id)]) }}",
     columns: [
         { data: 'service_type', name: 'service_type' },
+        { data: 'service_name', name: 'service_name' },
         { data: 'origin', name: 'origin' },
         { data: 'destination', name: 'destination' },
         { data: 'warehouse', name: 'warehouse', orderable: false, searchable: false },

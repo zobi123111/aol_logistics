@@ -15,7 +15,7 @@ class Supplier extends Model
         'office_phone', 'primary_contact_email', 'primary_contact_office_phone', 
         'primary_contact_mobile_phone', 'user_email', 'user_office_phone', 'user_mobile_phone',
         'user_role', 'service_type', 'currency', 'preferred_language',
-        'documents', 'scac_number', 'scac_documents', 'caat_number', 'caat_documents', 'user_id'
+        'documents', 'scac_number', 'scac_documents', 'caat_number', 'caat_documents', 'user_id', 'ctpat_number'
     ];
     
     public function user()

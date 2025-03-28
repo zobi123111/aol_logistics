@@ -78,6 +78,7 @@
                     <th> {{ __('messages.Assign') }} </th>
                     <th>{{ __('messages.shipment_status') }}</th>
                     <th>{{ __('messages.update_truck_details') }}</th>
+                    <th>add invoice</th>
                 </tr>
             </thead>
 
@@ -150,7 +151,14 @@
         var table = $('#loads').DataTable({
             processing: true,
             serverSide: true,
-            
+            scrollY: '550px',
+            scrollX: true, 
+            scrollCollapse: true,
+            paging: false, 
+            fixedHeader: false, 
+            footerCallback: function (row, data, start, end, display) {
+                $(row).css('position', 'relative'); 
+            },
             order: [[0, 'desc']],
             ajax: function(data, callback, settings) {
                 $('#loader').show();
@@ -187,8 +195,7 @@
                     }
                 });
             },
-            scrollY: '550px',        
-            scrollCollapse: true,  
+           
             columns: [
                 { data: 'aol', name: 'aol_number' },
                 { data: 'service_type', name: 'service_type' },
@@ -200,9 +207,9 @@
                     return row.weight ? `${row.weight} ${row.weight_unit}` : 'N/A';
                 } },
                 { data: 'schedule', name: 'schedule', render: function(data) { 
-                    return data ? moment(data).tz(userTimezone).format('YYYY-MM-DD hh:mm A') : 'N/A'; 
+                    return data ? moment(data).tz(userTimezone).format('MMM. D, YYYY HH:mm') : 'N/A'; 
                 }  },
-                { data: 'delivery_deadline', name: 'delivery_deadline', render: function(data) { return moment(data).tz(userTimezone).format('YYYY-MM-DD'); } },
+                { data: 'delivery_deadline', name: 'delivery_deadline', render: function(data) { return moment(data).tz(userTimezone).format('MMM. D, YYYY'); } },
                 { data: 'customer_po', name: 'customer_po' },
                 { data: 'is_hazmat', name: 'is_hazmat', orderable: false, searchable: false },
                 { data: 'is_inbond', name: 'is_inbond', orderable: false, searchable: false },
@@ -213,6 +220,7 @@
                 { data: 'assign', name: 'assign', orderable: false, searchable: false },
                 { data: 'shipment_status', name: 'shipment_status', orderable: false, searchable: false },
                 { data: 'update_details', name: 'update_details', orderable: false, searchable: false },
+                // { data: 'add_invoice', name: 'add_invoice', orderable: false, searchable: false },
             ],
             language: {
                 sSearch: "{{ __('messages.Search') }}",

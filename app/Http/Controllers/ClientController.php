@@ -50,8 +50,8 @@ class ClientController extends Controller
     public function store(Request $request)
     {
         $clientdata = [
-            'client_Fname' => 'required|string|max:255',
-            'client_Lname' => 'required|string|max:255',
+            // 'client_Fname' => 'required|string|max:255',
+            // 'client_Lname' => 'required|string|max:255',
             'business_name' => 'required|string|max:255',
             'email' => 'required|string|max:255',
             'password' => 'required|string|min:6|confirmed',
@@ -81,8 +81,8 @@ class ClientController extends Controller
             $role = Role::where('role_slug', config('constants.roles.CLIENTMASTERCLIENT'))->first();
         
             $createClient = User::create([
-                'fname' => $request->client_Fname,
-                'lname' => $request->client_Lname,
+                // 'fname' => $request->client_Fname,
+                // 'lname' => $request->client_Lname,
                 'email' => $request->email,
                 'business_name' => $request->business_name,
                 'created_by' => auth()->id(),
@@ -152,8 +152,8 @@ class ClientController extends Controller
          $user = User::findOrFail($de_clientId);
 
          $validator = Validator::make($request->all(), [
-            'client_Fname' => 'required|string|max:255',
-            'client_Lname' => 'required|string|max:255',
+            // 'client_Fname' => 'required|string|max:255',
+            // 'client_Lname' => 'required|string|max:255',
             'business_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
          ]);
@@ -165,8 +165,8 @@ class ClientController extends Controller
                  ->withInput();
          }
      
-         $user->fname = $request->client_Fname;
-         $user->lname = $request->client_Lname; 
+        //  $user->fname = $request->client_Fname;
+        //  $user->lname = $request->client_Lname; 
          $user->email = $request->email;
          $user->business_name = $request->business_name;
 

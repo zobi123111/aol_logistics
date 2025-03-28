@@ -18,21 +18,30 @@
             Load Information
         </div>
         <div class="card-body">
+                @php
+                    $payerOptions = [
+                        'client' => __('messages.Client directly'),
+                        'another_party' => __('messages.Another party will pay for the load')
+                    ];
+                @endphp
             <p><strong> {{ __('messages.AOL Number') }} :</strong> {{ $load->aol_number }}</p>
-            <p><strong> {{ __('messages.Origin') }} :</strong> {{ $load->origindata
-                    ? $load->origindata->street . ', ' . $load->origindata->city . ', ' . $load->origindata->state . ', ' . $load->origindata->country
-                    : 'N/A' }}</p>
-            <p><strong> {{ __('messages.Destination') }} :</strong> {{ $load->destinationdata
-                    ? $load->destinationdata->street . ', ' . $load->destinationdata->city . ', ' . $load->destinationdata->state . ', ' . $load->destinationdata->country
+            <p><strong> {{ __('messages.Origin') }} :</strong> 
+            {{  $load->origindata
+                    ? ($load->origindata->name ?: ($load->origindata->street . ', ' . $load->origindata->city . ', ' . $load->origindata->state . ', ' . $load->origindata->country))
+                    : 'N/A'; }}
+                    
+                </p>
+            <p><strong> {{ __('messages.Destination') }} :</strong> {{$load->destinationdata
+                    ? ($load->destinationdata->name ?: ($load->destinationdata->street . ', ' . $load->destinationdata->city . ', ' . $load->destinationdata->state . ', ' . $load->destinationdata->country))
                     : 'N/A' }}</p>
             <p><strong> {{ __('messages.Service Type') }} :</strong> {{ $load->service_type }}</p>
-            <p><strong> {{ __('messages.Payer') }} :</strong> {{ $load->payer }}</p>
+            <p><strong> {{ __('messages.Payer') }} :</strong> {{ $payerOptions[$load->payer] ?? 'N/A' }}</p>
             <p><strong> {{ __('messages.Equipment Type') }} :</strong> {{ $load->equipment_type }}</p>
             <p><strong> {{ __('messages.Trailer Number') }} :</strong> {{ $load->trailer_number ?? 'N/A' }}</p>
             <p><strong> {{ __('messages.Port of Entry') }} :</strong> {{ $load->port_of_entry ?? 'N/A' }}</p>
             <p><strong> {{ __('messages.Supplier') }} :</strong> {{ $load->supplier ? $load->supplier->company_name : 'N/A' }}</p>
             <p><strong> {{ __('messages.Weight') }} :</strong> {{ $load->weight ?? 'N/A' }} kg</p>
-            <p><strong> {{ __('messages.Delivery Deadline') }} :</strong> {{ $load->delivery_deadline->format('d M Y') }}</p>
+            <p><strong> {{ __('messages.Delivery Deadline') }} :</strong> {{ $load->delivery_deadline->format('M. j, Y') }}</p>
             <p><strong> {{ __('messages.Customer PO') }} :</strong> {{ $load->customer_po ?? 'N/A' }}</p>
             <p><strong> {{ __('messages.Hazmat') }} :</strong> {!! $load->is_hazmat ? '<span class="badge bg-danger">Yes</span>' : '<span class="badge bg-secondary">No</span>' !!}</p>
             <p><strong> {{ __('messages.Inbond') }} :</strong> {!! $load->is_inbond ? '<span class="badge bg-warning">Yes</span>' : '<span class="badge bg-secondary">No</span>' !!}</p>
@@ -42,7 +51,7 @@
                     {{ $load->status }}
                 </span>
             </p>
-            <p><strong>{{ __('messages.Created At') }} :</strong> {{ $load->created_at->format('d M Y, h:i A') }}</p>
+            <p><strong>{{ __('messages.Created At') }} :</strong> {{ $load->created_at->format('M. j, Y H:i') }}</p>
         </div>
     </div>
 
@@ -52,6 +61,7 @@
         <thead class="bg-secondary text-white">
             <tr>
                 <th>{{ __('messages.Supplier') }} </th>
+                <th> {{ __('messages.Service Name') }}  </th>
                 <th>{{ __('messages.Service Details') }} </th>
                 <th>{{ __('messages.Cost') }} </th>
             </tr>
@@ -60,10 +70,18 @@
             @forelse($load->assignedServices as $assignedService)
                 <tr>
                     <td>{{ $assignedService->supplier->company_name }}</td>
+                    <td>{{ $assignedService->service->service_name ?? 'NA' }}</td>
                     <td>
-                    {{ $assignedService->service->origindata ? $assignedService->service->origindata->street . ', ' . $assignedService->service->origindata->city . ', ' . $assignedService->service->origindata->state . ', ' . $assignedService->service->origindata->zip . ', ' . $assignedService->service->origindata->country : 'N/A' }} 
+                    {{ $assignedService->service->origindata 
+                        ? ($assignedService->service->origindata->name 
+                            ?: ($assignedService->service->origindata->street . ', ' . $assignedService->service->origindata->city . ', ' . $assignedService->service->origindata->state . ', ' . $assignedService->service->origindata->zip . ', ' . $assignedService->service->origindata->country)) 
+                        : 'N/A' }}  
                     →  
-                    {{ $assignedService->service->destinationdata ? $assignedService->service->destinationdata->street . ', ' . $assignedService->service->destinationdata->city . ', ' . $assignedService->service->destinationdata->state . ', ' . $assignedService->service->destinationdata->zip . ', ' . $assignedService->service->destinationdata->country : 'N/A' }}
+                    {{ $assignedService->service->destinationdata 
+                        ? ($assignedService->service->destinationdata->name 
+                            ?: ($assignedService->service->destinationdata->street . ', ' . $assignedService->service->destinationdata->city . ', ' . $assignedService->service->destinationdata->state . ', ' . $assignedService->service->destinationdata->zip . ', ' . $assignedService->service->destinationdata->country)) 
+                        : 'N/A' }}
+
 
                     </td>
                     <td>${{ number_format($assignedService->service->cost, 2) }}</td>

@@ -28,7 +28,7 @@
                 @method('PUT')
 
                 <!-- Client First Name -->
-                <div class="mb-3">
+                <!-- <div class="mb-3 mt-3">
                     <label class="form-label"> {{ __('messages.First Name') }}  <span class="text-danger">*</span></label>
                     <input type="text" name="client_Fname" class="form-control" value="{{ old('client_Fname', $client->fname) }}">
                     @error('client_Fname')
@@ -36,10 +36,10 @@
                             {{ $message }}
                         </div>
                     @enderror
-                </div>
+                </div> -->
 
                 <!-- Client Last Name -->
-                <div class="mb-3">
+                <!-- <div class="mb-3">
                     <label class="form-label"> {{ __('messages.Last Name') }}  <span class="text-danger">*</span></label>
                     <input type="text" name="client_Lname" class="form-control" value="{{ old('client_Lname', $client->lname) }}">
                     @error('client_Lname')
@@ -47,9 +47,9 @@
                             {{ $message }}
                         </div>
                     @enderror
-                </div>
+                </div> -->
 
-                <div class="mb-3">
+                <div class="mb-3 mt-3">
                     <label class="form-label"> {{ __('messages.Business Name') }} <span class="text-danger">*</span></label>
                     <input type="text" name="business_name" class="form-control" value="{{ old('business_name', $client->business_name) }}">
                     @error('business_name')

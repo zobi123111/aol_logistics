@@ -363,7 +363,34 @@
                     @endforeach
                 </div>
                 </div>
+                <div class="upload-design">
+                <!-- CAAT Number and File Upload -->
+                <div class="mb-3">
+                    <label class="form-label"> {{ __('messages.CTPAT Number') }} </label><span class="text-danger">*</span>
+                    <input type="text" name="ctpat_number" class="form-control" value="{{ old('ctpat_number') }}">
+                    @error('ctpat_number')
+                        <div class="text-danger">
+                           {{ $message }}
+                        </div>
+                    @enderror
+                </div>
 
+                <div class="mb-3">
+                    <label class="form-label"> {{ __('messages.CTPAT Legal Documents') }} </label>
+                    <input type="file" name="ctpat_documents[]" class="form-control" multiple>
+                    <small class="text-muted"> {{ __('messages.You can upload multiple legal documents') }} </small>
+                    @error('ctpat_documents')
+                        <div class="text-danger">
+                           {{ $message }}
+                        </div>
+                    @enderror
+
+                    <!-- Loop to show individual errors for each document -->
+                    @foreach ($errors->get('ctpat_documents.*') as $message)
+                        <div class="text-danger">{{ $message[0] }}</div>
+                    @endforeach
+                </div>
+                </div>
                 @if($errors->has('error'))
                 <div class="error-message">{{ $errors->first('error') }}</div>
                 @endif

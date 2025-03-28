@@ -372,13 +372,13 @@
 document.addEventListener("DOMContentLoaded", function () {
   if (typeof flatpickr !== "undefined") {
       const datePicker = flatpickr("#delivery_deadline", {
-        dateFormat: "F/j/Y", // Format to dd/mm/yyyy
+        dateFormat: "M. j, Y",
           allowInput: false
       });
 
       flatpickr("#schedule", {
         enableTime: true,
-        dateFormat: "F/j/Y H:i",
+        dateFormat: "M. j, Y H:i",
         time_24hr: true,
         defaultHour: 9,
         allowInput: false   

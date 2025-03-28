@@ -3,7 +3,7 @@
 return [
 
     'Sign Out' => 'Se déconnecter',
-    'Welcome to' => 'Bienvenue à',
+    'Welcome' => 'Bienvenue',
     'Dashboard' => 'tableau de bord',
     'User Statistics (Active vs Total)' => 'Statistiques des utilisateurs (actifs vs totaux)',
     'Users' => 'Utilisateur',

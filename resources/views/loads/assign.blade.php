@@ -69,10 +69,14 @@
             <div class="col-md-6">
                 <p><strong>{{ __('messages.AOL Number') }} :</strong> {{ $load->aol_number }}</p>
                 <p><strong>{{ __('messages.Origin') }} :</strong> 
-                    {{ $load->origindata ? $load->origindata->street . ', ' . $load->origindata->city . ', ' . $load->origindata->state . ', ' . $load->origindata->zip . ', ' . $load->origindata->country : 'N/A' }}
+                {{  $load->origindata
+                    ? ($load->origindata->name ?: ($load->origindata->street . ', ' . $load->origindata->city . ', ' . $load->origindata->state . ', ' . $load->origindata->country))
+                    : 'N/A'; }}
                 </p>
                 <p><strong>{{ __('messages.Destination') }} :</strong> 
-                    {{ $load->destinationdata ? $load->destinationdata->street . ', ' . $load->destinationdata->city . ', ' . $load->destinationdata->state . ', ' . $load->destinationdata->zip . ', ' . $load->destinationdata->country : 'N/A' }}
+                {{$load->destinationdata
+                    ? ($load->destinationdata->name ?: ($load->destinationdata->street . ', ' . $load->destinationdata->city . ', ' . $load->destinationdata->state . ', ' . $load->destinationdata->country))
+                    : 'N/A' }}
                 </p>
             </div>
             <div class="col-md-6">
@@ -96,6 +100,7 @@
             <th>{{ __('messages.Supplier Company Name') }} </th>
             <th>{{ __('messages.supplier_transport_type') }}</th>
             <th>{{ __('messages.service_type') }}</th>
+             <th> {{ __('messages.Service Name') }}  </th>
             <th>{{ __('messages.quantity') }}</th>
             <th>{{ __('messages.Service Details') }} </th>
             <th>{{ __('messages.Cost') }} </th>
@@ -107,15 +112,15 @@
         <!-- Show Assigned Services at the Top -->
         @if($assignedServices->isEmpty())
             <tr>
-                <td colspan="7" class="text-center">{{ __('messages.No Assigned Services') }} </td>
+                <td colspan="8" class="text-center">{{ __('messages.No Assigned Services') }} </td>
             </tr>
         @else
             @foreach ($assignedServices as $assigned)
                 <tr>
                     <td>{{ $assigned->supplier->company_name }}</td>
                     <td>{{ $assigned->supplier->service_type }}</td>
-
                     <td>{{ $assigned->service->service_type }}</td>
+                    <td>{{ $assigned->service->service_name?? 'NA' }}</td>
                     <td>{{ $assigned->quantity }}</td>
                     <td>
                     @if ($assigned->service->service_type === 'warehouse')
@@ -123,9 +128,15 @@
                     {{$assigned->service->street . ', ' . $assigned->service->city . ', ' . $assigned->service->state . ', ' . $assigned->service->zip . ', ' . $assigned->service->country}}
 
                         @else
-                        {{ $assigned->service->origindata ? $assigned->service->origindata->street . ', ' . $assigned->service->origindata->city . ', ' . $assigned->service->origindata->state . ', ' . $assigned->service->origindata->zip . ', ' . $assigned->service->origindata->country : 'N/A' }}
-                        →  
-                        {{ $assigned->service->destinationdata ? $assigned->service->destinationdata->street . ', ' . $assigned->service->destinationdata->city . ', ' . $assigned->service->destinationdata->state . ', ' . $assigned->service->destinationdata->zip . ', ' . $assigned->service->destinationdata->country : 'N/A' }}
+                        {{ $assigned->service->origindata 
+                        ? ($assigned->service->origindata->name 
+                            ?: ($assigned->service->origindata->street . ', ' . $assigned->service->origindata->city . ', ' . $assigned->service->origindata->state . ', ' . $assigned->service->origindata->zip . ', ' . $assigned->service->origindata->country)) 
+                        : 'N/A' }}  
+                    →  
+                    {{ $assigned->service->destinationdata 
+                        ? ($assigned->service->destinationdata->name 
+                            ?: ($assigned->service->destinationdata->street . ', ' . $assigned->service->destinationdata->city . ', ' . $assigned->service->destinationdata->state . ', ' . $assigned->service->destinationdata->zip . ', ' . $assigned->service->destinationdata->country)) 
+                        : 'N/A' }}
                         @endif
                     </td>
                     <td>
@@ -176,6 +187,7 @@
             <th>{{ __('messages.Supplier Company Name') }} </th>
             <th>{{ __('messages.supplier_transport_type') }}</th>
             <th>{{ __('messages.service_type') }}</th>
+            <th> {{ __('messages.Service Name') }}  </th>
             <th>{{ __('messages.Service Details') }} </th>
             <th>{{ __('messages.Cost') }} </th>
             <th>{{ __('messages.Action') }} </th>
@@ -184,7 +196,7 @@
     <tbody>
     @if($suppliers->isEmpty())
             <tr>
-                <td colspan="6" class="text-center">No Services</td>
+                <td colspan="7" class="text-center">No Services</td>
             </tr> 
         @else
     @foreach ($suppliers as $supplier)
@@ -192,8 +204,8 @@
             <tr>
                 <td>{{ $supplier->company_name }}</td>
             <td>{{ $supplier->service_type }}</td>
-
                 <td>{{ $service->service_type }}</td>
+                <td>{{ $service->service_name ?? 'NA' }}</td>
 
                 <td>
 
@@ -202,9 +214,15 @@
                      {{$service->street . ', ' . $service->city . ', ' . $service->state . ', ' . $service->zip . ', ' . $service->country}}
 
                       @else
-                      {{ $service->origindata ? $service->origindata->street . ', ' . $service->origindata->city . ', ' . $service->origindata->state . ', ' . $service->origindata->zip . ', ' . $service->origindata->country : 'N/A' }}
-                    →
-                    {{ $service->destinationdata ? $service->destinationdata->street . ', ' . $service->destinationdata->city . ', ' . $service->destinationdata->state . ', ' . $service->destinationdata->zip . ', ' . $service->destinationdata->country : 'N/A' }}
+                    {{ $service->origindata 
+                        ? ($service->origindata->name 
+                            ?: ($service->origindata->street . ', ' . $service->origindata->city . ', ' . $service->origindata->state . ', ' . $service->origindata->zip . ', ' . $service->origindata->country)) 
+                        : 'N/A' }}  
+                    →  
+                    {{ $service->destinationdata 
+                        ? ($service->destinationdata->name 
+                            ?: ($service->destinationdata->street . ', ' . $service->destinationdata->city . ', ' . $service->destinationdata->state . ', ' . $service->destinationdata->zip . ', ' . $service->destinationdata->country)) 
+                        : 'N/A' }}
                       @endif
                 </td>
                 <td>${{ number_format($service->cost, 2) }}</td>
@@ -240,6 +258,7 @@
             <th>{{ __('messages.Supplier Company Name') }} </th>
              <th>{{ __('messages.supplier_transport_type') }}</th>
             <th>{{ __('messages.service_type') }}</th>
+            <th> {{ __('messages.Service Name') }}  </th>
             <th>{{ __('messages.service_details') }}</th>
             <th>{{ __('messages.Cost') }} </th> 
             <th>{{ __('messages.reason_of_cancellation') }}</th>
@@ -250,7 +269,7 @@
         <!-- Show Assigned Services at the Top -->
         @if($deletedAssignedServices->isEmpty())
             <tr>
-                <td colspan="6" class="text-center">{{ __('messages.No Canceled Services') }}</td>
+                <td colspan="7" class="text-center">{{ __('messages.No Canceled Services') }}</td>
             </tr>
         @else
             @foreach ($deletedAssignedServices as $assigned)
@@ -259,20 +278,28 @@
                     <td>{{ $assigned->supplier->service_type }}</td>
 
                     <td>{{ $assigned->service->service_type }}</td>
+                    <td>{{ $assigned->service->service_name?? 'NA' }}</td>
 
                     <td>
-                        <!-- {{ $assigned->service->origindata ? $assigned->service->origindata->street . ', ' . $assigned->service->origindata->city . ', ' . $assigned->service->origindata->state . ', ' . $assigned->service->origindata->zip . ', ' . $assigned->service->origindata->country : 'N/A' }}
-                        →  
-                        {{ $assigned->service->destinationdata ? $assigned->service->destinationdata->street . ', ' . $assigned->service->destinationdata->city . ', ' . $assigned->service->destinationdata->state . ', ' . $assigned->service->destinationdata->zip . ', ' . $assigned->service->destinationdata->country : 'N/A' }} -->
-
                         @if ($assigned->service->service_type === 'warehouse')
                       
                       {{$assigned->service->street . ', ' . $assigned->service->city . ', ' . $assigned->service->state . ', ' . $assigned->service->zip . ', ' . $assigned->service->country}}
  
                        @else
-                       {{ $assigned->service->origindata ? $assigned->service->origindata->street . ', ' . $assigned->service->origindata->city . ', ' . $assigned->service->origindata->state . ', ' . $assigned->service->origindata->zip . ', ' . $assigned->service->origindata->country : 'N/A' }}
+                       <!-- {{ $assigned->service->origindata ? $assigned->service->origindata->street . ', ' . $assigned->service->origindata->city . ', ' . $assigned->service->origindata->state . ', ' . $assigned->service->origindata->zip . ', ' . $assigned->service->origindata->country : 'N/A' }}
                      →
-                     {{ $assigned->service->destinationdata ? $assigned->service->destinationdata->street . ', ' . $assigned->service->destinationdata->city . ', ' . $assigned->service->destinationdata->state . ', ' . $assigned->service->destinationdata->zip . ', ' . $assigned->service->destinationdata->country : 'N/A' }}
+                     {{ $assigned->service->destinationdata ? $assigned->service->destinationdata->street . ', ' . $assigned->service->destinationdata->city . ', ' . $assigned->service->destinationdata->state . ', ' . $assigned->service->destinationdata->zip . ', ' . $assigned->service->destinationdata->country : 'N/A' }} -->
+
+                     {{ $assigned->service->origindata 
+    ? ($assigned->service->origindata->name 
+        ?: ($assigned->service->origindata->street . ', ' . $assigned->service->origindata->city . ', ' . $assigned->service->origindata->state . ', ' . $assigned->service->origindata->zip . ', ' . $assigned->service->origindata->country)) 
+    : 'N/A' }}  
+→  
+{{ $assigned->service->destinationdata 
+    ? ($assigned->service->destinationdata->name 
+        ?: ($assigned->service->destinationdata->street . ', ' . $assigned->service->destinationdata->city . ', ' . $assigned->service->destinationdata->state . ', ' . $assigned->service->destinationdata->zip . ', ' . $assigned->service->destinationdata->country)) 
+    : 'N/A' }}
+
                        @endif
                     </td>
                     <td>${{ number_format($assigned->service->cost, 2) }}</td>
@@ -410,7 +437,7 @@ $(document).ready(function() {
             var content = $(data).find('#allServices tbody').html().trim();
             
             if (content === '') {
-                $('#allServices tbody').html('<tr><td colspan="6" class="text-center">No Services</td></tr>');
+                $('#allServices tbody').html('<tr><td colspan="7" class="text-center">No Services</td></tr>');
             } else {
                 $('#allServices tbody').html(content);
             }

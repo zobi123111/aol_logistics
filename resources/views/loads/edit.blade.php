@@ -64,7 +64,7 @@
             <option value="">{{ __('messages.Select Origin') }} </option>
             @foreach($origins as $origin)
                 <option value="{{ $origin->id }}" {{ old('origin', $load->origindata->id) == $origin->id ? 'selected' : '' }}>
-                    {{ $origin->street }}, {{ $origin->city }}, {{ $origin->state }}, {{ $origin->country }}
+                    {{ $origin->name ? $origin->name : ($origin->street . ', ' . $origin->city . ', ' . $origin->state . ', ' . $origin->zip . ', ' . $origin->country) }}
                 </option>
             @endforeach
             </select>
@@ -80,7 +80,7 @@
             <option value="">{{ __('messages.Select Destination') }} </option>
             @foreach($destinations as $destination)
                 <option value="{{ $destination->id }}" {{ old('destination', $load->destinationdata->id) == $destination->id ? 'selected' : '' }}>
-                    {{ $destination->street }}, {{ $destination->city }}, {{ $destination->state }}, {{ $destination->country }}
+                {{$destination->name ? $destination->name :  $destination->street.', '. $destination->city.', '. $destination->state.', '. $destination->zip.', '. $destination->country }}
                 </option>
             @endforeach
         </select>
@@ -165,51 +165,49 @@
     @enderror
 </div> -->
 
-<div class="form-group mb-3">
-    <label for="delivery_deadline" class="form-label">
-        {{ __('messages.Delivery Deadline') }} <span class="text-danger">*</span>
-    </label>
-    @php
-    $deliveryDeadline = '';
-    if (old('delivery_deadline')) {
-        try {
-            $deliveryDeadline = \Carbon\Carbon::createFromFormat('Y-m-d', old('delivery_deadline'))->format('F/j/Y');
-        } catch (\Exception $e) {
-            $deliveryDeadline = old('delivery_deadline');
+    <div class="form-group mb-3">
+        <label for="schedule" class="form-label">{{ __('messages.Schedule Date') }} </label>
+        @php
+        $scheduleDate = '';
+        if (old('schedule')) {
+            try {
+                $scheduleDate = \Carbon\Carbon::createFromFormat('Y-m-d H:i', old('schedule'))->format('M. j, Y H:i');
+            } catch (\Exception $e) {
+                $scheduleDate = old('schedule');
+            }
+        } elseif (isset($load) && $load->schedule) {
+            $scheduleDate = \Carbon\Carbon::parse($load->schedule)->format('M. j, Y H:i');
         }
-    } elseif (isset($load) && $load->delivery_deadline) {
-        $deliveryDeadline = \Carbon\Carbon::parse($load->delivery_deadline)->format('F/j/Y');
-    }
-    @endphp
-    <input type="text" id="delivery_deadline" name="delivery_deadline" class="form-control" 
-    value="{{ $deliveryDeadline }}">
-    @error('delivery_deadline')
-        <div class="text-danger">{{ $message }}</div>
-    @enderror
-</div>
+        @endphp
+        <input type="text" id="schedule" name="schedule" class="form-control"
+            value="{{ $scheduleDate }}">
+        @error('schedule')
+            <div class="text-danger">{{ $message }}</div>
+        @enderror
+    </div>
 
-<div class="form-group mb-3">
-    <label for="schedule" class="form-label">Schedule Date & Time: </label>
-    @php
-    $scheduleDate = '';
-    if (old('schedule')) {
-        try {
-            $scheduleDate = \Carbon\Carbon::createFromFormat('Y-m-d H:i', old('schedule'))->format('F/j/Y H:i');
-        } catch (\Exception $e) {
-            $scheduleDate = old('schedule');
+    <div class="form-group mb-3">
+        <label for="delivery_deadline" class="form-label">
+            {{ __('messages.Delivery Deadline') }} <span class="text-danger">*</span>
+        </label>
+        @php
+        $deliveryDeadline = '';
+        if (old('delivery_deadline')) {
+            try {
+                $deliveryDeadline = \Carbon\Carbon::createFromFormat('Y-m-d', old('delivery_deadline'))->format('M. j, Y');
+            } catch (\Exception $e) {
+                $deliveryDeadline = old('delivery_deadline');
+            }
+        } elseif (isset($load) && $load->delivery_deadline) {
+            $deliveryDeadline = \Carbon\Carbon::parse($load->delivery_deadline)->format('M. j, Y');
         }
-    } elseif (isset($load) && $load->schedule) {
-        $scheduleDate = \Carbon\Carbon::parse($load->schedule)->format('F/j/Y H:i');
-    }
-    @endphp
-    <input type="text" id="schedule" name="schedule" class="form-control"
-        value="{{ $scheduleDate }}">
-    @error('schedule')
-        <div class="text-danger">{{ $message }}</div>
-    @enderror
-</div>
-
-
+        @endphp
+        <input type="text" id="delivery_deadline" name="delivery_deadline" class="form-control" 
+        value="{{ $deliveryDeadline }}">
+        @error('delivery_deadline')
+            <div class="text-danger">{{ $message }}</div>
+        @enderror
+    </div>
     <div class="form-group mb-3">
         <label for="customer_po" class="form-label">{{ __('messages.Customer PO / Reference Number') }} </label>
         <input type="text" id="customer_po" name="customer_po" class="form-control" value="{{ $load->customer_po }}">
@@ -228,7 +226,7 @@
 
     <div class="form-check mb-3">
         <input type="checkbox" name="is_inbond" id="is_inbond" class="form-check-input" value="1" {{ $load->is_inbond ? 'checked' : '' }}>
-        <label class="form-check-label" for="is_inbond">{{ __('messages.Inbond Load') }} </label>
+        <label class="form-check-label" for="is_inbond">{{ __('messages.Inbond') }} </label>
         @error('is_inbond')
             <div class="text-danger">{{ $message }}</div>
         @enderror

@@ -71,13 +71,14 @@ class LoadController extends Controller
             return DataTables::of($loads)
                 ->addColumn('originval', function ($load) {
                     return $load->origindata
-                        ? $load->origindata->street . ', ' . $load->origindata->city . ', ' . $load->origindata->state . ', ' . $load->origindata->country
-                        : 'N/A';
+                    ? ($load->origindata->name ?: ($load->origindata->street . ', ' . $load->origindata->city . ', ' . $load->origindata->state . ', ' . $load->origindata->country))
+                    : 'N/A';
+                        
                 })
                 ->addColumn('destinationval', function ($load) {
                     return $load->destinationdata
-                        ? $load->destinationdata->street . ', ' . $load->destinationdata->city . ', ' . $load->destinationdata->state . ', ' . $load->destinationdata->country
-                        : 'N/A';
+                    ? ($load->destinationdata->name ?: ($load->destinationdata->street . ', ' . $load->destinationdata->city . ', ' . $load->destinationdata->state . ', ' . $load->destinationdata->country))
+                    : 'N/A';
                 })
                 ->addColumn('supplier_company_name', function ($load) {
                     if ($load->assignedServices->isNotEmpty()) {
@@ -104,10 +105,15 @@ class LoadController extends Controller
                                 <i class="fa-solid fa-user"></i> ' . __("messages.Assign").'
                             </a>';
                 })
+                // ->addColumn('add_invoice', function ($load) {
+                //     return '<a href="' . route('invoice.upload', encode_id($load->id)) . '" class="btn btn-primary create-button btn_primary_color">
+                //                 <i class="fa-solid fa-user"></i> Add Invoice
+                //              </a>';
+                // })
                 ->addColumn('aol', function ($load) {
                     $deleteId = encode_id($load->id);
                     $showUrl = route('loads.show', $deleteId);
-                    return '<a href="' . $showUrl . '" target="_blank" >
+                    return '<a href="' . $showUrl . '" >
                                 '.$load->aol_number.'
                             </a>';
                 })
@@ -128,7 +134,7 @@ class LoadController extends Controller
                                 ' . __('messages.update_truck_details') . '
                             </a>';
                 })
-                ->rawColumns(['originval', 'destinationval', 'actions', 'assign', 'suppliercompany', 'supplier_company_name', 'shipment_status', 'update_details', 'aol']) 
+                ->rawColumns(['originval', 'destinationval', 'actions', 'assign', 'suppliercompany', 'supplier_company_name', 'shipment_status', 'update_details', 'aol', 'add_invoice']) 
 
                 ->make(true);
         }
@@ -172,13 +178,13 @@ class LoadController extends Controller
        
         if ($request->filled('delivery_deadline')) {
             $request->merge([
-                'delivery_deadline' => Carbon::createFromFormat('F/j/Y', $request->delivery_deadline)->format('Y-m-d'),
+                'delivery_deadline' => Carbon::createFromFormat('M. j, Y', $request->delivery_deadline)->format('Y-m-d'),
             ]);
         }
         
         if ($request->filled('schedule')) {
             $request->merge([
-                'schedule' => Carbon::createFromFormat('F/j/Y H:i', $request->schedule)->format('Y-m-d H:i'),
+                'schedule' => Carbon::createFromFormat('M. j, Y H:i', $request->schedule)->format('Y-m-d H:i'),
             ]);
         }
         $request->validate([
@@ -293,13 +299,13 @@ class LoadController extends Controller
     {
         if ($request->filled('delivery_deadline')) {
             $request->merge([
-                'delivery_deadline' => Carbon::createFromFormat('F/j/Y', $request->delivery_deadline)->format('Y-m-d'),
+                'delivery_deadline' => Carbon::createFromFormat('M. j, Y', $request->delivery_deadline)->format('Y-m-d'),
             ]);
         }
         
         if ($request->filled('schedule')) {
             $request->merge([
-                'schedule' => Carbon::createFromFormat('F/j/Y H:i', $request->schedule)->format('Y-m-d H:i'),
+                'schedule' => Carbon::createFromFormat('M. j, Y H:i', $request->schedule)->format('Y-m-d H:i'),
             ]);
         }
     

@@ -3,7 +3,7 @@
 return [
 
     'Sign Out' => 'Desconectar',
-    'Welcome to' => 'Bienvenido a',
+    'Welcome' => 'Bienvenido',
     'Dashboard' => 'panel',
     'User Statistics (Active vs Total)' => 'Estadísticas de usuario (activo vs total)',
     'Users' => 'Usuario',
@@ -105,6 +105,7 @@ return [
     'User Details' => 'Detalles del Usuario',
     'SCAC Documents' => 'Documentos SCAC',
     'CAAT Documents' => 'Documentos CAAT',
+    'CTPAT Documents' => 'Documentos CTPAT',
     'User Role' => 'Rol del Usuario',
     'Currency' => 'Moneda',
     'Address' => 'Dirección',
@@ -139,6 +140,8 @@ return [
     'You can upload multiple legal documents' => 'Puede cargar múltiples documentos legales',
     'CAAT Number' => 'Número CAAT',
     'CAAT Legal Documents' => 'Documentos legales CAAT',
+    'CTPAT Number' => 'Número CTPAT',
+    'CTPAT Legal Documents' => 'Documentos legales CTPAT',
     'You can upload multiple legal documents' => 'Puede cargar múltiples documentos legales',
     'Save Supplier' => 'Guardar proveedor',
 
@@ -159,6 +162,8 @@ return [
     'Upload New SCAC Documents' => 'Subir Nuevos Documentos SCAC',
     'Uploaded CAAT Documents' => 'Documentos CAAT Cargados',
     'Upload New CAAT Documents' => 'Subir Nuevos Documentos CAAT',
+    'Uploaded CTPAT Documents' => 'Documentos CTPAT Cargados',
+    'Upload New CTPAT Documents' => 'Subir Nuevos Documentos CTPAT',
 
 
     // Supplier Service
@@ -418,6 +423,6 @@ return [
     'Filter by Creator' => 'Filtrar por Creador',
     'filter_by_client' => 'Filtrar por Cliente',
     'Hazmat' => 'Material Peligroso',
-
-
+    'Service Name' => 'Nombre del Servicio',
+    'No documents found' => 'No se encontraron documentos',
 ];

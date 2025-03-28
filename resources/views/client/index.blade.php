@@ -25,8 +25,8 @@
     <table class="table table-striped respo_table" id="client">
         <thead>
             <tr>
-                <th scope="col"> {{ __('messages.First Name') }} </th>
-                <th scope="col"> {{ __('messages.Last Name') }} </th>
+                <!-- <th scope="col"> {{ __('messages.First Name') }} </th>
+                <th scope="col"> {{ __('messages.Last Name') }} </th> -->
                 <th scope="col"> {{ __('messages.Business Name') }} </th>
                 <th scope="col"> {{ __('messages.Email') }} </th>
                 <th scope="col"> {{ __('messages.Role') }} </th>
@@ -74,8 +74,8 @@ $(document).ready(function() {
         serverSide: true,
         ajax: "{{ route('client.index') }}", 
         columns: [
-            { data: 'fname', name: 'fname' },
-            { data: 'lname', name: 'lname' },
+            // { data: 'fname', name: 'fname' },
+            // { data: 'lname', name: 'lname' },
             { data: 'business_name', name: 'business_name' },
             { data: 'email', name: 'email' },
             { data: 'role_name', name: 'role_name' },
@@ -93,16 +93,16 @@ $(document).ready(function() {
             }
         },
         columnDefs: [
+            // {
+            //     targets: 0, 
+            //     className: "fname" 
+            // },
+            // {
+            //     targets: 1, 
+            //     className: "lname" 
+            // },
             {
-                targets: 0, 
-                className: "fname" 
-            },
-            {
-                targets: 1, 
-                className: "lname" 
-            },
-            {
-            targets: 6, 
+            targets: 4, 
             className: 'icon-design',
            
         }

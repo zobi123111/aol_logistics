@@ -24,7 +24,7 @@
                 @csrf
 
                 <!-- Client First Name -->
-                <div class="mb-3 mt-3">
+                <!-- <div class="mb-3 mt-3">
                     <label class="form-label"> {{ __('messages.First Name') }} <span class="text-danger">*</span></label>
                     <input type="text" name="client_Fname" class="form-control" value="{{ old('client_Fname') }}">
                     @error('client_Fname')
@@ -32,10 +32,10 @@
                             {{ $message }}
                         </div>
                     @enderror
-                </div>
+                </div> -->
 
                 <!-- Client Last Name -->
-                <div class="mb-3">
+                <!-- <div class="mb-3">
                     <label class="form-label"> {{ __('messages.Last Name') }} <span class="text-danger">*</span></label>
                     <input type="text" name="client_Lname" class="form-control" value="{{ old('client_Lname') }}">
                     @error('client_Lname')
@@ -43,7 +43,7 @@
                             {{ $message }}
                         </div>
                     @enderror
-                </div>
+                </div> -->
 
                 <div class="mb-3">
                     <label class="form-label"> {{ __('messages.Business Name') }} <span class="text-danger">*</span></label>
