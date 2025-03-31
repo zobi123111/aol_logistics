@@ -12,7 +12,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command('invoices:process-pending')->hourly();
+        $schedule->command('invoices:process-pending')->everyMinute();
     }
 
     /**
