@@ -63,6 +63,7 @@
                     <th> {{ __('messages.Service Type') }} </th>
                     <th> {{ __('messages.Origin') }} </th>
                     <th> {{ __('messages.Destination') }} </th>
+                    <th>Created For</th>
                     <th> {{ __('messages.Payer') }} </th>
                     <th> {{ __('messages.Equipment Type') }} </th>
                     <th> {{ __('messages.Weight') }} </th>
@@ -79,6 +80,7 @@
                     <th>{{ __('messages.shipment_status') }}</th>
                     <th>{{ __('messages.update_truck_details') }}</th>
                     <th>add invoice</th>
+                    <th>QuickBooks Client Invoice</th>
                 </tr>
             </thead>
 
@@ -125,6 +127,7 @@
                         <option value="in_transit">{{ __('messages.in_transit') }}</option>
                         <option value="delivered">{{ __('messages.delivered') }}</option>
                         <option value="cancelled">{{ __('messages.cancelled') }}</option>
+                        <option value="ready_to_invoice">Ready to invoice</option>
                     </select>
                 </div>
                 <div class="modal-footer">
@@ -154,11 +157,11 @@
             scrollY: '550px',
             scrollX: true, 
             scrollCollapse: true,
-            paging: false, 
+            // paging: false, 
             fixedHeader: false, 
-            footerCallback: function (row, data, start, end, display) {
-                $(row).css('position', 'relative'); 
-            },
+            // footerCallback: function (row, data, start, end, display) {
+            //     $(row).css('position', 'relative'); 
+            // },
             order: [[0, 'desc']],
             ajax: function(data, callback, settings) {
                 $('#loader').show();
@@ -201,6 +204,7 @@
                 { data: 'service_type', name: 'service_type' },
                 { data: 'originval', name: 'origin' },
                 { data: 'destinationval', name: 'destination' },
+                { data: 'created_for_user', name: 'created_for_user', orderable: false, searchable: false },
                 { data: 'payer', name: 'payer' },
                 { data: 'equipment_type', name: 'equipment_type' },
                 { data: 'weight', name: 'weight', render: function(data, type, row) {
@@ -220,7 +224,8 @@
                 { data: 'assign', name: 'assign', orderable: false, searchable: false },
                 { data: 'shipment_status', name: 'shipment_status', orderable: false, searchable: false },
                 { data: 'update_details', name: 'update_details', orderable: false, searchable: false },
-                // { data: 'add_invoice', name: 'add_invoice', orderable: false, searchable: false },
+                { data: 'add_invoice', name: 'add_invoice', orderable: false, searchable: false },
+                { data: 'quickbooks_invoice', name: 'quickbooks_invoice', orderable: false, searchable: false },
             ],
             language: {
                 sSearch: "{{ __('messages.Search') }}",
@@ -233,28 +238,28 @@
             },
             columnDefs: [
                 {
-                    targets: 4, 
+                    targets: 5, 
                     className: 'text-center',
                     render: function(data, type, row) {
                         return data == 'another_party' ? 'Another party will pay for the load' : 'Client';
                     }
                 },
                 {
-                    targets: 10, 
+                    targets: 11, 
                     className: 'text-center',
                     render: function(data, type, row) {
                         return '<input type="checkbox" ' + (row.is_hazmat ? 'checked' : '') + ' disabled>';
                     }
                 },
                 {
-                    targets: 11, 
+                    targets: 12, 
                     className: 'text-center',
                     render: function(data, type, row) {
                         return '<input type="checkbox" ' + (row.is_inbond ? 'checked' : '') + ' disabled>';
                     }
                 },
                 {
-                    targets: 15, 
+                    targets: 16, 
                     className: 'icon-design',
                 }
             ]

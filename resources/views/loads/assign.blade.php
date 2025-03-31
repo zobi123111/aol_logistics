@@ -140,10 +140,10 @@
                         @endif
                     </td>
                     <td>
-                        ${{ number_format($assigned->service->cost * $assigned->quantity, 2) }}  
+                        ${{ number_format(($assigned->cost ?? $assigned->service->cost) * $assigned->quantity, 2) }}  
                         @if($assigned->quantity > 1)
                             <br>
-                            <small class="text-muted">(${{ number_format($assigned->service->cost, 2) }} per unit)</small>
+                            <small class="text-muted">(${{ number_format($assigned->cost ?? $assigned->service->cost, 2) }} per unit)</small>
                         @endif
                     </td>
 
@@ -302,7 +302,7 @@
 
                        @endif
                     </td>
-                    <td>${{ number_format($assigned->service->cost, 2) }}</td>
+                    <td>${{ number_format($assigned->cost ?? $assigned->service->cost, 2) }}</td>
                     <td>{{ $assigned->cancel_reason }}</td>
 
                 </tr>

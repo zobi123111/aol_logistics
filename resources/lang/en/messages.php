@@ -424,4 +424,5 @@ return [
     'Hazmat' => 'Hazardous Material',
     'Service Name' => 'Service Name',
     'No documents found' => 'No documents found',
+    'Select Client' => 'Select Client',
 ];

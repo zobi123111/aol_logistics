@@ -425,4 +425,6 @@ return [
     'Hazmat' => 'Material Peligroso',
     'Service Name' => 'Nombre del Servicio',
     'No documents found' => 'No se encontraron documentos',
+    'Select Client' => 'Seleccionar Cliente',
+
 ];

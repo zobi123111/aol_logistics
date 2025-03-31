@@ -20,6 +20,25 @@ use App\Http\Controllers\DestinationController;
 use App\Http\Controllers\LangController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use App\Http\Controllers\QuickBooksController;
+use QuickBooksOnline\API\Core\ServiceContext;
+use QuickBooksOnline\API\DataService\DataService;
+
+use QuickBooksOnline\API\Facades\Invoice;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Log;
+use QuickBooksOnline\API\Core\Http\Serialization\XmlObjectSerializer;
+use QuickBooksOnline\API\Facades\Customer;
+use QuickBooksOnline\API\Core\OAuth\OAuth2AccessToken;
+use QuickBooksOnline\API\Core\Http\IntuitLogger;
+use QuickBooksOnline\API\Core\OAuth\OAuth2LoginHelper;
+use QuickBooksOnline\API\Data\IPPAttachable;
+use QuickBooksOnline\API\Data\IPPAttachableRef;
+use QuickBooksOnline\API\Data\IPPReferenceType;
+use QuickBooksOnline\API\Utility\Upload;
+use QuickBooksOnline\API\PlatformService\PlatformService;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -142,3 +161,31 @@ Route::post('/set-timezone', function (Request $request) {
     Session::put('timezone', $request->timezone);
     return response()->json(['success' => true]);
 })->name('set.timezone');
+
+
+// Supplier Upload Invoice Form (GET)
+Route::get('/supplier/invoice/{loadId}', function ($loadId) {
+    return view('suppliers.upload_invoice', compact('loadId'));
+})->name('supplier.upload.invoice');
+
+
+////////////////////////// QuickBooks //////////////////////////
+
+Route::get('/quickbooks/connect', [QuickBooksController::class, 'connect'])->name('quickbooks.connect');
+Route::get('/quickbooks/callback', [QuickBooksController::class, 'callback'])->name('quickbooks.callback');
+Route::get('/quickbooks/refresh-token', [QuickBooksController::class, 'refreshToken'])->name('quickbooks.refresh');
+Route::get('/quickbooks/company-info', [QuickBooksController::class, 'getCompanyInfo'])->name('quickbooks.companyInfo');
+Route::get('/quickbooks/invoice', [QuickBooksController::class, 'createInvoice'])->name('quickbooks.invoice');
+
+
+Route::get('/quickbooks/refresh-token', [QuickBooksController::class, 'refreshToken'])->name('quickbooks.refresh');
+
+Route::post('/invoice/create-quickbooks/{id}', [QuickBooksController::class, 'createInvoice'])->name('invoice.quickbooks.create');
+
+Route::post('/invoice/store', [QuickBooksController::class, 'storeInvoice'])->name('invoice.store');
+Route::get('/invoice/client/{load_id}', [QuickBooksController::class, 'addClientInvoice'])
+    ->name('invoice.client');
+Route::get('/invoice/upload/{id}', [QuickBooksController::class, 'showUploadForm'])->name('invoice.upload');
+Route::get('/loads/{load_id}/quickbooks-invoices', [QuickBooksController::class, 'showQuickBooksInvoice'])->name('loads.quickbooks_invoices');
+
+

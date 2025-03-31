@@ -12,7 +12,7 @@ class AssignedService extends Model
     use HasFactory, SoftDeletes;
 
 
-    protected $fillable = ['load_id', 'supplier_id', 'service_id', 'cancel_reason', 'quantity'];
+    protected $fillable = ['load_id', 'supplier_id', 'service_id', 'cancel_reason', 'quantity', 'cost'];
 
     protected $dates = ['deleted_at'];
 
@@ -20,7 +20,7 @@ class AssignedService extends Model
     {
         return $this->belongsTo(Load::class);
     }
-
+    
     public function supplier()
     {
         return $this->belongsTo(Supplier::class);

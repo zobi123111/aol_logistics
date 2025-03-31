@@ -11,6 +11,8 @@ use App\Models\Destination;
 use App\Models\LoadsDocument;
 use App\Models\AssignedService;
 use App\Models\Service;
+use App\Models\Invoice;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Models\UserActivityLog;
@@ -32,7 +34,7 @@ class LoadController extends Controller
             $creatorFilter = $request->input('creator_filter');
             $clientFilter = $request->input('client_filter');
 
-            $loads = Load::with(['origindata', 'destinationdata', 'supplierdata', 'assignedServices.supplier', 'creator'])
+            $loads = Load::with(['origindata', 'destinationdata', 'supplierdata', 'assignedServices.supplier', 'creator', 'creatorfor'])
                 ->when($userType == 2, function ($query) use ($user) {
                     return $query->where('created_by', $user->id)
                         ->where(function ($q) {
@@ -110,6 +112,19 @@ class LoadController extends Controller
                 //                 <i class="fa-solid fa-user"></i> Add Invoice
                 //              </a>';
                 // })
+                ->addColumn('add_invoice', function ($load) {
+                    return '<a href="' . route('invoice.client', ['load_id' => encode_id($load->id)]) . '" 
+                                class="btn btn-primary create-button btn_primary_color">
+                                <i class="fa-solid fa-user"></i> Add Invoice
+                            </a>';
+                })
+                ->addColumn('quickbooks_invoice', function ($load) {
+                    return '<a href="' . route('loads.quickbooks_invoices', ['load_id' => encode_id($load->id)]) . '" 
+                                class="btn btn-primary create-button btn_primary_color">
+                                <i class="fa-solid fa-file-invoice-dollar"></i> View QB Invoice
+                            </a>';
+                })
+                
                 ->addColumn('aol', function ($load) {
                     $deleteId = encode_id($load->id);
                     $showUrl = route('loads.show', $deleteId);
@@ -128,13 +143,18 @@ class LoadController extends Controller
                     return optional($load->creator)->fname . ' ' . optional($load->creator)->lname;
                         
                 })
+
+                ->addColumn('created_for_user', function ($load) {
+                    return optional($load->creatorfor)->business_name ?? optional($load->creatorfor)->email;
+                        
+                })
                 ->addColumn('update_details', function ($load) {
                     return '<a href="' . route('loads.editTruckDetails', encode_id($load->id)) . '" 
                                 class="btn btn-primary create-button btn_primary_color">
                                 ' . __('messages.update_truck_details') . '
                             </a>';
                 })
-                ->rawColumns(['originval', 'destinationval', 'actions', 'assign', 'suppliercompany', 'supplier_company_name', 'shipment_status', 'update_details', 'aol', 'add_invoice']) 
+                ->rawColumns(['originval', 'destinationval', 'actions', 'assign', 'suppliercompany', 'supplier_company_name', 'shipment_status', 'update_details', 'aol', 'add_invoice', 'quickbooks_invoice']) 
 
                 ->make(true);
         }
@@ -166,7 +186,8 @@ class LoadController extends Controller
         $origins = Origin::orderBy('name', 'asc')->get();
         $destinations = Destination::orderBy('name', 'asc')->get();
         $suppliers = Supplier::where('is_active', 1)->get();
-        return view('loads.create', compact('origins', 'destinations', 'suppliers'));
+        $clients = User::where('is_client', 1)->get();
+        return view('loads.create', compact('origins', 'destinations', 'suppliers', 'clients'));
     }
 
     /**
@@ -203,6 +224,7 @@ class LoadController extends Controller
             'schedule' => 'nullable',
             'is_hazmat' => 'boolean',
             'is_inbond' => 'boolean',
+            'client_id' => 'required|exists:users,id',
         ]);
         $status = 'requested'; 
         $supplier_id = null; 
@@ -214,6 +236,7 @@ class LoadController extends Controller
             $request->except('aol_number', 'supplier_id'), 
             [
                 'supplier_id' => null, 
+                'created_for' => $request->client_id, 
                 'status' => $status,
                 'status' => $status,
                 'created_by' => Auth::id(),
@@ -292,7 +315,8 @@ class LoadController extends Controller
         $origins = Origin::orderBy('name', 'asc')->get();
         $destinations = Destination::orderBy('name', 'asc')->get();
         $suppliers = Supplier::where('is_active', 1)->get();
-        return view('loads.edit', compact('load', 'origins', 'destinations', 'suppliers'));
+        $clients = User::where('is_client', 1)->get();
+        return view('loads.edit', compact('load', 'origins', 'destinations', 'suppliers', 'clients'));
     }
     
     public function update(Request $request, $id)
@@ -322,6 +346,7 @@ class LoadController extends Controller
             'port_of_entry' => 'nullable',
             'schedule' => 'nullable',
             'weight_unit' => 'nullable',
+            'client_id' => 'required|exists:users,id',
         ]);
     
         $load = Load::findOrFail($id);
@@ -377,6 +402,7 @@ class LoadController extends Controller
             'supplier_id' => $supplier_id,
             'status' => $status,
             'weight_unit' => $request->weight_unit ,
+            'created_for' => $request->client_id, 
         ]);
     
         return redirect()->route('loads.index')->with('message',$message);
@@ -546,13 +572,17 @@ class LoadController extends Controller
         // if ($existingAssignment) {
         //     return redirect()->back()->with('error',  __('messages.This service is already assigned.'));
         // }
-
+        $cost = Service::where([
+            'id' => $request->service_id,
+            'supplier_id' => $request->supplier_id
+        ])->value('cost');
         // Assign the service
         AssignedService::create([
             'load_id' => $request->load_id,
             'supplier_id' => $request->supplier_id,
             'service_id' => $request->service_id,
-            'quantity' => $request->quantity ?? 1
+            'quantity' => $request->quantity ?? 1,
+            'cost' => $cost
         ]);
         $load = Load::where('id', $request->load_id)->update(['status' => 'assigned']);
         $email = Supplier::where('id', $request->supplier_id,)->value('user_email');
@@ -621,11 +651,23 @@ class LoadController extends Controller
         $request->validate([
             'status' => 'required',
         ]);
-    
         $load = Load::findOrFail($id);
         $old_status = $load->shipment_status;
         $load->shipment_status = $request->status;
         $load->save();
+
+        if ($request->status === 'ready_to_invoice') {
+            // Check if an invoice already exists for this load_id
+            $existingInvoice = Invoice::where('load_id', $load->id)->exists();
+        
+            if (!$existingInvoice) {
+                Invoice::create([
+                    'load_id' => $load->id,
+                    'status' => 'pending', 
+                    'external_invoice_id' => null, 
+                ]);
+            }
+        }
 
         $aol_number = Load::where('id', $load->id,)->value('aol_number');
 
