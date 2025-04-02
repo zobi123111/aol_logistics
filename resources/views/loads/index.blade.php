@@ -79,8 +79,16 @@
                     <th> {{ __('messages.Assign') }} </th>
                     <th>{{ __('messages.shipment_status') }}</th>
                     <th>{{ __('messages.update_truck_details') }}</th>
-                    <th>add invoice</th>
-                    <th>QuickBooks Client Invoice</th>
+                    @if (auth()->user()->roledata->user_type_id == 3)
+                    <th>add invoice </th>
+                    @endif
+
+                    @if (auth()->user()->roledata->user_type_id != 3)
+                        <th>QuickBooks Client Invoice</th>
+                    @endif
+                    @if (auth()->user()->roledata->user_type_id == 3)
+                        <th>QuickBooks Supplier Invoice</th>
+                    @endif
                 </tr>
             </thead>
 
@@ -149,7 +157,10 @@
 @section('js_scripts')
 
 <script>
+
     $(document).ready(function() {
+        var userType = @json(auth()->user()->roledata->user_type_id);
+
         let userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;    
         var table = $('#loads').DataTable({
             processing: true,
@@ -224,8 +235,14 @@
                 { data: 'assign', name: 'assign', orderable: false, searchable: false },
                 { data: 'shipment_status', name: 'shipment_status', orderable: false, searchable: false },
                 { data: 'update_details', name: 'update_details', orderable: false, searchable: false },
-                { data: 'add_invoice', name: 'add_invoice', orderable: false, searchable: false },
-                { data: 'quickbooks_invoice', name: 'quickbooks_invoice', orderable: false, searchable: false },
+                // { data: 'add_invoice', name: 'add_invoice', orderable: false, searchable: false },
+                ...(userType === 3 ? [{ data: 'add_invoice', name: 'add_invoice', orderable: false, searchable: false }] : []),
+                // { data: 'quickbooks_invoice', name: 'quickbooks_invoice', orderable: false, searchable: false },
+                ...(userType != 3 ? [{ data: 'quickbooks_invoice', name: 'quickbooks_invoice', orderable: false, searchable: false }] : []),
+                // { data: 'quickbooks_supplier_invoice', name: 'quickbooks_supplier_invoice', orderable: false, searchable: false },
+                
+                // Conditionally add 'quickbooks_supplier_invoice' column based on user type
+                ...(userType === 3 ? [{ data: 'quickbooks_supplier_invoice', name: 'quickbooks_supplier_invoice', orderable: false, searchable: false }] : [])
             ],
             language: {
                 sSearch: "{{ __('messages.Search') }}",

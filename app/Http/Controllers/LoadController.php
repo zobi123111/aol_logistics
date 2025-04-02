@@ -113,16 +113,34 @@ class LoadController extends Controller
                 //              </a>';
                 // })
                 ->addColumn('add_invoice', function ($load) {
-                    return '<a href="' . route('invoice.client', ['load_id' => encode_id($load->id)]) . '" 
+                    return '<a href="' . route('upload.bill.form', ['load_id' => encode_id($load->id)]) . '" 
                                 class="btn btn-primary create-button btn_primary_color">
                                 <i class="fa-solid fa-user"></i> Add Invoice
                             </a>';
                 })
                 ->addColumn('quickbooks_invoice', function ($load) {
+                    if ($load->invoice_id) {
                     return '<a href="' . route('loads.quickbooks_invoices', ['load_id' => encode_id($load->id)]) . '" 
                                 class="btn btn-primary create-button btn_primary_color">
                                 <i class="fa-solid fa-file-invoice-dollar"></i> View QB Invoice
                             </a>';
+                        } else {
+                            // If supplier_invoice_id is null, return 'NA'
+                            return '<span>NA</span>';
+                        }
+                })
+                ->addColumn('quickbooks_supplier_invoice', function ($load) {
+                    // Check if supplier_invoice_id exists and is not null
+                    if ($load->supplier_invoice_id) {
+                        // If it exists, show the button with the link to view the supplier invoice
+                        return '<a href="' . route('invoice.supplier', ['load_id' => encode_id($load->id)]) . '" 
+                                    class="btn btn-primary create-button btn_primary_color">
+                                    <i class="fa-solid fa-file-invoice-dollar"></i> View QB Supplier Invoice
+                                </a>';
+                    } else {
+                        // If supplier_invoice_id is null, return 'NA'
+                        return '<span>NA</span>';
+                    }
                 })
                 
                 ->addColumn('aol', function ($load) {
@@ -154,7 +172,7 @@ class LoadController extends Controller
                                 ' . __('messages.update_truck_details') . '
                             </a>';
                 })
-                ->rawColumns(['originval', 'destinationval', 'actions', 'assign', 'suppliercompany', 'supplier_company_name', 'shipment_status', 'update_details', 'aol', 'add_invoice', 'quickbooks_invoice']) 
+                ->rawColumns(['originval', 'destinationval', 'actions', 'assign', 'suppliercompany', 'supplier_company_name', 'shipment_status', 'update_details', 'aol', 'add_invoice', 'quickbooks_invoice', 'quickbooks_supplier_invoice']) 
 
                 ->make(true);
         }

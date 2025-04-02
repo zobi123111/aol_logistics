@@ -189,3 +189,11 @@ Route::get('/invoice/upload/{id}', [QuickBooksController::class, 'showUploadForm
 Route::get('/loads/{load_id}/quickbooks-invoices', [QuickBooksController::class, 'showQuickBooksInvoice'])->name('loads.quickbooks_invoices');
 
 
+Route::get('/upload-bill/{load_id}', [QuickBooksController::class, 'showUploadBillForm'])->name('upload.bill.form');
+Route::post('/upload-bill/supplier/{load_id}', [QuickBooksController::class, 'createSupplierBill'])
+    ->name('upload.bill');
+Route::get('/invoice/supplier/{load_id}', [QuickBooksController::class, 'showQuickBooksBillByLoadId'])->name('invoice.supplier');
+
+    // Route::get('/test', [QuickBooksController::class, 'uploadToQuickBooks'])
+    // ->name('upload.bill'); 
+

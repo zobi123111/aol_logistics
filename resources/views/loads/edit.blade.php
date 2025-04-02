@@ -94,7 +94,7 @@
             <option value="">{{ __('messages.Select Client') }} </option>
             @foreach($clients as $client)
                 <option value="{{ $client->id }}" 
-                    {{ (old('client_id', $load->client_id ?? '') == $client->id) ? 'selected' : '' }}>
+                    {{ (old('client_id', $load->creatorfor->id ?? '') == $client->id) ? 'selected' : '' }}>
                     {{ $client->business_name ?? $client->email }}
                 </option>
             @endforeach
