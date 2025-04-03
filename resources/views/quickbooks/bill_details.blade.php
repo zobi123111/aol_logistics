@@ -69,22 +69,28 @@
             @endforeach
         </tbody>
     </table>
-       <div>
-        <h3>Attachments</h3>
-        @if (count($attachments) > 0)
-            <ul>
-                @foreach ($attachments as $attachment)
-                    <li>
-                        <a href="{{ $attachment->TempDownloadUri }}" target="_blank">
-                            {{ $attachment->FileName }}
-                        </a>
-                    </li>
-                @endforeach
-            </ul>
-        @else
-            <p>No attachments available for this bill.</p>
-        @endif
-    </div>
+    
+
+    <div>
+    <h3>Attachments</h3>
+    @if (count($attachments) > 0)
+        <ul>
+            @foreach ($attachments as $attachment)
+                <li>
+                    <a href="#" class="attachment-link" data-src="{{ $attachment->TempDownloadUri }}">
+                        {{ $attachment->FileName }}
+                    </a>
+                </li>
+            @endforeach
+        </ul>
+
+        <!-- Iframe to display selected attachment -->
+        <iframe id="attachmentViewer" width="100%" height="500px" style="border:1px solid #ddd; display: none;"></iframe>
+
+    @else
+        <p>No attachments available for this bill.</p>
+    @endif
+</div>
 @endif
 
    
@@ -99,7 +105,21 @@
 $(document).ready(function() {
  
 });
+document.addEventListener("DOMContentLoaded", function () {
+        const links = document.querySelectorAll(".attachment-link");
+        const iframe = document.getElementById("attachmentViewer");
 
+        links.forEach(link => {
+            link.addEventListener("click", function (event) {
+                event.preventDefault(); // Prevent default link behavior
+                
+                const fileUrl = this.getAttribute("data-src"); // Get file URL
+                
+                iframe.src = fileUrl; // Update iframe source
+                iframe.style.display = "block"; // Show iframe when a file is clicked
+            });
+        });
+    });
 </script>
 
 @endsection

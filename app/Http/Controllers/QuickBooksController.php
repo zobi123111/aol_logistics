@@ -1074,8 +1074,7 @@ class QuickBooksController extends Controller
 
             $bill = $dataService->Add($billData);
 
-            $file_path_from_db = 'public/uploads/bills/P86k5j5wr0UbHC883OtlxqyxQyjURvPL5TaZsvW3.png';
-
+            $file_path_from_db  = 'public/'.$invoice['file_path'];
             // Use the Laravel Storage facade to get the file content
             if (Storage::exists($file_path_from_db)) {
                 $fileContent = Storage::get($file_path_from_db);
@@ -1136,19 +1135,21 @@ class QuickBooksController extends Controller
         return redirect()->back()->with('error', 'Load not found.');
     }
      // Fetch the SupplierInvoice record with the given load_id
-     $supplierInvoice = SupplierInvoice::where('load_id', $de)->first();
+     $supplierInvoice = SupplierInvoice::where('load_id', $de)
+     ->latest()
+     ->first();
      if (!$supplierInvoice) {
         return redirect()->back()->with('error', 'supplier Invoice not found.');
     }
      if (!$supplierInvoice) {
-         return view('quickbooks.bill')->with('error', 'No supplier invoice found for this load.');
+         return view('quickbooks.bill_details')->with('error', 'No supplier invoice found for this load.');
      }
  
      // Get the QuickBooks Invoice ID (Bill ID)
      $billId = $supplierInvoice->quickbook_invoice_id;
  
      if (!$billId) {
-         return view('quickbooks.bill')->with('error', 'No QuickBooks Bill ID found for this load.');
+         return view('quickbooks.bill_details')->with('error', 'No QuickBooks Bill ID found for this load.');
      }
  
     // Get QuickBooks Access Token
@@ -1174,8 +1175,6 @@ class QuickBooksController extends Controller
         $quickBooksBill = $dataService->FindById('Bill', $billId);
         $attachments = $dataService->Query("SELECT * FROM Attachable WHERE AttachableRef.EntityRef.value ='$billId'");
         return view('quickbooks.bill_details', compact('quickBooksBill', 'attachments'));
-
-        // dd($attachments);
         // Fetch Vendor Details
         // $vendorId = $quickBooksBill->VendorRef->value ?? null;
         // $vendorInfo = $vendorId ? $dataService->FindById('Vendor', '71') : null;

@@ -107,16 +107,15 @@ class LoadController extends Controller
                                 <i class="fa-solid fa-user"></i> ' . __("messages.Assign").'
                             </a>';
                 })
-                // ->addColumn('add_invoice', function ($load) {
-                //     return '<a href="' . route('invoice.upload', encode_id($load->id)) . '" class="btn btn-primary create-button btn_primary_color">
-                //                 <i class="fa-solid fa-user"></i> Add Invoice
-                //              </a>';
-                // })
                 ->addColumn('add_invoice', function ($load) {
+                    if ($load->status === 'assigned') {
                     return '<a href="' . route('upload.bill.form', ['load_id' => encode_id($load->id)]) . '" 
                                 class="btn btn-primary create-button btn_primary_color">
                                 <i class="fa-solid fa-user"></i> Add Invoice
                             </a>';
+                        } else {
+                            return '<span>NA</span>';
+                        }
                 })
                 ->addColumn('quickbooks_invoice', function ($load) {
                     if ($load->invoice_id) {

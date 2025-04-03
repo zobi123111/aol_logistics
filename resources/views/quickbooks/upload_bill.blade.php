@@ -4,6 +4,12 @@
 @section('content')
 <div class="container">
     <h3 class="services-text">{{ __('messages.Assigned Services') }} </h3> 
+    @if(session()->has('message'))
+    <div id="successMessage" class="alert alert-success fade show" role="alert">
+        <i class="bi bi-check-circle me-1"></i>
+        {{ session()->get('message') }}
+    </div>
+    @endif
 <table class="table" id="assignedServices">
     <thead>
         <tr>
