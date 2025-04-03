@@ -28,7 +28,7 @@ use Illuminate\Support\Facades\Storage;
 class QuickBooksController extends Controller
 {
     // ✅ Function to refresh QuickBooks Access Token
-    private function refreshAccessToken()
+    public function refreshAccessToken()
     {
         $refreshToken = Cache::get('qb_refresh_token');
 

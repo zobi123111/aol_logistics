@@ -14,7 +14,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('invoices:process-pending')->everyMinute();
         $schedule->command('supplier:process-invoices')->everyMinute();
-
+        $schedule->command('quickbooks:refresh-token')->everyFiftyMinutes(); 
     }
 
     /**
