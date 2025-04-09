@@ -178,6 +178,20 @@ class SupplierController extends Controller
                 'user_id' => auth()->id(), 
             ]);
 
+            //  Queue welcome email for supplier login
+            queueEmailJob(
+                recipients: [$request->user_email], 
+                subject: 'Welcome to ' . config('app.name'),
+                template: 'emails.supplier_created',
+                payload: [
+                    'company_name' => $supplier->company_name,
+                    'contact_email' => $supplier->primary_contact_email,
+                    'login_email' => $request->user_email,
+                    'password' => $request->password,
+                ],
+                emailType: 'supplier_created'
+            );
+
             // Function to save documents
             $this->storeDocuments($supplier->id, $request, 'document_path', 'documents');
             $this->storeDocuments($supplier->id, $request, 'scac_documents', 'scac_documents');
@@ -372,7 +386,23 @@ class SupplierController extends Controller
         if (!$supplier) {
             return redirect()->route('suppliers.index')->with('error', 'Supplier not found.');
         }
+       
         $supplier->delete();
+
+         // Store data before deletion
+         $userEmail = $supplier->user_email;
+         $companyName = $supplier->company_name;
+ 
+         // Queue email
+         queueEmailJob(
+             recipients: [$userEmail],
+             subject: 'Your Supplier Account Has Been Deleted',
+             template: 'emails.supplier_deleted',
+             payload: [
+                 'company_name' => $companyName,
+             ],
+             emailType: 'supplier_deleted'
+         );
 
         // add log
         UserActivityLog::create([
@@ -441,6 +471,18 @@ class SupplierController extends Controller
                             . $oldStatus . ' to ' . $newStatus . ' by User with email (' . auth()->user()->email . ')',
             'user_id' => auth()->id(),
         ]);
+      // Queue email to supplier
+        queueEmailJob(
+            recipients: [$supplier->user_email],
+            subject: 'Your Supplier Account Status Has Been Updated',
+            template: 'emails.supplier_status_changed',
+            payload: [
+                'old_status' => $oldStatus,
+                'new_status' => $newStatus,
+                'company_name' => $supplier->company_name,
+            ],
+            emailType: 'supplier_status_changed'
+        );
         return response()->json([
             'success' => true,
             'message' => __('messages.Supplier status updated successfully'),

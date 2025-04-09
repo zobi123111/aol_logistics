@@ -71,6 +71,23 @@ class ClientUserController extends Controller
                         . ' (' . auth()->user()->email . ') with role '.$role->role_name,
                 'user_id' => auth()->id(), 
             ]);
+
+            $mainClientEmail = User::where('id', $id)->value('email');
+            $mainClientBusiness = User::where('id', $id)->value('business_name');
+            
+           // Send email to both the new client user and the main client
+            queueEmailJob(
+                recipients: [$createClient->email, $mainClientEmail],
+                subject: 'New Client User Created',
+                template: 'emails.client_user_created',
+                payload: [
+                    'fname' => $createClient->fname,
+                    'email' => $createClient->email,
+                    'business_name' => $mainClientBusiness,
+                    'password' => $request->password, // original password
+                ],
+                emailType: 'client_user_created'
+            );
             return redirect()->route('client_users.index', encode_id($id))
             ->with('message',  __('messages.Client created successfully!'));
 
@@ -84,11 +101,21 @@ class ClientUserController extends Controller
 
     public function destroy($clientId, $master_client)
     {
+        
         $de_clientId = decode_id($clientId);
         $client_data = User::find($de_clientId);
         if (!$client_data) {
             return redirect()->route('client.index')->with('error', 'Client not found.');
         }
+
+        $deletedEmail = $client_data->email;
+        $deletedName = $client_data->fname . ' ' . $client_data->lname;
+
+          // Get master client email and business name
+        $masterClientData = User::find(decode_id($master_client));
+        $masterEmail = $masterClientData?->email;
+        $businessName = $masterClientData?->business_name;
+
         $client_data->delete();
 
         // add log
@@ -100,6 +127,20 @@ class ClientUserController extends Controller
                     . ' (' . auth()->user()->email . ')',
                 'user_id' => auth()->id(), 
             ]);
+
+            // Send email
+            queueEmailJob(
+                recipients: [$deletedEmail, $masterEmail],
+                subject: 'Client User Deleted - ' . config('app.name'),
+                template: 'emails.client_user_deleted',
+                payload: [
+                    'deleted_name' => $deletedName,
+                    'deleted_email' => $deletedEmail,
+                    'business_name' => $businessName,
+                ],
+                emailType: 'client_user_deleted'
+            );
+
 
         Session::flash('message', __('messages.Client deleted successfully.'));
         return redirect()->route('client_users.index',$master_client )->with('success', 'Client deleted successfully.');

@@ -3,6 +3,7 @@ use Hashids\Hashids;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Page;
 use Illuminate\Support\Str;
+use App\Models\EmailJob;
 
 function encode_id($id)
 {
@@ -134,6 +135,25 @@ function isSupplierUser()
     }
 
     return optional($user->supplier)->id ?: false;
+}
+
+function queueEmailJob(array $recipients, string $subject, string $template, array $payload = [], ?string $emailType = null): bool
+{
+    try {
+        $emailJob = new EmailJob();
+        $emailJob->to_email = $recipients; 
+        $emailJob->subject = $subject;
+        $emailJob->template = $template; 
+        $emailJob->payload = $payload;
+        $emailJob->email_type = $emailType;
+        $emailJob->status = 'pending';
+        $emailJob->save();
+
+        return true;
+    } catch (\Exception $e) {
+        \Log::error('Failed to queue email job: ' . $e->getMessage());
+        return false;
+    }
 }
 
 ?>

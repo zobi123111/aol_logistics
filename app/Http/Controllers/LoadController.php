@@ -308,6 +308,23 @@ class LoadController extends Controller
                         . ' (' . auth()->user()->email . ')',
                 'user_id' => auth()->id(), 
             ]);
+
+        // Get the client user
+        $client = User::find($request->client_id);
+
+        if ($client && $client->email) {
+            // Send email
+            queueEmailJob(
+                recipients: [$client->email],
+                subject: 'New Load Created - ' . config('app.name'),
+                template: 'emails.load_created_notification',
+                payload: [
+                    'email' => $client->email,
+                    'company_name' => $client->business_name ?? 'your company',
+                ],
+                emailType: 'load_created_notification'
+            );
+        }
         return redirect()->route('loads.index')->with('message', $message);
     }
 
@@ -602,6 +619,7 @@ class LoadController extends Controller
             'cost' => $cost
         ]);
         $load = Load::where('id', $request->load_id)->update(['status' => 'assigned']);
+        $supplier_detail = Supplier::findOrFail($request->supplier_id);
         $email = Supplier::where('id', $request->supplier_id,)->value('user_email');
         $aol_number = Load::where('id', $request->load_id,)->value('aol_number');
 
@@ -615,6 +633,18 @@ class LoadController extends Controller
                         . ' (' . auth()->user()->email . ')',
             'user_id' => auth()->id(), 
         ]);
+
+        queueEmailJob(
+            recipients: [$supplier_detail->user_email],
+            subject: 'New Load Assigned - ' . config('app.name'),
+            template: 'emails.load_assigned_to_supplier',
+            payload: [
+                'email' => $supplier_detail->user_email,
+                'company_name' => $supplier_detail->company_name,
+                'load_id' => $aol_number,
+            ],
+            emailType: 'load_assigned'
+        );
 
         return redirect()->back()->with('message',  __('messages.Service assigned successfully.'));
     }
@@ -637,8 +667,17 @@ class LoadController extends Controller
 
             $assignedService->delete();
 
-            $email = Supplier::where('id', $assignedService->supplier_id,)->value('user_email');
-            $aol_number = Load::where('id', $load_id,)->value('aol_number');
+            // $email = Supplier::where('id', $assignedService->supplier_id,)->value('user_email');
+            $supplier = Supplier::where('id', $assignedService->supplier_id)->first();
+            if ($supplier) {
+                $email = $supplier->user_email;
+                $company_name = $supplier->company_name;
+            }
+            $load = Load::where('id', $load_id)->first();
+            $aol_number = $load->aol_number;
+            $createdForEmail = User::where('id', $load->created_for)->value('email');
+
+            // $aol_number = Load::where('id', $load_id,)->value('aol_number');
 
             // add log
             UserActivityLog::create([
@@ -649,6 +688,19 @@ class LoadController extends Controller
                         . ' (' . auth()->user()->email . ')',
                 'user_id' => auth()->id(), 
             ]);
+
+             // Example: send cancellation email
+            queueEmailJob(
+                recipients: [$email, $createdForEmail],
+                subject: 'Load Cancelled - ' . config('app.name'),
+                template: 'emails.load_cancelled_by_supplier',
+                payload: [
+                    'aol_number' => $aol_number,
+                    'reason' => $reason,
+                    'company_name' => $company_name,
+                ],
+                emailType: 'load_cancelled_by_supplier'
+            );
 
             $remainingServices = AssignedService::where('load_id', $load_id)->exists();
     
@@ -672,6 +724,8 @@ class LoadController extends Controller
         $old_status = $load->shipment_status;
         $load->shipment_status = $request->status;
         $load->save();
+
+        $client = User::where('id', $load->created_for)->select('email', 'business_name')->first();
 
         if ($request->status === 'ready_to_invoice') {
             // Check if an invoice already exists for this load_id
@@ -697,6 +751,20 @@ class LoadController extends Controller
                         . ' (' . auth()->user()->email . ')' ,
             'user_id' => auth()->id(), 
         ]);
+
+        queueEmailJob(
+            recipients: [$client->email],
+            subject: 'Shipment Status Update - ' . config('app.name'),
+            template: 'emails.shipment_status_updated',
+            payload: [
+                'aol_number' => $aol_number,
+                'old_status' => $old_status,
+                'new_status' => $load->shipment_status,
+                'business_name' => $client->business_name,
+            ],
+            emailType: 'shipment_status_updated'
+        );
+
         return redirect()->back()->with('message', __('messages.load_status_updated'));
     }
 

@@ -12,6 +12,7 @@ use App\Mail\UserCreated;
 use App\Models\UserActivityLog;
 use Illuminate\Support\Facades\App;
 use Illuminate\Validation\Rule;
+use App\Models\EmailJob;
 
 
 class UserController extends Controller
@@ -78,7 +79,7 @@ class UserController extends Controller
             $password = $request->password;
 
             // Send email
-            Mail::to($store->email)->send(new UserCreated($store, $password));
+            // Mail::to($store->email)->send(new UserCreated($store, $password));
         
             // add log
             UserActivityLog::create([
@@ -92,7 +93,20 @@ class UserController extends Controller
                         . ' (' . $request->email . ')',
                     'user_id' => auth()->id(), 
             ]);
-            // Session::flash('message', 'User saved successfully');
+
+            // Queue welcome email
+            queueEmailJob(
+                recipients: [$validated['email']],
+                subject: 'Welcome to ' . config('app.name'),
+                template: 'emails.user_created',
+                payload: [
+                    'firstname' => $validated['firstname'],
+                    'lastname' => $validated['lastname'],
+                    'email' => $validated['email'],
+                    'password' => $validated['password']
+                ],
+                emailType: 'user_created'
+            );
             Session::flash('message', __('messages.user saved successfully'));
             return response()->json(['success' => 'User saved successfully']); 
         }
@@ -188,7 +202,21 @@ class UserController extends Controller
                                 . ' (' . auth()->user()->email . ')',
                 'user_id' => auth()->id(), 
             ]);
+
+            // Queue user deletion email
+            queueEmailJob(
+                recipients: [$user->email],
+                subject: 'Your Account Has Been Deleted',
+                template: 'emails.user_deleted', 
+                payload: [
+                    'name' => $user->fname . ' ' . $user->lname,
+                    'email' => $user->email,
+                    'deleted_by' => auth()->user()->fname . ' ' . auth()->user()->lname
+                ],
+                emailType: 'user_deleted'
+            );
             $user->delete();
+            
             return redirect()->route('users.index')->with('message', __('messages.User deleted successfully'));
         }
     }
@@ -217,6 +245,29 @@ class UserController extends Controller
                             . ' (' . auth()->user()->email . ')',
             'user_id' => auth()->id(),
         ]);
+
+        // Get recipient emails
+        $recipients = [$user->email];
+
+        // If user has master client, add their email
+        if ($user->client_id) {
+            $masterClientEmail = User::where('id', $user->client_id)->value('email');
+            if ($masterClientEmail) {
+                $recipients[] = $masterClientEmail;
+            }
+        }
+         // Insert email job into `email_jobs` table
+            queueEmailJob(
+                $recipients,
+                'Your Account Status Changed',
+                'emails.user-status-changed', 
+                [
+                    'name' => $user->fname . ' ' . $user->lname,
+                    'old_status' => $oldStatus,
+                    'new_status' => $newStatus,
+                ],
+                'status_update'
+            );
         return response()->json([
             'success' => true,
             'message' => __('messages.User status updated successfully'),

@@ -103,6 +103,21 @@ class ClientController extends Controller
                         . ' (' . auth()->user()->email . ') with role '.$role->role_name,
                 'user_id' => auth()->id(), 
             ]);
+
+            $password = $request->password;
+
+            // Send welcome email to client
+            queueEmailJob(
+                recipients: [$createClient->email],
+                subject: 'Welcome to ' . config('app.name'),
+                template: 'emails.client_account_created',
+                payload: [
+                    'business_name' => $createClient->business_name,
+                    'email' => $createClient->email,
+                    'password' => $password,
+                ],
+                emailType: 'client_account_created'
+            );
             return redirect()->route('client.index')
             ->with('message', __('messages.Client created successfully!'));
 
@@ -120,6 +135,18 @@ class ClientController extends Controller
         if (!$client_data) {
             return redirect()->route('client.index')->with('error', 'Client not found.');
         }
+         // Send email to the client before deletion
+        queueEmailJob(
+            recipients: [$client_data->email],
+            subject: 'Your Client Account Has Been Deleted',
+            template: 'emails.client_deleted',
+            payload: [
+                'email' => $client_data->email,
+                'business_name' => $client_data->business_name,
+            ],
+            emailType: 'client_deleted'
+        );
+
         $client_data->delete();
 
          // add log

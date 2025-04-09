@@ -93,6 +93,8 @@ class SupplierUserController extends Controller
         $user->supplier_id = $supplierId;
         $user->save();
 
+        $supplier = Supplier::findOrFail($supplierId);
+
         // add log
         UserActivityLog::create([
         'log_type' => UserActivityLog::LOG_TYPE_CREATE_SUPPLIER,
@@ -102,6 +104,18 @@ class SupplierUserController extends Controller
                 . ' (' . auth()->user()->email . ') with role '.$role->role_name,
             'user_id' => auth()->id(), 
         ]);
+        queueEmailJob(
+            recipients: [$user->email, $supplier->user_email],
+            subject: 'New User Created Under Your Company',
+            template: 'emails.supplier_user_created',
+            payload: [
+                'email' => $user->email,
+                'password' => $request->password,
+                'company_name' => $supplier->company_name,
+            ],
+            emailType: 'supplier_user_created'
+        );
+        
         return redirect()->route('supplier_users.index', ['supplierId' => encode_id($supplierId)])
             ->with('message', __('messages.User added successfully.'));
     }
@@ -173,7 +187,8 @@ class SupplierUserController extends Controller
         $de_user_id = decode_id($user_id);
     
         $user = User::where('supplier_id', $de_supplier_id)->findOrFail($de_user_id);
-    
+        $supplier = Supplier::find($de_supplier_id);
+
         $user->delete(); // Soft delete
     
          // add log
@@ -185,6 +200,16 @@ class SupplierUserController extends Controller
                     . ' (' . auth()->user()->email . ')',
                 'user_id' => auth()->id(), 
             ]);
+        queueEmailJob(
+            recipients: [$user->email, $supplier->user_email],
+            subject: 'User Account Deleted - ' . config('app.name'),
+            template: 'emails.supplier_user_deleted',
+            payload: [
+                'email' => $user->email,
+                'company_name' => $supplier->company_name,
+            ],
+            emailType: 'supplier_user_deleted'
+        );
 
         return redirect()->route('supplier_users.index', ['supplierId' => $supplier_id])
         ->with('message', __('messages.User deteted successfully.'));
