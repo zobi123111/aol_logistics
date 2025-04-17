@@ -78,7 +78,7 @@
 <form action="{{ route('upload.bill', ['load_id' => $load_id]) }}" method="POST" enctype="multipart/form-data">
     @csrf
         <div class="mb-3">
-            <label for="bill_pdf" class="form-label">Upload Bill PDF</label>
+            <label for="bill_pdf" class="form-label">{{ __('messages.upload_bill_pdf') }}</label>
             <input type="file" name="bill_pdf" class="form-control" >
             @error('bill_pdf')
                 <div class="text-danger">
@@ -86,7 +86,7 @@
                 </div>
             @enderror
         </div>
-        <button type="submit" class="btn btn-primary">Upload Bill</button>
+        <button type="submit" class="btn btn-primary">{{ __('messages.upload_bill') }}</button>
     </form>
 </div>
 @endsection

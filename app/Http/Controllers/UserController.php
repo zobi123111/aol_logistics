@@ -28,7 +28,9 @@ class UserController extends Controller
         ->get();
         $roles = Role::with(['userType'])->where('user_type_id', 1)->get();
         $userType = UserType::all();
-        return view('User.allusers', compact('users', 'roles', 'userType'));
+        $allclient = User::where('is_client', 1)->get();
+
+        return view('User.allusers', compact('users', 'roles', 'userType', 'allclient'));
     }
 
     public function save_user(Request $request)
@@ -316,5 +318,32 @@ class UserController extends Controller
 
             return back()->with('error', 'Invalid action selected.');
         }
+    }
+
+    public function updateClientBusiness(Request $request)
+    {
+        // dd($request->user_id);
+
+        // Validate the request
+        $request->validate([
+            'user_id' => 'required',
+            'client_id' => 'required',
+        ]);
+
+        // try {
+            // dd(decode_id($request->user_id));
+            
+            $userId = decode_id($request->user_id);
+            // Get the user and update their client_id and role
+            $user = User::findOrFail($userId);
+            $role = Role::where('role_slug', config('constants.roles.CLIENT_SERVICE_EXECUTIVE'))->first();
+            $user->client_id = $request->client_id;
+            $user->role = $role->id;  
+            $user->save();
+
+            return redirect()->back()->with('message', __('messages.user_updated_successfully'));
+        // } catch (\Exception $e) {
+        //     return redirect()->back()->with('error', 'Failed to update user: ' . $e->getMessage());
+        // }
     }
 }

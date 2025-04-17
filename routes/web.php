@@ -37,6 +37,9 @@ use QuickBooksOnline\API\Data\IPPAttachableRef;
 use QuickBooksOnline\API\Data\IPPReferenceType;
 use QuickBooksOnline\API\Utility\Upload;
 use QuickBooksOnline\API\PlatformService\PlatformService;
+use App\Http\Controllers\EmailTypeController;
+use App\Http\Controllers\WhatsAppWebhookController;
+use App\Livewire\Chat;
 
 
 
@@ -109,6 +112,27 @@ Route::middleware(['auth.user', 'otp.verified', 'role.permission'])->group(funct
 });
 
 Route::middleware(['auth.user', 'otp.verified', 'check.supplier'])->group(function () {
+    Route::get('/email-types', [EmailTypeController::class, 'index'])->name('email-types.index');
+    Route::post('/email-types/{id}/toggle', [EmailTypeController::class, 'toggle'])->name('email-types.toggle');
+    Route::get('/quickbooks/company-info', [QuickBooksController::class, 'getCompanyInfo'])->name('quickbooks.companyInfo');
+    Route::get('/quickbooks/invoice', [QuickBooksController::class, 'createInvoice'])->name('quickbooks.invoice');
+    Route::get('/quickbooks/refresh-token', [QuickBooksController::class, 'refreshToken'])->name('quickbooks.refresh');
+    Route::post('/invoice/create-quickbooks/{id}', [QuickBooksController::class, 'createInvoice'])->name('invoice.quickbooks.create');
+    Route::post('/invoice/store', [QuickBooksController::class, 'storeInvoice'])->name('invoice.store');
+    Route::get('/invoice/client/{load_id}', [QuickBooksController::class, 'addClientInvoice'])
+        ->name('invoice.client');
+    Route::get('/invoice/upload/{id}', [QuickBooksController::class, 'showUploadForm'])->name('invoice.upload');
+    Route::get('/loads/{load_id}/quickbooks-invoices', [QuickBooksController::class, 'showQuickBooksInvoice'])->name('loads.quickbooks_invoices');
+    Route::get('/upload-bill/{load_id}', [QuickBooksController::class, 'showUploadBillForm'])->name('upload.bill.form');
+    Route::post('/upload-bill/supplier/{load_id}', [QuickBooksController::class, 'createSupplierBill'])
+        ->name('upload.bill');
+    Route::get('/invoice/supplier/{load_id}', [QuickBooksController::class, 'showQuickBooksBillByLoadId'])->name('invoice.supplier');
+    Route::post('/update-client-business', [UserController::class, 'updateClientBusiness'])->name('update.client.business');
+
+
+});
+
+Route::middleware(['auth.user', 'otp.verified', 'check.supplier'])->group(function () {
     Route::prefix('suppliers/{supplierId}/users')->group(function () {
         Route::get('/', [SupplierUserController::class, 'index'])->name('supplier_users.index');
         Route::get('/create', [SupplierUserController::class, 'create'])->name('supplier_users.create');
@@ -174,26 +198,14 @@ Route::get('/supplier/invoice/{loadId}', function ($loadId) {
 Route::get('/quickbooks/connect', [QuickBooksController::class, 'connect'])->name('quickbooks.connect');
 Route::get('/quickbooks/callback', [QuickBooksController::class, 'callback'])->name('quickbooks.callback');
 Route::get('/quickbooks/refresh-token', [QuickBooksController::class, 'refreshToken'])->name('quickbooks.refresh');
-Route::get('/quickbooks/company-info', [QuickBooksController::class, 'getCompanyInfo'])->name('quickbooks.companyInfo');
-Route::get('/quickbooks/invoice', [QuickBooksController::class, 'createInvoice'])->name('quickbooks.invoice');
-
-
-Route::get('/quickbooks/refresh-token', [QuickBooksController::class, 'refreshToken'])->name('quickbooks.refresh');
-
-Route::post('/invoice/create-quickbooks/{id}', [QuickBooksController::class, 'createInvoice'])->name('invoice.quickbooks.create');
-
-Route::post('/invoice/store', [QuickBooksController::class, 'storeInvoice'])->name('invoice.store');
-Route::get('/invoice/client/{load_id}', [QuickBooksController::class, 'addClientInvoice'])
-    ->name('invoice.client');
-Route::get('/invoice/upload/{id}', [QuickBooksController::class, 'showUploadForm'])->name('invoice.upload');
-Route::get('/loads/{load_id}/quickbooks-invoices', [QuickBooksController::class, 'showQuickBooksInvoice'])->name('loads.quickbooks_invoices');
-
-
-Route::get('/upload-bill/{load_id}', [QuickBooksController::class, 'showUploadBillForm'])->name('upload.bill.form');
-Route::post('/upload-bill/supplier/{load_id}', [QuickBooksController::class, 'createSupplierBill'])
-    ->name('upload.bill');
-Route::get('/invoice/supplier/{load_id}', [QuickBooksController::class, 'showQuickBooksBillByLoadId'])->name('invoice.supplier');
 
     // Route::get('/test', [QuickBooksController::class, 'uploadToQuickBooks'])
     // ->name('upload.bill'); 
+
+Route::post('/api/weather', [DashboardController::class, 'getWeather']);
+
+Route::get('/chat/{number}/{name}', function ($number, $name) {
+    return view('chat', ['number' => $number, 'name' => $name ]);
+})->name('chat.here');
+
 

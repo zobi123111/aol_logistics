@@ -111,7 +111,7 @@ class LoadController extends Controller
                     if ($load->status === 'assigned') {
                     return '<a href="' . route('upload.bill.form', ['load_id' => encode_id($load->id)]) . '" 
                                 class="btn btn-primary create-button btn_primary_color">
-                                <i class="fa-solid fa-user"></i> Add Invoice
+                                <i class="fa-solid fa-user"></i> '. __('messages.add_invoice').'
                             </a>';
                         } else {
                             return '<span>NA</span>';
@@ -121,7 +121,7 @@ class LoadController extends Controller
                     if ($load->invoice_id) {
                     return '<a href="' . route('loads.quickbooks_invoices', ['load_id' => encode_id($load->id)]) . '" 
                                 class="btn btn-primary create-button btn_primary_color">
-                                <i class="fa-solid fa-file-invoice-dollar"></i> View QB Invoice
+                                <i class="fa-solid fa-file-invoice-dollar"></i> '.__('messages.view_qb_invoice').'
                             </a>';
                         } else {
                             // If supplier_invoice_id is null, return 'NA'
@@ -134,7 +134,7 @@ class LoadController extends Controller
                         // If it exists, show the button with the link to view the supplier invoice
                         return '<a href="' . route('invoice.supplier', ['load_id' => encode_id($load->id)]) . '" 
                                     class="btn btn-primary create-button btn_primary_color">
-                                    <i class="fa-solid fa-file-invoice-dollar"></i> View QB Supplier Invoice
+                                    <i class="fa-solid fa-file-invoice-dollar"></i> '.__('messages.view_qb_supplier_invoice').'
                                 </a>';
                     } else {
                         // If supplier_invoice_id is null, return 'NA'

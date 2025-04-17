@@ -11,5 +11,12 @@
                         <i class="fa-solid fa-trash delete-icon table_icon_style blue_icon_color"
     data-clientdata-id="{{ encode_id($client->id) }}"></i>
     @endif
+
+
+    @if($client->country_code && $client->mobile_number)
+                        <a href="{{ route('chat.here', ['number' => $client->country_code . $client->mobile_number, 'name' => $client->business_name ??  $client->email]) }}">
+                            <i class="fa-solid fa-comments table_icon_style blue_icon_color"></i>
+                        </a>
+                    @endif
 </td>
 @endif

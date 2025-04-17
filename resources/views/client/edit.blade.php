@@ -70,6 +70,32 @@
                     @enderror
                 </div>
 
+                <div class="mb-3">
+                <label class="form-label">{{ __('messages.Country Code') }} <span class="text-danger">*</span></label>
+                <select name="country_code" class="form-control" value="{{ old('country_code', $client->country_code) }}">
+                    <option value="">Select Country Code</option>
+                    <option value="1" {{ old('country_code', $client->country_code) == '1' ? 'selected' : '' }}>+1 (USA, Canada)</option>
+                    <option value="44" {{ old('country_code', $client->country_code) == '44' ? 'selected' : '' }}>+44 (UK)</option>
+                    <option value="91" {{ old('country_code', $client->country_code) == '91' ? 'selected' : '' }}>+91 (India)</option>
+                    <option value="33" {{ old('country_code', $client->country_code) == '33' ? 'selected' : '' }}>+33 (France)</option>
+                    <!-- Add more countries as needed -->
+                </select>
+                @error('country_code')
+                    <div class="text-danger">
+                        {{ $message }}
+                    </div>
+                @enderror
+                </div>
+            <!-- Client Mobile Number -->
+            <div class="mb-3">
+                    <label class="form-label">{{ __('messages.WhatsApp Number') }} <span class="text-danger">*</span></label>
+                    <input type="text" name="mobile_number" class="form-control" value="{{ old('mobile_number', $client->mobile_number) }}">
+                    @error('mobile_number')
+                        <div class="text-danger">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
                 <!-- Profile Photo Upload -->
                 <!-- <div class="mb-3">
                 <div id="current-profile-photo" class="mt-2"><div class="image-cont" style="position:relative;"><label>Current Profile Photo</label><br><img src="{{ asset('storage/' . $client->profile_photo) }}" width="100" height="100" class="rounded-circle" alt="Profile Photo"><button type="button" class="btn btn-danger btn-sm position-absolute remove-photo">x</button></div>

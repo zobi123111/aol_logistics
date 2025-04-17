@@ -996,7 +996,7 @@ class QuickBooksController extends Controller
         // Optional: Update Load with invoice ID
         $load->update(['supplier_invoice_id' => $supplierInvoice->id]);
 
-        return back()->with('message', 'Bill uploaded successfully.');
+        return back()->with('message',  __('messages.bill_uploaded_successfully'));
     }
 
 

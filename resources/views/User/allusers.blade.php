@@ -25,7 +25,7 @@
         'users.toggleStatus')->isNotEmpty())
         <div class="d-flex justify-content-start mb-3 bulk_div">
             <!-- Bulk Action Dropdown -->
-            <select name="bulk_action" class="form-control w-25" required>
+            <select name="bulk_action" class="form-control w-25">
                 <option value=""> {{ __('messages.Select Bulk Action') }} </option>
                 @if(checkAllowedModule('users', 'user.toggleStatus')->isNotEmpty())
                 <option value="change_status">{{ __('messages.Change Status') }}</option>
@@ -65,6 +65,8 @@
                     <!-- @if(checkAllowedModule('users', 'user.destroy')->isNotEmpty())
                     <th scope="col">Delete</th>
                     @endif -->
+                    <th scope="col">{{ __('messages.Client') }}</th>
+
                 </tr>
             </thead>
             <tbody>
@@ -114,6 +116,13 @@
                     @endif
                     </td>
                     @endif
+                    <td>
+                    <a href="javascript:void(0);" class="btn btn-primary create-button btn_primary_color" data-user-id="{{ encode_id($val->id) }}" onclick="allBusness(this)">
+                        <i class="bi bi-person"></i> <!-- Icon here -->
+                    </a>
+
+                  
+                </td>
                 </tr>
                 @endforeach
                 @endif
@@ -331,6 +340,34 @@
     </div>
 </form>
 <!-- End of Delete Model -->
+
+<!-- Modal for Business Selection -->
+<div class="modal fade" id="businessModal" tabindex="-1" aria-labelledby="businessModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="businessModalLabel">{{ __('messages.Select Client Business') }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="businessForm" action="{{ route('update.client.business') }}" method="POST">
+                @csrf
+                <input type="hidden" id="userId" name="user_id">
+                    <div class="mb-3">
+                        <label for="businessSelect" class="form-label">{{ __('messages.Select Business') }}</label>
+                        <select class="form-control" id="businessSelect" name="client_id">
+                        @foreach($allclient as $business)
+                                <option value="{{ $business->id }}">{{ $business->business_name?? $business->email }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary create-button btn_primary_color">{{ __('messages.Save') }}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @section('js_scripts')
@@ -593,6 +630,11 @@ $(document).on('change', '.status-toggle', function() {
         }
     });
 });
+function allBusness(element) {
+    var userId = element.getAttribute('data-user-id');
+    document.getElementById('userId').value = userId;
+    $('#businessModal').modal('show');
+}
 </script>
 
 @endsection

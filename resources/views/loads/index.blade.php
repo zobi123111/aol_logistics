@@ -80,14 +80,13 @@
                     <th>{{ __('messages.shipment_status') }}</th>
                     <th>{{ __('messages.update_truck_details') }}</th>
                     @if (auth()->user()->roledata->user_type_id == 3)
-                    <th>add invoice </th>
+                    <th>{{ __('messages.add_invoice') }}</th>
                     @endif
-
                     @if (auth()->user()->roledata->user_type_id != 3)
-                        <th>QuickBooks Client Invoice</th>
+                    <th>{{ __('messages.quickbooks_client_invoice') }}</th>
                     @endif
                     @if (auth()->user()->roledata->user_type_id == 3)
-                        <th>QuickBooks Supplier Invoice</th>
+                    <th>{{ __('messages.quickbooks_supplier_invoice') }}</th>
                     @endif
                 </tr>
             </thead>

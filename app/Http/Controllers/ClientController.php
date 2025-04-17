@@ -56,6 +56,8 @@ class ClientController extends Controller
             'email' => 'required|string|max:255',
             'password' => 'required|string|min:6|confirmed',
             'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'mobile_number' => 'required|numeric',  
+            'country_code' => 'required|string|max:5', 
         ];
         
       
@@ -89,7 +91,9 @@ class ClientController extends Controller
                 'password' => Hash::make($request->password),
                 'role' => $role->id,
                 // 'profile_photo' => $profilePhotoPath,
-                'is_client' => 1
+                'is_client' => 1,
+                'mobile_number' => $request->mobile_number,
+                'country_code' => $request->country_code,
             ]);
         
             DB::commit();
@@ -183,6 +187,8 @@ class ClientController extends Controller
             // 'client_Lname' => 'required|string|max:255',
             'business_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
+            'mobile_number' => 'required|numeric', 
+            'country_code' => 'required|string|max:5',
          ]);
      
          // Check if validation fails
@@ -196,6 +202,8 @@ class ClientController extends Controller
         //  $user->lname = $request->client_Lname; 
          $user->email = $request->email;
          $user->business_name = $request->business_name;
+         $user->mobile_number = $request->mobile_number;
+         $user->country_code = $request->country_code;
 
          $user->save();
 
