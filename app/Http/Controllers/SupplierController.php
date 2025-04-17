@@ -179,6 +179,8 @@ class SupplierController extends Controller
             ]);
 
             //  Queue welcome email for supplier login
+        if (isEmailTypeActive('supplier_created')) {
+
             queueEmailJob(
                 recipients: [$request->user_email], 
                 subject: 'Welcome to ' . config('app.name'),
@@ -191,6 +193,7 @@ class SupplierController extends Controller
                 ],
                 emailType: 'supplier_created'
             );
+        }
 
             // Function to save documents
             $this->storeDocuments($supplier->id, $request, 'document_path', 'documents');
@@ -394,6 +397,8 @@ class SupplierController extends Controller
          $companyName = $supplier->company_name;
  
          // Queue email
+        if (isEmailTypeActive('supplier_deleted')) {
+
          queueEmailJob(
              recipients: [$userEmail],
              subject: 'Your Supplier Account Has Been Deleted',
@@ -403,7 +408,7 @@ class SupplierController extends Controller
              ],
              emailType: 'supplier_deleted'
          );
-
+        }
         // add log
         UserActivityLog::create([
         'log_type' => UserActivityLog::LOG_TYPE_DELETE_SUPPLIER,
@@ -472,6 +477,8 @@ class SupplierController extends Controller
             'user_id' => auth()->id(),
         ]);
       // Queue email to supplier
+      if (isEmailTypeActive('supplier_status_changed')) {
+
         queueEmailJob(
             recipients: [$supplier->user_email],
             subject: 'Your Supplier Account Status Has Been Updated',
@@ -483,6 +490,7 @@ class SupplierController extends Controller
             ],
             emailType: 'supplier_status_changed'
         );
+    }
         return response()->json([
             'success' => true,
             'message' => __('messages.Supplier status updated successfully'),

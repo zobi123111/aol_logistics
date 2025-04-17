@@ -16,7 +16,7 @@
         <thead>
             <tr>
             <th>{{ __('messages.name') }}</th>
-            <th>{{ __('messages.toggle') }}</th>
+            <th>{{ __('messages.status') }}</th>
             </tr>
         </thead>
         <tbody>

@@ -97,18 +97,20 @@ class UserController extends Controller
             ]);
 
             // Queue welcome email
-            queueEmailJob(
-                recipients: [$validated['email']],
-                subject: 'Welcome to ' . config('app.name'),
-                template: 'emails.user_created',
-                payload: [
-                    'firstname' => $validated['firstname'],
-                    'lastname' => $validated['lastname'],
-                    'email' => $validated['email'],
-                    'password' => $validated['password']
-                ],
-                emailType: 'user_created'
-            );
+            if (isEmailTypeActive('user_created')) {
+                queueEmailJob(
+                    recipients: [$validated['email']],
+                    subject: 'Welcome to ' . config('app.name'),
+                    template: 'emails.user_created',
+                    payload: [
+                        'firstname' => $validated['firstname'],
+                        'lastname' => $validated['lastname'],
+                        'email' => $validated['email'],
+                        'password' => $validated['password']
+                    ],
+                    emailType: 'user_created'
+                );
+            }
             Session::flash('message', __('messages.user saved successfully'));
             return response()->json(['success' => 'User saved successfully']); 
         }
@@ -206,6 +208,7 @@ class UserController extends Controller
             ]);
 
             // Queue user deletion email
+            if (isEmailTypeActive('user_deleted')) {
             queueEmailJob(
                 recipients: [$user->email],
                 subject: 'Your Account Has Been Deleted',
@@ -217,6 +220,7 @@ class UserController extends Controller
                 ],
                 emailType: 'user_deleted'
             );
+        }
             $user->delete();
             
             return redirect()->route('users.index')->with('message', __('messages.User deleted successfully'));
@@ -259,6 +263,7 @@ class UserController extends Controller
             }
         }
          // Insert email job into `email_jobs` table
+         if (isEmailTypeActive('status_update')) {
             queueEmailJob(
                 $recipients,
                 'Your Account Status Changed',
@@ -270,6 +275,7 @@ class UserController extends Controller
                 ],
                 'status_update'
             );
+        }
         return response()->json([
             'success' => true,
             'message' => __('messages.User status updated successfully'),

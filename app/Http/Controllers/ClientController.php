@@ -111,6 +111,8 @@ class ClientController extends Controller
             $password = $request->password;
 
             // Send welcome email to client
+        if (isEmailTypeActive('client_account_created')) {
+
             queueEmailJob(
                 recipients: [$createClient->email],
                 subject: 'Welcome to ' . config('app.name'),
@@ -122,6 +124,7 @@ class ClientController extends Controller
                 ],
                 emailType: 'client_account_created'
             );
+        }
             return redirect()->route('client.index')
             ->with('message', __('messages.Client created successfully!'));
 
@@ -140,6 +143,8 @@ class ClientController extends Controller
             return redirect()->route('client.index')->with('error', 'Client not found.');
         }
          // Send email to the client before deletion
+        if (isEmailTypeActive('client_deleted')) {
+
         queueEmailJob(
             recipients: [$client_data->email],
             subject: 'Your Client Account Has Been Deleted',
@@ -150,7 +155,7 @@ class ClientController extends Controller
             ],
             emailType: 'client_deleted'
         );
-
+    }
         $client_data->delete();
 
          // add log

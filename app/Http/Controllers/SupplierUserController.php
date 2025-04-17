@@ -104,6 +104,8 @@ class SupplierUserController extends Controller
                 . ' (' . auth()->user()->email . ') with role '.$role->role_name,
             'user_id' => auth()->id(), 
         ]);
+        if (isEmailTypeActive('supplier_user_created')) {
+
         queueEmailJob(
             recipients: [$user->email, $supplier->user_email],
             subject: 'New User Created Under Your Company',
@@ -115,6 +117,7 @@ class SupplierUserController extends Controller
             ],
             emailType: 'supplier_user_created'
         );
+    }
         
         return redirect()->route('supplier_users.index', ['supplierId' => encode_id($supplierId)])
             ->with('message', __('messages.User added successfully.'));
@@ -200,6 +203,8 @@ class SupplierUserController extends Controller
                     . ' (' . auth()->user()->email . ')',
                 'user_id' => auth()->id(), 
             ]);
+            if (isEmailTypeActive('supplier_user_deleted')) {
+
         queueEmailJob(
             recipients: [$user->email, $supplier->user_email],
             subject: 'User Account Deleted - ' . config('app.name'),
@@ -210,7 +215,7 @@ class SupplierUserController extends Controller
             ],
             emailType: 'supplier_user_deleted'
         );
-
+    }
         return redirect()->route('supplier_users.index', ['supplierId' => $supplier_id])
         ->with('message', __('messages.User deteted successfully.'));
     }

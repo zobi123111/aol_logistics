@@ -314,6 +314,8 @@ class LoadController extends Controller
 
         if ($client && $client->email) {
             // Send email
+        if (isEmailTypeActive('load_created_notification')) {
+
             queueEmailJob(
                 recipients: [$client->email],
                 subject: 'New Load Created - ' . config('app.name'),
@@ -324,6 +326,7 @@ class LoadController extends Controller
                 ],
                 emailType: 'load_created_notification'
             );
+        }
         }
         return redirect()->route('loads.index')->with('message', $message);
     }
@@ -633,6 +636,7 @@ class LoadController extends Controller
                         . ' (' . auth()->user()->email . ')',
             'user_id' => auth()->id(), 
         ]);
+        if (isEmailTypeActive('load_assigned')) {
 
         queueEmailJob(
             recipients: [$supplier_detail->user_email],
@@ -645,6 +649,7 @@ class LoadController extends Controller
             ],
             emailType: 'load_assigned'
         );
+    }
 
         return redirect()->back()->with('message',  __('messages.Service assigned successfully.'));
     }
@@ -690,6 +695,8 @@ class LoadController extends Controller
             ]);
 
              // Example: send cancellation email
+        if (isEmailTypeActive('load_cancelled_by_supplier')) {
+
             queueEmailJob(
                 recipients: [$email, $createdForEmail],
                 subject: 'Load Cancelled - ' . config('app.name'),
@@ -701,7 +708,7 @@ class LoadController extends Controller
                 ],
                 emailType: 'load_cancelled_by_supplier'
             );
-
+        }
             $remainingServices = AssignedService::where('load_id', $load_id)->exists();
     
             if (!$remainingServices) {
@@ -751,6 +758,7 @@ class LoadController extends Controller
                         . ' (' . auth()->user()->email . ')' ,
             'user_id' => auth()->id(), 
         ]);
+        if (isEmailTypeActive('shipment_status_updated')) {
 
         queueEmailJob(
             recipients: [$client->email],
@@ -764,7 +772,7 @@ class LoadController extends Controller
             ],
             emailType: 'shipment_status_updated'
         );
-
+    }
         return redirect()->back()->with('message', __('messages.load_status_updated'));
     }
 

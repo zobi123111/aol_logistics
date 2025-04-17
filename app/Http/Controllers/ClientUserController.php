@@ -76,6 +76,8 @@ class ClientUserController extends Controller
             $mainClientBusiness = User::where('id', $id)->value('business_name');
             
            // Send email to both the new client user and the main client
+        if (isEmailTypeActive('client_user_created')) {
+
             queueEmailJob(
                 recipients: [$createClient->email, $mainClientEmail],
                 subject: 'New Client User Created',
@@ -88,6 +90,7 @@ class ClientUserController extends Controller
                 ],
                 emailType: 'client_user_created'
             );
+        }
             return redirect()->route('client_users.index', encode_id($id))
             ->with('message',  __('messages.Client created successfully!'));
 
@@ -129,6 +132,8 @@ class ClientUserController extends Controller
             ]);
 
             // Send email
+        if (isEmailTypeActive('client_user_deleted')) {
+
             queueEmailJob(
                 recipients: [$deletedEmail, $masterEmail],
                 subject: 'Client User Deleted - ' . config('app.name'),
@@ -140,7 +145,7 @@ class ClientUserController extends Controller
                 ],
                 emailType: 'client_user_deleted'
             );
-
+        }
 
         Session::flash('message', __('messages.Client deleted successfully.'));
         return redirect()->route('client_users.index',$master_client )->with('success', 'Client deleted successfully.');

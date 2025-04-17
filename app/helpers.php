@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Page;
 use Illuminate\Support\Str;
 use App\Models\EmailJob;
+use App\Models\EmailType;
 
 function encode_id($id)
 {
@@ -156,4 +157,10 @@ function queueEmailJob(array $recipients, string $subject, string $template, arr
     }
 }
 
+if (!function_exists('isEmailTypeActive')) {
+    function isEmailTypeActive(string $name): bool
+    {
+        return EmailType::where('name', $name)->where('is_active', 1)->exists();
+    }
+}
 ?>
