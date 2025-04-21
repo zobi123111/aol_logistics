@@ -46,7 +46,7 @@ class LoadController extends Controller
                     return $query->where(function ($q) use ($user) {
                         $q->whereHas('assignedServices', function ($q) use ($user) {
                             $q->whereHas('supplier', function ($q) use ($user) {
-                                $q->where('id', $user->supplier->id);
+                                $q->where('id', $user->supplier_id);
                             });
                         })->orWhere('created_by', $user->id)->orWhere('status', 'requested');;
                     })
@@ -92,9 +92,7 @@ class LoadController extends Controller
                     $editUrl = route('loads.edit', encode_id($load->id));
                     $deleteId = encode_id($load->id);
                     $showUrl = route('loads.show', $deleteId);
-                    return '<a href="' . $showUrl . '" class="">
-                                <i class="fa fa-eye table_icon_style blue_icon_color"></i>
-                            </a>
+                    return '
                             <a href="' . $editUrl . '" class="">
                                 <i class="fa fa-edit edit-user-icon table_icon_style blue_icon_color"></i>
                             </a>

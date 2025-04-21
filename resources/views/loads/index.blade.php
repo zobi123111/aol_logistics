@@ -63,8 +63,8 @@
                     <th> {{ __('messages.Service Type') }} </th>
                     <th> {{ __('messages.Origin') }} </th>
                     <th> {{ __('messages.Destination') }} </th>
-                    <th>Created For</th>
-                    <th> {{ __('messages.Payer') }} </th>
+                    <th>{{ __('messages.Client') }}</th>
+                    <!-- <th> {{ __('messages.Payer') }} </th> -->
                     <th> {{ __('messages.Equipment Type') }} </th>
                     <th> {{ __('messages.Weight') }} </th>
                     <th>{{ __('messages.Schedule Date') }}</th>
@@ -73,7 +73,7 @@
                     <th> {{ __('messages.HazMat') }} </th>
                     <th> {{ __('messages.Inbond') }} </th>
                     <th> {{ __('messages.Status') }} </th>
-                    <th> {{ __('messages.Supplier Company') }} </th>
+                    <!-- <th> {{ __('messages.Supplier Company') }} </th> -->
                     <th> {{ __('messages.Created By') }} </th>
                     <th width="160px">{{ __('messages.Actions') }} </th>
                     <th> {{ __('messages.Assign') }} </th>
@@ -215,7 +215,7 @@
                 { data: 'originval', name: 'origin' },
                 { data: 'destinationval', name: 'destination' },
                 { data: 'created_for_user', name: 'created_for_user', orderable: false, searchable: false },
-                { data: 'payer', name: 'payer' },
+                //{ data: 'payer', name: 'payer' },
                 { data: 'equipment_type', name: 'equipment_type' },
                 { data: 'weight', name: 'weight', render: function(data, type, row) {
                     return row.weight ? `${row.weight} ${row.weight_unit}` : 'N/A';
@@ -228,7 +228,7 @@
                 { data: 'is_hazmat', name: 'is_hazmat', orderable: false, searchable: false },
                 { data: 'is_inbond', name: 'is_inbond', orderable: false, searchable: false },
                 { data: 'status', name: 'status' },
-                { data: 'supplier_company_name', name: 'supplier_company_name' },
+                // { data: 'supplier_company_name', name: 'supplier_company_name' },
                 { data: 'created_by_user', name: 'created_by' },
                 { data: 'actions', name: 'actions', orderable: false, searchable: false },
                 { data: 'assign', name: 'assign', orderable: false, searchable: false },
@@ -253,29 +253,29 @@
                 }
             },
             columnDefs: [
+                // {
+                //     targets: 5, 
+                //     className: 'text-center',
+                //     render: function(data, type, row) {
+                //         return data == 'another_party' ? 'Another party will pay for the load' : 'Client';
+                //     }
+                // },
                 {
-                    targets: 5, 
-                    className: 'text-center',
-                    render: function(data, type, row) {
-                        return data == 'another_party' ? 'Another party will pay for the load' : 'Client';
-                    }
-                },
-                {
-                    targets: 11, 
+                    targets: 9, 
                     className: 'text-center',
                     render: function(data, type, row) {
                         return '<input type="checkbox" ' + (row.is_hazmat ? 'checked' : '') + ' disabled>';
                     }
                 },
                 {
-                    targets: 12, 
+                    targets: 10, 
                     className: 'text-center',
                     render: function(data, type, row) {
                         return '<input type="checkbox" ' + (row.is_inbond ? 'checked' : '') + ' disabled>';
                     }
                 },
                 {
-                    targets: 16, 
+                    targets: 14, 
                     className: 'icon-design',
                 }
             ]

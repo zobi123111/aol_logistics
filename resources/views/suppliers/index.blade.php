@@ -30,10 +30,10 @@
                 <th scope="col">State</th>
                 <th scope="col">Zip Code</th>
                 <th scope="col">Country</th> -->
-                <th scope="col"> {{ __('messages.Office Phone') }}  </th>
+                <!-- <th scope="col"> {{ __('messages.Office Phone') }}  </th>
                 <th scope="col"> {{ __('messages.Email') }}  </th>
                 <th scope="col"> {{ __('messages.Office Phone') }}  </th>
-                <th scope="col"> {{ __('messages.Mobile Phone') }}  </th>
+                <th scope="col"> {{ __('messages.Mobile Phone') }}  </th> -->
                 <!-- <th scope="col">User Role</th>
                 <th scope="col">User Email</th>
                 <th scope="col">User Office Phone</th>
@@ -96,10 +96,10 @@
             columns: [
                 { data: 'company_name', name: 'company_name' },
                 { data: 'dba', name: 'dba' },
-                { data: 'office_phone', name: 'office_phone' },
-                { data: 'primary_contact_email', name: 'primary_contact_email' },
-                { data: 'primary_contact_office_phone', name: 'primary_contact_office_phone' },
-                { data: 'primary_contact_mobile_phone', name: 'primary_contact_mobile_phone' },
+                // { data: 'office_phone', name: 'office_phone' },
+                // { data: 'primary_contact_email', name: 'primary_contact_email' },
+                // { data: 'primary_contact_office_phone', name: 'primary_contact_office_phone' },
+                // { data: 'primary_contact_mobile_phone', name: 'primary_contact_mobile_phone' },
                 { data: 'status', name: 'status', orderable: false, searchable: false },
                 { data: 'actions', name: 'actions', orderable: false, searchable: false },
                 { data: 'supplier_users', name: 'supplier_users', orderable: false, searchable: false },
@@ -121,7 +121,7 @@
                     className: "company" 
                 },
                 {
-                    targets: 7, 
+                    targets: 3, 
                     className: "icon-design" 
                 }
             ]

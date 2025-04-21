@@ -127,7 +127,7 @@
                     @enderror
                 </div>
 
-                <div class="mb-3">
+                <!-- <div class="mb-3">
                     <label class="form-label"> {{ __('messages.Primary Contact Office Phone') }} </label><span class="text-danger">*</span>
                     <input type="text" name="primary_contact_office_phone" class="form-control"
                         value="{{ old('primary_contact_office_phone') }}">
@@ -147,7 +147,7 @@
                            {{ $message }}
                         </div>
                     @enderror
-                </div>
+                </div> -->
 
                 <!-- User Role Selection -->
                 <!-- <div class="mb-3">
@@ -169,7 +169,7 @@
                 </div> -->
 
                 <!-- User Email -->
-                <div class="mb-3">
+                <!-- <div class="mb-3">
                     <label class="form-label"> {{ __('messages.User Email') }}  <small> {{ __('messages.(Used for login)') }} </small><span class="text-danger">*</span></label>
                     <input type="email" name="user_email" class="form-control" value="{{ old('user_email') }}">
                     @error('user_email')
@@ -177,10 +177,10 @@
                            {{ $message }}
                         </div>
                     @enderror
-                </div>
+                </div> -->
 
                 <!-- User Office Phone -->
-                <div class="mb-3">
+                <!-- <div class="mb-3">
                     <label class="form-label"> {{ __('messages.User Office Phone Number') }} </label><span class="text-danger">*</span>
                     <input type="text" name="user_office_phone" class="form-control"
                         value="{{ old('user_office_phone') }}">
@@ -189,10 +189,10 @@
                            {{ $message }}
                         </div>
                     @enderror
-                </div>
+                </div> -->
 
                 <!-- User Mobile Phone -->
-                <div class="mb-3">
+                <!-- <div class="mb-3">
                     <label class="form-label"> {{ __('messages.User Mobile Phone Number') }} </label><span class="text-danger">*</span>
                     <input type="text" name="user_mobile_phone" class="form-control"
                         value="{{ old('user_mobile_phone') }}">
@@ -201,10 +201,10 @@
                            {{ $message }}
                         </div>
                     @enderror
-                </div>
+                </div> -->
 
                 <!-- User Password -->
-                <div class="mb-3">
+                <!-- <div class="mb-3">
                     <label class="form-label"> {{ __('messages.Password') }} </label><span class="text-danger">*</span>
                     <input type="password" name="password" class="form-control" value="{{ old('password') }}">
                     @error('password')
@@ -212,10 +212,10 @@
                            {{ $message }}
                         </div>
                     @enderror
-                </div>
+                </div> -->
 
                 <!-- Confirm Password -->
-                <div class="mb-3">
+                <!-- <div class="mb-3">
                     <label class="form-label"> {{ __('messages.Confirm Password') }} </label><span class="text-danger">*</span>
                     <input type="password" name="password_confirmation" class="form-control"
                         value="{{ old('password_confirmation') }}">
@@ -224,7 +224,7 @@
                            {{ $message }}
                         </div>
                     @enderror
-                </div>
+                </div> -->
 
                 <!-- Service Type (Select) -->
                 <div class="mb-3">

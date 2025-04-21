@@ -370,19 +370,36 @@
 });
 
 document.addEventListener("DOMContentLoaded", function () {
+  const input = document.getElementById("schedule");
+  const trigger = document.getElementById("calendar-trigger");
+  const deinput = document.getElementById("delivery_deadline");
+  const detrigger = document.getElementById("de-calendar-trigger");
+
   if (typeof flatpickr !== "undefined") {
-      const datePicker = flatpickr("#delivery_deadline", {
+    const decalendar = flatpickr(deinput, {
         dateFormat: "M. j, Y",
-          allowInput: false
+          allowInput: true,
+          clickOpens: false,
       });
 
-      flatpickr("#schedule", {
+      detrigger.addEventListener('click', () => {
+        decalendar.open();
+    });
+
+      const calendar = flatpickr(input, {
         enableTime: true,
         dateFormat: "M. j, Y H:i",
         time_24hr: true,
         defaultHour: 9,
-        allowInput: false   
+        allowInput: true ,
+        clickOpens: false
     });
+
+      trigger.addEventListener('click', () => {
+        calendar.open();
+    });
+
+
 
       function adjustDate(inputField, increase = true) {
           let instance = inputField._flatpickr;

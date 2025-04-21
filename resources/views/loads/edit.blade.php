@@ -131,13 +131,13 @@
     </div>
 
 
-    <div class="form-group mb-3">
+    <!-- <div class="form-group mb-3">
             <label for="trailer_number" class="form-label">{{ __('messages.Trailer Number') }} </label>
             <input type="text" id="trailer_number" name="trailer_number" class="form-control" value="{{ old('trailer_number', $load->trailer_number) }}">
             @error('trailer_number')
                     <div class="text-danger">{{ $message }}</div>
                 @enderror
-        </div>
+        </div> -->
         <div class="form-group mb-3">
             <label for="port_of_entry" class="form-label">{{ __('messages.Port of Entry') }}</label>
             <select id="port_of_entry" name="port_of_entry" class="form-select">
@@ -181,7 +181,7 @@
     @enderror
 </div> -->
 
-    <div class="form-group mb-3">
+    <div class="form-group mb-3 position-relative">
         <label for="schedule" class="form-label">{{ __('messages.Schedule Date') }} </label>
         @php
         $scheduleDate = '';
@@ -195,14 +195,20 @@
             $scheduleDate = \Carbon\Carbon::parse($load->schedule)->format('M. j, Y H:i');
         }
         @endphp
+        <div class="input-group">
         <input type="text" id="schedule" name="schedule" class="form-control"
-            value="{{ $scheduleDate }}">
+            value="{{ $scheduleDate }}" readonly>
+            <button type="button" id="calendar-trigger" class="input-group-text" style="cursor: pointer;">
+                    <i class="bi bi-calendar"></i> {{-- Replace with your preferred icon if needed --}}
+                </button>
+    </div>
+
         @error('schedule')
             <div class="text-danger">{{ $message }}</div>
         @enderror
     </div>
 
-    <div class="form-group mb-3">
+    <div class="form-group mb-3 position-relative">
         <label for="delivery_deadline" class="form-label">
             {{ __('messages.Delivery Deadline') }} <span class="text-danger">*</span>
         </label>
@@ -218,8 +224,13 @@
             $deliveryDeadline = \Carbon\Carbon::parse($load->delivery_deadline)->format('M. j, Y');
         }
         @endphp
+        <div class="input-group">
         <input type="text" id="delivery_deadline" name="delivery_deadline" class="form-control" 
-        value="{{ $deliveryDeadline }}">
+        value="{{ $deliveryDeadline }}" readonly>
+        <button type="button" id="de-calendar-trigger" class="input-group-text" style="cursor: pointer;">
+                    <i class="bi bi-calendar"></i> {{-- Replace with your preferred icon if needed --}}
+                </button>
+        </div>
         @error('delivery_deadline')
             <div class="text-danger">{{ $message }}</div>
         @enderror

@@ -21,6 +21,12 @@
 @endif
 
     <div class="container">
+    @if(Auth::check())
+        <div class="login-design ">
+    <a href="{{ route('dashboard') }}" class="btn btn-primary container-login w-100 btn_primary_color login-btn" type="submit"><span>Dashboard</span>
+        </a>
+    </div>
+    @endif
 
         <section class="section register  d-flex flex-column align-items-center justify-content-center ">
      

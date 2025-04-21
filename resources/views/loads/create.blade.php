@@ -145,13 +145,13 @@
             @enderror
         </div>
 
-        <div class="form-group mb-3">
+        <!-- <div class="form-group mb-3">
             <label for="trailer_number" class="form-label">{{ __('messages.Trailer Number') }} </label>
             <input type="text" id="trailer_number" name="trailer_number" class="form-control" value="{{old('trailer_number')}}">
             @error('trailer_number')
                     {{ $message }}
                 @enderror
-        </div>
+        </div> -->
        <div class="form-group mb-3">
             <label for="port_of_entry" class="form-label">{{ __('messages.Port of Entry') }}</label>
             <select id="port_of_entry" name="port_of_entry" class="form-select">
@@ -196,23 +196,37 @@
         </div>
          -->
 
-        <div class="form-group mb-3">
+        <div class="form-group mb-3 position-relative">
             <label for="schedule" class="form-label">{{ __('messages.Schedule Date') }}</label>
+
+            <div class="input-group">
             <input type="text" id="schedule" name="schedule" class="form-control"
        value="{{ old('schedule') ? \Carbon\Carbon::createFromFormat('Y-m-d H:i', old('schedule'))->format('M. j, Y H:i') : now()->format('M. j, Y 09:00') }}"
-       placeholder="Select date & time">
+       placeholder="Select date & time" readonly>
+
+       <button type="button" id="calendar-trigger" class="input-group-text" style="cursor: pointer;">
+                    <i class="bi bi-calendar"></i> {{-- Replace with your preferred icon if needed --}}
+                </button>
+                </div>
 
             @error('schedule')
                 <div class="text-danger">{{ $message }}</div>
             @enderror
         </div>
-        <div class="form-group mb-3">
+       
+
+        <div class="form-group mb-3 position-relative">
             <label for="delivery_deadline" class="form-label">
                 {{ __('messages.Delivery Deadline') }} <span class="text-danger">*</span>
             </label>
+            <div class="input-group">
             <input type="text" id="delivery_deadline" name="delivery_deadline" class="form-control"
                 value="{{ old('delivery_deadline') ? \Carbon\Carbon::createFromFormat('Y-m-d', old('delivery_deadline'))->format('M. j, Y') : now()->format('M. j, Y') }}"
-                placeholder="Select a date">
+                placeholder="Select a date" readonly>
+                <button type="button" id="de-calendar-trigger" class="input-group-text" style="cursor: pointer;">
+                    <i class="bi bi-calendar"></i> {{-- Replace with your preferred icon if needed --}}
+                </button>
+                </div>
             @error('delivery_deadline')
                 <div class="text-danger">{{ $message }}</div>
             @enderror
@@ -273,7 +287,11 @@ $(document).ready(function() {
             placeholder: "{{ __('messages.Select Destination') }}",
             allowClear: true
         });
-        $('#origin, #destination').on('select2:open', function() {
+        $('#client_id').select2({
+            placeholder: "{{ __('messages.Select Destination') }}",
+            allowClear: true
+        });
+        $('#origin, #destination, #client_id').on('select2:open', function() {
             $('.select2-results__options').scrollTop(0);
         });
 });

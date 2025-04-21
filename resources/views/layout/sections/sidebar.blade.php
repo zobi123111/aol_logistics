@@ -18,19 +18,19 @@
 
 @if(Auth::check() && Auth::user()->roledata->role_slug == config('constants.roles.MASTERCLIENT'))
 <li class="nav-item">
-        <a class="nav-link {{ Request::routeIs('supplier_users.index') ? 'active' : '' }}" href="{{ route('supplier_users.index', encode_id(Auth::user()->supplier->id)) }}">
+        <a class="nav-link {{ Request::routeIs('supplier_users.index') ? 'active' : '' }}" href="{{ route('supplier_users.index', encode_id(Auth::user()->supplier_id)) }}">
         <i class="bi bi-people"></i> 
             <span>Supplier Users</span>
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link {{ Request::routeIs('supplier_units.index') ? 'active' : '' }}" href="{{ route('supplier_units.index', encode_id(Auth::user()->supplier->id)) }}">
+        <a class="nav-link {{ Request::routeIs('supplier_units.index') ? 'active' : '' }}" href="{{ route('supplier_units.index', encode_id(Auth::user()->supplier_id)) }}">
         <i class="bi bi-truck"></i> 
             <span>  {{ __('messages.Supplier Equipment') }} </span>
         </a>
     </li>   
     <li class="nav-item">
-        <a class="nav-link {{ Request::routeIs('services.index') ? 'active' : '' }}" href="{{ route('services.index', encode_id(Auth::user()->supplier->id)) }}">
+        <a class="nav-link {{ Request::routeIs('services.index') ? 'active' : '' }}" href="{{ route('services.index', encode_id(Auth::user()->supplier_id)) }}">
         <i class="bi bi-gear"></i> 
             <span>  {{ __('messages.Supplier Services') }}  </span>
         </a>

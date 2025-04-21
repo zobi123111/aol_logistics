@@ -60,6 +60,7 @@
                 <div class="mb-3">
                     <label class="form-label">{{ __('messages.User Role') }} <span class="text-danger">*</span></label>
                     <select name="user_role" class="form-select">
+                    <option value="master_client" {{ old('user_role',  $user->roledata->role_slug) == 'master_client' ? 'selected' : '' }}>Master Client</option>
                         <option value="customer_service_executive" {{ old('user_role',  $user->roledata->role_slug) == 'customer_service_executive' ? 'selected' : '' }}>Customer Service Executive</option>
                         <option value="accounting_user" {{ old('user_role',  $user->roledata->role_slug) == 'accounting_user' ? 'selected' : '' }}>Accounting User</option>
                     </select>

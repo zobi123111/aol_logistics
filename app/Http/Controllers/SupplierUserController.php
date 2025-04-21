@@ -91,10 +91,18 @@ class SupplierUserController extends Controller
         $user->role = $role->id;
         $user->password = Hash::make($request->password);
         $user->supplier_id = $supplierId;
-        $user->save();
 
+        // Check if the supplier exists
+        if (!$supplierId) {
+            return redirect()->route('suppliers.index')->with('error', __('messages.Supplier not found.'));
+
+}
         $supplier = Supplier::findOrFail($supplierId);
-
+        if($request->user_role == 'master_client'){
+            $user->is_supplier = 1;
+        }
+        $user->save();
+       
         // add log
         UserActivityLog::create([
         'log_type' => UserActivityLog::LOG_TYPE_CREATE_SUPPLIER,
@@ -166,7 +174,12 @@ class SupplierUserController extends Controller
         $user->lname = $request->lastname;
         $user->email = $request->email;
         $user->role = $role->id;
-    
+
+        if($request->user_role == 'master_client'){
+            $user->is_supplier = 1;
+        }else{
+            $user->is_supplier = 0;
+        }
         $user->save();
 
        // add log

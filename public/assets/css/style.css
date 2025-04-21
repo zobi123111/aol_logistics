@@ -2407,3 +2407,31 @@ span.select2.select2-container.select2-container--default.select2-container--bel
   max-height: 500px;
   scroll-behavior: smooth;
 }
+
+.dropzone-wrapper {
+  border: 2px dashed #ccc;
+  border-radius: 10px;
+  padding: 30px;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.dropzone-wrapper.dragover {
+  border-color: #007bff;
+  background-color: #eef6ff;
+}
+
+.select2-container--default .select2-selection--multiple {
+  cursor: text;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  border: 1px solid var(--link-color);
+  position: relative;
+  border-radius: 5px;
+  padding: 2px 6px 10px;
+  min-height: auto;
+}
+textarea.select2-search__field {
+  height: 20px !important;
+}
