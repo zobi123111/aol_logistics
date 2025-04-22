@@ -318,22 +318,37 @@
                     </ul>
                 </div>
 
-                <div class="mb-3">
+                <!-- <div class="mb-3">
                     <label class="form-label">  {{ __('messages.Upload New Documents') }} </label>
                     <input type="file" name="document_path[]" class="form-control" multiple>
                     <small class="text-muted">   {{ __('messages.You can upload multiple documents') }} </small>
-                    <!-- Loop to show any validation errors for the document_path array -->
                     @error('document_path')
                         <div class="text-danger">
                            {{ $message }}
                         </div>
                     @enderror
 
-                    <!-- Loop to show individual errors for each document -->
                     @foreach ($errors->get('document_path.*') as $message)
                     <div class="text-danger">{{ $message[0] }}</div>
                     @endforeach
-                </div>
+                </div> -->
+                <div class="mb-3">
+    <label class="form-label">{{ __('messages.Legal Documents') }}</label>
+    <div class="drop-zone" id="dropZone-document">
+        <i class="fas fa-upload"></i>
+        <span id="dropZoneText-document">{{ __('messages.Drag & drop or click to upload') }}</span>
+        <input type="file" name="document_path[]" id="fileInput-document" multiple>
+    </div>
+    <div class="file-names" id="fileNames-document"></div>
+    <small class="text-muted">{{ __('messages.You can upload multiple legal documents') }}</small>
+
+    @error('document_path')
+        <div class="text-danger">{{ $message }}</div>
+    @enderror
+    @foreach ($errors->get('document_path.*') as $message)
+        <div class="text-danger">{{ $message[0] }}</div>
+    @endforeach
+</div>
                 </div>
 
                 <!-- SCAC Documents -->
@@ -369,7 +384,7 @@
                     @endif
                     </ul>
                 </div>
-                
+<!--                 
                 <div class="mb-3">
                     <label class="form-label">  {{ __('messages.Upload New SCAC Documents') }} </label>
                     <input type="file" name="scac_documents[]" class="form-control" multiple>
@@ -380,11 +395,27 @@
                         </div>
                     @enderror
 
-                    <!-- Loop to show individual errors for each document -->
                     @foreach ($errors->get('scac_documents.*') as $message)
                     <div class="text-danger">{{ $message[0] }}</div>
                     @endforeach
-                </div>
+                </div> -->
+                <div class="mb-3">
+    <label class="form-label">{{ __('messages.SCAC Legal Documents') }}</label>
+    <div class="drop-zone" id="dropZone-scac">
+        <i class="fas fa-upload"></i>
+        <span id="dropZoneText-scac">{{ __('messages.Drag & drop or click to upload') }}</span>
+        <input type="file" name="scac_documents[]" id="fileInput-scac" multiple>
+    </div>
+    <div class="file-names" id="fileNames-scac"></div>
+    <small class="text-muted">{{ __('messages.You can upload multiple legal documents') }}</small>
+    
+    @error('scac_documents')
+        <div class="text-danger">{{ $message }}</div>
+    @enderror
+    @foreach ($errors->get('scac_documents.*') as $message)
+        <div class="text-danger">{{ $message[0] }}</div>
+    @endforeach
+</div>
                 </div>
                 <div class="upload-design">
 
@@ -416,7 +447,7 @@
                         <p>  {{ __('messages.No documents found') }}  </p>
                     @endif
                 </div>
-                <div class="mb-3">
+                <!-- <div class="mb-3">
                     <label class="form-label">  {{ __('messages.Upload New CAAT Documents') }} </label>
                     <input type="file" name="caat_documents[]" class="form-control" multiple>
                     <small class="text-muted">  {{ __('messages.You can upload multiple legal documents') }} </small>
@@ -426,11 +457,27 @@
                         </div>
                     @enderror
 
-                    <!-- Loop to show individual errors for each document -->
                     @foreach ($errors->get('caat_documents.*') as $message)
                     <div class="text-danger">{{ $message[0] }}</div>
                     @endforeach
-                </div>
+                </div> -->
+                <div class="mb-3">
+    <label class="form-label">{{ __('messages.CAAT Legal Documents') }}</label>
+    <div class="drop-zone" id="dropZone-caat">
+        <i class="fas fa-upload"></i>
+        <span id="dropZoneText-caat">{{ __('messages.Drag & drop or click to upload') }}</span>
+        <input type="file" name="caat_documents[]" id="fileInput-caat" multiple>
+    </div>
+    <div class="file-names" id="fileNames-caat"></div>
+    <small class="text-muted">{{ __('messages.You can upload multiple legal documents') }}</small>
+    
+    @error('caat_documents')
+        <div class="text-danger">{{ $message }}</div>
+    @enderror
+    @foreach ($errors->get('caat_documents.*') as $message)
+        <div class="text-danger">{{ $message[0] }}</div>
+    @endforeach
+</div>
                 </div>
 
                 <div class="upload-design">
@@ -463,7 +510,7 @@
                         <p>  {{ __('messages.No documents found') }}  </p>
                     @endif
                 </div>
-                <div class="mb-3">
+                <!-- <div class="mb-3">
                     <label class="form-label">  {{ __('messages.Upload New CTPAT Documents') }} </label>
                     <input type="file" name="ctpat_documents[]" class="form-control" multiple>
                     <small class="text-muted">  {{ __('messages.You can upload multiple legal documents') }} </small>
@@ -473,11 +520,27 @@
                         </div>
                     @enderror
 
-                    <!-- Loop to show individual errors for each document -->
                     @foreach ($errors->get('ctpat_documents.*') as $message)
                     <div class="text-danger">{{ $message[0] }}</div>
                     @endforeach
-                </div>
+                </div> -->
+                <div class="mb-3">
+    <label class="form-label">{{ __('messages.CTPAT Legal Documents') }}</label>
+    <div class="drop-zone" id="dropZone-ctpat">
+        <i class="fas fa-upload"></i>
+        <span id="dropZoneText-ctpat">{{ __('messages.Drag & drop or click to upload') }}</span>
+        <input type="file" name="ctpat_documents[]" id="fileInput-ctpat" multiple>
+    </div>
+    <div class="file-names" id="fileNames-ctpat"></div>
+    <small class="text-muted">{{ __('messages.You can upload multiple legal documents') }}</small>
+    
+    @error('ctpat_documents')
+        <div class="text-danger">{{ $message }}</div>
+    @enderror
+    @foreach ($errors->get('ctpat_documents.*') as $message)
+        <div class="text-danger">{{ $message[0] }}</div>
+    @endforeach
+</div>
                 </div>
                     <button type="submit" class="btn btn-primary btn_primary_color">  {{ __('messages.Update Supplier') }} </button>
             </form>
@@ -490,6 +553,61 @@
 <script>
     // Enable Select2 for multi-select dropdowns (Optional)
     $('#service_type').select2({ width: '100%' });
+
+    const fileFields = ['document', 'scac', 'caat', 'ctpat'];
+
+fileFields.forEach(field => {
+    const dropZone = document.getElementById(`dropZone-${field}`);
+    const fileInput = document.getElementById(`fileInput-${field}`);
+    const fileNames = document.getElementById(`fileNames-${field}`);
+    const dropZoneText = document.getElementById(`dropZoneText-${field}`);
+
+    // Click to trigger input
+    dropZone.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    // Drag over styling
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+    });
+
+    // Remove styling on leave
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('dragover');
+    });
+
+    // Handle dropped files
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+
+        if (e.dataTransfer.files.length) {
+            fileInput.files = e.dataTransfer.files;
+            updateFileNames(e.dataTransfer.files, fileNames, dropZoneText);
+        }
+    });
+
+    // Update when choosing files manually
+    fileInput.addEventListener('change', () => {
+        updateFileNames(fileInput.files, fileNames, dropZoneText);
+    });
+});
+
+function updateFileNames(files, container, textElement) {
+    if (files.length) {
+        let names = [];
+        for (let i = 0; i < files.length; i++) {
+            names.push(`<div>📎 ${files[i].name}</div>`);
+        }
+        container.innerHTML = names.join('');
+        textElement.textContent = "{{ __('messages.Files Selected:') }}";
+    } else {
+        container.innerHTML = '';
+        textElement.textContent = "{{ __('messages.Drag & drop or click to upload') }}";
+    }
+}
 </script>
 
 @endsection

@@ -118,12 +118,13 @@ class LoadController extends Controller
                 ->addColumn('quickbooks_invoice', function ($load) {
                     if ($load->invoice_id) {
                     return '<a href="' . route('loads.quickbooks_invoices', ['load_id' => encode_id($load->id)]) . '" 
-                                class="btn btn-primary create-button btn_primary_color">
-                                <i class="fa-solid fa-file-invoice-dollar"></i> '.__('messages.view_qb_invoice').'
+                                class="btn btn-primary create-button btn_primary_color qb_invoice">
+                                      <img src="/assets/img/qb1.png">
+                                 
                             </a>';
                         } else {
                             // If supplier_invoice_id is null, return 'NA'
-                            return '<span>NA</span>';
+                            return '<span>---</span>';
                         }
                 })
                 ->addColumn('quickbooks_supplier_invoice', function ($load) {
@@ -131,12 +132,13 @@ class LoadController extends Controller
                     if ($load->supplier_invoice_id) {
                         // If it exists, show the button with the link to view the supplier invoice
                         return '<a href="' . route('invoice.supplier', ['load_id' => encode_id($load->id)]) . '" 
-                                    class="btn btn-primary create-button btn_primary_color">
+                                    class="btn btn-primary create-button btn_primary_color qb_invoice">
+                                   <img src="/assets/img/qb1.png">
                                     <i class="fa-solid fa-file-invoice-dollar"></i> '.__('messages.view_qb_supplier_invoice').'
                                 </a>';
                     } else {
                         // If supplier_invoice_id is null, return 'NA'
-                        return '<span>NA</span>';
+                        return '<span>---</span>';
                     }
                 })
                 
@@ -382,6 +384,8 @@ class LoadController extends Controller
             'schedule' => 'nullable',
             'weight_unit' => 'nullable',
             'client_id' => 'required|exists:users,id',
+            'reefer_temperature' => 'nullable',
+
         ]);
     
         $load = Load::findOrFail($id);
@@ -438,6 +442,7 @@ class LoadController extends Controller
             'status' => $status,
             'weight_unit' => $request->weight_unit ,
             'created_for' => $request->client_id, 
+            'reefer_temperature' => $request->reefer_temperature ?? null 
         ]);
     
         return redirect()->route('loads.index')->with('message',$message);

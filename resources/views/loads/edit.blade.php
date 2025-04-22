@@ -25,7 +25,7 @@
     @method('PUT')
 
     <div class="form-group mb-3 mt-3">
-    <label for="service_type" class="form-label">{{ __('messages.Transportation Type') }} <span class="text-danger">*</span></label>
+    <label for="service_type" class="form-label">{{ __('messages.service_type') }} <span class="text-danger">*</span></label>
     <select name="service_type" id="service_type" class="form-control">
         <!-- <option value="">{{ __('messages.Select Service Type') }} </option>
         <option value="Express" {{ old('service_type', $load->service_type) == 'Express' ? 'selected' : '' }}>Express</option>
@@ -108,8 +108,8 @@
     <div class="form-group mb-3">
         <label for="payer" class="form-label">{{ __('messages.Who Pays Load') }} <span class="text-danger">*</span></label>
         <select name="payer" id="payer" class="form-control">
-            <option value="client" {{ $load->payer == 'client' ? 'selected' : '' }}>{{ __('messages.Client directly') }}</option>
-            <option value="another_party" {{ $load->payer == 'another_party' ? 'selected' : '' }}>{{ __('messages.Another party will pay for the load') }}</option>
+            <option value="client" {{ $load->payer == 'client' ? 'selected' : '' }}>{{ __('messages.Client') }}</option>
+            <option value="another_party" {{ $load->payer == 'another_party' ? 'selected' : '' }}>GEMCO</option>
         </select>
         @error('payer')
             <div class="text-danger">{{ $message }}</div>
@@ -124,7 +124,13 @@
             <option value="48' Truck" {{ $load->equipment_type == "48' Truck" ? 'selected' : '' }}>48' Truck</option>
             <option value="48' Flatbed" {{ $load->equipment_type == "48' Flatbed" ? 'selected' : '' }}>48' Flatbed</option>
             <option value="53' R" {{ $load->equipment_type == "53' R" ? 'selected' : '' }}>53' R</option>
+            <option value="Reefer" {{ $load->equipment_type == "Reefer" ? 'selected' : '' }}>Reefer</option>
+            
         </select>
+        <div id="reefer_temperature_field" style="display: none;">
+            <label for="reefer_temperature">Required Temperature (°F):</label>
+            <input type="number" name="reefer_temperature" id="reefer_temperature" class="form-control" placeholder="Enter temperature" value="{{ old('reefer_temperature', $load->reefer_temperature) }}">
+        </div>
         @error('equipment_type')
             <div class="text-danger">{{ $message }}</div>
         @enderror
@@ -287,6 +293,29 @@ $(document).ready(function() {
         $('#origin, #destination').on('select2:open', function() {
             $('.select2-results__options').scrollTop(0);
         });
+
+
+        function toggleTemperatureField() {
+        var equipmentType = $('#equipment_type').val();
+        var $reeferField = $('#reefer_temperature_field');
+        var $reeferInput = $('#reefer_temperature');
+
+        if (equipmentType === 'Reefer') {
+            $reeferField.show();
+            $reeferInput.prop('disabled', false);
+        } else {
+            $reeferField.hide();
+            $reeferInput.val('').prop('disabled', true);
+        }
+    }
+
+    // Initialize the visibility based on the current selection
+    toggleTemperatureField();
+
+    // Add event listener to handle changes in the equipment type selection
+    $('#equipment_type').change(function() {
+        toggleTemperatureField();
+    });
 });
 
 </script>

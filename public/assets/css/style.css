@@ -2435,3 +2435,66 @@ span.select2.select2-container.select2-container--default.select2-container--bel
 textarea.select2-search__field {
   height: 20px !important;
 }
+
+a.btn.btn-primary.container-login.w-100.btn_primary_color.login-btn {
+  display: flex;
+  justify-content: end;
+  padding: 10px;
+  margin-top: 20px;
+  width: auto !important;
+}
+
+.login-design {
+   display: flex;
+   justify-content: end;
+   margin: 0px auto;
+   width: 100%;
+}
+
+.drop-zone {
+  border: 2px dashed #ccc;
+  border-radius: 10px;
+  padding: 30px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 10px;
+}
+
+.drop-zone.dragover {
+  background-color: #f0f0f0;
+}
+
+.drop-zone i {
+  font-size: 2rem;
+  color: #888;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.drop-zone span {
+  color: #555;
+  display: block;
+}
+
+.drop-zone input[type="file"] {
+  display: none;
+}
+
+.file-names {
+  font-size: 0.9rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+.qb_invoice {
+  border: 0px solid var(--btn-color) !important;
+  display: flex;
+  justify-content: left;
+  padding: 5px;
+  align-items: center;
+  column-gap: 5px;
+  background: transparent !important;
+}
+.qb_invoice img{
+  width: 45px;
+}
