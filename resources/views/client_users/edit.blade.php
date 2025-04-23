@@ -2,7 +2,7 @@
 
 @section('title', 'Client Customer Service Executve')
 {{-- @section('sub-title', 'Client Customer Service Executve') --}}
-@section('sub-title', __('messages.Client Customer Service Executive'))
+@section('sub-title',  __('messages.Client'). ' | Business: ' . $master_client_data->business_name . ' | User: ' . $client->fname.' ' . $client->lname)
 
 @section('content')
 <div class="main_cont_outer">
@@ -56,6 +56,19 @@
                     @error('email')
                         <div class="text-danger">
                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">{{ __('messages.User Role') }} <span class="text-danger">*</span></label>
+                    <select name="user_role" class="form-select">
+                    <option value="cl_master_client" {{ old('user_role',  $client->roledata->role_slug) == 'cl_master_client' ? 'selected' : '' }}>Master Client</option>
+                        <option value="cl_customer_service_executive" {{ old('user_role',  $client->roledata->role_slug) == 'cl_customer_service_executive' ? 'selected' : '' }}>Customer Service Executive</option>
+                    </select>
+                    @error('user_role') 
+                       <div class="text-danger">
+                            {{ $message }}
                         </div>
                     @enderror
                 </div>

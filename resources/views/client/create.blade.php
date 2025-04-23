@@ -56,7 +56,7 @@
                 </div>
 
                 <!-- Client Email -->
-                <div class="mb-3">
+                <!-- <div class="mb-3">
                     <label class="form-label"> {{ __('messages.Email') }} <span class="text-danger">*</span></label>
                     <input type="text" name="email" class="form-control" value="{{ old('email') }}">
                     @error('email')
@@ -64,7 +64,7 @@
                             {{ $message }}
                         </div>
                     @enderror
-                </div>
+                </div> -->
                 <div class="mb-3">
                 <label class="form-label">{{ __('messages.Country Code') }} <span class="text-danger">*</span></label>
                 <select name="country_code" class="form-control">
@@ -93,7 +93,7 @@
                 </div>
 
                 <!-- Client Password -->
-                <div class="row">
+                <!-- <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label"> {{ __('messages.Password') }} <span class="text-danger">*</span></label>
                         <input type="password" name="password" class="form-control" value="{{ old('password') }}">
@@ -112,7 +112,7 @@
                             </div>
                         @enderror
                     </div>
-                </div>
+                </div> -->
 
                 <!-- Profile Photo Uploads -->
                 <!-- <div class="mb-3">

@@ -301,30 +301,30 @@ class SupplierController extends Controller
         $user = $supplier->user; // Assuming Supplier has a `user` relation
 
         // If the user exists, update their information
-        if ($user) {
-            if (User::where('email', $request->user_email)->where('id', '!=', $user->id)->exists()) {
-                return redirect()->back()->withInput()->withErrors(['user_email' => 'The email is already registered.']);
-            }
+        // if ($user) {
+        //     if (User::where('email', $request->user_email)->where('id', '!=', $user->id)->exists()) {
+        //         return redirect()->back()->withInput()->withErrors(['user_email' => 'The email is already registered.']);
+        //     }
 
-            // Update the user's email
-            $user->email = $request->user_email;
+        //     // Update the user's email
+        //     $user->email = $request->user_email;
 
-            // Update the user's password if provided
-            if ($request->filled('password')) {
-                $user->password = Hash::make($request->password);
-            }
+        //     // Update the user's password if provided
+        //     if ($request->filled('password')) {
+        //         $user->password = Hash::make($request->password);
+        //     }
 
-            // Update the user's role
-            // $role = Role::where('role_slug', $request->user_role)->first();
-            $role = Role::where('role_slug', config('constants.roles.MASTERCLIENT'))->first();
+        //     // Update the user's role
+        //     // $role = Role::where('role_slug', $request->user_role)->first();
+        //     $role = Role::where('role_slug', config('constants.roles.MASTERCLIENT'))->first();
 
-            if ($role) {
-                $user->role = $role->id;
-            }
+        //     if ($role) {
+        //         $user->role = $role->id;
+        //     }
 
-            // Save the user updates
-            $user->save();
-        }
+        //     // Save the user updates
+        //     $user->save();
+        // }
 
          // Check for documents to delete
         if ($request->has('delete_documents')) {

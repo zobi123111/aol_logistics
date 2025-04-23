@@ -53,8 +53,8 @@ class ClientController extends Controller
             // 'client_Fname' => 'required|string|max:255',
             // 'client_Lname' => 'required|string|max:255',
             'business_name' => 'required|string|max:255',
-            'email' => 'required|string|max:255',
-            'password' => 'required|string|min:6|confirmed',
+            // 'email' => 'required|string|max:255',
+            // 'password' => 'required|string|min:6|confirmed',
             'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'mobile_number' => 'required|numeric',  
             'country_code' => 'required|string|max:5', 
@@ -77,19 +77,19 @@ class ClientController extends Controller
 
         DB::beginTransaction();
         try {
-            if (User::where('email', $request->email)->exists()) {
-                return redirect()->back()->withInput()->withErrors(['email' => 'The email is already registered.']);
-            }
-            $role = Role::where('role_slug', config('constants.roles.CLIENTMASTERCLIENT'))->first();
+            // if (User::where('email', $request->email)->exists()) {
+            //     return redirect()->back()->withInput()->withErrors(['email' => 'The email is already registered.']);
+            // }
+            // $role = Role::where('role_slug', config('constants.roles.CLIENTMASTERCLIENT'))->first();
         
             $createClient = User::create([
                 // 'fname' => $request->client_Fname,
                 // 'lname' => $request->client_Lname,
-                'email' => $request->email,
+                // 'email' => $request->email,
                 'business_name' => $request->business_name,
                 'created_by' => auth()->id(),
-                'password' => Hash::make($request->password),
-                'role' => $role->id,
+                // 'password' => Hash::make($request->password),
+                // 'role' => $role->id,
                 // 'profile_photo' => $profilePhotoPath,
                 'is_client' => 1,
                 'mobile_number' => $request->mobile_number,
@@ -101,30 +101,30 @@ class ClientController extends Controller
              // add log
             UserActivityLog::create([
                 'log_type' => UserActivityLog::LOG_TYPE_CREATE_CLIENT,
-                'description' => 'A new client user'. ' (' .$request->email . ') has been created by ' 
+                'description' => 'A new client user'. ' (' .$request->business_name . ') has been created by ' 
                         . auth()->user()->fname . ' ' 
                         . auth()->user()->lname 
-                        . ' (' . auth()->user()->email . ') with role '.$role->role_name,
+                        . ' (' . auth()->user()->business_name . ') ',
                 'user_id' => auth()->id(), 
             ]);
 
-            $password = $request->password;
+            // $password = $request->password;
 
             // Send welcome email to client
-        if (isEmailTypeActive('client_account_created')) {
+        // if (isEmailTypeActive('client_account_created')) {
 
-            queueEmailJob(
-                recipients: [$createClient->email],
-                subject: 'Welcome to ' . config('app.name'),
-                template: 'emails.client_account_created',
-                payload: [
-                    'business_name' => $createClient->business_name,
-                    'email' => $createClient->email,
-                    'password' => $password,
-                ],
-                emailType: 'client_account_created'
-            );
-        }
+        //     queueEmailJob(
+        //         recipients: [$createClient->email],
+        //         subject: 'Welcome to ' . config('app.name'),
+        //         template: 'emails.client_account_created',
+        //         payload: [
+        //             'business_name' => $createClient->business_name,
+        //             'email' => $createClient->email,
+        //             'password' => $password,
+        //         ],
+        //         emailType: 'client_account_created'
+        //     );
+        // }
             return redirect()->route('client.index')
             ->with('message', __('messages.Client created successfully!'));
 
@@ -191,7 +191,7 @@ class ClientController extends Controller
             // 'client_Fname' => 'required|string|max:255',
             // 'client_Lname' => 'required|string|max:255',
             'business_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
+            // 'email' => 'required|email|unique:users,email,' . $user->id,
             'mobile_number' => 'required|numeric', 
             'country_code' => 'required|string|max:5',
          ]);
@@ -205,7 +205,7 @@ class ClientController extends Controller
      
         //  $user->fname = $request->client_Fname;
         //  $user->lname = $request->client_Lname; 
-         $user->email = $request->email;
+        //  $user->email = $request->email;
          $user->business_name = $request->business_name;
          $user->mobile_number = $request->mobile_number;
          $user->country_code = $request->country_code;
@@ -215,10 +215,10 @@ class ClientController extends Controller
           // add log
         UserActivityLog::create([
         'log_type' => UserActivityLog::LOG_TYPE_EDIT_CLIENT,
-        'description' => 'A new client user'. ' (' .$request->email . ') has been updated by ' 
+        'description' => 'A new client user'. ' (' .$request->business_name . ') has been updated by ' 
                 . auth()->user()->fname . ' ' 
                 . auth()->user()->lname 
-                . ' (' . auth()->user()->email . ')',
+                . ' (' . auth()->user()->business_name . ')',
             'user_id' => auth()->id(), 
         ]);
          return redirect()->route('client.index', ['supplierId' => $clientId])

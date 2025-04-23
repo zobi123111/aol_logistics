@@ -123,10 +123,12 @@ class ServiceController extends Controller
     public function edit($supplierId, $serviceId)
     {
         $serviceId = decode_id($serviceId);
+        $de_supplier_id = decode_id($supplierId);
+        $supplier = Supplier::findOrFail($de_supplier_id);
         $service = Service::with(['origindata', 'destinationdata'])->findOrFail($serviceId);
         $origins = Origin::all(); 
         $destinations = Destination::all();
-        return view('services.edit', compact('service', 'supplierId', 'origins', 'destinations'));
+        return view('services.edit', compact('service', 'supplierId', 'origins', 'destinations', 'supplier' ));
     }
 
     // Update the service

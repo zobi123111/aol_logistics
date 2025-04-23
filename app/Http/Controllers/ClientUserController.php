@@ -17,14 +17,16 @@ class ClientUserController extends Controller
     public function index($id)
     {
         $de_id = decode_id($id);
+        $client = User::find($de_id);
         $clients = User::with('roledata')->where('client_id', $de_id)->get(); 
-        return view('client_users.index', compact('clients', 'id'));
+        return view('client_users.index', compact('clients', 'id', 'client'));
     }
 
     public function create($id)
     {
         $client_id = decode_id($id);
-        return view('client_users.create', compact('client_id'));
+        $client = User::find($client_id);
+        return view('client_users.create', compact('client_id', 'client'));
     }
 
     public function store(Request $request, $id)
@@ -34,6 +36,7 @@ class ClientUserController extends Controller
             'client_Lname' => 'required|string|max:255',
             'email' => 'required|string|max:255',
             'password' => 'required|string|min:6|confirmed',
+            'user_role' => 'required|string',
         ];
         
       
@@ -43,13 +46,17 @@ class ClientUserController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
+        $role = Role::where('role_slug', $request->user_role)->first();
+        if (!$role) {
+            return redirect()->route('suppliers.index')->with('success', __('messages.Supplier created successfully!'));
+        }
 
         DB::beginTransaction();
         try {
             if (User::where('email', $request->email)->exists()) {
                 return redirect()->back()->withInput()->withErrors(['email' => __('messages.The email is already registered.')]);
             }
-            $role = Role::where('role_slug', config('constants.roles.CLIENT_SERVICE_EXECUTIVE'))->first();
+            // $role = Role::where('role_slug', config('constants.roles.CLIENT_SERVICE_EXECUTIVE'))->first();
         
             $createClient = User::create([
                 'fname' => $request->client_Fname,
@@ -61,6 +68,7 @@ class ClientUserController extends Controller
                 'client_id' => $id
             ]);
         
+            
             DB::commit();
              // add log
              UserActivityLog::create([
@@ -157,8 +165,9 @@ class ClientUserController extends Controller
         $de_id = decode_id($id);
         $en = $master_client;
         $master_client = decode_id($master_client);
+        $master_client_data = User::find($master_client);
         $client = User::findOrFail($de_id);
-        return view('client_users.edit', compact('client', 'master_client')); 
+        return view('client_users.edit', compact('client', 'master_client', 'master_client_data')); 
     }
 
      // Update user information
@@ -173,6 +182,7 @@ class ClientUserController extends Controller
             'client_Fname' => 'required|string|max:255',
             'client_Lname' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
+            'user_role' => 'required|string',
          ]);
        
          // Check if validation fails
@@ -182,10 +192,15 @@ class ClientUserController extends Controller
                  ->withInput();
          }
      
- 
+         $role = Role::where('role_slug', $request->user_role)->first();
+         if (!$role) {
+             return redirect()->route('suppliers.index')->with('success', __('messages.Supplier created successfully!'));
+         }
+
          $user->fname = $request->client_Fname;
          $user->lname = $request->client_Lname;
          $user->email = $request->email;
+         $user->role = $role->id;
          $user->save();
          
         // add log

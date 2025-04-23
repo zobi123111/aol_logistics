@@ -1,6 +1,6 @@
 @section('title', 'Supplier User')
 {{-- @section('sub-title', 'Supplier User') --}}
-@section('sub-title', __('messages.Supplier User'))
+@section('sub-title', __('messages.Supplier User') . ' | Company: ' . $supplier->company_name . ' | User: ' . $user->fname . ' ' . $user->lname)
 @extends('layout.app')
 @section('content')
 <div class="main_cont_outer">

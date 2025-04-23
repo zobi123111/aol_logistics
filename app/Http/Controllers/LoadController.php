@@ -237,7 +237,8 @@ class LoadController extends Controller
             'weight' => 'nullable|numeric',
             'weight_unit' => 'nullable',
             'delivery_deadline' => 'required|date',
-            'customer_po' => 'nullable',
+           'customer_po' => 'nullable|array',
+            'customer_po.*' => 'nullable|string|max:255',
             'schedule' => 'nullable',
             'is_hazmat' => 'boolean',
             'is_inbond' => 'boolean',
@@ -249,6 +250,8 @@ class LoadController extends Controller
         $message = __('messages.Load added successfully.');
 
         // Step 1: Create Load with supplier_id = null
+        $referenceNumbers = array_filter($request->customer_po ?? []); 
+
         $load = Load::create(array_merge(
             $request->except('aol_number', 'supplier_id'), 
             [
@@ -258,7 +261,7 @@ class LoadController extends Controller
                 'status' => $status,
                 'created_by' => Auth::id(),
                 'schedule' => $request->schedule ? Carbon::parse($request->schedule) : null,
-
+                'customer_po' => implode(', ', $referenceNumbers)
             ]
         ));
         
@@ -385,7 +388,8 @@ class LoadController extends Controller
             'weight_unit' => 'nullable',
             'client_id' => 'required|exists:users,id',
             'reefer_temperature' => 'nullable',
-
+            'customer_po' => 'nullable|array',
+            'customer_po.*' => 'nullable|string|max:255',
         ]);
     
         $load = Load::findOrFail($id);
@@ -422,7 +426,7 @@ class LoadController extends Controller
                 }
             }
         }
-
+            $referenceNumbers = array_filter($request->customer_po ?? []);
         $load->update([
             'origin' => $request->origin,     
             'destination' => $request->destination,
@@ -431,7 +435,7 @@ class LoadController extends Controller
             'service_type' => $request->service_type,
             'weight' => $request->weight,
             'delivery_deadline' => $request->delivery_deadline,
-            'customer_po' => $request->customer_po,
+            'customer_po' => implode(', ', $referenceNumbers),
             'is_hazmat' => $request->has('is_hazmat'),
             'is_inbond' => $request->has('is_inbond'),
             'trailer_number' => $request->trailer_number,

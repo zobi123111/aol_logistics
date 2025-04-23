@@ -236,15 +236,31 @@
                 <div class="text-danger">{{ $message }}</div>
             @enderror
         </div>
+     
         <div class="form-group mb-3">
-            <label for="customer_po" class="form-label">{{ __('messages.Customer PO / Reference Number') }} </label>
-            <input type="text" id="customer_po" name="customer_po" class="form-control" value="{{old('customer_po')}}">
-            @error('customer_po')
-                <div class="text-danger">
-                     {{ $message }}
-                </div>
+            <label class="form-label">{{ __('messages.Customer PO / Reference Number') }}</label>
+
+            <div id="reference_numbers_container">
+                @php
+                    $oldPOs = old('customer_po', ['']); // Ensure there's at least one input
+                @endphp
+
+                @foreach($oldPOs as $index => $po)
+                    <div class="reference-number mb-2">
+                        <input type="text" name="customer_po[]" class="form-control" value="{{ $po }}">
+                    </div>
+                @endforeach
+            </div>
+            <button type="button" class="btn btn-link text-decoration-none mt-2" onclick="addReferenceNumber()">
+                <span class="fw-semibold" style="color: #00709e">+ Add Another Reference</span>
+            </button>
+
+
+            @error('customer_po.*')
+                <div class="text-danger">{{ $message }}</div>
             @enderror
         </div>
+
         <div class="form-check mb-3">
             <input type="checkbox" name="is_hazmat" id="is_hazmat" class="form-check-input" value="1" {{ old('is_hazmat') ? 'checked' : '' }}>
             <label class="form-check-label" for="is_hazmat">{{ __('messages.HazMat (Hazardous)') }} </label>
@@ -322,7 +338,13 @@ $(document).ready(function() {
     });
 });
 
-
+function addReferenceNumber() {
+    const container = document.getElementById('reference_numbers_container');
+    const input = document.createElement('div');
+    input.classList.add('reference-number', 'mb-2');
+    input.innerHTML = `<input type="text" name="customer_po[]" class="form-control">`;
+    container.appendChild(input);
+}
 
 </script>
 

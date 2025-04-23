@@ -1,6 +1,6 @@
 @section('title', 'Supplier Equipment')
 {{-- @section('sub-title', 'Supplier Equipment') --}}
-@section('sub-title', __('messages.Supplier Equipment'))
+@section('sub-title', __('messages.Supplier Equipment'). ' | Company: ' . $supplier->company_name)
 
 @extends('layout.app')
 @section('content')

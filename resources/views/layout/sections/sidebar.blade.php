@@ -38,7 +38,7 @@
 @endif
 @if(Auth::check() && Auth::user()->roledata->role_slug == config('constants.roles.CLIENTMASTERCLIENT'))
     <li class="nav-item">
-        <a class="nav-link {{ Request::routeIs('client_users.index') ? 'active' : '' }}" href="{{ route('client_users.index', encode_id(Auth::user()->id)) }}">
+        <a class="nav-link {{ Request::routeIs('client_users.index') ? 'active' : '' }}" href="{{ route('client_users.index', encode_id(Auth::user()->client_id)) }}">
         <i class="bi bi-people"></i> 
             <span>  {{ __('messages.Client Users') }} </span>
         </a>

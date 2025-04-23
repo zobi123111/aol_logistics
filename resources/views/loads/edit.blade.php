@@ -242,9 +242,25 @@
         @enderror
     </div>
     <div class="form-group mb-3">
-        <label for="customer_po" class="form-label">{{ __('messages.Customer PO / Reference Number') }} </label>
-        <input type="text" id="customer_po" name="customer_po" class="form-control" value="{{ $load->customer_po }}">
-        @error('customer_po')
+        <label class="form-label">{{ __('messages.Customer PO / Reference Number') }}</label>
+
+        <div id="reference_numbers_container">
+            @php
+                $referenceNumbers = explode(',', old('customer_po', $load->customer_po ?? ''));
+            @endphp
+
+            @foreach ($referenceNumbers as $po)
+                <div class="reference-number mb-2">
+                    <input type="text" name="customer_po[]" class="form-control" value="{{ trim($po) }}">
+                </div>
+            @endforeach
+        </div>
+
+        <button type="button" class="btn btn-link text-decoration-none mt-2" onclick="addReferenceNumber()">
+            <span class="fw-semibold" style="color: #00709e">+ Add Another Reference</span>
+        </button>
+
+        @error('customer_po.*')
             <div class="text-danger">{{ $message }}</div>
         @enderror
     </div>
@@ -317,6 +333,14 @@ $(document).ready(function() {
         toggleTemperatureField();
     });
 });
+
+function addReferenceNumber() {
+    const container = document.getElementById('reference_numbers_container');
+    const div = document.createElement('div');
+    div.classList.add('reference-number', 'mb-2');
+    div.innerHTML = `<input type="text" name="customer_po[]" class="form-control">`;
+    container.appendChild(div);
+}
 
 </script>
 

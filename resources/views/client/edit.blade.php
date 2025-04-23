@@ -1,7 +1,7 @@
 @extends('layout.app')
 @section('title', 'Client')
 {{-- @section('sub-title', 'Client') --}}
-@section('sub-title', __('messages.Client'))
+@section('sub-title', __('messages.Client'). ' | Business: ' . $client->business_name)
 
 @section('content')
 <div class="main_cont_outer">
@@ -60,7 +60,7 @@
                 </div>
 
                 <!-- Client Email -->
-                <div class="mb-3">
+                <!-- <div class="mb-3">
                     <label class="form-label"> {{ __('messages.Email') }}  <span class="text-danger">*</span></label>
                     <input type="email" name="email" class="form-control" value="{{ old('email', $client->email) }}" >
                     @error('email')
@@ -68,7 +68,7 @@
                             {{ $message }}
                         </div>
                     @enderror
-                </div>
+                </div> -->
 
                 <div class="mb-3">
                 <label class="form-label">{{ __('messages.Country Code') }} <span class="text-danger">*</span></label>

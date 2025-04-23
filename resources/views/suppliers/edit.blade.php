@@ -2,7 +2,7 @@
 
 @section('title', 'Edit Supplier')
 {{-- @section('sub-title', 'Edit Supplier') --}}
-@section('sub-title', __('messages.Edit Supplier'))
+@section('sub-title', __('messages.Edit Supplier'). ' | Company: ' . $supplier->company_name)
 
 @section('content')
 <div class="main_cont_outer">

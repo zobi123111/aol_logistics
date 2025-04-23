@@ -1,7 +1,7 @@
 
 @section('title', 'Client Customer Service Executve')
 {{-- @section('sub-title', 'Client Customer Service Executve') --}}
-@section('sub-title', __('messages.Client Customer Service Executive'))
+@section('sub-title',  __('messages.Client'). ' | Business: ' . $client->business_name)
 @extends('layout.app')
 @section('content')
 <div class="main_cont_outer">

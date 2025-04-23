@@ -28,8 +28,8 @@
                 <!-- <th scope="col"> {{ __('messages.First Name') }} </th>
                 <th scope="col"> {{ __('messages.Last Name') }} </th> -->
                 <th scope="col"> {{ __('messages.Business Name') }} </th>
-                <th scope="col"> {{ __('messages.Email') }} </th>
-                <th scope="col"> {{ __('messages.Role') }} </th>
+                <!-- <th scope="col"> {{ __('messages.Email') }} </th> -->
+                <!-- <th scope="col"> {{ __('messages.Role') }} </th> -->
                 @if(checkAllowedModule('client', 'client.toggleStatus')->isNotEmpty() )
                 <th scope="col"> {{ __('messages.Status') }} </th>
                 @endif
@@ -77,8 +77,8 @@ $(document).ready(function() {
             // { data: 'fname', name: 'fname' },
             // { data: 'lname', name: 'lname' },
             { data: 'business_name', name: 'business_name' },
-            { data: 'email', name: 'email' },
-            { data: 'role_name', name: 'role_name' },
+            // { data: 'email', name: 'email' },
+            // { data: 'role_name', name: 'role_name' },
             { data: 'status', name: 'status', orderable: false, searchable: false },
             { data: 'actions', name: 'actions', orderable: false, searchable: false },
             { data: 'client_users', name: 'client_users', orderable: false, searchable: false }
@@ -102,7 +102,7 @@ $(document).ready(function() {
             //     className: "lname" 
             // },
             {
-            targets: 4, 
+            targets: 2, 
             className: 'icon-design',
            
         }
