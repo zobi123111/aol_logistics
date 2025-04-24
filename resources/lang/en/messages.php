@@ -311,6 +311,7 @@ return [
     'Destination updated successfully.' => 'Destination updated successfully.',
     'Destination deleted successfully.' => 'Destination deleted successfully.',
     'Load added successfully.' => 'Load added successfully.',
+    'Load added successfully with Aol Number: :id' => 'Load added successfully with Aol Number: :id',
     'Load updated successfully.' => 'Load updated successfully.',
     'Load deleted successfully.' => 'Load deleted successfully.',
     'Supplier assigned successfully.' => 'Supplier assigned successfully.',
@@ -445,5 +446,8 @@ return [
     'Mobile Number' => 'Mobile Number',
     'Country Code' => 'Country Code',
     'WhatsApp Number' => 'WhatsApp Number',
-
+    'Drag & drop or click to upload' => 'Drag & drop or click to upload',
+    'Files Selected:' => 'Files Selected:',
+    'Inspection' => 'Inspection',
+    'Notes' => 'Notes',
 ];

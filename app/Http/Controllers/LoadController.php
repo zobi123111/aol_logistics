@@ -243,11 +243,12 @@ class LoadController extends Controller
             'is_hazmat' => 'boolean',
             'is_inbond' => 'boolean',
             'client_id' => 'required|exists:users,id',
+            'inspection' => 'boolean',
+            'notes' => 'nullable',
         ]);
         $status = 'requested'; 
         $supplier_id = null; 
         $service_id = null;
-        $message = __('messages.Load added successfully.');
 
         // Step 1: Create Load with supplier_id = null
         $referenceNumbers = array_filter($request->customer_po ?? []); 
@@ -264,6 +265,8 @@ class LoadController extends Controller
                 'customer_po' => implode(', ', $referenceNumbers)
             ]
         ));
+        $message = __('messages.Load added successfully with Aol Number: :id', ['id' => $load->aol_number]);
+
         
         if ($request->filled('supplier_id') || isSupplierUser()) {
             if(isSupplierUser()){
@@ -390,6 +393,7 @@ class LoadController extends Controller
             'reefer_temperature' => 'nullable',
             'customer_po' => 'nullable|array',
             'customer_po.*' => 'nullable|string|max:255',
+            'notes' => 'nullable',
         ]);
     
         $load = Load::findOrFail($id);
@@ -437,6 +441,7 @@ class LoadController extends Controller
             'delivery_deadline' => $request->delivery_deadline,
             'customer_po' => implode(', ', $referenceNumbers),
             'is_hazmat' => $request->has('is_hazmat'),
+            'inspection' => $request->has('inspection'),
             'is_inbond' => $request->has('is_inbond'),
             'trailer_number' => $request->trailer_number,
             'schedule' => $request->schedule ? Carbon::parse($request->schedule) : null,
@@ -446,7 +451,8 @@ class LoadController extends Controller
             'status' => $status,
             'weight_unit' => $request->weight_unit ,
             'created_for' => $request->client_id, 
-            'reefer_temperature' => $request->reefer_temperature ?? null 
+            'reefer_temperature' => $request->reefer_temperature ?? null ,
+            'notes' => $request->notes, 
         ]);
     
         return redirect()->route('loads.index')->with('message',$message);

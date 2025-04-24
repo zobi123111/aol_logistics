@@ -37,7 +37,7 @@
             <p><strong> {{ __('messages.Service Type') }} :</strong> {{ $load->service_type }}</p>
             <p><strong> {{ __('messages.Payer') }} :</strong> {{ $payerOptions[$load->payer] ?? 'N/A' }}</p>
             <p><strong> {{ __('messages.Equipment Type') }} :</strong> {{ $load->equipment_type }}</p>
-            <p><strong> {{ __('messages.Trailer Number') }} :</strong> {{ $load->trailer_number ?? 'N/A' }}</p>
+            <p><strong> {{ __('messages.Trailer Number') }} :</strong> {{ $load->truck_number ?? 'N/A' }}</p>
             <p><strong> {{ __('messages.Port of Entry') }} :</strong> {{ $load->port_of_entry ?? 'N/A' }}</p>
             <p><strong> {{ __('messages.Supplier') }} :</strong> {{ $load->supplier ? $load->supplier->company_name : 'N/A' }}</p>
             <p><strong> {{ __('messages.Weight') }} :</strong> {{ $load->weight ?? 'N/A' }} kg</p>

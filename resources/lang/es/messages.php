@@ -313,6 +313,7 @@ return [
     'Destination updated successfully.' => '¡Destino actualizado con éxito!',
     'Destination deleted successfully.' => '¡Destino eliminado con éxito!',
     'Load added successfully.' => '¡Carga agregada con éxito!',
+    'Load added successfully with Aol Number: :id' => '¡Carga agregada con éxito con número de AOL: :id!',
     'Load updated successfully.' => '¡Carga actualizada con éxito!',
     'Load deleted successfully.' => '¡Carga eliminada con éxito!',
     'Supplier assigned successfully.' => '¡Proveedor asignado con éxito!',
@@ -445,6 +446,10 @@ return [
     'user_updated_successfully' => 'Usuario actualizado con éxito',
     'Mobile Number' => 'Número de Teléfono',
     'Country Code' => 'Código de País',
-    'WhatsApp Number' => 'Número de WhatsApp'
+    'WhatsApp Number' => 'Número de WhatsApp',
+    'Drag & drop or click to upload' => 'Arrastra y suelta o haz clic para subir',
+    'Files Selected:' => 'Archivos seleccionados:',
+    'Inspection' => 'Inspección',
+    'Notes' => 'Notas',
 
 ];

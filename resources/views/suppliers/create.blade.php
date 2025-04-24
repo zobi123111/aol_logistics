@@ -303,19 +303,19 @@
                     @endforeach
                 </div> -->
                 <div class="mb-3">
-    <label class="form-label">{{ __('messages.Legal Documents') }}</label>
+    <label class="form-label">{{ __('messages.Upload Documents') }}</label>
     <div class="drop-zone" id="dropZone-document">
         <i class="fas fa-upload"></i>
         <span id="dropZoneText-document">{{ __('messages.Drag & drop or click to upload') }}</span>
-        <input type="file" name="document_documents[]" id="fileInput-document" multiple>
+        <input type="file" name="document_path[]" id="fileInput-document" multiple>
     </div>
     <div class="file-names" id="fileNames-document"></div>
     <small class="text-muted">{{ __('messages.You can upload multiple legal documents') }}</small>
 
-    @error('document_documents')
+    @error('document_path')
         <div class="text-danger">{{ $message }}</div>
     @enderror
-    @foreach ($errors->get('document_documents.*') as $message)
+    @foreach ($errors->get('document_path.*') as $message)
         <div class="text-danger">{{ $message[0] }}</div>
     @endforeach
 </div>
@@ -476,61 +476,126 @@
 <script>
         $('#service_type').select2({ width: '100%' });
 
-  const fileFields = ['document', 'scac', 'caat', 'ctpat'];
+//   const fileFields = ['document', 'scac', 'caat', 'ctpat'];
+
+// fileFields.forEach(field => {
+//     const dropZone = document.getElementById(`dropZone-${field}`);
+//     const fileInput = document.getElementById(`fileInput-${field}`);
+//     const fileNames = document.getElementById(`fileNames-${field}`);
+//     const dropZoneText = document.getElementById(`dropZoneText-${field}`);
+
+//     // Click to trigger input
+//     dropZone.addEventListener('click', () => {
+//         fileInput.click();
+//     });
+
+//     // Drag over styling
+//     dropZone.addEventListener('dragover', (e) => {
+//         e.preventDefault();
+//         dropZone.classList.add('dragover');
+//     });
+
+//     // Remove styling on leave
+//     dropZone.addEventListener('dragleave', () => {
+//         dropZone.classList.remove('dragover');
+//     });
+
+//     // Handle dropped files
+//     dropZone.addEventListener('drop', (e) => {
+//         e.preventDefault();
+//         dropZone.classList.remove('dragover');
+
+//         if (e.dataTransfer.files.length) {
+//             fileInput.files = e.dataTransfer.files;
+//             updateFileNames(e.dataTransfer.files, fileNames, dropZoneText);
+//         }
+//     });
+
+//     // Update when choosing files manually
+//     fileInput.addEventListener('change', () => {
+//         updateFileNames(fileInput.files, fileNames, dropZoneText);
+//     });
+// });
+
+// function updateFileNames(files, container, textElement) {
+//     if (files.length) {
+//         let names = [];
+//         for (let i = 0; i < files.length; i++) {
+//             names.push(`<div>📎 ${files[i].name}</div>`);
+//         }
+//         container.innerHTML = names.join('');
+//         textElement.textContent = "{{ __('messages.Files Selected:') }}";
+//     } else {
+//         container.innerHTML = '';
+//         textElement.textContent = "{{ __('messages.Drag & drop or click to upload') }}";
+//     }
+// }
+const fileFields = ['document', 'scac', 'caat', 'ctpat'];
+
+const fileStore = {}; // Track files per field
 
 fileFields.forEach(field => {
+    fileStore[field] = [];
+
     const dropZone = document.getElementById(`dropZone-${field}`);
     const fileInput = document.getElementById(`fileInput-${field}`);
     const fileNames = document.getElementById(`fileNames-${field}`);
     const dropZoneText = document.getElementById(`dropZoneText-${field}`);
 
-    // Click to trigger input
-    dropZone.addEventListener('click', () => {
-        fileInput.click();
-    });
+    dropZone.addEventListener('click', () => fileInput.click());
 
-    // Drag over styling
     dropZone.addEventListener('dragover', (e) => {
         e.preventDefault();
         dropZone.classList.add('dragover');
     });
 
-    // Remove styling on leave
     dropZone.addEventListener('dragleave', () => {
         dropZone.classList.remove('dragover');
     });
 
-    // Handle dropped files
     dropZone.addEventListener('drop', (e) => {
         e.preventDefault();
         dropZone.classList.remove('dragover');
-
-        if (e.dataTransfer.files.length) {
-            fileInput.files = e.dataTransfer.files;
-            updateFileNames(e.dataTransfer.files, fileNames, dropZoneText);
-        }
+        const files = Array.from(e.dataTransfer.files);
+        fileStore[field] = fileStore[field].concat(files);
+        updateFileDisplay(field);
     });
 
-    // Update when choosing files manually
     fileInput.addEventListener('change', () => {
-        updateFileNames(fileInput.files, fileNames, dropZoneText);
+        const files = Array.from(fileInput.files);
+        fileStore[field] = fileStore[field].concat(files);
+        updateFileDisplay(field);
     });
-});
 
-function updateFileNames(files, container, textElement) {
-    if (files.length) {
-        let names = [];
-        for (let i = 0; i < files.length; i++) {
-            names.push(`<div>📎 ${files[i].name}</div>`);
+    function updateFileDisplay(field) {
+        const container = document.getElementById(`fileNames-${field}`);
+        const textElement = document.getElementById(`dropZoneText-${field}`);
+        const files = fileStore[field];
+
+        if (files.length) {
+            container.innerHTML = files.map((f, i) => `
+                <div>
+                    📎 ${f.name}
+                    <button onclick="removeFile('${field}', ${i})">✖</button>
+                </div>
+            `).join('');
+            textElement.textContent = "{{ __('messages.Files Selected:') }}";
+        } else {
+            container.innerHTML = '';
+            textElement.textContent = "{{ __('messages.Drag & drop or click to upload') }}";
         }
-        container.innerHTML = names.join('');
-        textElement.textContent = "{{ __('messages.Files Selected:') }}";
-    } else {
-        container.innerHTML = '';
-        textElement.textContent = "{{ __('messages.Drag & drop or click to upload') }}";
+
+        // Rebuild a DataTransfer object for fileInput
+        const dataTransfer = new DataTransfer();
+        files.forEach(f => dataTransfer.items.add(f));
+        document.getElementById(`fileInput-${field}`).files = dataTransfer.files;
     }
-}
-    
+
+    window.removeFile = (field, index) => {
+        fileStore[field].splice(index, 1);
+        updateFileDisplay(field);
+    }
+});
 </script>
 
 @endsection

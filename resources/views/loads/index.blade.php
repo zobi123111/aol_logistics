@@ -261,14 +261,18 @@
                 //     }
                 // },
                 {
-                    targets: 9, 
+                    targets: '_all', // This applies to all columns
+                    className: 'text-center'
+                },
+                {
+                    targets: 10, 
                     className: 'text-center',
                     render: function(data, type, row) {
                         return '<input type="checkbox" ' + (row.is_hazmat ? 'checked' : '') + ' disabled>';
                     }
                 },
                 {
-                    targets: 10, 
+                    targets: 11, 
                     className: 'text-center',
                     render: function(data, type, row) {
                         return '<input type="checkbox" ' + (row.is_inbond ? 'checked' : '') + ' disabled>';

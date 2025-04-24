@@ -35,7 +35,7 @@
     </div>
 
     <!-- User Details Section -->
-    <div class="card mb-4">
+    <!-- <div class="card mb-4">
         <div class="card-body">
             <h5 class="card-title">  {{ __('messages.User Details') }} </h5>
             <p class="card-text">
@@ -48,7 +48,7 @@
                 <strong>  {{ __('messages.Preferred Language') }} :</strong> {{ $supplier->preferred_language }} <br>
             </p>
         </div>
-    </div>
+    </div> -->
 
 
     <!-- Documents Section -->

@@ -2498,3 +2498,34 @@ a.btn.btn-primary.container-login.w-100.btn_primary_color.login-btn {
 .qb_invoice img{
   width: 45px;
 }
+
+.drop-zone {
+  border: 2px dashed #ccc;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.drop-zone.dragover {
+  background-color: #f0f8ff;
+  border-color: #007bff;
+}
+
+.file-names > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 5px;
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.file-names button {
+  background: transparent;
+  border: none;
+  color: red;
+  font-size: 16px;
+  cursor: pointer;
+}

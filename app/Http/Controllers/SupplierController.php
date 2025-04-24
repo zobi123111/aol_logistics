@@ -120,10 +120,10 @@ class SupplierController extends Controller
         DB::beginTransaction();
         try {
             // Check if email already exists
-            if (User::where('email', $request->user_email)->exists()) {
-                return redirect()->back()->withInput()->withErrors(['user_email' => 'The email is already registered.']);
+            // if (User::where('email', $request->user_email)->exists()) {
+            //     return redirect()->back()->withInput()->withErrors(['user_email' => 'The email is already registered.']);
 
-            }
+            // }
              
             // Find role ID by matching role_slug with user_role
             // $role = Role::where('role_slug', $request->user_role)->first();

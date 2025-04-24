@@ -281,6 +281,24 @@
             @enderror
         </div>
 
+        <div class="form-check mb-3">
+            <input type="checkbox" name="inspection" id="inspection" class="form-check-input" value="1" {{ old('inspection') ? 'checked' : '' }}>
+            <label class="form-check-label" for="inspection">{{ __('messages.Inspection') }}</label>
+            @error('inspection')
+                <div class="text-danger">
+                    {{ $message }}
+                </div>
+            @enderror
+        </div>
+
+        <div class="mb-3">
+            <label for="notes" class="form-label">{{ __('messages.Notes') }}</label>
+            <textarea name="notes" id="notes" class="form-control" rows="3">{{ old('notes') }}</textarea>
+            @error('notes')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
+        </div>
+        
         <button type="submit" class="btn btn-primary btn_primary_color">{{ __('messages.Create Load') }} </button>
     </form>
         </div>
