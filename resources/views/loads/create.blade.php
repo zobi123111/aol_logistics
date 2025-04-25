@@ -48,6 +48,34 @@
                 </div>
             @enderror
         </div>
+        <div class="form-group mb-3">
+            <label for="client_id" class="form-label">{{ __('messages.Select Client') }} <span class="text-danger">*</span></label>
+            <select name="client_id" id="client_id" class="form-control select2">
+                <option value="">{{ __('messages.Select Client') }} </option>
+                @foreach($clients as $client)
+                    <option value="{{ $client->id }}" {{ old('client_id') == $client->id ? 'selected' : '' }}>
+                        {{ $client->business_name ??  $client->email}}
+                    </option>
+                @endforeach
+            </select>
+            @error('client_id')
+                <div class="text-danger">
+                     {{ $message }}
+                </div>
+            @enderror
+        </div>
+        <div class="form-group mb-3">
+            <label for="payer" class="form-label">{{ __('messages.Who Pays Load') }} <span class="text-danger">*</span></label>
+            <select name="payer" id="payer" class="form-control">
+                <option value="client" {{ old('payer') == 'client' ? 'selected' : '' }}>{{ __('messages.Client') }}</option>
+                <option value="another_party" {{ old('payer') == 'another_party' ? 'selected' : '' }}>GEMCO</option>
+            </select>
+            @error('payer')
+                <div class="text-danger">
+                     {{ $message }}
+                </div>
+            @enderror
+        </div>
         @if(!isSupplierUser())
         <!-- <div class="form-group mb-3">
             <label for="supplier_id" class="form-label">{{ __('messages.Select Supplier') }} </label>
@@ -95,34 +123,6 @@
                 @endforeach
             </select>
             @error('destination')
-                <div class="text-danger">
-                     {{ $message }}
-                </div>
-            @enderror
-        </div>
-        <div class="form-group mb-3">
-            <label for="client_id" class="form-label">{{ __('messages.Select Client') }} <span class="text-danger">*</span></label>
-            <select name="client_id" id="client_id" class="form-control select2">
-                <option value="">{{ __('messages.Select Client') }} </option>
-                @foreach($clients as $client)
-                    <option value="{{ $client->id }}" {{ old('client_id') == $client->id ? 'selected' : '' }}>
-                        {{ $client->business_name ??  $client->email}}
-                    </option>
-                @endforeach
-            </select>
-            @error('client_id')
-                <div class="text-danger">
-                     {{ $message }}
-                </div>
-            @enderror
-        </div>
-        <div class="form-group mb-3">
-            <label for="payer" class="form-label">{{ __('messages.Who Pays Load') }} <span class="text-danger">*</span></label>
-            <select name="payer" id="payer" class="form-control">
-                <option value="client" {{ old('payer') == 'client' ? 'selected' : '' }}>{{ __('messages.Client') }}</option>
-                <option value="another_party" {{ old('payer') == 'another_party' ? 'selected' : '' }}>GEMCO</option>
-            </select>
-            @error('payer')
                 <div class="text-danger">
                      {{ $message }}
                 </div>

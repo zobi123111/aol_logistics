@@ -461,9 +461,9 @@ class SupplierController extends Controller
         $oldStatus = $supplier->is_active ? 'Active' : 'Inactive';
         $newStatus = $isActive ? 'Active' : 'Inactive';
 
-        $user = User::findOrFail($supplier->user_id);
-        $user->is_active = $isActive;
-        $user->save();
+        // $user = User::findOrFail($supplier->user_id);
+        // $user->is_active = $isActive;
+        // $user->save();
 
         // Update the user's status
         $supplier->is_active = $isActive;
@@ -472,24 +472,24 @@ class SupplierController extends Controller
         // Log the status update
         UserActivityLog::create([
             'log_type' => UserActivityLog::LOG_TYPE_UPDATE_STATUS_SUPPLIER,
-            'description' => 'Supplier  (' . $supplier->user_email . ') status changed from ' 
+            'description' => 'Supplier  (' . $supplier->company_name . ') status changed from ' 
                             . $oldStatus . ' to ' . $newStatus . ' by User with email (' . auth()->user()->email . ')',
             'user_id' => auth()->id(),
         ]);
       // Queue email to supplier
       if (isEmailTypeActive('supplier_status_changed')) {
 
-        queueEmailJob(
-            recipients: [$supplier->user_email],
-            subject: 'Your Supplier Account Status Has Been Updated',
-            template: 'emails.supplier_status_changed',
-            payload: [
-                'old_status' => $oldStatus,
-                'new_status' => $newStatus,
-                'company_name' => $supplier->company_name,
-            ],
-            emailType: 'supplier_status_changed'
-        );
+        // queueEmailJob(
+        //     recipients: [$supplier->user_email],
+        //     subject: 'Your Supplier Account Status Has Been Updated',
+        //     template: 'emails.supplier_status_changed',
+        //     payload: [
+        //         'old_status' => $oldStatus,
+        //         'new_status' => $newStatus,
+        //         'company_name' => $supplier->company_name,
+        //     ],
+        //     emailType: 'supplier_status_changed'
+        // );
     }
         return response()->json([
             'success' => true,
