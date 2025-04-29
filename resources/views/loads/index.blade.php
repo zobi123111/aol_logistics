@@ -20,7 +20,7 @@
     @endif
 
     <div class="filter-container">
-        <div class="row mb-3">
+        <div class="row mb-0">
             <div class="col-md-3">
                 <input type="text" id="aol_number_filter" class="form-control" placeholder="{{ __('messages.Enter AOL Number') }}">
             </div>
@@ -52,10 +52,14 @@
         </div>
        
         </div>
+        <div class="col-md-12  ">
+            <div class="create-btn1">
+    <button id="reset_filters" class="btn btn-secondary">Reset</button></div>
+</div>
     </div>
 
-    <div class="table-responsive">
-        <table class="table mt-3 respo_table" id="loads">
+    <!-- <div style="overflow-x: auto;"> -->
+        <table class="display mt-3 respo_table load_table_dis" id="loads">
             <thead>
                 <tr>
 
@@ -66,7 +70,7 @@
                     <th>{{ __('messages.Client') }}</th>
                     <!-- <th> {{ __('messages.Payer') }} </th> -->
                     <th> {{ __('messages.Equipment Type') }} </th>
-                    <th> {{ __('messages.Weight') }} </th>
+                    <!-- <th> {{ __('messages.Weight') }} </th> -->
                     <th>{{ __('messages.Schedule Date') }}</th>
                     <th> {{ __('messages.Delivery Deadline') }} </th>
                     <th> {{ __('messages.Customer PO') }} </th>
@@ -82,18 +86,18 @@
                     @if (auth()->user()->roledata->user_type_id == 3)
                     <th>{{ __('messages.add_invoice') }}</th>
                     @endif
-                    @if (auth()->user()->roledata->user_type_id != 3)
-                    <th>{{ __('messages.quickbooks_client_invoice') }}</th>
-                    @endif
                     @if (auth()->user()->roledata->user_type_id == 3)
-                    <th>{{ __('messages.quickbooks_supplier_invoice') }}</th>
+                    <th>{{ __('messages.supplier_bills') }}</th>
+                    @endif
+                    @if (auth()->user()->roledata->user_type_id != 3)
+                    <th>{{ __('messages.Client Invoice') }}</th>
                     @endif
                 </tr>
             </thead>
 
         </table>
         
-    </div>
+    <!-- </div> -->
     <form method="POST" id="deleteloadFormId">
         @csrf
         @method('DELETE')
@@ -164,7 +168,7 @@
         var table = $('#loads').DataTable({
             processing: true,
             serverSide: true,
-            scrollY: '550px',
+            scrollY: '650px',
             scrollX: true, 
             scrollCollapse: true,
             // paging: false, 
@@ -217,9 +221,9 @@
                 { data: 'created_for_user', name: 'created_for_user', orderable: false, searchable: false },
                 //{ data: 'payer', name: 'payer' },
                 { data: 'equipment_type', name: 'equipment_type' },
-                { data: 'weight', name: 'weight', render: function(data, type, row) {
-                    return row.weight ? `${row.weight} ${row.weight_unit}` : 'N/A';
-                } },
+                // { data: 'weight', name: 'weight', render: function(data, type, row) {
+                //     return row.weight ? `${row.weight} ${row.weight_unit}` : 'N/A';
+                // } },
                 { data: 'schedule', name: 'schedule', render: function(data) { 
                     return data ? moment(data).tz(userTimezone).format('MMM. D, YYYY HH:mm') : 'N/A'; 
                 }  },
@@ -234,14 +238,9 @@
                 { data: 'assign', name: 'assign', orderable: false, searchable: false },
                 { data: 'shipment_status', name: 'shipment_status', orderable: false, searchable: false },
                 { data: 'update_details', name: 'update_details', orderable: false, searchable: false },
-                // { data: 'add_invoice', name: 'add_invoice', orderable: false, searchable: false },
                 ...(userType === 3 ? [{ data: 'add_invoice', name: 'add_invoice', orderable: false, searchable: false }] : []),
-                // { data: 'quickbooks_invoice', name: 'quickbooks_invoice', orderable: false, searchable: false },
+                ...(userType === 3 ? [{ data: 'quickbooks_supplier_invoice', name: 'quickbooks_supplier_invoice', orderable: false, searchable: false }] : []),
                 ...(userType != 3 ? [{ data: 'quickbooks_invoice', name: 'quickbooks_invoice', orderable: false, searchable: false }] : []),
-                // { data: 'quickbooks_supplier_invoice', name: 'quickbooks_supplier_invoice', orderable: false, searchable: false },
-                
-                // Conditionally add 'quickbooks_supplier_invoice' column based on user type
-                ...(userType === 3 ? [{ data: 'quickbooks_supplier_invoice', name: 'quickbooks_supplier_invoice', orderable: false, searchable: false }] : [])
             ],
             language: {
                 sSearch: "{{ __('messages.Search') }}",
@@ -260,9 +259,13 @@
                 //         return data == 'another_party' ? 'Another party will pay for the load' : 'Client';
                 //     }
                 // },
+                // {
+                //     targets: '_all', // This applies to all columns
+                //     className: 'text-center'
+                // },
                 {
-                    targets: '_all', // This applies to all columns
-                    className: 'text-center'
+                    targets: 0, // This applies to all columns
+                    className: 'aol_number_td',
                 },
                 {
                     targets: 10, 
@@ -330,6 +333,15 @@
             allowClear: true
         });
 
+        document.getElementById('reset_filters').addEventListener('click', function() {
+    $('#aol_number_filter').val('');
+    $('#status_filter').val('');
+    $('#creator_filter').val([]).trigger('change');
+    $('#client_filter').val([]).trigger('change');
+
+    // Reload your table
+    $('#loads').DataTable().ajax.reload();
+});
 </script>
 
 @endsection

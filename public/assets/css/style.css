@@ -1099,11 +1099,12 @@ section.section.dashboard p {
   font-size: 14px;
 }
 
-.dashboard .recent-sales .table thead {
+.dashboard .recent-sales .table thead, .dashboard .recent-sales .load_table_dis thead  {
   background: #f6f6fe;
 }
 
-.dashboard .recent-sales .table thead th {
+
+.dashboard .recent-sales .table thead th, .dashboard .recent-sales .load_table_dis thead th {
   border: 0;
 }
 
@@ -1120,15 +1121,15 @@ section.section.dashboard p {
   font-size: 14px;
 }
 
-.dashboard .top-selling .table thead {
+.dashboard .top-selling .table thead, .dashboard .top-selling .load_table_dis thead {
   background: #f6f6fe;
 }
 
-.dashboard .top-selling .table thead th {
+.dashboard .top-selling .table thead th, .dashboard .top-selling .load_table_dis thead th {
   border: 0;
 }
 
-.dashboard .top-selling .table tbody td {
+.dashboard .top-selling .table tbody td, .dashboard .top-selling .load_table_dis tbody td {
   vertical-align: middle;
 }
 
@@ -1612,7 +1613,7 @@ div#supplier_filter {
   color: var(--font-color);
 }
 /* Override overall table background */
-.table {
+.table, .load_table_dis{
   background-color: #f8f9fa !important; /* Your desired background color */
 }
 
@@ -1628,7 +1629,7 @@ div#supplier_filter {
 
 /* Override table header background */
 
-.dark-mode .table {
+.dark-mode .table, .dark-mode .load_table_dis  {
   background-color: var(--header-bg) !important;
   color: #e0e0e0 !important;
 }
@@ -1637,11 +1638,11 @@ div#supplier_filter {
   background-color: var(--header-bg) !important;
 }
 
-.dark-mode .table thead th {
+.dark-mode .table thead th , .dark-mode .load_table_dis thead th{
   background-color: var(--header-bg) !important;
   color: var(--font-color) !important;
 }
-.dark-mode .table tbody td {
+.dark-mode .table tbody td , .dark-mode .load_table_dis tbody td{
   background-color: var(--header-bg) !important;
   color: var(--font-color) !important;
 }
@@ -2532,3 +2533,92 @@ a.btn.btn-primary.container-login.w-100.btn_primary_color.login-btn {
 
 
 
+
+
+@media (max-width: 768px) {
+  .filter-container .dataTables_filter,
+  .dataTables_length {
+    width: 100%;
+    text-align: left;
+  }
+ 
+  /* Ensure row properly wraps filter inputs */
+  .filter-container .row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Optional: adds spacing between filters */
+    width: 100%;
+  }
+ 
+  /* Ensure filter input and select elements are 100% wide */
+  .filter-container .row .form-control,
+  .filter-container .row select {
+    width: 100% !important;
+    margin-bottom: 10px;
+    box-sizing: border-box; /* Prevent overflow due to padding */
+  }
+ 
+  /* Ensure that child divs inside row don't break the layout */
+  .filter-container.row > div {
+    width: 100% !important;
+    padding: 0;
+    margin-bottom: 10px; /* Adjust spacing */
+  }
+ 
+  /* Prevent overflow issues */
+  .filter-container .row {
+    overflow: visible;
+  }
+}
+ 
+/* Ensure select2 dropdowns fit properly */
+.select2-container {
+  width: 100% !important;
+  box-sizing: border-box; /* Prevent overflow due to padding or border */
+}
+ 
+.select2-selection--multiple {
+  min-height: 38px;
+}
+ 
+.filter-container .form-control,
+.select2-container .select2-selection {
+  min-height: 38px;
+  font-size: 14px;
+}
+ 
+#aol_number_filter,
+#status_filter,
+#creator_filter,
+#client_filter {
+  margin-bottom: 10px;
+}
+
+.create-btn1 button#reset_filters {
+  background: var(--btn-color);
+  border-color: var(--btn-color);
+  padding: 6px 10px;
+  font-size: 15px;
+}
+.filter-container {
+  background: var(--header-bg);
+  padding: 18px 20px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  flex-direction: column;
+}
+
+.create-btn1 {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+}
+
+.aol_number_td a{
+  color: #23709e !important;
+}
+
+table.load_table_dis, th, td, tr {
+  text-align: center;
+}

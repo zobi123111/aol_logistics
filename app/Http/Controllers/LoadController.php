@@ -570,7 +570,6 @@ class LoadController extends Controller
         $query->orderBy('cost', 'asc');
     }])->where('is_active', 1)
     ->get();
-// dd($suppliers, "sdbjcfjh");
 
     $deletedAssignedServices = AssignedService::onlyTrashed()
         ->where('load_id', $load->id)
@@ -800,8 +799,8 @@ class LoadController extends Controller
     {
         $request->validate([
             'truck_number' => 'required|string|max:255',
-            'driver_name' => 'required|string|max:255',
-            'driver_contact_no' => 'required|string|max:20',
+            'driver_name' => 'nullable|string|max:255',
+            'driver_contact_no' => 'nullable|string|max:20',
             'documents.*' => 'file|mimes:pdf,jpg,png|max:2048',
         ]);
 

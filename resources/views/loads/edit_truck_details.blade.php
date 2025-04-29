@@ -64,15 +64,50 @@
             @endforeach
         </ul>
     </div>
-
+<!-- 
     <div class="mb-3">
         <label for="documents" class="form-label">{{ __('messages.upload_documents') }}</label>
         <input type="file" class="form-control" name="documents[]" multiple accept=".pdf,.jpg,.png,.docx,.xlsx">
         @error('documents.*') 
             <span class="text-danger">{{ $message }}</span>
         @enderror
+    </div> -->
+    <!-- <div class="mb-3">
+    <label for="documents" class="form-label">{{ __('messages.upload_documents') }}</label>
+
+    <div id="dropzone" class="border border-dashed rounded p-4 text-center" style="cursor: pointer;">
+        <p class="mb-0">{{ __('messages.drag_drop_or_click') }}</p>
+        <input type="file" id="documents" name="documents[]" multiple accept=".pdf,.jpg,.png,.docx,.xlsx" class="d-none">
     </div>
 
+    @error('documents.*') 
+        <span class="text-danger">{{ $message }}</span>
+    @enderror
+</div> -->
+<div class="mb-3">
+    <label class="form-label">{{ __('messages.upload_documents') }}</label>
+
+    <div class="drop-zone border border-dashed rounded p-4 text-center" id="dropZone-documents" style="cursor: pointer;">
+        <i class="fas fa-upload fa-2x mb-2"></i><br>
+        <span id="dropZoneText-documents">{{ __('messages.Drag & drop or click to upload') }}</span>
+        <input type="file" name="documents[]" id="fileInput-documents" multiple class="d-none" accept=".pdf,.jpg,.png,.docx,.xlsx">
+    </div>
+
+    <div class="file-names mt-2" id="fileNames-documents"></div>
+
+    <small class="text-muted">{{ __('messages.You can upload multiple legal documents') }}</small>
+
+    @error('documents')
+        <div class="text-danger">{{ $message }}</div>
+    @enderror
+
+    @foreach ($errors->get('documents.*') as $message)
+        <div class="text-danger">{{ $message[0] }}</div>
+    @endforeach
+</div>
+
+
+              
     <button type="submit" class="btn btn-primary create-button btn_primary_color">{{ __('messages.update') }}</button>
 </form>
 
@@ -107,8 +142,71 @@
 @section('js_scripts')
 
 <script>
-$(document).ready(function() {
+$(document).ready(function () {
+    const fileFields = ['documents'];
+    const fileStore = {};
 
+    fileFields.forEach(field => {
+        fileStore[field] = [];
+
+        const dropZone = document.getElementById(`dropZone-${field}`);
+        const fileInput = document.getElementById(`fileInput-${field}`);
+        const fileNames = document.getElementById(`fileNames-${field}`);
+        const dropZoneText = document.getElementById(`dropZoneText-${field}`);
+
+        dropZone.addEventListener('click', () => fileInput.click());
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('bg-light');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('bg-light');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('bg-light');
+            const files = Array.from(e.dataTransfer.files);
+            fileStore[field] = fileStore[field].concat(files);
+            updateFileDisplay(field);
+        });
+
+        fileInput.addEventListener('change', () => {
+            const files = Array.from(fileInput.files);
+            fileStore[field] = fileStore[field].concat(files);
+            updateFileDisplay(field);
+        });
+
+        function updateFileDisplay(field) {
+            const container = document.getElementById(`fileNames-${field}`);
+            const textElement = document.getElementById(`dropZoneText-${field}`);
+            const files = fileStore[field];
+
+            if (files.length) {
+                container.innerHTML = files.map((f, i) => `
+                    <div class="d-flex align-items-center justify-content-between border p-1 mb-1 rounded">
+                        <span>📎 ${f.name}</span>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="removeFile('${field}', ${i})">✖</button>
+                    </div>
+                `).join('');
+                textElement.textContent = "Files Selected:";
+            } else {
+                container.innerHTML = '';
+                textElement.textContent = "Drag & drop or click to upload";
+            }
+
+            const dataTransfer = new DataTransfer();
+            files.forEach(f => dataTransfer.items.add(f));
+            fileInput.files = dataTransfer.files;
+        }
+
+        window.removeFile = (field, index) => {
+            fileStore[field].splice(index, 1);
+            updateFileDisplay(field);
+        };
+    });
 });
 function showDeleteModal(id, deleteUrl) {
     $('#deleteRoleFormId').attr('action', deleteUrl);

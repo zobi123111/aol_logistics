@@ -350,22 +350,22 @@
                     @endforeach
                 </div> -->
                 <div class="mb-3">
-    <label class="form-label">{{ __('messages.SCAC Legal Documents') }}</label>
-    <div class="drop-zone" id="dropZone-scac">
-        <i class="fas fa-upload"></i>
-        <span id="dropZoneText-scac">{{ __('messages.Drag & drop or click to upload') }}</span>
-        <input type="file" name="scac_documents[]" id="fileInput-scac" multiple>
-    </div>
-    <div class="file-names" id="fileNames-scac"></div>
-    <small class="text-muted">{{ __('messages.You can upload multiple legal documents') }}</small>
-    
-    @error('scac_documents')
-        <div class="text-danger">{{ $message }}</div>
-    @enderror
-    @foreach ($errors->get('scac_documents.*') as $message)
-        <div class="text-danger">{{ $message[0] }}</div>
-    @endforeach
-</div>
+                    <label class="form-label">{{ __('messages.SCAC Legal Documents') }}</label>
+                    <div class="drop-zone" id="dropZone-scac">
+                        <i class="fas fa-upload"></i>
+                        <span id="dropZoneText-scac">{{ __('messages.Drag & drop or click to upload') }}</span>
+                        <input type="file" name="scac_documents[]" id="fileInput-scac" multiple>
+                    </div>
+                    <div class="file-names" id="fileNames-scac"></div>
+                    <small class="text-muted">{{ __('messages.You can upload multiple legal documents') }}</small>
+                    
+                    @error('scac_documents')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                    @foreach ($errors->get('scac_documents.*') as $message)
+                        <div class="text-danger">{{ $message[0] }}</div>
+                    @endforeach
+                </div>
                 </div>
 
                 <div class="upload-design">

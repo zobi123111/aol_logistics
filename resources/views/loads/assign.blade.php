@@ -80,7 +80,7 @@
                 </p>
             </div>
             <div class="col-md-6">
-                <p><strong>{{ __('messages.Weight') }} :</strong> {{ $load->weight ?? 'N/A' }} lbs</p>
+                <p><strong>{{ __('messages.Weight') }} :</strong> {{ $load->weight !== null ? number_format($load->weight, 2, '.', ',') . ' lbs' : 'N/A' }} </p>
                 <p><strong>{{ __('messages.Status') }} :</strong> 
                     <span class="badge 
                         {{ $load->status == 'Pending' ? 'bg-warning' : ($load->status == 'Completed' ? 'bg-success' : 'bg-secondary') }}">
@@ -92,72 +92,6 @@
         </div>
     </div>
 </div>
-
-<h3 class="services-text">{{ __('messages.Assigned Services') }} </h3> 
-<table class="table" id="assignedServices">
-    <thead>
-        <tr>
-            <th>{{ __('messages.Supplier Company Name') }} </th>
-            <th>{{ __('messages.supplier_transport_type') }}</th>
-            <th>{{ __('messages.service_type') }}</th>
-             <th> {{ __('messages.Service Name') }}  </th>
-            <th>{{ __('messages.quantity') }}</th>
-            <th>{{ __('messages.Service Details') }} </th>
-            <th>{{ __('messages.Cost') }} </th>
-            <th>{{ __('messages.Action') }} </th>
-        </tr>
-    </thead>
-    <tbody>
-
-        <!-- Show Assigned Services at the Top -->
-        @if($assignedServices->isEmpty())
-            <tr>
-                <td colspan="8" class="text-center">{{ __('messages.No Assigned Services') }} </td>
-            </tr>
-        @else
-            @foreach ($assignedServices as $assigned)
-                <tr>
-                    <td>{{ $assigned->supplier->company_name }}</td>
-                    <td>{{ $assigned->supplier->service_type }}</td>
-                    <td>{{ $assigned->service->service_type }}</td>
-                    <td>{{ $assigned->service->service_name?? 'NA' }}</td>
-                    <td>{{ $assigned->quantity }}</td>
-                    <td>
-                    @if ($assigned->service->service_type === 'warehouse')
-                      
-                    {{$assigned->service->street . ', ' . $assigned->service->city . ', ' . $assigned->service->state . ', ' . $assigned->service->zip . ', ' . $assigned->service->country}}
-
-                        @else
-                        {{ $assigned->service->origindata 
-                        ? ($assigned->service->origindata->name 
-                            ?: ($assigned->service->origindata->street . ', ' . $assigned->service->origindata->city . ', ' . $assigned->service->origindata->state . ', ' . $assigned->service->origindata->zip . ', ' . $assigned->service->origindata->country)) 
-                        : 'N/A' }}  
-                    →  
-                    {{ $assigned->service->destinationdata 
-                        ? ($assigned->service->destinationdata->name 
-                            ?: ($assigned->service->destinationdata->street . ', ' . $assigned->service->destinationdata->city . ', ' . $assigned->service->destinationdata->state . ', ' . $assigned->service->destinationdata->zip . ', ' . $assigned->service->destinationdata->country)) 
-                        : 'N/A' }}
-                        @endif
-                    </td>
-                    <td>
-                        ${{ number_format(($assigned->cost ?? $assigned->service->cost) * $assigned->quantity, 2) }}  
-                        @if($assigned->quantity > 1)
-                            <br>
-                            <small class="text-muted">(${{ number_format($assigned->cost ?? $assigned->service->cost, 2) }} per unit)</small>
-                        @endif
-                    </td>
-
-                    <td>
-                        <button type="button" class="btn btn-danger" onclick="showDeleteModal({{ $assigned->id }})">
-        <i class="fas fa-times"></i>
-    </button>
-                    </td>
-                </tr>
-            @endforeach
-        @endif
-
-    </tbody>
-</table>
 <h3 class="mt-3 services-text">{{ __('messages.Services') }} </h3>
 <div class="d-flex justify-content-start assign-service" style="column-gap: 10px;">
 <div class="form-group mb-3">
@@ -202,9 +136,9 @@
     @foreach ($suppliers as $supplier)
         @foreach ($supplier->services as $service)
             <tr>
-                <td>{{ $supplier->company_name }}</td>
-            <td>{{ $supplier->service_type }}</td>
-                <td>{{ $service->service_type }}</td>
+                <td>{{ $supplier->dba }}</td>
+            <td>{{ ucfirst($supplier->service_type) }}</td>
+                <td>{{ ucfirst($service->service_type) }}</td>
                 <td>{{ $service->service_name ?? 'NA' }}</td>
 
                 <td>
@@ -251,6 +185,72 @@
 </tbody>
 
 </table>
+<h3 class="services-text">{{ __('messages.Assigned Services') }} </h3> 
+<table class="table" id="assignedServices">
+    <thead>
+        <tr>
+            <th>{{ __('messages.Supplier Company Name') }} </th>
+            <th>{{ __('messages.supplier_transport_type') }}</th>
+            <th>{{ __('messages.service_type') }}</th>
+             <th> {{ __('messages.Service Name') }}  </th>
+            <th>{{ __('messages.quantity') }}</th>
+            <th>{{ __('messages.Service Details') }} </th>
+            <th>{{ __('messages.Cost') }} </th>
+            <th>{{ __('messages.Action') }} </th>
+        </tr>
+    </thead>
+    <tbody>
+
+        <!-- Show Assigned Services at the Top -->
+        @if($assignedServices->isEmpty())
+            <tr>
+                <td colspan="8" class="text-center">{{ __('messages.No Assigned Services') }} </td>
+            </tr>
+        @else
+            @foreach ($assignedServices as $assigned)
+                <tr>
+                    <td>{{ $assigned->supplier->dba }}</td>
+                    <td>{{ ucfirst($assigned->supplier->service_type) }}</td>
+                    <td>{{ ucfirst($assigned->service->service_type) }}</td>
+                    <td>{{ $assigned->service->service_name?? 'NA' }}</td>
+                    <td>{{ $assigned->quantity }}</td>
+                    <td>
+                    @if ($assigned->service->service_type === 'warehouse')
+                      
+                    {{$assigned->service->street . ', ' . $assigned->service->city . ', ' . $assigned->service->state . ', ' . $assigned->service->zip . ', ' . $assigned->service->country}}
+
+                        @else
+                        {{ $assigned->service->origindata 
+                        ? ($assigned->service->origindata->name 
+                            ?: ($assigned->service->origindata->street . ', ' . $assigned->service->origindata->city . ', ' . $assigned->service->origindata->state . ', ' . $assigned->service->origindata->zip . ', ' . $assigned->service->origindata->country)) 
+                        : 'N/A' }}  
+                    →  
+                    {{ $assigned->service->destinationdata 
+                        ? ($assigned->service->destinationdata->name 
+                            ?: ($assigned->service->destinationdata->street . ', ' . $assigned->service->destinationdata->city . ', ' . $assigned->service->destinationdata->state . ', ' . $assigned->service->destinationdata->zip . ', ' . $assigned->service->destinationdata->country)) 
+                        : 'N/A' }}
+                        @endif
+                    </td>
+                    <td>
+                        ${{ number_format(($assigned->cost ?? $assigned->service->cost) * $assigned->quantity, 2) }}  
+                        @if($assigned->quantity > 1)
+                            <br>
+                            <small class="text-muted">(${{ number_format($assigned->cost ?? $assigned->service->cost, 2) }} per unit)</small>
+                        @endif
+                    </td>
+
+                    <td>
+                        <button type="button" class="btn btn-danger" onclick="showDeleteModal({{ $assigned->id }})">
+        <i class="fas fa-times"></i>
+    </button>
+                    </td>
+                </tr>
+            @endforeach
+        @endif
+
+    </tbody>
+</table>
+
 <h3 class="mt-3 services-text">{{ __('messages.Canceled Assigned Services') }}</h3>
 <table class="table" id="assignedServices">
     <thead>
@@ -274,10 +274,10 @@
         @else
             @foreach ($deletedAssignedServices as $assigned)
                 <tr>
-                    <td>{{ $assigned->supplier->company_name }}</td>
-                    <td>{{ $assigned->supplier->service_type }}</td>
+                    <td>{{ $assigned->supplier->dba }}</td>
+                    <td>{{ ucfirst($assigned->supplier->service_type) }}</td>
 
-                    <td>{{ $assigned->service->service_type }}</td>
+                    <td>{{ ucfirst($assigned->service->service_type) }}</td>
                     <td>{{ $assigned->service->service_name?? 'NA' }}</td>
 
                     <td>

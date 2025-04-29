@@ -54,8 +54,10 @@ class DashboardController extends Controller
         }
         
         $activeUsers = User::whereIn('id', array_unique($activeUserIds))->with('roledata')->get();
-        $pendingLoads = Load::with('origindata','destinationdata' )->where('shipment_status', 'pending')->get();
+        $pendingLoads = Load::with('origindata','destinationdata', 'creatorfor')->where('shipment_status', 'pending')->get();
         if ($request->ajax()) {
+
+            // dd($request->all());
             if ($request->query('type') === 'loads') {
                 return DataTables::of($pendingLoads)
                 ->addColumn('originval', function ($load) {
@@ -75,6 +77,9 @@ class DashboardController extends Controller
                                 '.$load->aol_number.'
                             </a>';
                 })
+                ->addColumn('created_for_user', function ($load) {
+                    return optional($load->creatorfor)->business_name ?? optional($load->creatorfor)->email;
+                })
                 ->rawColumns(['originval', 'destinationval', 'aol']) 
                     ->addIndexColumn()
                     ->make(true);
@@ -93,6 +98,9 @@ class DashboardController extends Controller
                 if (!empty($request->client_ids)) {
                     $query->whereIn('created_by', $request->client_ids);
                 }
+                if (!empty($request->status_ids)) {
+                    $query->whereIn('status', $request->status_ids);
+                }     
         
                 return DataTables::of($query)
                     ->addIndexColumn()
@@ -119,6 +127,9 @@ class DashboardController extends Controller
                                     '.$load->aol_number.'
                                 </a>';
                     })
+                    ->addColumn('created_for_user', function ($load) {
+                        return optional($load->creatorfor)->business_name ?? optional($load->creatorfor)->email;
+                    })
                     ->rawColumns(['originval', 'destinationval', 'aol']) 
                     ->make(true);
             }
@@ -141,6 +152,11 @@ class DashboardController extends Controller
         ->whereNotNull('created_by') 
         ->get();
 
+        $statuses = Load::selectRaw('DISTINCT status')
+                    ->whereNotNull('status')
+                    ->get();
+
+
         $creatorsclients = Load::with('creator.client') 
         ->whereHas('creator', function ($query) {
             $query->whereNotNull('client_id')
@@ -154,7 +170,7 @@ class DashboardController extends Controller
             'totalClients', 'activeClients',
             'totalSuppliers', 'activeSuppliers',
             'totalAol', 'activeTotalAol',
-            'activeUsers', 'pendingLoads','suppliers', 'creators', 'creatorsclients'
+            'activeUsers', 'pendingLoads','suppliers', 'creators', 'creatorsclients', 'statuses'
         ));
     }
 }

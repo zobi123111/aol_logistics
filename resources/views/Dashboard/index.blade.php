@@ -1,5 +1,4 @@
 @section('title', 'Dashboard')
-@section('sub-title', env('PROJECT_NAME'))
 @extends('layout.app')
 @section('content')
 <section class="section dashboard">
@@ -19,12 +18,13 @@
 <div class="container">
     <!-- Welcome Section -->
     <div class="text-center py-4 mb-4 border-bottom">
-        <h3 class="fw-bold">{{ __('messages.Welcome') }} {{ Auth::user()->fname }} {{ Auth::user()->lname }} !</h3>
+        <!-- <h3 class="fw-bold">{{ __('messages.Welcome') }} {{ Auth::user()->fname }} {{ Auth::user()->lname }} !</h3> -->
+        <h3 class="fw-bold">{{ __('messages.Welcome') }} {{ Auth::user()->fname }} !</h3>
         <!-- <p class="text-muted lead">{{ __('messages.Hey') }} <strong>{{ Auth::user()->fname }} {{ Auth::user()->lname }}</strong>, {{ __("messages.we're excited to have you on board") }}! 😊</p> -->
     </div>
 
-    <div class="row">
-        <!-- User Profile Card -->
+    <!-- User Profile Card -->
+    <!-- <div class="row">
         <div class="col-lg-12">
             <div class="card shadow-sm dashboard-design">
                 <div class="card-body">
@@ -41,10 +41,10 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <!-- Active Users List -->
-    <div class="row mt-4">
+    <!-- <div class="row mt-4">
         <div class="col-lg-12">
             <div class="card shadow-sm dashboard-design">
                 <div class="card-body">
@@ -69,10 +69,43 @@
                 </div>
             </div>
         </div>
+    </div> -->
+
+    <div class="row mt-4">
+        <div class="col-lg-12">
+            <div class="card shadow-sm dashboard-design">
+                <div class="card-body">
+                    
+                    <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#activeUsersList" aria-expanded="false" aria-controls="activeUsersList">
+                        <h5 class="card-title"> {{ __('messages.Active Users') }} 
+                            <span class="badge badge-success">{{ $activeUsers->count() }}</span>
+                        </h5>                   
+                     </button>
+                    <div class="collapse mt-3" id="activeUsersList">
+                        <ul class="list-group">
+                            @forelse($activeUsers as $user)
+                                <li class="list-group-item">
+                                    <div>
+                                        <strong>{{ $user->fname }} {{ $user->lname }}</strong> 
+                                        <small class="text-muted">({{ $user->email }})</small><br>
+                                        <strong>{{ __('messages.User Type') }}:</strong> {{ $user->roledata->userType->name ?? 'Not Assigned' }}<br>
+                                        <strong>{{ __('messages.Role') }}:</strong> {{ $user->roledata->role_name ?? 'Not Assigned' }}
+                                    </div>
+                                    <span class="text-success">🟢 {{ __('messages.Online') }}</span>
+                                </li>
+                            @empty
+                                <li class="list-group-item text-center text-danger">😔 {{ __('messages.No active users found') }}.</li>
+                            @endforelse
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
+
      <!-- Active Users List -->
-     <div class="row mt-4">
+     <!-- <div class="row mt-4">
         <div class="col-lg-12">
             <div class="card shadow-sm dashboard-design">
                 <div class="card-body">
@@ -90,7 +123,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
     <!-- <div class="row">
 
 </div> -->
@@ -102,7 +135,7 @@
             <div class="card-body">
                 <h5 class="card-title">🚛 🔍 {{ __('messages.filtered_loads') }}</h5>
                 <div class="row mt-4">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label for="supplierFilter">{{ __('messages.filter_by_supplier') }}</label>
                     <select id="supplierFilter" class="form-control" multiple>
                         @foreach($suppliers as $supplier)
@@ -111,7 +144,7 @@
                     </select>
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label for="creatorFilter">{{ __('messages.filter_by_creator') }}</label>
                     <select id="creatorFilter" class="form-control" multiple>
                         @foreach($creators as $creator)
@@ -121,7 +154,7 @@
                     </select>
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-3">
                 <label for="client_filter">{{ __('messages.filter_by_client') }}</label>
                     <select id="client_filter" class="form-control select2" multiple>
                         @foreach($creatorsclients as $client)
@@ -133,6 +166,17 @@
                         @endforeach
                     </select>
                 </div>  
+
+                <div class="col-md-3">
+                    <label for="statusFilter">{{ __('messages.filter_by_status') }}</label>
+                    <select id="statusFilter" class="form-control" multiple="multiple">
+                        @foreach ($statuses as $status)
+                            <option value="{{ $status->status }}">{{ $status->status }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+
                 </div>
 
                 <div class="col-md-4">
@@ -147,6 +191,7 @@
                         <tr>
                             <th>{{ __('messages.aol_number') }}</th>
                             <th>{{ __('messages.origin') }}</th>
+                            <th>{{ __('messages.Client') }}</th>
                             <th>{{ __('messages.destination') }}</th>
                             <th>{{ __('messages.supplier') }}</th>
                             <th>{{ __('messages.created_by') }}</th>
@@ -251,14 +296,14 @@
      
     });
 
-    function loadTable(suppliers = [], creators = [] , clients = []) {
+    function loadTable(suppliers = [], creators = [] , clients = [], statuses = []) {
         // Destroy previous instance if exists
         if ($.fn.DataTable.isDataTable("#pendingLoadsTablefilter")) {
             $("#pendingLoadsTablefilter").DataTable().destroy();
         }
 
         // Don't load table if no filters are applied
-        if (suppliers.length === 0 && creators.length === 0 && clients.length === 0) {
+        if (suppliers.length === 0 && creators.length === 0 && clients.length === 0 && statuses.length === 0) {
             $("#pendingLoadsTablefilter tbody").html(
                 `<tr><td colspan="7" class="text-center">{{ __('messages.no_data') }}</td></tr>`
             );
@@ -275,12 +320,14 @@
                 data: {
                     supplier_ids: suppliers,
                     creator_ids: creators,
-                    client_ids: clients
+                    client_ids: clients,
+                    status_ids: statuses
                 }
             },
             columns: [
                 { data: 'aol', name: 'aol_number' },
                 { data: 'originval', name: 'origin' },
+                { data: 'created_for_user', name: 'created_for_user', orderable: false, searchable: false },
                 { data: 'destinationval', name: 'destination' },
                 { data: 'supplier_name', name: 'supplierdata.company_name' },
                 { data: 'creator_name', name: 'creator.fname' },
@@ -299,8 +346,9 @@
         let selectedSuppliers = $('#supplierFilter').val() || [];
         let selectedCreators = $('#creatorFilter').val() || [];
         let selectedClient = $('#client_filter').val() || [];
+        var statuses = $('#statusFilter').val(); 
 
-        loadTable(selectedSuppliers, selectedCreators, selectedClient);
+        loadTable(selectedSuppliers, selectedCreators, selectedClient, statuses);
     });
 
     // Handle clear filters
@@ -315,8 +363,13 @@
         );
     });
 
+    $('#statusFilter').select2({
+        placeholder: 'Select status', // Placeholder text
+        allowClear: true // Allow clearing the selection (optional)
+    });
+
     // Enable Select2 for multi-select dropdowns (Optional)
-    $('#supplierFilter, #creatorFilter, #client_filter').select2({ width: '100%' });
+    $('#supplierFilter, #creatorFilter, #client_filter',).select2({ width: '100%' });
 </script>
 
 @endsection

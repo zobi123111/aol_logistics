@@ -451,5 +451,9 @@ return [
     'Files Selected:' => 'Archivos seleccionados:',
     'Inspection' => 'Inspección',
     'Notes' => 'Notas',
+    'Client Invoice' => 'Factura del cliente',
+    'supplier_bills' => 'Facturas del proveedor',
 
+
+    
 ];

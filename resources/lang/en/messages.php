@@ -450,4 +450,7 @@ return [
     'Files Selected:' => 'Files Selected:',
     'Inspection' => 'Inspection',
     'Notes' => 'Notes',
+    'Client Invoice' => 'Client Invoice',
+    'supplier_bills' => 'Supplier Bills',
+
 ];
