@@ -44,9 +44,12 @@
             <select id="client_filter" class="form-control select2" multiple>
                 <option value="">{{ __('messages.filter_by_client') }}</option>
                 @foreach($creatorsclients as $client)
+                @if(isset($client->creatorfor->id))
                     <option value="{{ $client->creatorfor->id }}"> {{ optional($client->creatorfor->client)->business_name 
                                 ?? $client->creatorfor->business_name 
                                 ?? $client->creatorfor->email }}</option>
+
+                @endif
                 @endforeach
             </select>
         </div>
