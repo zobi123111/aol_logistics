@@ -453,7 +453,5 @@ return [
     'Notes' => 'Notas',
     'Client Invoice' => 'Factura del cliente',
     'supplier_bills' => 'Facturas del proveedor',
-
-
-    
+    "filter_by_status" => "Filtrar por estado"
 ];

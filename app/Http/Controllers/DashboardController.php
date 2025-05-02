@@ -96,7 +96,7 @@ class DashboardController extends Controller
                     $query->whereIn('created_by', $request->creator_ids);
                 }
                 if (!empty($request->client_ids)) {
-                    $query->whereIn('created_by', $request->client_ids);
+                    $query->whereIn('created_for', $request->client_ids);
                 }
                 if (!empty($request->status_ids)) {
                     $query->whereIn('status', $request->status_ids);
@@ -157,15 +157,11 @@ class DashboardController extends Controller
                     ->get();
 
 
-        $creatorsclients = Load::with('creator.client') 
-        ->whereHas('creator', function ($query) {
-            $query->whereNotNull('client_id')
-                ->orWhere('is_client', 1);
-        })
-        ->selectRaw('DISTINCT created_by')
-        ->whereNotNull('created_by')
+        $creatorsclients = Load::with('creatorfor')
+        ->selectRaw('DISTINCT created_for')
+        ->whereNotNull('created_for') 
         ->get();
-
+            
         return view('Dashboard.index', compact(
             'totalClients', 'activeClients',
             'totalSuppliers', 'activeSuppliers',

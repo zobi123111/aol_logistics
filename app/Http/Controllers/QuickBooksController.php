@@ -315,13 +315,13 @@ class QuickBooksController extends Controller
 
             // Refresh access token
             $accessTokenObj = $OAuth2LoginHelper->refreshAccessTokenWithRefreshToken($refreshToken);
+            
             if (!$accessTokenObj) {
                 return null;
             }
 
-            // Store new tokens in cache
-            Cache::put('qb_access_token', $accessTokenObj->getAccessToken(), now()->addMinutes(50));
-            Cache::put('qb_refresh_token', $accessTokenObj->getRefreshToken(), now()->addDays(30));
+            Cache::put('qb_access_token', $accessTokenObj->getAccessToken(), now()->addSeconds($accessTokenObj->getAccessTokenExpiresAt()));
+            Cache::put('qb_refresh_token', $accessTokenObj->getRefreshToken(), now()->addDays(90));
 
             return $accessTokenObj->getAccessToken();
         }
@@ -476,7 +476,7 @@ class QuickBooksController extends Controller
                 return null;
             }
             $businessName = optional($load->creatorfor)->business_name ?? optional($load->creatorfor)->email;
-            $email = $load->creatorfor->email;
+            // $email = $load->creatorfor->email;
 
             // Get QuickBooks Access Token
             $accessToken = $this->getAccessToken();
@@ -500,7 +500,7 @@ class QuickBooksController extends Controller
             $dataService->setLogLocation(storage_path('logs/quickbooks.log'));
 
             // Check if customer exists
-            $query = "SELECT * FROM Customer WHERE PrimaryEmailAddr = '$email'";
+            $query = "SELECT * FROM Customer WHERE DisplayName = '$businessName'";
             $existingCustomers = $dataService->Query($query);
 
             $customer = null;
@@ -510,7 +510,7 @@ class QuickBooksController extends Controller
                 $customerData = Customer::create([
                     "CompanyName" => $businessName,
                     "DisplayName" => $businessName,
-                    "PrimaryEmailAddr" => ["Address" => $email]
+                    // "PrimaryEmailAddr" => ["Address" => $email]
                 ]);
 
                 $customer = $dataService->Add($customerData);
@@ -678,7 +678,7 @@ class QuickBooksController extends Controller
         // Create a new supplier
         $supplierData = Vendor::create([
             "DisplayName" => $supplierName,
-            "PrimaryEmailAddr" => ["Address" => $supplierEmail]
+            // "PrimaryEmailAddr" => ["Address" => $supplierEmail]
         ]);
 
         $newSupplier = $dataService->Add($supplierData);
@@ -1012,7 +1012,8 @@ class QuickBooksController extends Controller
             $suppliers = Supplier::where('id', $supplier_id)->first();
 
             $supplierName = $suppliers->company_name;
-            $supplierEmail = $suppliers->user_email;
+            // $supplierEmail = $suppliers->user_email;
+            $supplierEmail = 'test@gmail.com';
 
             // Get QuickBooks Access Token
             $accessToken = $this->getAccessToken();

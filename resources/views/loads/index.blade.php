@@ -35,7 +35,7 @@
             <select id="creator_filter" class="form-control select2" multiple>
                 <option value="">{{ __('messages.Filter by Creator') }}</option>
                 @foreach($creators as $creator)
-                            <option value="{{ $creator->creator->id }}">{{ isset($creator->creator->fname) ? $creator->creator->fname. ' '. $creator->creator->lname : $creator->creator->email }} </option>
+                            <option value="{{ $creator->creator->id }}">{{ isset($creator->creator->business_name) ? $creator->creator->business_name. ' '. $creator->creator->lname : $creator->creator->email }} </option>
                         @endforeach
             </select>
         </div>
@@ -44,9 +44,9 @@
             <select id="client_filter" class="form-control select2" multiple>
                 <option value="">{{ __('messages.filter_by_client') }}</option>
                 @foreach($creatorsclients as $client)
-                    <option value="{{ $client->creator->id }}"> {{ optional($client->creator->client)->business_name 
-                                ?? $client->creator->business_name 
-                                ?? $client->creator->fname . ' ' . $client->creator->lname }}</option>
+                    <option value="{{ $client->creatorfor->id }}"> {{ optional($client->creatorfor->client)->business_name 
+                                ?? $client->creatorfor->business_name 
+                                ?? $client->creatorfor->email }}</option>
                 @endforeach
             </select>
         </div>

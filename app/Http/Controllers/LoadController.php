@@ -65,7 +65,7 @@ class LoadController extends Controller
                     return $query->whereIn('created_by', (array) $creatorFilter); 
                 })
                 ->when(!empty($clientFilter), function ($query) use ($clientFilter) {
-                    return $query->whereIn('created_by', (array) $clientFilter); 
+                    return $query->whereIn('created_for', (array) $clientFilter); 
                 })
                 ->latest('id')
                 ->get();
@@ -181,13 +181,18 @@ class LoadController extends Controller
         ->whereNotNull('created_by') 
         ->get();
 
-        $creatorsclients = Load::with('creator.client') 
-        ->whereHas('creator', function ($query) {
-            $query->whereNotNull('client_id')
-                ->orWhere('is_client', 1);
-        })
-        ->selectRaw('DISTINCT created_by')
-        ->whereNotNull('created_by')
+        // $creatorsclients = Load::with('creator.client') 
+        // ->whereHas('creator', function ($query) {
+        //     $query->whereNotNull('client_id')
+        //         ->orWhere('is_client', 1);
+        // })
+        // ->selectRaw('DISTINCT created_by')
+        // ->whereNotNull('created_by')
+        // ->get();
+
+        $creatorsclients = Load::with('creatorfor')
+        ->selectRaw('DISTINCT created_for')
+        ->whereNotNull('created_for') 
         ->get();
 
         return view('loads.index', compact('creators', 'creatorsclients'));
@@ -543,7 +548,8 @@ class LoadController extends Controller
     // Get filter inputs
     $supplierId = $request->input('supplier_id');
     $serviceType = $request->input('service_type');
-
+    $suppliers = collect();
+    if ($supplierId || $serviceType) {
     // Query suppliers with optional filters
     $suppliers = Supplier::when($supplierId, function ($query) use ($supplierId) {
 
@@ -570,7 +576,7 @@ class LoadController extends Controller
         $query->orderBy('cost', 'asc');
     }])->where('is_active', 1)
     ->get();
-
+    }
     $deletedAssignedServices = AssignedService::onlyTrashed()
         ->where('load_id', $load->id)
         ->with(['supplier', 'service'])

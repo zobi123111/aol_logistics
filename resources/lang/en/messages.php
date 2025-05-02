@@ -452,5 +452,5 @@ return [
     'Notes' => 'Notes',
     'Client Invoice' => 'Client Invoice',
     'supplier_bills' => 'Supplier Bills',
-
+    "filter_by_status"=> "Filter by status",
 ];
