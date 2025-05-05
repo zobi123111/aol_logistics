@@ -34,4 +34,8 @@ class Service extends Model
      {
          return $this->belongsTo(Destination::class, 'destination');
      }
+     public function clientCosts()
+{
+    return $this->hasMany(ClientCost::class, 'service_id');
+}
 }

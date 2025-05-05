@@ -453,4 +453,8 @@ return [
     'Client Invoice' => 'Client Invoice',
     'supplier_bills' => 'Supplier Bills',
     "filter_by_status"=> "Filter by status",
+    'client_cost_missing' => 'Client cost not found. Please add a client cost for this service.',
+    'Assign Service' => 'Assign Service',
+    'Add Service' => 'Add Service',
+
 ];

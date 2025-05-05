@@ -109,6 +109,10 @@ Route::middleware(['auth.user', 'otp.verified', 'role.permission'])->group(funct
     Route::get('/loads/{id}/edit-truck-details', [LoadController::class, 'editTruckDetails'])->name('loads.editTruckDetails');
     Route::post('/loads/{id}/update-truck-details', [LoadController::class, 'updateTruckDetails'])->name('loads.updateTruckDetails');
     Route::delete('/loads/document/{id}', [LoadController::class, 'deleteDocument'])->name('loads.deleteDocument');
+    Route::get('/client-cost/{clientId}', [ClientController::class, 'clientCost'])->name('client_cost.index');
+    Route::post('/client-cost/save', [ClientController::class, 'save'])->name('client_cost.save');
+
+
 });
 
 Route::middleware(['auth.user', 'otp.verified', 'check.supplier'])->group(function () {

@@ -1,6 +1,5 @@
-@section('title', 'Assign Load')
-{{-- @section('sub-title', 'Assign Load') --}}
-@section('sub-title', __('messages.Assign Load'))
+@section('title', __('messages.Assign Service'))
+@section('sub-title', __('messages.Assign Service'))
 
 @extends('layout.app')
 @section('content')
@@ -17,6 +16,13 @@
         <i class="bi bi-check-circle me-1"></i>
         {{ session()->get('message') }}
 
+    </div>
+    @endif
+
+    @if(session()->has('error'))
+    <div class="alert alert-danger fade show" role="alert">
+        <i class="bi bi-x-circle me-1"></i>
+        {{ session()->get('error') }}
     </div>
     @endif
 
@@ -68,6 +74,7 @@
         <div class="row">
             <div class="col-md-6">
                 <p><strong>{{ __('messages.AOL Number') }} :</strong> {{ $load->aol_number }}</p>
+                <p><strong>{{ __('messages.Client') }} :</strong> {{ $load->creatorfor->business_name }}</p>
                 <p><strong>{{ __('messages.Origin') }} :</strong> 
                 {{  $load->origindata
                     ? ($load->origindata->name ?: ($load->origindata->street . ', ' . $load->origindata->city . ', ' . $load->origindata->state . ', ' . $load->origindata->country))
@@ -159,7 +166,10 @@
                         : 'N/A' }}
                       @endif
                 </td>
-                <td>${{ number_format($service->cost, 2) }}</td>
+                <td>{{ optional($service->clientCosts->first())->client_cost !== null ? '$' . number_format($service->clientCosts->first()->client_cost, 2) : '---' }}
+
+
+                </td>
                 <td>
                     <!-- <form action="{{ route('assign.service') }}" method="POST">
                         @csrf

@@ -11,6 +11,7 @@ use App\Models\Role;
 use Illuminate\Support\Facades\Session;
 use App\Models\UserActivityLog;
 use Yajra\DataTables\DataTables;
+use App\Models\ClientCost;
 
 
 class ClientController extends Controller
@@ -35,7 +36,12 @@ class ClientController extends Controller
                             <i class="fa-solid fa-user"></i> '. __('messages.Manage').'
                         </a>';
             })
-            ->rawColumns(['status', 'actions', 'client_users']) 
+            ->addColumn('client_cost', function ($client) {
+                return '<a href="'.route('client_cost.index', encode_id($client->id)).'" class="btn btn-primary create-button btn_primary_color">
+                            <i class="fa-solid fa-user"></i> '. __('messages.Manage').'
+                        </a>';
+            })
+            ->rawColumns(['status', 'actions', 'client_users', 'client_cost']) 
             ->make(true);
         }
     
@@ -225,6 +231,60 @@ class ClientController extends Controller
              ->with('message', __('messages.Client updated successfully.'));
      }
 
+     public function clientCost(Request $request, $clientId)
+     {
+         $de = decode_id($clientId); // Decode if you're using encoded IDs
+         if ($request->ajax()) {
+            // dd($clientId);
+            $services =\App\Models\Service::with(['clientCosts' => function ($query) use ($de) {
+                $query->where('client_id', '=', $de);  // Filter client costs by client_id
+            }, 'supplier'])->get();
+            return DataTables::of($services)
+                ->addColumn('supplier_name', function ($service) {
+                    return $service->supplier ? $service->supplier->company_name : '---';
+                })
+                ->addColumn('service_name', function ($service) {
+                    return $service->service_name ?? $service->service_name ;
+                })
+                ->addColumn('client_cost', function ($service) {
+                    $clientCost = $service->clientCosts->first()?->client_cost ?? '';
+                    return '<input type="number" step="0.01"
+                                   name="costs[' . $service->id . ']"
+                                    value="' . (is_null($clientCost) || $clientCost === "" ? '' : number_format((float) $clientCost, 2)) . '"
+                                   class="form-control client-cost-input"
+                                   data-service-id="' . $service->id . '">';
+                })
+                ->rawColumns(['client_cost'])
+                ->make(true);
+        }
+    
+        return view('client.client_cost', compact('clientId'));
+     }
+
+     public function save(Request $request)
+{
+    $clientId = $request->input('client_id');
+    $costs = $request->input('costs', []); // [service_id => cost]
+    $de = decode_id($clientId);
+    foreach ($costs as $serviceId => $cost) {
+        if ($cost === null || $cost === ''|| floatval($cost) == 0.00) continue;
+
+        $service = \App\Models\Service::find($serviceId);
+        if (!$service) continue;
+
+        \App\Models\ClientCost::updateOrCreate(
+            [
+                'client_id' => $de,
+                'service_id' => $serviceId,
+            ],
+            [
+                'supplier_id' => $service->supplier_id,
+                'client_cost' => $cost,
+            ]
+        );
+    }
+    return redirect()->back()->with('message', 'Cost updated successfully.');
+}
 
      
 }

@@ -1,13 +1,14 @@
-@section('title', 'Loads')
+@section('title', __('messages.Services'))
 {{-- @section('sub-title', 'Loads') --}}
-@section('sub-title', __('messages.Loads'))
+@section('sub-title', __('messages.Services'))
 
 @extends('layout.app')
 @section('content')
 <div class="main_cont_outer">
     <div class="create_btn">
         <a href="{{ route('loads.create') }}" class="btn btn-primary create-button btn_primary_color"
-            id="createrole"> {{ __('messages.Add Load') }} </a>
+            id="createrole"> {{ __('messages.Add Service') }}
+            </a>
     </div>
     <div id="successMessagea" class="alert alert-success" style="display: none;" role="alert">
         <i class="bi bi-check-circle me-1"></i>

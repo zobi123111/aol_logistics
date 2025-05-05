@@ -2622,3 +2622,12 @@ a.btn.btn-primary.container-login.w-100.btn_primary_color.login-btn {
 table.load_table_dis, th, td, tr {
   text-align: center;
 }
+
+ul.list-group {
+  background: var(--header-bg);
+  color: var(--font-color);
+}
+li.list-group-item {
+  color: var(--font-color);
+  background: var(--header-bg);
+}

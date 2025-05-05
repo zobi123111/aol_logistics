@@ -16,6 +16,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Models\UserActivityLog;
+use App\Models\ClientCost;
+
 
 class LoadController extends Controller
 {
@@ -134,7 +136,6 @@ class LoadController extends Controller
                         return '<a href="' . route('invoice.supplier', ['load_id' => encode_id($load->id)]) . '" 
                                     class="btn btn-primary create-button btn_primary_color qb_invoice">
                                    <img src="/assets/img/qb1.png">
-                                    <i class="fa-solid fa-file-invoice-dollar"></i> '.__('messages.view_qb_supplier_invoice').'
                                 </a>';
                     } else {
                         // If supplier_invoice_id is null, return 'NA'
@@ -542,7 +543,8 @@ class LoadController extends Controller
 {
     $en = $id;
     $de = decode_id($id);
-    $load = Load::findOrFail($de);
+    $load = Load::with(['creatorfor'])->findOrFail($de);
+    $clientId = $load->created_for;
     $assignedServiceIds = AssignedService::where('load_id', $load->id)->pluck('service_id');
 
     // Get filter inputs
@@ -563,7 +565,8 @@ class LoadController extends Controller
             });
         }
     })
-    ->with(['services' => function ($query) use ($load, $assignedServiceIds, $supplierId, $serviceType) {
+    ->with(['services.clientCosts' => function ($query) use ($load, $assignedServiceIds, $supplierId, $serviceType, $clientId) {
+        $query->where('client_id', $clientId);
         if (!$serviceType &&  !$supplierId) {
             $query->where('origin', $load->origin)
                 ->where('destination', $load->destination);
@@ -573,7 +576,7 @@ class LoadController extends Controller
                 $query->where('service_type', $serviceType); 
             }
         }
-        $query->orderBy('cost', 'asc');
+        // $query->orderBy('cost', 'asc');
     }])->where('is_active', 1)
     ->get();
     }
@@ -627,10 +630,21 @@ class LoadController extends Controller
         // if ($existingAssignment) {
         //     return redirect()->back()->with('error',  __('messages.This service is already assigned.'));
         // }
-        $cost = Service::where([
-            'id' => $request->service_id,
-            'supplier_id' => $request->supplier_id
-        ])->value('cost');
+        $loadData = Load::findOrFail($request->load_id);
+        // $cost = Service::where([
+        //     'id' => $request->service_id,
+        //     'supplier_id' => $request->supplier_id
+        // ])->value('cost');
+
+        $cost = ClientCost::where([
+            'client_id' => $loadData->created_for,
+            'service_id' => $request->service_id
+        ])->value('client_cost');
+
+        if (is_null($cost) || $cost == 0 || $cost == '0.00') {
+            return redirect()->back()->with('error', __('messages.client_cost_missing'));
+        }
+
         // Assign the service
         AssignedService::create([
             'load_id' => $request->load_id,

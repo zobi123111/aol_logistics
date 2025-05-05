@@ -453,5 +453,9 @@ return [
     'Notes' => 'Notas',
     'Client Invoice' => 'Factura del cliente',
     'supplier_bills' => 'Facturas del proveedor',
-    "filter_by_status" => "Filtrar por estado"
+    "filter_by_status" => "Filtrar por estado",
+    'client_cost_missing' => 'Costo del cliente no encontrado. Por favor, agregue un costo del cliente para este servicio.',
+    'Assign Service' => 'Asignar Servicio',
+    'Add Service' => 'Agregar Servicio',
+
 ];

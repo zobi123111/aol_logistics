@@ -1,6 +1,6 @@
-@section('title', 'Load')
+@section('title', __('messages.Services'))
 {{-- @section('sub-title', 'Load') --}}
-@section('sub-title', __('messages.Loads'))
+@section('sub-title', __('messages.Services'))
 
 @extends('layout.app')
 @section('content')

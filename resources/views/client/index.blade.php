@@ -37,6 +37,8 @@
                 <th scope="col"> {{ __('messages.Actions') }} </th>
                 @endif
                 <th scope="col"> {{ __('messages.Users') }} </th>
+                <th scope="col"> Service Cost </th>
+
             </tr>
         </thead>
        
@@ -81,7 +83,8 @@ $(document).ready(function() {
             // { data: 'role_name', name: 'role_name' },
             { data: 'status', name: 'status', orderable: false, searchable: false },
             { data: 'actions', name: 'actions', orderable: false, searchable: false },
-            { data: 'client_users', name: 'client_users', orderable: false, searchable: false }
+            { data: 'client_users', name: 'client_users', orderable: false, searchable: false },
+            { data: 'client_cost', name: 'client_cost', orderable: false, searchable: false }
         ],
         language: {
             sSearch: "{{ __('messages.Search') }}",

@@ -315,7 +315,7 @@ class QuickBooksController extends Controller
 
             // Refresh access token
             $accessTokenObj = $OAuth2LoginHelper->refreshAccessTokenWithRefreshToken($refreshToken);
-            
+
             if (!$accessTokenObj) {
                 return null;
             }
@@ -656,9 +656,9 @@ class QuickBooksController extends Controller
         }
 
         $assignedServices = AssignedService::where('load_id', $de)
-            ->whereHas('supplier', function ($query) {
-                $query->where('user_id', auth()->id());
-            })
+            // ->whereHas('supplier', function ($query) {
+            //     $query->where('user_id', auth()->id());
+            // })
             ->with(['supplier', 'service'])
             ->get();
         return view('quickbooks.upload_bill', compact('assignedServices', 'load_id'));
@@ -974,7 +974,11 @@ class QuickBooksController extends Controller
             'bill_pdf' => 'required|mimes:pdf,jpg,jpeg,png,doc,docx|max:5120'
         ]);
         $user = auth()->user();
-        $suppliers = Supplier::where('user_id', $user->id)->first();
+
+        $suppliers = Supplier::with('user')
+        ->where('id', $user->supplier_id)
+        ->first();     
+        
         // dd($suppliers);
         if ($request->hasFile('bill_pdf')) {
             $file = $request->file('bill_pdf');

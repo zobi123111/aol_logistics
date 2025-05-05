@@ -1,5 +1,5 @@
-@section('title', 'Loads')
-@section('sub-title', __('messages.Loads'))
+@section('title', __('messages.Services'))
+@section('sub-title', __('messages.Services'))
 @extends('layout.app')
 @section('content')
 <div class="main_cont_outer">
