@@ -366,7 +366,7 @@
     });
 
     $('#statusFilter').select2({
-        placeholder: 'Select status', // Placeholder text
+        placeholder: '', // Placeholder text
         allowClear: true // Allow clearing the selection (optional)
     });
 

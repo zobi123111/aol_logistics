@@ -35,9 +35,13 @@
                     ? ($load->destinationdata->name ?: ($load->destinationdata->street . ', ' . $load->destinationdata->city . ', ' . $load->destinationdata->state . ', ' . $load->destinationdata->country))
                     : 'N/A' }}</p>
             <p><strong> {{ __('messages.Service Type') }} :</strong> {{ $load->service_type }}</p>
+            @if(!isClientUser())
             <p><strong> {{ __('messages.Payer') }} :</strong> {{ $payerOptions[$load->payer] ?? 'N/A' }}</p>
+            @endif
             <p><strong> {{ __('messages.Equipment Type') }} :</strong> {{ $load->equipment_type }}</p>
+            @if(!isClientUser())
             <p><strong> {{ __('messages.Supplier') }} :</strong> {{ $load->supplier ? $load->supplier->company_name : 'N/A' }}</p>
+            @endif
             <p><strong> {{ __('messages.Trailer Number') }} :</strong> {{ $load->truck_number ?? 'N/A' }}</p>
             <p><strong> {{ __('messages.Port of Entry') }} :</strong> {{ $load->port_of_entry ?? 'N/A' }}</p>
             <p><strong> {{ __('messages.Weight') }} :</strong> {{ $load->weight !== null ? number_format($load->weight, 2, '.', ',') . ' lbs' : 'N/A' }}</p>
@@ -45,6 +49,8 @@
             <p><strong> {{ __('messages.Customer PO') }} :</strong> {{ $load->customer_po ?? 'N/A' }}</p>
             <p><strong> {{ __('messages.Hazmat') }} :</strong> {!! $load->is_hazmat ? '<span class="badge bg-danger">Yes</span>' : '<span class="badge bg-secondary">No</span>' !!}</p>
             <p><strong> {{ __('messages.Inbond') }} :</strong> {!! $load->is_inbond ? '<span class="badge bg-warning">Yes</span>' : '<span class="badge bg-secondary">No</span>' !!}</p>
+            <p><strong> {{ __('messages.Inspection') }} :</strong> {!! $load->inspection ? '<span class="badge bg-warning">Yes</span>' : '<span class="badge bg-secondary">No</span>' !!}</p>
+
             <p><strong> {{ __('messages.Status') }} :</strong> 
                 <span class="badge 
                     {{ $load->status == 'Pending' ? 'bg-warning' : ($load->status == 'Completed' ? 'bg-success' : 'bg-secondary') }}">
@@ -62,16 +68,22 @@
     <table class="table table-bordered" id="assigned">
         <thead class="bg-secondary text-white">
             <tr>
+                @if(!isClientUser())
                 <th>{{ __('messages.Supplier') }} </th>
+                @endif
                 <th> {{ __('messages.Service Name') }}  </th>
                 <th>{{ __('messages.Service Details') }} </th>
+                @if(!isClientUser())
                 <th>{{ __('messages.Cost') }} </th>
+                @endif
             </tr>
         </thead>
         <tbody>
             @forelse($load->assignedServices as $assignedService)
                 <tr>
+                    @if(!isClientUser())
                     <td>{{ $assignedService->supplier->dba ?? $assignedService->supplier->company_name }}</td>
+                    @endif
                     <td>{{ $assignedService->service->service_name ?? 'NA' }}</td>
                     <td>
                     {{ $assignedService->service->origindata 
@@ -86,7 +98,9 @@
 
 
                     </td>
+                    @if(!isClientUser())
                     <td>${{ number_format($assignedService->service->cost, 2) }}</td>
+                    @endif
                 </tr>
             @empty
                 <tr>

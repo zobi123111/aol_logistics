@@ -28,7 +28,11 @@ class LoadController extends Controller
     public function index(Request $request)
     {
         $user = auth()->user();
+        // dd($user);
         $userType = $user->roledata->user_type_id;
+        $company_name = User::where('id', $user->client_id)->value('business_name');
+        $sup_company_name = Supplier::where('id', $user->supplier_id)->value('company_name');
+
 
         if ($request->ajax()) {
             $aolNumber = $request->input('aol_number');
@@ -37,25 +41,39 @@ class LoadController extends Controller
             $clientFilter = $request->input('client_filter');
 
             $loads = Load::with(['origindata', 'destinationdata', 'supplierdata', 'assignedServices.supplier', 'creator', 'creatorfor'])
-                ->when($userType == 2, function ($query) use ($user) {
-                    return $query->where('created_by', $user->id)
-                        ->where(function ($q) {
-                            $q->whereNull('schedule')
-                                ->orWhereDate('schedule', '<=', now());
-                        });
-                })
-                ->when($userType == 3, function ($query) use ($user) {
-                    return $query->where(function ($q) use ($user) {
-                        $q->whereHas('assignedServices', function ($q) use ($user) {
-                            $q->whereHas('supplier', function ($q) use ($user) {
-                                $q->where('id', $user->supplier_id);
+            ->when($userType == 2, function ($query) use ($user, $company_name) {
+                return $query->where(function ($q) use ($user, $company_name) {
+                    $q->where(function ($q1) use ($user) {
+                        $q1->where('created_by', $user->id)
+                            ->where(function ($q2) {
+                                $q2->whereNull('schedule')
+                                    ->orWhereDate('schedule', '<=', now());
                             });
-                        })->orWhere('created_by', $user->id)->orWhere('status', 'requested');;
                     })
-                        ->where(function ($q) {
-                            $q->whereNull('schedule')
-                                ->orWhereDate('schedule', '<=', now());
+                    ->orWhereHas('creatorfor', function ($q3) use ($company_name) {
+                        $q3->where('business_name', $company_name);
+                    });
+                               
+                });
+            })
+                
+            ->when($userType == 3, function ($query) use ($user) {
+                return $query->where(function ($q) use ($user) {
+                    $q->whereHas('assignedServices', function ($q1) use ($user) {
+                        $q1->whereHas('supplier', function ($q2) use ($user) {
+                            $q2->where('id', $user->supplier_id);
                         });
+                    })
+                    ->orWhereHas('creator', function ($q3) use ($user) {
+                        $q3->where('supplier_id', $user->supplier_id);
+                    })
+                    ->orWhere('created_by', $user->id)
+                    ->orWhere('status', 'requested');
+                })
+                ->where(function ($q) {
+                        $q->whereNull('schedule')
+                        ->orWhereDate('schedule', '<=', now());
+                    });
                 })
                 ->when($aolNumber, function ($query) use ($aolNumber) {
                     return $query->where('aol_number', 'like', '%' . $aolNumber . '%');
@@ -565,18 +583,18 @@ class LoadController extends Controller
             });
         }
     })
-    ->with(['services.clientCosts' => function ($query) use ($load, $assignedServiceIds, $supplierId, $serviceType, $clientId) {
-        $query->where('client_id', $clientId);
+    ->with(['services' => function ($query) use ($serviceType, $supplierId, $load) {
         if (!$serviceType &&  !$supplierId) {
-            $query->where('origin', $load->origin)
-                ->where('destination', $load->destination);
-        }else{
-            if ($serviceType) {
-
-                $query->where('service_type', $serviceType); 
+                $query->where('origin', $load->origin)
+                    ->where('destination', $load->destination);
+            }else{
+                if ($serviceType) {
+    
+                    $query->where('service_type', $serviceType); 
+                }
             }
-        }
-        // $query->orderBy('cost', 'asc');
+    }, 'services.clientCosts' => function ($query) use ($load, $supplierId, $clientId) {
+        $query->where('client_id', $clientId);
     }])->where('is_active', 1)
     ->get();
     }

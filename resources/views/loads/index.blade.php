@@ -69,9 +69,9 @@
 
                     <th> {{ __('messages.AOL Number') }} </th>
                     <th> {{ __('messages.Service Type') }} </th>
+                    <th>{{ __('messages.Client') }}</th>
                     <th> {{ __('messages.Origin') }} </th>
                     <th> {{ __('messages.Destination') }} </th>
-                    <th>{{ __('messages.Client') }}</th>
                     <!-- <th> {{ __('messages.Payer') }} </th> -->
                     <th> {{ __('messages.Equipment Type') }} </th>
                     <!-- <th> {{ __('messages.Weight') }} </th> -->
@@ -220,9 +220,9 @@
             columns: [
                 { data: 'aol', name: 'aol_number' },
                 { data: 'service_type', name: 'service_type' },
+                { data: 'created_for_user', name: 'created_for_user', orderable: false, searchable: false },
                 { data: 'originval', name: 'origin' },
                 { data: 'destinationval', name: 'destination' },
-                { data: 'created_for_user', name: 'created_for_user', orderable: false, searchable: false },
                 //{ data: 'payer', name: 'payer' },
                 { data: 'equipment_type', name: 'equipment_type' },
                 // { data: 'weight', name: 'weight', render: function(data, type, row) {
@@ -272,14 +272,14 @@
                     className: 'aol_number_td',
                 },
                 {
-                    targets: 10, 
+                    targets: 9, 
                     className: 'text-center',
                     render: function(data, type, row) {
                         return '<input type="checkbox" ' + (row.is_hazmat ? 'checked' : '') + ' disabled>';
                     }
                 },
                 {
-                    targets: 11, 
+                    targets: 10, 
                     className: 'text-center',
                     render: function(data, type, row) {
                         return '<input type="checkbox" ' + (row.is_inbond ? 'checked' : '') + ' disabled>';

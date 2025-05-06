@@ -15,11 +15,17 @@ class LoginController extends Controller
 {
     public function index()
     {
+        if (Auth::check()) {
+            return redirect('/dashboard');
+        }
         return view('Login/index');
     }
 
     public function login(Request $request)
     {
+        if (Auth::check()) {
+            return redirect('/dashboard');
+        }
         if ($request->isMethod('get')) {
             $user = Auth::user();
             if ($user && $user->otp_verified) {               

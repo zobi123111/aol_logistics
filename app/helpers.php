@@ -138,6 +138,20 @@ function isSupplierUser()
     return optional($user->supplier)->id ?: false;
 }
 
+function isClientUser()
+{
+    $user = auth()->user();
+    
+    if (!$user) {
+        return false;
+    }
+    if (!$user || !$user->roledata || $user->roledata->user_type_id !== 2) {
+        return false;
+    }
+    return true;
+    // return optional($user->supplier)->id ?: false;
+}
+
 function queueEmailJob(array $recipients, string $subject, string $template, array $payload = [], ?string $emailType = null): bool
 {
     try {
