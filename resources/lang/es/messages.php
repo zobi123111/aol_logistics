@@ -457,5 +457,6 @@ return [
     'client_cost_missing' => 'Costo del cliente no encontrado. Por favor, agregue un costo del cliente para este servicio.',
     'Assign Service' => 'Asignar Servicio',
     'Add Service' => 'Agregar Servicio',
-
+    'Local Delivery' => 'Entrega Local',
+    'Bridge Crossing' => 'Cruce de Puente',
 ];

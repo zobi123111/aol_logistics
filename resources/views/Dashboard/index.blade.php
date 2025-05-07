@@ -19,7 +19,7 @@
     <!-- Welcome Section -->
     <div class="text-center py-4 mb-4 border-bottom">
         <!-- <h3 class="fw-bold">{{ __('messages.Welcome') }} {{ Auth::user()->fname }} {{ Auth::user()->lname }} !</h3> -->
-        <h3 class="fw-bold">{{ __('messages.Welcome') }} {{ Auth::user()->fname }} !</h3>
+        <h3 class="fw-bold">{{ __('messages.Welcome') }} {{ Auth::user()->fname }}!</h3>
         <!-- <p class="text-muted lead">{{ __('messages.Hey') }} <strong>{{ Auth::user()->fname }} {{ Auth::user()->lname }}</strong>, {{ __("messages.we're excited to have you on board") }}! 😊</p> -->
     </div>
 
@@ -70,12 +70,12 @@
             </div>
         </div>
     </div> -->
+    @if(isOwnerOrDev())
 
     <div class="row mt-4">
         <div class="col-lg-12">
             <div class="card shadow-sm dashboard-design">
                 <div class="card-body">
-                    
                     <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#activeUsersList" aria-expanded="false" aria-controls="activeUsersList">
                         <h5 class="card-title"> {{ __('messages.Active Users') }} 
                             <span class="badge badge-success">{{ $activeUsers->count() }}</span>
@@ -102,7 +102,7 @@
             </div>
         </div>
     </div>
-
+    @endif
 
      <!-- Active Users List -->
      <!-- <div class="row mt-4">
@@ -139,7 +139,9 @@
                     <label for="supplierFilter">{{ __('messages.filter_by_supplier') }}</label>
                     <select id="supplierFilter" class="form-control" multiple>
                         @foreach($suppliers as $supplier)
+                        @if(isset($supplier->supplierdata))
                             <option value="{{ $supplier->supplierdata->id }}">{{ $supplier->supplierdata->company_name }}</option>
+                            @endif
                         @endforeach
                     </select>
                 </div>

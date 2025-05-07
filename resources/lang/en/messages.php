@@ -456,5 +456,6 @@ return [
     'client_cost_missing' => 'Client cost not found. Please add a client cost for this service.',
     'Assign Service' => 'Assign Service',
     'Add Service' => 'Add Service',
-
+    'Local Delivery' => 'Local Delivery',
+    'Bridge Crossing' => 'Bridge Crossing',
 ];

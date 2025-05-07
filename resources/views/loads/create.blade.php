@@ -25,7 +25,7 @@
                 <li>{{ $error }}</li>
             @endforeach
         </ul>
-    </div>
+    </div>  
 @endif -->
 
     <div class="card card-container">
@@ -41,6 +41,12 @@
                         <option value="Air Freight" {{ old('service_type') == 'Air Freight' ? 'selected' : '' }}>{{ __('messages.Air Freight') }}</option>
                         <option value="Ocean Freight" {{ old('service_type') == 'Ocean Freight' ? 'selected' : '' }}>
                         {{ __('messages.Ocean Freight') }}</option>
+                        <option value="Local Delivery" {{ old('service_type') == 'Local Delivery' ? 'selected' : '' }}>
+                            {{ __('messages.Local Delivery') }}
+                        </option>
+                        <option value="Bridge Crossing" {{ old('service_type') == 'Bridge Crossing' ? 'selected' : '' }}>
+                            {{ __('messages.Bridge Crossing') }}
+                        </option>
             </select>
             @error('service_type')
                 <div class="text-danger">

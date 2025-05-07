@@ -113,7 +113,7 @@ function isDev()
     return ($user->role === 'admin' || $user->is_dev == 1);
 }
 
-function isAdminOrDev()
+function isOwnerOrDev()
 {
     $user = auth()->user();
     
@@ -121,7 +121,7 @@ function isAdminOrDev()
         return false;
     }
 
-    return ($user->role === 'admin' || $user->is_owner == 1 || $user->is_dev == 1);
+    return ( $user->is_owner == 1 || $user->is_dev == 1);
 }
 
 function isSupplierUser()

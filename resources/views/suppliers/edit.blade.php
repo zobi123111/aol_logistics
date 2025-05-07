@@ -213,6 +213,12 @@
                         <option value="Ocean Freight" {{ in_array('Ocean Freight', $selectedServices) ? 'selected' : '' }}>
                             {{ __('messages.Ocean Freight') }}
                         </option>
+                        <option value="Local Delivery" {{ in_array('Local Delivery', $selectedServices) ? 'selected' : '' }}>
+                            {{ __('messages.Local Delivery') }}
+                        </option>
+                        <option value="Bridge Crossing" {{ in_array('Bridge Crossing', $selectedServices) ? 'selected' : '' }}>
+                            {{ __('messages.Bridge Crossing') }}    
+                        </option>
                     </select>
 
                     @error('service_type')

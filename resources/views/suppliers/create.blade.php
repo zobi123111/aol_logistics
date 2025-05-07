@@ -20,7 +20,15 @@
             {{ session()->get('message') }}
         </div>
     @endif
-
+    <!-- @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>    
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif -->
     <div class="card card-container">
         <div class="card-body">
             <form action="{{ route('suppliers.store') }}" method="POST" enctype="multipart/form-data">
@@ -242,6 +250,12 @@
                         </option>
                         <option value="Ocean Freight" {{ in_array('Ocean Freight', $selectedServices) ? 'selected' : '' }}>
                             {{ __('messages.Ocean Freight') }}
+                        </option>
+                        <option value="Local Delivery" {{ in_array('Local Delivery', $selectedServices) ? 'selected' : '' }}>
+                            {{ __('messages.Local Delivery') }}
+                        </option>
+                        <option value="Bridge Crossing" {{ in_array('Bridge Crossing', $selectedServices) ? 'selected' : '' }}>
+                            {{ __('messages.Bridge Crossing') }}    
                         </option>
                     </select>
 
