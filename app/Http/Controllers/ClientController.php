@@ -233,11 +233,11 @@ class ClientController extends Controller
 
      public function clientCost(Request $request, $clientId)
      {
-         $de = decode_id($clientId); // Decode if you're using encoded IDs
+         $de = decode_id($clientId); 
+         $client = User::findOrFail($de);
          if ($request->ajax()) {
-            // dd($clientId);
             $services =\App\Models\Service::with(['clientCosts' => function ($query) use ($de) {
-                $query->where('client_id', '=', $de);  // Filter client costs by client_id
+                $query->where('client_id', '=', $de);  
             }, 'supplier'])->get();
             return DataTables::of($services)
                 ->addColumn('supplier_name', function ($service) {
@@ -258,7 +258,7 @@ class ClientController extends Controller
                 ->make(true);
         }
     
-        return view('client.client_cost', compact('clientId'));
+        return view('client.client_cost', compact('clientId', 'client'));
      }
 
      public function save(Request $request)

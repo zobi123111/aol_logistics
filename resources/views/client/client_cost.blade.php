@@ -1,6 +1,6 @@
 @section('title', 'Client')
  <!-- @section('sub-title', 'Client') -->
-@section('sub-title', __('messages.Client'))
+@section('sub-title', __('messages.Client'). ' | Business: ' . $client->business_name)
 
 @extends('layout.app')
 @section('content')

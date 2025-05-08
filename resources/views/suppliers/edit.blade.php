@@ -284,7 +284,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">  ctpat_number </label><span class="text-danger">*</span>
+                    <label class="form-label"> {{ __('messages.CTPAT Number') }} </label><span class="text-danger">*</span>
                     <input type="text" name="ctpat_number" class="form-control" value="{{ old('ctpat_number', $supplier->ctpat_number) }}">
                     @error('ctpat_number')
                         <div class="text-danger">
