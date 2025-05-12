@@ -73,6 +73,7 @@
                     <option value="44" {{ old('country_code') == '44' ? 'selected' : '' }}>+44 (UK)</option>
                     <option value="91" {{ old('country_code') == '91' ? 'selected' : '' }}>+91 (India)</option>
                     <option value="33" {{ old('country_code') == '33' ? 'selected' : '' }}>+33 (France)</option>
+                    <option value="52" {{ old('country_code') == '52' ? 'selected' : '' }}>+52 (Mexico)</option>
                     <!-- Add more countries as needed -->
                 </select>
                 @error('country_code')
