@@ -19,7 +19,7 @@
         {{ session()->get('message') }}
     </div>
     @endif
-
+    @if( isAolUser())
     <div class="filter-container">
         <div class="row mb-0">
             <div class="col-md-3">
@@ -61,6 +61,7 @@
     <button id="reset_filters" class="btn btn-secondary">Reset</button></div>
 </div>
     </div>
+    @endif
 
     <!-- <div style="overflow-x: auto;"> -->
         <table class="display mt-3 respo_table load_table_dis" id="loads">
@@ -68,7 +69,7 @@
                 <tr>
 
                     <th> {{ __('messages.AOL Number') }} </th>
-                    <th> {{ __('messages.Service Type') }} </th>
+                    <th> {{ __('messages.Service Type') }} </th> 
                     <th>{{ __('messages.Client') }}</th>
                     <th> {{ __('messages.Origin') }} </th>
                     <th> {{ __('messages.Destination') }} </th>

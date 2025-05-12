@@ -70,6 +70,7 @@ class Kernel extends HttpKernel
         'role.permission' => \App\Http\Middleware\CheckRolePermission::class,
         'auto.logout' => \App\Http\Middleware\AutoLogout::class,
         'check.supplier' => \App\Http\Middleware\CheckSupplier::class,
+        'check.suppliers' => \App\Http\Middleware\CheckSuppliers::class,
         'check.client' => \App\Http\Middleware\CheckClient::class,
     ];
 }

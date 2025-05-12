@@ -102,6 +102,17 @@ function isAdminUser()
     return ($user->role === 'admin' || $user->is_owner == 1);
 }
 
+function isAolUser()
+{
+    $user = auth()->user();
+    
+    if (!$user) {
+        return false;
+    }
+
+    return ($user->user_type === 1 || $user->is_owner == 1 || $user->is_dev == 1);
+}
+
 function isDev()
 {
     $user = auth()->user();

@@ -2631,3 +2631,7 @@ li.list-group-item {
   color: var(--font-color);
   background: var(--header-bg);
 }
+
+#loads td {
+  word-break: break-word;
+}

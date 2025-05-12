@@ -128,7 +128,7 @@
 
 </div> -->
 
-
+@if( isAolUser())
 <div class="row mt-4">
     <div class="col-lg-12">
         <div class="card shadow-sm dashboard-design">
@@ -213,6 +213,7 @@
     </div>
 </div>
 
+@endif
     <!-- User Statistics Chart -->
     <div class="row mt-4">
         <div class="col-lg-6">
