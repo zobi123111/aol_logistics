@@ -26,12 +26,19 @@
                 <input type="text" id="aol_number_filter" class="form-control" placeholder="{{ __('messages.Enter AOL Number') }}">
             </div>
             <div class="col-md-3">
-                <select id="status_filter" class="form-control">
-                    <option value="">{{ __('messages.Filter by Status') }}</option>
+                <select id="shipment_status_filter" class="form-control">
+                    <!-- <option value="">{{ __('messages.Filter by Status') }}</option>
                     <option value="assigned">{{ __('messages.Assigned') }}</option>
-                    <option value="requested">{{ __('messages.Requested') }}</option>
+                    <option value="requested">{{ __('messages.Requested') }}</option> -->
+                    <option value="">{{ __('messages.Filter by Status') }}</option>
+                    <option value="pending">{{ __('messages.pending') }}</option>
+                        <option value="in_transit">{{ __('messages.in_transit') }}</option>
+                        <option value="delivered">{{ __('messages.delivered') }}</option>
+                        <option value="cancelled">{{ __('messages.cancelled') }}</option>
+                        <option value="ready_to_invoice">Ready to invoice</option>
                 </select>
             </div>
+   
             <div class="col-md-3">
             <select id="creator_filter" class="form-control select2" multiple>
                 <option value="">{{ __('messages.Filter by Creator') }}</option>
@@ -54,7 +61,19 @@
                 @endforeach
             </select>
         </div>
-       
+        <div class="col-md-3">
+    <!-- <label>{{ __('messages.Filter by Status') }}</label> -->
+        <div class="main-div">
+            <div class="form-check">
+                <input type="checkbox" id="status_assigned" name="status_filter" value="assigned" class="form-check-input">
+                <label for="status_assigned" class="form-check-label">{{ __('messages.Assigned') }}</label>
+            </div>
+            <div class="form-check">
+                <input type="checkbox" id="status_requested" name="status_filter" value="requested" class="form-check-input">
+                <label for="status_requested" class="form-check-label">{{ __('messages.Requested') }}</label>
+            </div>
+        </div>
+</div>
         </div>
         <div class="col-md-12  ">
             <div class="create-btn1">
@@ -186,7 +205,14 @@
                 $('#loader').show();
 
                 var aolNumber = $('#aol_number_filter').val();
-                var status = $('#status_filter').val();
+                var shipment_status_filter = $('#shipment_status_filter').val();
+                var status = [];
+
+                // Collect all selected statuses
+                $('input[name="status_filter"]:checked').each(function() {
+                    status.push($(this).val());
+                });
+
                 var creator_filter = $('#creator_filter').val() || [];
                 var client_filter = $('#client_filter').val() || [];
                 console.log(creator_filter);
@@ -200,7 +226,8 @@
                         order: data.order, 
                         creator_filter: creator_filter,
                         client_filter: client_filter,
-                        columns: data.columns
+                        columns: data.columns,
+                        shipment_status_filter: shipment_status_filter,
                     },
                     success: function(response) {
                         $('#loader').hide();
@@ -295,13 +322,18 @@
 
         // Filter change event
         var delayTimer;
-        $('#aol_number_filter, #status_filter').on('change keyup', function() {
+        $('#aol_number_filter, #shipment_status_filter').on('change keyup', function() {
             clearTimeout(delayTimer);
             delayTimer = setTimeout(function() {
                 table.draw();
             }, 200);
         });
-
+        $(document).on('change', 'input[name="status_filter"]', function() {
+            clearTimeout(delayTimer);
+            delayTimer = setTimeout(function() {
+                table.draw();
+            }, 200);
+});
         $('#creator_filter, #client_filter').on('change', function() {
 
             clearTimeout(delayTimer);
@@ -339,14 +371,16 @@
         });
 
         document.getElementById('reset_filters').addEventListener('click', function() {
-    $('#aol_number_filter').val('');
-    $('#status_filter').val('');
-    $('#creator_filter').val([]).trigger('change');
-    $('#client_filter').val([]).trigger('change');
+            $('#aol_number_filter').val('');
+            $('#shipment_status_filter').val('');
+            $('#creator_filter').val([]).trigger('change');
+            $('#client_filter').val([]).trigger('change');
+            $('input[name="status_filter"]').prop('checked', false);
 
-    // Reload your table
-    $('#loads').DataTable().ajax.reload();
-});
+            // Reload your table
+            $('#loads').DataTable().ajax.reload();
+        });
+
 </script>
 
 @endsection

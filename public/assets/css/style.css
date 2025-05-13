@@ -2635,3 +2635,8 @@ li.list-group-item {
 #loads td {
   word-break: break-word;
 }
+
+.main-div {
+  display: flex;
+  gap: 20px;
+}

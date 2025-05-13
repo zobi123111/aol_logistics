@@ -37,6 +37,7 @@ class LoadController extends Controller
         if ($request->ajax()) {
             $aolNumber = $request->input('aol_number');
             $status = $request->input('status');
+            $shipment_status_filter = $request->input('shipment_status_filter');
             $creatorFilter = $request->input('creator_filter');
             $clientFilter = $request->input('client_filter');
 
@@ -79,13 +80,19 @@ class LoadController extends Controller
                     return $query->where('aol_number', 'like', '%' . $aolNumber . '%');
                 })
                 ->when($status, function ($query) use ($status) {
-                    return $query->where('status', $status);
+                    if (is_array($status) && !empty($status)) {
+                        return $query->whereIn('status', $status);
+                    }
+                    return $query;
                 })
                 ->when(!empty($creatorFilter), function ($query) use ($creatorFilter) {
                     return $query->whereIn('created_by', (array) $creatorFilter); 
                 })
                 ->when(!empty($clientFilter), function ($query) use ($clientFilter) {
                     return $query->whereIn('created_for', (array) $clientFilter); 
+                })
+                ->when($shipment_status_filter, function ($query) use ($shipment_status_filter) {
+                    return $query->where('shipment_status', $shipment_status_filter);
                 })
                 ->latest('id')
                 ->get();
@@ -283,7 +290,7 @@ class LoadController extends Controller
                 'supplier_id' => null, 
                 'created_for' => $request->client_id, 
                 'status' => $status,
-                'status' => $status,
+                'shipment_status' => 'pending',
                 'created_by' => Auth::id(),
                 'schedule' => $request->schedule ? Carbon::parse($request->schedule) : null,
                 'customer_po' => implode(', ', $referenceNumbers)
