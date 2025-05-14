@@ -44,14 +44,14 @@
         </a>
     </li>
 @endif
-
-<!-- <li class="nav-item">
-        <a class="nav-link {{ Request::routeIs('email-types.index') ? 'active' : '' }}" href="{{ route('email-types.index') }}">
+@if(isOwnerOrDev())
+<li class="nav-item">
+        <a class="nav-link {{ Request::routeIs('master-services.index') ? 'active' : '' }}" href="{{ route('master-services.index') }}">
         <i class="bi bi-bell"></i> 
-            <span> {{ __('messages.email_notification')}} </span>
+            <span> Master Service </span>
         </a>
-    </li> -->
-
+    </li>
+    @endif
 </ul>
 
   </aside><!-- End Sidebar-->

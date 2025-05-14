@@ -40,6 +40,8 @@ use QuickBooksOnline\API\PlatformService\PlatformService;
 use App\Http\Controllers\EmailTypeController;
 use App\Http\Controllers\WhatsAppWebhookController;
 use App\Livewire\Chat;
+use App\Http\Controllers\MasterServiceController;
+use App\Http\Controllers\SupplierServiceController;
 
 
 
@@ -111,8 +113,9 @@ Route::middleware(['auth.user', 'otp.verified', 'role.permission'])->group(funct
     Route::delete('/loads/document/{id}', [LoadController::class, 'deleteDocument'])->name('loads.deleteDocument');
     Route::get('/client-cost/{clientId}', [ClientController::class, 'clientCost'])->name('client_cost.index');
     Route::post('/client-cost/save', [ClientController::class, 'save'])->name('client_cost.save');
-
-
+    Route::resource('master-services', MasterServiceController::class)->except(['show']);
+    Route::get('master-services/data', [MasterServiceController::class, 'index'])->name('master-services.data');
+    
 
 
 });
@@ -172,6 +175,16 @@ Route::middleware(['auth.user', 'otp.verified', 'check.supplier'])->group(functi
         Route::put('/{serviceId}', [ServiceController::class, 'update'])->name('services.update');
         Route::delete('/{serviceId}', [ServiceController::class, 'destroy'])->name('services.destroy');
         Route::post('/restore/{serviceId}', [ServiceController::class, 'restore'])->name('services.restore');
+    });
+
+    Route::prefix('suppliers/{supplierId}/services')->group(function () {
+        Route::get('/', [SupplierServiceController::class, 'index'])->name('supplier_services.index');
+        Route::get('/create', [SupplierServiceController::class, 'create'])->name('supplier_services.create');
+        Route::post('/', [SupplierServiceController::class, 'store'])->name('supplier_services.store');
+        Route::get('/{serviceId}/edit', [SupplierServiceController::class, 'edit'])->name('supplier_services.edit');
+        Route::put('/{serviceId}', [SupplierServiceController::class, 'update'])->name('supplier_services.update');
+        Route::delete('/{serviceId}', [SupplierServiceController::class, 'destroy'])->name('supplier_services.destroy');
+        Route::post('/restore/{serviceId}', [SupplierServiceController::class, 'restore'])->name('supplier_services.restore');
     });
 });
 Route::middleware(['auth.user', 'otp.verified', 'check.client'])->group(function () {

@@ -42,7 +42,7 @@ class SupplierController extends Controller
                         </a>';
             })
             ->addColumn('services', function ($supplier) {
-                return '<a href="'.route('services.index', encode_id($supplier->id)).'" class="btn btn-primary create-button btn_primary_color">
+                return '<a href="'.route('supplier_services.index', encode_id($supplier->id)).'" class="btn btn-primary create-button btn_primary_color">
                             <i class="fa-solid fa-gear"></i> '. __('messages.Manage').'
                         </a>';
             })

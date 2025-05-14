@@ -195,11 +195,7 @@
             scrollY: '650px',
             scrollX: true, 
             scrollCollapse: true,
-            // paging: false, 
             fixedHeader: false, 
-            // footerCallback: function (row, data, start, end, display) {
-            //     $(row).css('position', 'relative'); 
-            // },
             order: [[0, 'desc']],
             ajax: function(data, callback, settings) {
                 $('#loader').show();
@@ -221,8 +217,8 @@
                     data: {
                         aol_number: aolNumber,
                         status: status,
-                        page: settings.page,
-                        length: settings.length,
+                        start: data.start,
+                        length: data.length,
                         order: data.order, 
                         creator_filter: creator_filter,
                         client_filter: client_filter,
