@@ -1,13 +1,12 @@
-@section('title', 'Supplier Services')
-{{-- @section('sub-title', 'Supplier Services') --}}
-@section('sub-title', __('messages.Supplier Service'). ' | Company: ' . $supplier->company_name)
+@section('title', 'client_service')
+@section('sub-title', __('messages.client_service') . ' | Client: ' . $client->business_name)
 @extends('layout.app')
 @section('content')
 <div class="main_cont_outer">
     <div class="create_btn">
-    <a href="{{ route('suppliers.index') }}" class="btn btn-primary create-button btn_primary_color"
-    id="createClient"><i class="bi bi-arrow-left-circle-fill"></i> {{ __('messages.Back') }}</a>
-        <a href="{{ route('supplier_services.create', encode_id($supplier->id)) }}" class="btn btn-primary create-button btn_primary_color"
+        <a href="{{ route('client.index') }}" class="btn btn-primary create-button btn_primary_color"
+        id="createClient"><i class="bi bi-arrow-left-circle-fill"></i> {{ __('messages.Back') }}</a>
+        <a href="{{ route('client_services.create', encode_id($client->id)) }}" class="btn btn-primary create-button btn_primary_color"
             id="createrole"> {{ __('messages.Add Service') }} </a>
     </div>
     <div id="successMessagea" class="alert alert-success" style="display: none;" role="alert">
@@ -20,14 +19,14 @@
     </div>
     @endif
    
-    <table class="table table-striped respo_table mt-3" id="supplier-services-table">
+    <table class="table table-striped respo_table mt-3" id="client-services-table">
         <thead>
             <tr>
-                <th>Master Service</th>
-                <th>Cost</th>
-                <th>Effective Date</th>
-                <th>Future Cost</th>
-                <th>Actions</th>
+            <th>{{ __('messages.master_service') }}</th>
+            <th>{{ __('messages.cost') }}</th>
+            <th>{{ __('messages.effective_date') }}e</th>
+            <th>{{ __('messages.future_cost') }}</th>
+            <th>{{ __('messages.actions') }}</th>
             </tr>
         </thead>
     </table>
@@ -61,38 +60,33 @@
 <script>
 $(document).ready(function () {
     let userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;    
-
-    $('#supplier-services-table').DataTable({
+    $('#client-services-table').DataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('supplier_services.index', encode_id($supplier->id)) }}",
+        ajax: "{{ route('client_services.index', encode_id($client->id)) }}",
         columns: [
-            // { data: 'id', name: 'id' },
             { data: 'service_name', name: 'masterService.service_name' },
             { data: 'cost', name: 'cost' },
             { data: 'service_date', name: 'service_date', render: function(data) { 
                     return data ? moment(data).tz(userTimezone).format('MMM. D, YYYY') : '-'; 
-                }  },           
-            { data: 'schedule_cost', name: 'schedule_cost' , render: function(data) { 
+                }  },
+            { data: 'schedule_cost', name: 'schedule_cost', render: function(data) { 
         return data ? data : '-'; 
     } },
             { data: 'actions', name: 'actions', orderable: false, searchable: false }
         ]
     });
 });
-    $(document).on('click', '.delete-icon', function(e) {
-        e.preventDefault();
-        var supplierId = $(this).data('supplier-id');
-        var serviceId = $(this).data('service-id');
-        // var username = $(this).closest('tr').find('.username').text();
-        var modal_text =
-            `{{ __('messages.Are you sure you want to delete ?') }}`;
-        $('.delete_content').html(modal_text);
-        $('#deleteRoleFormId').attr('action', `/suppliers/${supplierId}/services/${serviceId}`);
-
-        $('#deleteRoleForm').modal('show');
-    });
-
+    
+$(document).on('click', '.delete-icon', function(e) {
+    e.preventDefault();
+    var clientId = $(this).data('client-id');
+    var serviceId = $(this).data('service-id');
+    var modal_text = `{{ __('messages.Are you sure you want to delete ?') }}`;
+    $('.delete_content').html(modal_text);
+    $('#deleteRoleFormId').attr('action', `/clients/${clientId}/services/${serviceId}`);
+    $('#deleteRoleForm').modal('show');
+});
 </script>
 
 @endsection

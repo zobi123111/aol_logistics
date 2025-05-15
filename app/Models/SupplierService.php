@@ -14,6 +14,7 @@ class SupplierService extends Model
         'cost',
         'service_date',
         'supplier_id',
+        'schedule_cost'
     ];
     protected $casts = [
         'service_date' => 'date', // This is important

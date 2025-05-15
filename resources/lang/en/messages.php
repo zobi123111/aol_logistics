@@ -471,4 +471,13 @@ return [
     'submit' => 'Add Service',
     'cancel' => 'Cancel',
     'success' => 'Service added successfully.',
+    'client_service' => 'Client Service',
+    'service_type' => 'Service Type',
+    'master_service' => 'Master Service',
+    'cost' => 'Cost',
+    'effective_date' => 'Effective Date',
+    'future_cost' => 'Future Cost',
+    'add_service' => 'Add Service',
+    'actions' => 'Actions',
+
 ];

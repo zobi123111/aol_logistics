@@ -1,11 +1,10 @@
-@section('title', 'Supplier Service')
-{{-- @section('sub-title', 'Supplier Service') --}}
-@section('sub-title', __('messages.Supplier Service'). ' | Company: ' . $supplier->company_name)
+@section('title', 'client_service')
+@section('sub-title', __('messages.client_service'). ' | Company: ' . $client->company_name)
 @extends('layout.app')
 @section('content')
 <div class="main_cont_outer">
     <div class="create_btn">
-        <a href="{{ route('supplier_services.index',  encode_id($supplier->id)) }}" class="btn btn-primary create-button btn_primary_color" id="createUser">
+        <a href="{{ route('client_services.index',  encode_id($client->id)) }}" class="btn btn-primary create-button btn_primary_color" id="createUser">
             <i class="bi bi-arrow-left-circle-fill"> </i>  {{ __('messages.Back') }} </a>
     </div>
 
@@ -22,17 +21,17 @@
 
     <div class="card card-container">
         <div class="card-body">
-        <form action="{{ route('supplier_services.update', ['supplierId' => $supplier->id, 'serviceId' => $supplierService->id]) }}" method="POST">
+        <form action="{{ route('client_services.update', ['userId' => $client->id, 'serviceId' => $clientService->id]) }}" method="POST">
         @csrf
         @method('PUT')
 
     <!-- Service Type Selection -->
     <div class="form-group mb-3">
-        <label for="service-type" class="form-label">Service Type <span class="text-danger">*</span></label>
+        <label for="service-type" class="form-label">{{ __('messages.service_type') }} <span class="text-danger">*</span></label>
         <select id="service-type" class="form-control" name="service_type" onchange="updateMasterServices()">
             <option value="">Select Service Type</option>
             @foreach ($serviceTypes as $type)
-                <option value="{{ $type }}" {{ old('service_type', $supplierService->masterService->service_type) == $type ? 'selected' : '' }}>
+                <option value="{{ $type }}" {{ old('service_type', $clientService->masterService->service_type) == $type ? 'selected' : '' }}>
                     {{ ucfirst($type) }}
                 </option>
             @endforeach
@@ -46,7 +45,7 @@
 
     <!-- Master Service Selection -->
     <div class="form-group mb-3">
-        <label for="master-service" class="form-label">Master Service <span class="text-danger">*</span></label>
+        <label for="master-service" class="form-label">{{ __('messages.master_service') }} <span class="text-danger">*</span></label>
         <select name="master_service_id" id="master-service" class="form-control">
             <option value="">Select Master Service</option>
             @foreach ($masterServices as $type => $services)
@@ -62,7 +61,7 @@
                         }
                     @endphp
                     <option value="{{ $service->id }}" data-type="{{ $type }}" 
-                        {{ old('master_service_id', $supplierService->master_service_id) == $service->id ? 'selected' : '' }} 
+                        {{ old('master_service_id', $clientService->master_service_id) == $service->id ? 'selected' : '' }} 
                         data-location="{{ $locationDetails }}">
                         {{ $service->service_name }}{{ $locationDetails }}
                     </option>
@@ -78,8 +77,8 @@
 
     <!-- Cost Input -->
     <div class="form-group mb-3">
-        <label for="cost" class="form-label">Cost <span class="text-danger">*</span></label>
-        <input type="text" name="cost" class="form-control" value="{{ old('cost', $supplierService->cost) }}">
+        <label for="cost" class="form-label">{{ __('messages.cost') }}  <span class="text-danger">*</span></label>
+        <input type="text" name="cost" class="form-control" value="{{ old('cost', $clientService->cost) }}">
         @error('cost')
             <div class="text-danger">
                 {{ $message }}
@@ -89,8 +88,8 @@
 
     <!-- Service Date (optional) -->
     <div class="form-group mb-3">
-        <label for="service-date" class="form-label">Service Date</label>
-        <input type="date" name="service_date" class="form-control" value="{{ old('service_date', optional($supplierService->service_date)->format('Y-m-d')) }}" required>
+        <label for="service-date" class="form-label">{{ __('messages.effective_date') }} </label>
+        <input type="date" name="service_date" class="form-control" value="{{ old('service_date', $clientService->service_date ? $clientService->service_date->format('Y-m-d') : '') }}">
         @error('service_date')
             <div class="text-danger">
                 {{ $message }}
@@ -98,8 +97,8 @@
         @enderror
     </div>
     <div class="form-group mb-3">
-    <label for="schedule-cost" class="form-label">Schedule Cost</label>
-    <input type="text" name="schedule_cost" id="schedule-cost" class="form-control" value="{{ old('schedule_cost', $supplierService->schedule_cost) }}">
+    <label for="schedule-cost" class="form-label">{{ __('messages.future_cost') }} </label>
+    <input type="text" name="schedule_cost" id="schedule-cost" class="form-control" value="{{ old('schedule_cost', $clientService->schedule_cost) }}">
     @error('schedule_cost')
         <div class="text-danger">
             {{ $message }}

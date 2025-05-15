@@ -82,15 +82,16 @@ public function index(Request $request, $supplierId)
         $request->validate([
             'master_service_id' => 'required|exists:master_services,id',
             'cost' => 'required|numeric|min:0',
-            'service_date' => 'nullable|date',
+            'service_date' => 'nullable|date|after:today',
+            'schedule_cost' => 'nullable|numeric|min:0',
             'service_type' => 'required',
         ]);
-        $serviceDate = $request->service_date ? $request->service_date : Carbon::today()->toDateString();
+
+        $serviceDate = $request->service_date ? date('Y-m-d', strtotime($request->service_date)) : null;
 
           // Find existing SupplierService record with same supplier_id, service_date, and master_service_id
             $existingService = SupplierService::where('supplier_id', $supplierId)
             ->where('master_service_id', $request->master_service_id)
-            ->where('service_date', $serviceDate)
             ->first();
 
         if ($existingService) {
@@ -105,6 +106,7 @@ public function index(Request $request, $supplierId)
         'master_service_id' => $request->master_service_id,
         'cost' => $request->cost,
         'service_date' => $serviceDate,
+        'schedule_cost' => $request->schedule_cost,
         ]);
         }
 
@@ -139,7 +141,7 @@ public function index(Request $request, $supplierId)
         $request->validate([
             'master_service_id' => 'required|exists:master_services,id',
             'cost' => 'required|numeric|min:0',
-            'service_date' => 'nullable|date',
+            'service_date' => 'nullable|date|after:today',
             'service_type' => 'required',
         ]);
 
@@ -156,8 +158,13 @@ public function index(Request $request, $supplierId)
         ])->withInput();
     }
         $supplierService = SupplierService::where('supplier_id', $supplierId)->findOrFail($serviceId);
-        $supplierService->update($request->all());
-
+        $supplierService->update([
+            'master_service_id' => $request->master_service_id,
+            'cost' => $request->cost,
+            'service_date' => $request->service_date,
+            'schedule_cost' => $request->schedule_cost,
+            'service_type' => $request->service_type,
+        ]);
         return redirect()->route('supplier_services.index', encode_id($supplierId))->with('message', 'Supplier Service updated successfully.');
     }
 

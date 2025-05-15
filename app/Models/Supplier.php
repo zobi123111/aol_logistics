@@ -37,5 +37,16 @@ class Supplier extends Model
         return $this->hasMany(SupplierDocument::class, 'supplier_id');
     }
 
+
+public function supplierServices()
+{
+    return $this->hasMany(SupplierService::class);
+}
+
+public function clientServices()
+{
+    return $this->hasMany(ClientService::class);
+}
+
     
 }

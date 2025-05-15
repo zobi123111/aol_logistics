@@ -37,7 +37,7 @@ class ClientController extends Controller
                         </a>';
             })
             ->addColumn('client_cost', function ($client) {
-                return '<a href="'.route('client_cost.index', encode_id($client->id)).'" class="btn btn-primary create-button btn_primary_color">
+                return '<a href="'.route('client_services.index', encode_id($client->id)).'" class="btn btn-primary create-button btn_primary_color">
                             <i class="fa-solid fa-user"></i> '. __('messages.Manage').'
                         </a>';
             })

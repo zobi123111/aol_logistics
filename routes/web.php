@@ -42,6 +42,7 @@ use App\Http\Controllers\WhatsAppWebhookController;
 use App\Livewire\Chat;
 use App\Http\Controllers\MasterServiceController;
 use App\Http\Controllers\SupplierServiceController;
+use App\Http\Controllers\ClientServiceController;
 
 
 
@@ -135,7 +136,15 @@ Route::middleware(['auth.user', 'otp.verified'])->group(function () {
     Route::post('/upload-bill/supplier/{load_id}', [QuickBooksController::class, 'createSupplierBill'])
         ->name('upload.bill');
     Route::get('/invoice/supplier/{load_id}', [QuickBooksController::class, 'showQuickBooksBillByLoadId'])->name('invoice.supplier');
-
+    Route::prefix('clients/{userId}/services')->group(function () {
+        Route::get('/', [ClientServiceController::class, 'index'])->name('client_services.index');
+        Route::get('/create', [ClientServiceController::class, 'create'])->name('client_services.create');
+        Route::post('/', [ClientServiceController::class, 'store'])->name('client_services.store');
+        Route::get('/{serviceId}/edit', [ClientServiceController::class, 'edit'])->name('client_services.edit');
+        Route::put('/{serviceId}', [ClientServiceController::class, 'update'])->name('client_services.update');
+        Route::delete('/{serviceId}', [ClientServiceController::class, 'destroy'])->name('client_services.destroy');
+        Route::post('/restore/{serviceId}', [ClientServiceController::class, 'restore'])->name('client_services.restore');
+    });
 });
 
 Route::middleware(['auth.user', 'otp.verified', 'check.suppliers'])->group(function () {

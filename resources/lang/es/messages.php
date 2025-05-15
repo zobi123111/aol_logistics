@@ -472,4 +472,14 @@ return [
     'submit' => 'Agregar servicio',
     'cancel' => 'Cancelar',
     'success' => 'Servicio agregado con éxito.',
+    'client_service' => 'Servicio al Cliente',
+    'service_type' => 'Tipo de Servicio',
+    'master_service' => 'Servicio Principal',
+    'cost' => 'Costo',
+    'effective_date' => 'Fecha Efectiva',
+    'future_cost' => 'Costo Futuro',
+    'add_service' => 'Agregar Servicio',
+    'actions' => 'Acciones',
+
+
 ];

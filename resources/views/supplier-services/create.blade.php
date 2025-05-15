@@ -84,15 +84,24 @@
     @enderror
 </div>
 
-<!-- <div class="form-group mb-3">
-    <label for="service-date" class="form-label">Service Date <span class="text-danger">*</span></label>
-    <input type="date" name="service_date" class="form-control" value="{{ old('service_date') }}" required>
+<div class="form-group mb-3">
+    <label for="service-date" class="form-label">Service Date</label>
+    <input type="date" name="service_date" class="form-control" value="{{ old('service_date') }}">
     @error('service_date')
         <div class="text-danger">
             {{ $message }}
         </div>
     @enderror
-</div> -->
+</div>
+<div class="form-group mb-3">
+    <label for="schedule-cost" class="form-label">Schedule Cost</label>
+    <input type="text" name="schedule_cost" id="schedule-cost" class="form-control" value="{{ old('schedule_cost') }}">
+    @error('schedule_cost')
+        <div class="text-danger">
+            {{ $message }}
+        </div>
+    @enderror
+</div>
 <button type="submit" class="btn btn-primary btn_primary_color"> {{ __('messages.Add Service') }} </button>
     </form>
         </div>
