@@ -23,5 +23,11 @@ class SupplierService extends Model
     {
         return $this->belongsTo(MasterService::class);
     }
+
+
+    public function clientServices()
+    {
+        return $this->hasMany(ClientService::class, 'master_service_id', 'master_service_id');
+    }
 }
 

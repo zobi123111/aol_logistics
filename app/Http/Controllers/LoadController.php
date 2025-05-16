@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Models\UserActivityLog;
 use App\Models\ClientCost;
+use App\Models\ClientService;
+
 
 
 class LoadController extends Controller
@@ -566,6 +568,7 @@ class LoadController extends Controller
 
     public function assignPage($id, Request $request)
 {
+    // dd("dfjdhj");
     $en = $id;
     $de = decode_id($id);
     $load = Load::with(['creatorfor'])->findOrFail($de);
@@ -578,40 +581,123 @@ class LoadController extends Controller
     $suppliers = collect();
     if ($supplierId || $serviceType) {
     // Query suppliers with optional filters
-    $suppliers = Supplier::when($supplierId, function ($query) use ($supplierId) {
+    // $suppliers = Supplier::when($supplierId, function ($query) use ($supplierId) {
 
-        return $query->where('id', $supplierId);
-    }, function ($query) use ($load, $assignedServiceIds,$serviceType) {
-        if (!$serviceType) {
+    //     return $query->where('id', $supplierId);
+    // }, function ($query) use ($load, $assignedServiceIds,$serviceType) {
+    //     if (!$serviceType) {
 
-            return $query->whereHas('services', function ($subQuery) use ($load, $assignedServiceIds) {
-                $subQuery->where('origin', $load->origin)
-                    ->where('destination', $load->destination);
-            });
-        }
-    })
-    ->with(['services' => function ($query) use ($serviceType, $supplierId, $load) {
-        if (!$serviceType &&  !$supplierId) {
-                $query->where('origin', $load->origin)
-                    ->where('destination', $load->destination);
-            }else{
-                if ($serviceType) {
+    //         return $query->whereHas('services', function ($subQuery) use ($load, $assignedServiceIds) {
+    //             $subQuery->where('origin', $load->origin)
+    //                 ->where('destination', $load->destination);
+    //         });
+    //     }
+    // })
+    // ->with(['services' => function ($query) use ($serviceType, $supplierId, $load) {
+    //     if (!$serviceType &&  !$supplierId) {
+    //             $query->where('origin', $load->origin)
+    //                 ->where('destination', $load->destination);
+    //         }else{
+    //             if ($serviceType) {
     
-                    $query->where('service_type', $serviceType); 
+    //                 $query->where('service_type', $serviceType); 
+    //             }
+    //         }
+    // }, 'services.clientCosts' => function ($query) use ($load, $supplierId, $clientId) {
+    //     $query->where('client_id', $clientId);
+    // }])->where('is_active', 1)
+    // ->get();
+    // dd($suppliers );
+    // $suppliers = Supplier::when($supplierId, function ($query) use ($supplierId) {
+    //     // Filter by specific supplier if supplierId is provided
+    //     return $query->where('id', $supplierId);
+    // }, function ($query) use ($load, $serviceType) {
+    //     // Filter by origin and destination if service type is not provided
+    //     if (!$serviceType) {
+    //         return $query->whereHas('supplierServices.masterService', function ($subQuery) use ($load) {
+    //             $subQuery->where('origin', $load->origin)
+    //                      ->where('destination', $load->destination);
+    //         });
+    //     }
+    // })
+    // ->with([
+    //     'supplierServices' => function ($query) use ($serviceType, $supplierId, $load) {
+    //         if (!$serviceType && !$supplierId) {
+    //             $query->whereHas('masterService', function ($subQuery) use ($load) {
+    //                 $subQuery->where('origin', $load->origin)
+    //                          ->where('destination', $load->destination);
+    //             });
+    //         } elseif ($serviceType) {
+    //             $query->whereHas('masterService', function ($subQuery) use ($serviceType) {
+    //                 $subQuery->where('service_type', $serviceType);
+    //             });
+    //         }
+    //     },
+    //     'supplierServices.masterService', // Include master service details
+    //     'supplierServices.clientServices' => function ($query) use ($clientId) {
+    //         // Filter client services for the current client
+    //         $query->where('client_id', $clientId)
+    //               ->select(['id', 'master_service_id', 'cost']);
+    //     }
+    // ])
+    // ->where('is_active', 1)
+    // ->get();
+
+    $suppliers = Supplier::when($supplierId, function ($query) use ($supplierId) {
+        // Filter by supplier ID
+        return $query->where('id', $supplierId);
+    })
+    ->when($serviceType, function ($query) use ($serviceType) {
+        // Filter by service type
+        return $query->whereHas('supplierServices.masterService', function ($subQuery) use ($serviceType) {
+            $subQuery->where('service_type', $serviceType);
+        });
+    })
+    ->when(!$supplierId && !$serviceType, function ($query) use ($load) {
+        // Filter by origin and destination if no specific supplier or service type is selected
+        return $query->whereHas('supplierServices.masterService', function ($subQuery) use ($load) {
+            $subQuery->where('origin', $load->origin)
+                     ->where('destination', $load->destination);
+        });
+    })
+    ->with([
+        'supplierServices' => function ($query) use ($supplierId, $serviceType, $load) {
+            if ($supplierId || $serviceType) {
+                // Filter by service type or supplier ID
+                if ($serviceType) {
+                    $query->whereHas('masterService', function ($subQuery) use ($serviceType) {
+                        $subQuery->where('service_type', $serviceType);
+                    });
                 }
+
+                if ($supplierId) {
+                    $query->where('supplier_id', $supplierId);
+                }
+            } else {
+                // Default load filter if no supplier ID or service type is provided
+                $query->whereHas('masterService', function ($subQuery) use ($load) {
+                    $subQuery->where('origin', $load->origin)
+                             ->where('destination', $load->destination);
+                });
             }
-    }, 'services.clientCosts' => function ($query) use ($load, $supplierId, $clientId) {
-        $query->where('client_id', $clientId);
-    }])->where('is_active', 1)
+        },
+        'supplierServices.masterService',
+        'supplierServices.clientServices' => function ($query) use ($clientId) {
+            // Filter by client ID for client costs
+            $query->where('client_id', $clientId);
+        }
+    ])
+    ->where('is_active', 1)
     ->get();
+    // dd($suppliers );
     }
     $deletedAssignedServices = AssignedService::onlyTrashed()
         ->where('load_id', $load->id)
-        ->with(['supplier', 'service'])
+        ->with(['supplier', 'service.masterService'])
         ->get();
 
     $assignedServices = AssignedService::where('load_id', $load->id)
-        ->with(['supplier', 'service'])
+        ->with(['supplier', 'service.masterService'])
         ->get();
 
     $allSuppliers = Supplier::with('services')->where('is_active', 1)->get();
@@ -637,12 +723,12 @@ class LoadController extends Controller
 
     public function assign(Request $request)
     {
-        // dd( $request);
         // Validate input
         $request->validate([
             'load_id' => 'required|exists:loads,id',
             'supplier_id' => 'required|exists:suppliers,id',
-            'service_id' => 'required|exists:services,id',
+            'service_id' => 'required|exists:master_services,id',
+            'supplier_service_id' => 'required|exists:supplier_services,id',
             'quantity' => 'nullable|numeric',
         ]);
 
@@ -651,20 +737,28 @@ class LoadController extends Controller
             'load_id' => $request->load_id, 
             'service_id' => $request->service_id
         ])->first();
+        // dd( $request->load_id, $request->supplier_id, $request->service_id);
 
         // if ($existingAssignment) {
         //     return redirect()->back()->with('error',  __('messages.This service is already assigned.'));
         // }
+
+
         $loadData = Load::findOrFail($request->load_id);
         // $cost = Service::where([
         //     'id' => $request->service_id,
         //     'supplier_id' => $request->supplier_id
         // ])->value('cost');
 
-        $cost = ClientCost::where([
+        // $cost = ClientCost::where([
+        //     'client_id' => $loadData->created_for,
+        //     'service_id' => $request->service_id
+        // ])->value('client_cost');
+
+        $cost = ClientService::where([
             'client_id' => $loadData->created_for,
-            'service_id' => $request->service_id
-        ])->value('client_cost');
+            'master_service_id' => $request->service_id
+        ])->value('cost');
 
         if (is_null($cost) || $cost == 0 || $cost == '0.00') {
             return redirect()->back()->with('error', __('messages.client_cost_missing'));
@@ -674,7 +768,7 @@ class LoadController extends Controller
         AssignedService::create([
             'load_id' => $request->load_id,
             'supplier_id' => $request->supplier_id,
-            'service_id' => $request->service_id,
+            'service_id' => $request->supplier_service_id,
             'quantity' => $request->quantity ?? 1,
             'cost' => $cost
         ]);
@@ -772,9 +866,11 @@ class LoadController extends Controller
                 Load::where('id', $load_id)->update(['status' => 'requested', 'supplier_id' => null]);
             }
 
+            // return back()->with('error',  __('messages.Service not found.'));
+            return redirect()->back()->with('message',  'Service unassigned successfully');
 
-        return back()->with('error',  __('messages.Service not found.'));
         }
+
     }
 
     public function changeStatus(Request $request, $encodedId)

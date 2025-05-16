@@ -40,7 +40,7 @@ class Supplier extends Model
 
 public function supplierServices()
 {
-    return $this->hasMany(SupplierService::class);
+    return $this->hasMany(SupplierService::class, 'supplier_id');
 }
 
 public function clientServices()

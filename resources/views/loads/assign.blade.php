@@ -141,32 +141,32 @@
             </tr> 
         @else
     @foreach ($suppliers as $supplier)
-        @foreach ($supplier->services as $service)
+        @foreach ($supplier->supplierServices as $service)
             <tr>
                 <td>{{ $supplier->dba }}</td>
             <td>{{ ucfirst($supplier->service_type) }}</td>
-                <td>{{ ucfirst($service->service_type) }}</td>
-                <td>{{ $service->service_name ?? 'NA' }}</td>
+                <td>{{ ucfirst($service->masterService->service_type) }}</td>
+                <td>{{ $service->masterService->service_name ?? 'NA' }}</td>
 
                 <td>
 
-                    @if ($service->service_type === 'warehouse')
+                    @if ($service->masterService->service_type === 'warehouse')
                       
-                     {{$service->street . ', ' . $service->city . ', ' . $service->state . ', ' . $service->zip . ', ' . $service->country}}
+                     {{$service->masterService->street . ', ' . $service->masterService->city . ', ' . $service->masterService->state . ', ' . $service->masterService->zip . ', ' . $service->masterService->country}}
 
                       @else
-                    {{ $service->origindata 
-                        ? ($service->origindata->name 
-                            ?: ($service->origindata->street . ', ' . $service->origindata->city . ', ' . $service->origindata->state . ', ' . $service->origindata->zip . ', ' . $service->origindata->country)) 
+                    {{ $service->masterService->origindata 
+                        ? ($service->masterService->origindata->name 
+                            ?: ($service->masterService->origindata->street . ', ' . $service->masterService->origindata->city . ', ' . $service->masterService->origindata->state . ', ' . $service->masterService->origindata->zip . ', ' . $service->masterService->origindata->country)) 
                         : 'N/A' }}  
                     →  
-                    {{ $service->destinationdata 
-                        ? ($service->destinationdata->name 
-                            ?: ($service->destinationdata->street . ', ' . $service->destinationdata->city . ', ' . $service->destinationdata->state . ', ' . $service->destinationdata->zip . ', ' . $service->destinationdata->country)) 
+                    {{ $service->masterService->destinationdata 
+                        ? ($service->masterService->destinationdata->name 
+                            ?: ($service->masterService->destinationdata->street . ', ' . $service->masterService->destinationdata->city . ', ' . $service->masterService->destinationdata->state . ', ' . $service->masterService->destinationdata->zip . ', ' . $service->masterService->destinationdata->country)) 
                         : 'N/A' }}
                       @endif
                 </td>
-                <td>{{ optional($service->clientCosts->first())->client_cost !== null ? '$' . number_format($service->clientCosts->first()->client_cost, 2) : '---' }}
+                <td>{{ optional($service->clientServices->first())->cost !== null ? '$' . number_format($service->clientServices->first()->cost, 2) : '---' }}
 
 
                 </td>
@@ -184,7 +184,8 @@
                         class="btn btn-primary btn_primary_color open-modal-btn" 
                         data-load_id="{{ $load->id }}"
                         data-supplier_id="{{ $supplier->id }}"
-                        data-service_id="{{ $service->id }}">
+                        data-supplier_service_id="{{ $service->id }}"
+                        data-service_id="{{ $service->masterService->id }}">
                         <i class="fas fa-plus"></i> 
                     </button>
                 </td>
@@ -221,38 +222,38 @@
                 <tr>
                     <td>{{ $assigned->supplier->dba }}</td>
                     <td>{{ ucfirst($assigned->supplier->service_type) }}</td>
-                    <td>{{ ucfirst($assigned->service->service_type) }}</td>
-                    <td>{{ $assigned->service->service_name?? 'NA' }}</td>
+                    <td>{{ ucfirst($assigned->service->masterService->service_type) }}</td>
+                    <td>{{ $assigned->service->masterService->service_name?? 'NA' }}</td>
                     <td>{{ $assigned->quantity }}</td>
                     <td>
-                    @if ($assigned->service->service_type === 'warehouse')
+                    @if ($assigned->service->masterService->service_type === 'warehouse')
                       
-                    {{$assigned->service->street . ', ' . $assigned->service->city . ', ' . $assigned->service->state . ', ' . $assigned->service->zip . ', ' . $assigned->service->country}}
+                    {{$assigned->service->masterService->street . ', ' . $assigned->service->masterService->city . ', ' . $assigned->service->masterService->state . ', ' . $assigned->service->masterService->zip . ', ' . $assigned->service->masterService->country}}
 
                         @else
-                        {{ $assigned->service->origindata 
-                        ? ($assigned->service->origindata->name 
-                            ?: ($assigned->service->origindata->street . ', ' . $assigned->service->origindata->city . ', ' . $assigned->service->origindata->state . ', ' . $assigned->service->origindata->zip . ', ' . $assigned->service->origindata->country)) 
+                        {{ $assigned->service->masterService->origindata 
+                        ? ($assigned->service->masterService->origindata->name 
+                            ?: ($assigned->service->masterService->origindata->street . ', ' . $assigned->service->masterService->origindata->city . ', ' . $assigned->service->masterService->origindata->state . ', ' . $assigned->service->masterService->origindata->zip . ', ' . $assigned->service->masterService->origindata->country)) 
                         : 'N/A' }}  
                     →  
-                    {{ $assigned->service->destinationdata 
-                        ? ($assigned->service->destinationdata->name 
-                            ?: ($assigned->service->destinationdata->street . ', ' . $assigned->service->destinationdata->city . ', ' . $assigned->service->destinationdata->state . ', ' . $assigned->service->destinationdata->zip . ', ' . $assigned->service->destinationdata->country)) 
+                    {{ $assigned->service->masterService->destinationdata 
+                        ? ($assigned->service->masterService->destinationdata->name 
+                            ?: ($assigned->service->masterService->destinationdata->street . ', ' . $assigned->service->masterService->destinationdata->city . ', ' . $assigned->service->masterService->destinationdata->state . ', ' . $assigned->service->masterService->destinationdata->zip . ', ' . $assigned->service->masterService->destinationdata->country)) 
                         : 'N/A' }}
                         @endif
                     </td>
                     <td>
-                        ${{ number_format(($assigned->cost ?? $assigned->service->cost) * $assigned->quantity, 2) }}  
+                        ${{ number_format(($assigned->cost ?? $assigned->cost) * $assigned->quantity, 2) }}  
                         @if($assigned->quantity > 1)
                             <br>
-                            <small class="text-muted">(${{ number_format($assigned->cost ?? $assigned->service->cost, 2) }} per unit)</small>
+                            <small class="text-muted">(${{ number_format($assigned->cost ?? $assigned->cost, 2) }} per unit)</small>
                         @endif
                     </td>
 
                     <td>
                         <button type="button" class="btn btn-danger" onclick="showDeleteModal({{ $assigned->id }})">
-        <i class="fas fa-times"></i>
-    </button>
+                            <i class="fas fa-times"></i>
+                        </button>
                     </td>
                 </tr>
             @endforeach
@@ -287,32 +288,29 @@
                     <td>{{ $assigned->supplier->dba }}</td>
                     <td>{{ ucfirst($assigned->supplier->service_type) }}</td>
 
-                    <td>{{ ucfirst($assigned->service->service_type) }}</td>
-                    <td>{{ $assigned->service->service_name?? 'NA' }}</td>
+                    <td>{{ ucfirst($assigned->service->masterService->service_type) }}</td>
+                    <td>{{ $assigned->service->masterService->service_name?? 'NA' }}</td>
 
                     <td>
-                        @if ($assigned->service->service_type === 'warehouse')
+                        @if ($assigned->service->masterService->service_type === 'warehouse')
                       
-                      {{$assigned->service->street . ', ' . $assigned->service->city . ', ' . $assigned->service->state . ', ' . $assigned->service->zip . ', ' . $assigned->service->country}}
+                      {{$assigned->service->masterService->street . ', ' . $assigned->service->masterService->city . ', ' . $assigned->service->masterService->state . ', ' . $assigned->service->masterService->zip . ', ' . $assigned->service->masterService->country}}
  
                        @else
-                       <!-- {{ $assigned->service->origindata ? $assigned->service->origindata->street . ', ' . $assigned->service->origindata->city . ', ' . $assigned->service->origindata->state . ', ' . $assigned->service->origindata->zip . ', ' . $assigned->service->origindata->country : 'N/A' }}
-                     →
-                     {{ $assigned->service->destinationdata ? $assigned->service->destinationdata->street . ', ' . $assigned->service->destinationdata->city . ', ' . $assigned->service->destinationdata->state . ', ' . $assigned->service->destinationdata->zip . ', ' . $assigned->service->destinationdata->country : 'N/A' }} -->
 
-                     {{ $assigned->service->origindata 
-    ? ($assigned->service->origindata->name 
-        ?: ($assigned->service->origindata->street . ', ' . $assigned->service->origindata->city . ', ' . $assigned->service->origindata->state . ', ' . $assigned->service->origindata->zip . ', ' . $assigned->service->origindata->country)) 
+                     {{ $assigned->service->masterService->origindata 
+    ? ($assigned->service->masterService->origindata->name 
+        ?: ($assigned->service->masterService->origindata->street . ', ' . $assigned->service->masterService->origindata->city . ', ' . $assigned->service->masterService->origindata->state . ', ' . $assigned->service->masterService->origindata->zip . ', ' . $assigned->service->masterService->origindata->country)) 
     : 'N/A' }}  
 →  
-{{ $assigned->service->destinationdata 
-    ? ($assigned->service->destinationdata->name 
-        ?: ($assigned->service->destinationdata->street . ', ' . $assigned->service->destinationdata->city . ', ' . $assigned->service->destinationdata->state . ', ' . $assigned->service->destinationdata->zip . ', ' . $assigned->service->destinationdata->country)) 
+{{ $assigned->service->masterService->destinationdata 
+    ? ($assigned->service->masterService->destinationdata->name 
+        ?: ($assigned->service->masterService->destinationdata->street . ', ' . $assigned->service->masterService->destinationdata->city . ', ' . $assigned->service->masterService->destinationdata->state . ', ' . $assigned->service->masterService->destinationdata->zip . ', ' . $assigned->service->masterService->destinationdata->country)) 
     : 'N/A' }}
 
                        @endif
                     </td>
-                    <td>${{ number_format($assigned->cost ?? $assigned->service->cost, 2) }}</td>
+                    <td>${{ number_format($assigned->cost ?? $assigned->cost, 2) }}</td>
                     <td>{{ $assigned->cancel_reason }}</td>
 
                 </tr>
@@ -375,6 +373,7 @@
                     <input type="hidden" name="load_id" id="modal_load_id">
                     <input type="hidden" name="supplier_id" id="modal_supplier_id">
                     <input type="hidden" name="service_id" id="modal_service_id">
+                    <input type="hidden" name="supplier_service_id" id="modal_supplier_service_id">
                     
                     <div class="form-group">
                         <label for="quantity" class="form-label">{{ __('messages.quantity') }}</label>
@@ -487,11 +486,13 @@ $(document).on('click', '.open-modal-btn', function () {
     let loadId = $(this).data('load_id');
     let supplierId = $(this).data('supplier_id');
     let serviceId = $(this).data('service_id');
-
+    let supplierserviceId = $(this).data('supplier_service_id');
+    
     // Set modal input values
     $('#modal_load_id').val(loadId);
     $('#modal_supplier_id').val(supplierId);
     $('#modal_service_id').val(serviceId);
+    $('#modal_supplier_service_id').val(supplierserviceId);
 
     // Manually open the modal
     $('#assignServiceModalN').modal('show');

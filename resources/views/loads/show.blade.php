@@ -84,22 +84,22 @@
                     @if(!isClientUser())
                     <td>{{ $assignedService->supplier->dba ?? $assignedService->supplier->company_name }}</td>
                     @endif
-                    <td>{{ $assignedService->service->service_name ?? 'NA' }}</td>
+                    <td>{{ $assignedService->service->masterService->service_name ?? 'NA' }}</td>
                     <td>
-                    {{ $assignedService->service->origindata 
-                        ? ($assignedService->service->origindata->name 
-                            ?: ($assignedService->service->origindata->street . ', ' . $assignedService->service->origindata->city . ', ' . $assignedService->service->origindata->state . ', ' . $assignedService->service->origindata->zip . ', ' . $assignedService->service->origindata->country)) 
+                    {{ $assignedService->service->masterService->origindata 
+                        ? ($assignedService->service->masterService->origindata->name 
+                            ?: ($assignedService->service->masterService->origindata->street . ', ' . $assignedService->service->masterService->origindata->city . ', ' . $assignedService->service->masterService->origindata->state . ', ' . $assignedService->service->masterService->origindata->zip . ', ' . $assignedService->service->masterService->origindata->country)) 
                         : 'N/A' }}  
                     →  
-                    {{ $assignedService->service->destinationdata 
-                        ? ($assignedService->service->destinationdata->name 
-                            ?: ($assignedService->service->destinationdata->street . ', ' . $assignedService->service->destinationdata->city . ', ' . $assignedService->service->destinationdata->state . ', ' . $assignedService->service->destinationdata->zip . ', ' . $assignedService->service->destinationdata->country)) 
+                    {{ $assignedService->service->masterService->destinationdata 
+                        ? ($assignedService->service->masterService->destinationdata->name 
+                            ?: ($assignedService->service->masterService->destinationdata->street . ', ' . $assignedService->service->masterService->destinationdata->city . ', ' . $assignedService->service->masterService->destinationdata->state . ', ' . $assignedService->service->masterService->destinationdata->zip . ', ' . $assignedService->service->masterService->destinationdata->country)) 
                         : 'N/A' }}
 
 
                     </td>
                     @if(!isClientUser())
-                    <td>${{ number_format($assignedService->service->cost, 2) }}</td>
+                    <td>${{ number_format($assignedService->cost, 2) }}</td>
                     @endif
                 </tr>
             @empty
