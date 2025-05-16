@@ -18,8 +18,7 @@ use Carbon\Carbon;
 use App\Models\UserActivityLog;
 use App\Models\ClientCost;
 use App\Models\ClientService;
-
-
+use App\Models\SupplierService;
 
 class LoadController extends Controller
 {
@@ -378,7 +377,10 @@ class LoadController extends Controller
     {
         $en = $id;
         $de = decode_id($id);
-        $load = Load::with(['supplierdata', 'assignedServices.supplier', 'assignedServices.service', 'origindata', 'destinationdata',])->findOrFail($de);
+        // $assignedServices = AssignedService::where('load_id', $load->id)
+        // ->with(['supplier', 'service.masterService'])
+        // ->get();
+        $load = Load::with(['supplierdata', 'assignedServices.supplier', 'assignedServices.service', 'assignedServices.service.masterService', 'origindata', 'destinationdata',])->findOrFail($de);
 
         return view('loads.show', compact('load'));
     }
@@ -737,23 +739,17 @@ class LoadController extends Controller
             'load_id' => $request->load_id, 
             'service_id' => $request->service_id
         ])->first();
-        // dd( $request->load_id, $request->supplier_id, $request->service_id);
 
-        // if ($existingAssignment) {
-        //     return redirect()->back()->with('error',  __('messages.This service is already assigned.'));
-        // }
+        if ($existingAssignment) {
+            return redirect()->back()->with('error',  __('messages.This service is already assigned.'));
+        }
 
 
         $loadData = Load::findOrFail($request->load_id);
-        // $cost = Service::where([
-        //     'id' => $request->service_id,
-        //     'supplier_id' => $request->supplier_id
-        // ])->value('cost');
-
-        // $cost = ClientCost::where([
-        //     'client_id' => $loadData->created_for,
-        //     'service_id' => $request->service_id
-        // ])->value('client_cost');
+        
+        $supplier_cost = SupplierService::where([
+            'id' => $request->supplier_service_id,
+        ])->value('cost');
 
         $cost = ClientService::where([
             'client_id' => $loadData->created_for,
@@ -770,7 +766,9 @@ class LoadController extends Controller
             'supplier_id' => $request->supplier_id,
             'service_id' => $request->supplier_service_id,
             'quantity' => $request->quantity ?? 1,
-            'cost' => $cost
+            'cost' => $cost,
+            'supplier_cost' => $supplier_cost,
+
         ]);
         $load = Load::where('id', $request->load_id)->update(['status' => 'assigned']);
         $supplier_detail = Supplier::findOrFail($request->supplier_id);

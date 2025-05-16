@@ -6,7 +6,7 @@
 @section('content')
 <div class="main_cont_outer">
     <div class="create_btn">
-        <a  class="btn btn-primary create-button btn_primary_color"
+        <a  class="btn btn-primary create-button btn_primary_color" href="{{ route('master-services.index') }}"
             id="createUser"><i class="bi bi-arrow-left-circle-fill"></i>  {{ __('messages.Back') }} </a>
 
     </div>

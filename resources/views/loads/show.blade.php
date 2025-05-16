@@ -86,17 +86,23 @@
                     @endif
                     <td>{{ $assignedService->service->masterService->service_name ?? 'NA' }}</td>
                     <td>
-                    {{ $assignedService->service->masterService->origindata 
-                        ? ($assignedService->service->masterService->origindata->name 
-                            ?: ($assignedService->service->masterService->origindata->street . ', ' . $assignedService->service->masterService->origindata->city . ', ' . $assignedService->service->masterService->origindata->state . ', ' . $assignedService->service->masterService->origindata->zip . ', ' . $assignedService->service->masterService->origindata->country)) 
-                        : 'N/A' }}  
-                    →  
-                    {{ $assignedService->service->masterService->destinationdata 
-                        ? ($assignedService->service->masterService->destinationdata->name 
-                            ?: ($assignedService->service->masterService->destinationdata->street . ', ' . $assignedService->service->masterService->destinationdata->city . ', ' . $assignedService->service->masterService->destinationdata->state . ', ' . $assignedService->service->masterService->destinationdata->zip . ', ' . $assignedService->service->masterService->destinationdata->country)) 
-                        : 'N/A' }}
+                        @if ($assignedService->service->masterService->service_type === 'warehouse')
+                      
+                      {{$assignedService->service->masterService->street . ', ' . $assignedService->service->masterService->city . ', ' . $assignedService->service->masterService->state . ', ' . $assignedService->service->masterService->zip . ', ' . $assignedService->service->masterService->country}}
+ 
+                       @else
 
+                     {{ $assignedService->service->masterService->origindata 
+                    ? ($assignedService->service->masterService->origindata->name 
+                        ?: ($assignedService->service->masterService->origindata->street . ', ' . $assignedService->service->masterService->origindata->city . ', ' . $assignedService->service->masterService->origindata->state . ', ' . $assignedService->service->masterService->origindata->zip . ', ' . $assignedService->service->masterService->origindata->country)) 
+                    : 'N/A' }}  
+                →  
+                {{ $assignedService->service->masterService->destinationdata 
+                    ? ($assignedService->service->masterService->destinationdata->name 
+                        ?: ($assignedService->service->masterService->destinationdata->street . ', ' . $assignedService->service->masterService->destinationdata->city . ', ' . $assignedService->service->masterService->destinationdata->state . ', ' . $assignedService->service->masterService->destinationdata->zip . ', ' . $assignedService->service->masterService->destinationdata->country)) 
+                    : 'N/A' }}
 
+                       @endif
                     </td>
                     @if(!isClientUser())
                     <td>${{ number_format($assignedService->cost, 2) }}</td>

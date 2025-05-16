@@ -12,7 +12,7 @@ class AssignedService extends Model
     use HasFactory, SoftDeletes;
 
 
-    protected $fillable = ['load_id', 'supplier_id', 'service_id', 'cancel_reason', 'quantity', 'cost'];
+    protected $fillable = ['load_id', 'supplier_id', 'service_id', 'cancel_reason', 'quantity', 'cost', 'supplier_cost'];
 
     protected $dates = ['deleted_at'];
 

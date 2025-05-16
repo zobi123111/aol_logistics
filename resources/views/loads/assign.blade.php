@@ -299,14 +299,14 @@
                        @else
 
                      {{ $assigned->service->masterService->origindata 
-    ? ($assigned->service->masterService->origindata->name 
-        ?: ($assigned->service->masterService->origindata->street . ', ' . $assigned->service->masterService->origindata->city . ', ' . $assigned->service->masterService->origindata->state . ', ' . $assigned->service->masterService->origindata->zip . ', ' . $assigned->service->masterService->origindata->country)) 
-    : 'N/A' }}  
-→  
-{{ $assigned->service->masterService->destinationdata 
-    ? ($assigned->service->masterService->destinationdata->name 
-        ?: ($assigned->service->masterService->destinationdata->street . ', ' . $assigned->service->masterService->destinationdata->city . ', ' . $assigned->service->masterService->destinationdata->state . ', ' . $assigned->service->masterService->destinationdata->zip . ', ' . $assigned->service->masterService->destinationdata->country)) 
-    : 'N/A' }}
+                    ? ($assigned->service->masterService->origindata->name 
+                        ?: ($assigned->service->masterService->origindata->street . ', ' . $assigned->service->masterService->origindata->city . ', ' . $assigned->service->masterService->origindata->state . ', ' . $assigned->service->masterService->origindata->zip . ', ' . $assigned->service->masterService->origindata->country)) 
+                    : 'N/A' }}  
+                →  
+                {{ $assigned->service->masterService->destinationdata 
+                    ? ($assigned->service->masterService->destinationdata->name 
+                        ?: ($assigned->service->masterService->destinationdata->street . ', ' . $assigned->service->masterService->destinationdata->city . ', ' . $assigned->service->masterService->destinationdata->state . ', ' . $assigned->service->masterService->destinationdata->zip . ', ' . $assigned->service->masterService->destinationdata->country)) 
+                    : 'N/A' }}
 
                        @endif
                     </td>
