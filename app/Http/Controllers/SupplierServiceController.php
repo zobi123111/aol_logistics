@@ -49,7 +49,7 @@ public function index(Request $request, $supplierId)
             //     return $service->service_date->format('Y-m-d');
             // })
             ->addColumn('actions', function ($service) use ($supplier) {
-                return '<a href="' . route('supplier_services.edit', [encode_id($supplier->id), encode_id($service->id)]) . '" class="text-primary me-2">
+                return '<a href="' . route('supplier_services.edit', [encode_id($supplier->id), encode_id($service->id)]) . '" class="table_icon_style blue_icon_color">
                             <i class="fa fa-edit"></i>
                         </a>
                        <i class="fa-solid fa-trash delete-icon table_icon_style blue_icon_color"

@@ -480,6 +480,5 @@ return [
     'future_cost' => 'Costo Futuro',
     'add_service' => 'Agregar Servicio',
     'actions' => 'Acciones',
-
-
+    'Service cannot be deleted because it is currently in use.' => 'El servicio no se puede eliminar porque está en uso.',
 ];

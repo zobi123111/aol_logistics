@@ -5,7 +5,8 @@ use App\Models\Service;
 use App\Models\MasterService;
 use App\Models\Origin;
 use App\Models\Destination;
-use App\Models\Supplier;
+use App\Models\SupplierService;
+use App\Models\ClientService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
@@ -35,7 +36,7 @@ class MasterServiceController extends Controller
                     <a href="' . $editUrl . '" class="table_icon_style blue_icon_color">
                         <i class="fa fa-edit"></i>
                     </a>
-                    <a href="#" class="delete-icon table_icon_style red_icon_color" data-service-id="' . $deleteId . '">
+                    <a href="#" class="delete-icon table_icon_style blue_icon_color" data-service-id="' . $deleteId . '">
                         <i class="fa-solid fa-trash"></i>
                     </a>
                 ';
@@ -180,6 +181,13 @@ class MasterServiceController extends Controller
     {
         $serviceId = decode_id($serviceId);
         $service = MasterService::findOrFail($serviceId);
+        // Check if the service is used in SupplierService or ClientService
+        $isUsed = SupplierService::where('master_service_id', $serviceId)->exists() || 
+        ClientService::where('master_service_id', $serviceId)->exists();
+
+        if ($isUsed) {
+        return redirect()->route('master-services.index')->with('error', __('messages.Service cannot be deleted because it is currently in use.'));
+        }
         $service->delete();
 
         return redirect()->route('master-services.index')->with('message', __('messages.Service deleted successfully'));

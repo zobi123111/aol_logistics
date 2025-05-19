@@ -81,26 +81,28 @@
                         </div>
                     @enderror
                 </div>
+                <fieldset class="form-group mb-3 border p-3 rounded">
+                    <legend class="text-center"> {{ __('messages.set_future_cost') }}</legend>
+                    <div class="form-group mb-3">
+                        <label for="schedule-cost" class="form-label">{{ __('messages.future_cost') }} </label>
+                        <input type="text" name="schedule_cost" id="schedule-cost" class="form-control" value="{{ old('schedule_cost') }}">
+                        @error('schedule_cost')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="service-date" class="form-label">{{ __('messages.effective_date') }} </label>
+                        <input type="date" name="service_date" class="form-control" value="{{ old('service_date') }}">
+                        @error('service_date')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
 
-                <div class="form-group mb-3">
-                    <label for="service-date" class="form-label">{{ __('messages.effective_date') }} </label>
-                    <input type="date" name="service_date" class="form-control" value="{{ old('service_date') }}">
-                    @error('service_date')
-                        <div class="text-danger">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-
-                <div class="form-group mb-3">
-                    <label for="schedule-cost" class="form-label">{{ __('messages.future_cost') }} </label>
-                    <input type="text" name="schedule_cost" id="schedule-cost" class="form-control" value="{{ old('schedule_cost') }}">
-                    @error('schedule_cost')
-                        <div class="text-danger">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
+                </fieldset>
 
                 <button type="submit" class="btn btn-primary btn_primary_color"> {{ __('messages.add_service') }} </button>
             </form>

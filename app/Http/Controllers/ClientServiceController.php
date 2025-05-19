@@ -46,7 +46,7 @@ class ClientServiceController extends Controller
                 //     return '$' . number_format($service->schedule_cost, 2);
                 // })
                 ->addColumn('actions', function ($service) use ($client) {
-                    return '<a href="' . route('client_services.edit', [encode_id($client->id), encode_id($service->id)]) . '" class="text-primary me-2">
+                    return '<a href="' . route('client_services.edit', [encode_id($client->id), encode_id($service->id)]) . '" class="table_icon_style blue_icon_color">
                                 <i class="fa fa-edit"></i>
                             </a>
                            <i class="fa-solid fa-trash delete-icon table_icon_style blue_icon_color"

@@ -17,6 +17,13 @@
         {{ session()->get('message') }}
     </div>
     @endif
+
+    @if(session()->has('error'))
+    <div class="alert alert-danger fade show" role="alert">
+        <i class="bi bi-x-circle me-1"></i>
+        {{ session()->get('error') }}
+    </div>
+    @endif
     <table class="table mt-3 respo_table" id="servicesTable">
         <thead>
             <tr>
