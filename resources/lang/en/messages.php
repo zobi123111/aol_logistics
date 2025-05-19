@@ -480,6 +480,7 @@ return [
     'add_service' => 'Add Service',
     'actions' => 'Actions',
     'Service cannot be deleted because it is currently in use.' => 'Service cannot be deleted because it is currently in use.',
+    'set_future_cost' => 'Set Future Cost',
 
 
 ];
