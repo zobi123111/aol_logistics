@@ -735,10 +735,11 @@ class LoadController extends Controller
         ]);
 
         // Check if service is already assigned to the load
-        $existingAssignment = AssignedService::where([
-            'load_id' => $request->load_id, 
-            'service_id' => $request->service_id
-        ])->first();
+       $existingAssignment = AssignedService::where('load_id', $request->load_id)
+        ->where('service_id', $request->service_id)
+        ->whereNotNull('cancel_reason')
+        ->first();
+
 
         if ($existingAssignment) {
             return redirect()->back()->with('error',  __('messages.This service is already assigned.'));

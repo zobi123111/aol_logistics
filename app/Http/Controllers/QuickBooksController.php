@@ -565,13 +565,14 @@ class QuickBooksController extends Controller
             Session::flash('message', 'You dont have permission to access this page');
             return redirect()->route('dashboard')->with('error', 'Access Denied!');
         }
+        $supplierId = auth()->user()->supplier_id;
 
-        $assignedServices = AssignedService::where('load_id', $de)
-            // ->whereHas('supplier', function ($query) {
-            //     $query->where('user_id', auth()->id());
-            // })
-            ->with(['supplier', 'service.masterService'])
-            ->get();
+       $assignedServices = AssignedService::where('load_id', $de)
+        ->whereHas('supplier', function ($query) use ($supplierId) {
+            $query->where('id', $supplierId);
+        })
+        ->get();
+
         return view('quickbooks.upload_bill', compact('assignedServices', 'load_id'));
     }
 
@@ -962,6 +963,8 @@ class QuickBooksController extends Controller
                 })
                 ->with(['supplier', 'service.masterService']) // Eager load the related 'supplier' and 'service' models
                 ->get();
+
+
             $lines = [];
 
             foreach ($assignedServices as $assignedService) {
