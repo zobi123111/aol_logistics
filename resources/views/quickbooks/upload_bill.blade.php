@@ -34,31 +34,31 @@
                 <tr>
                     <!-- <td>{{ $assigned->supplier->company_name }}</td> -->
                     <td>{{ $assigned->supplier->service_type }}</td>
-                    <td>{{ $assigned->service->service_type }}</td>
-                    <td>{{ $assigned->service->service_name?? 'NA' }}</td>
+                    <td>{{ $assigned->service->masterService->service_type }}</td>
+                    <td>{{ $assigned->service->masterService->service_name?? 'NA' }}</td>
                     <td>{{ $assigned->quantity }}</td>
                     <td>
-                    @if ($assigned->service->service_type === 'warehouse')
+                    @if ($assigned->service->masterService->service_type === 'warehouse')
                       
-                    {{$assigned->service->street . ', ' . $assigned->service->city . ', ' . $assigned->service->state . ', ' . $assigned->service->zip . ', ' . $assigned->service->country}}
+                    {{$assigned->service->masterService->street . ', ' . $assigned->service->masterService->city . ', ' . $assigned->service->masterService->state . ', ' . $assigned->service->masterService->zip . ', ' . $assigned->service->masterService->country}}
 
                         @else
-                        {{ $assigned->service->origindata 
-                        ? ($assigned->service->origindata->name 
-                            ?: ($assigned->service->origindata->street . ', ' . $assigned->service->origindata->city . ', ' . $assigned->service->origindata->state . ', ' . $assigned->service->origindata->zip . ', ' . $assigned->service->origindata->country)) 
+                        {{ $assigned->service->masterService->origindata 
+                        ? ($assigned->service->masterService->origindata->name 
+                            ?: ($assigned->service->masterService->origindata->street . ', ' . $assigned->service->masterService->origindata->city . ', ' . $assigned->service->masterService->origindata->state . ', ' . $assigned->service->masterService->origindata->zip . ', ' . $assigned->service->masterService->origindata->country)) 
                         : 'N/A' }}  
                     →  
-                    {{ $assigned->service->destinationdata 
-                        ? ($assigned->service->destinationdata->name 
-                            ?: ($assigned->service->destinationdata->street . ', ' . $assigned->service->destinationdata->city . ', ' . $assigned->service->destinationdata->state . ', ' . $assigned->service->destinationdata->zip . ', ' . $assigned->service->destinationdata->country)) 
+                    {{ $assigned->service->masterService->destinationdata 
+                        ? ($assigned->service->masterService->destinationdata->name 
+                            ?: ($assigned->service->masterService->destinationdata->street . ', ' . $assigned->service->masterService->destinationdata->city . ', ' . $assigned->service->masterService->destinationdata->state . ', ' . $assigned->service->masterService->destinationdata->zip . ', ' . $assigned->service->masterService->destinationdata->country)) 
                         : 'N/A' }}
                         @endif
                     </td>
                     <td>
-                        ${{ number_format(($assigned->cost ?? $assigned->service->cost) * $assigned->quantity, 2) }}  
+                        ${{ number_format(($assigned->supplier_cost ?? $assigned->service->masterService->supplier_cost) * $assigned->quantity, 2) }}  
                         @if($assigned->quantity > 1)
                             <br>
-                            <small class="text-muted">(${{ number_format($assigned->cost ?? $assigned->service->cost, 2) }} per unit)</small>
+                            <small class="text-muted">(${{ number_format($assigned->supplier_cost ?? $assigned->supplier_cost, 2) }} per unit)</small>
                         @endif
                     </td>
                 </tr>

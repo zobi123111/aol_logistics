@@ -30,7 +30,7 @@
         </a>
     </li>   
     <li class="nav-item">
-        <a class="nav-link {{ Request::routeIs('services.index') ? 'active' : '' }}" href="{{ route('services.index', encode_id(Auth::user()->supplier_id)) }}">
+        <a class="nav-link {{ Request::routeIs('supplier_services.index') ? 'active' : '' }}" href="{{ route('supplier_services.index', encode_id(Auth::user()->supplier_id)) }}">
         <i class="bi bi-gear"></i> 
             <span>  {{ __('messages.Supplier Services') }}  </span>
         </a>

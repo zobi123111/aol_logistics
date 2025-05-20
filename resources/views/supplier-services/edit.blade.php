@@ -101,7 +101,7 @@
 </div>
     <div class="form-group mb-3">
         <label for="service-date" class="form-label">{{ __('messages.effective_date') }} </label>
-        <input type="date" name="service_date" class="form-control" value="{{ old('service_date', optional($supplierService->service_date)->format('Y-m-d')) }}" required>
+        <input type="date" name="service_date" class="form-control" value="{{ old('service_date', optional($supplierService->service_date)->format('Y-m-d')) }}">
         @error('service_date')
             <div class="text-danger">
                 {{ $message }}

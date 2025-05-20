@@ -570,7 +570,7 @@ class QuickBooksController extends Controller
             // ->whereHas('supplier', function ($query) {
             //     $query->where('user_id', auth()->id());
             // })
-            ->with(['supplier', 'service'])
+            ->with(['supplier', 'service.masterService'])
             ->get();
         return view('quickbooks.upload_bill', compact('assignedServices', 'load_id'));
     }
@@ -960,14 +960,14 @@ class QuickBooksController extends Controller
                 ->whereHas('supplier', function ($query) use ($supplier_id) {
                     $query->where('id', $supplier_id); // Filter based on the user_id of the supplier
                 })
-                ->with(['supplier', 'service']) // Eager load the related 'supplier' and 'service' models
+                ->with(['supplier', 'service.masterService']) // Eager load the related 'supplier' and 'service' models
                 ->get();
             $lines = [];
 
             foreach ($assignedServices as $assignedService) {
-                $serviceDescription = 'This is for ' . ($assignedService->service->service_type ?? 'freight'); 
-                $amount = ($assignedService->cost ?? $assignedService->service->cost) * ($assignedService->quantity ?? 1);  
-                $unitPrice = $assignedService->cost ?? $assignedService->service->cost; 
+                $serviceDescription = 'This is for ' . ($assignedService->service->masterService->service_type ?? 'freight'); 
+                $amount = ($assignedService->supplier_cost ) * ($assignedService->quantity ?? 1);  
+                $unitPrice = $assignedService->supplier_cost ; 
                 $quantity = $assignedService->quantity;  
 
                 // Build the Line data dynamically
