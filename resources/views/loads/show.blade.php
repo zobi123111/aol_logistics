@@ -34,7 +34,8 @@
             <p><strong> {{ __('messages.Destination') }} :</strong> {{$load->destinationdata
                     ? ($load->destinationdata->name ?: ($load->destinationdata->street . ', ' . $load->destinationdata->city . ', ' . $load->destinationdata->state . ', ' . $load->destinationdata->country))
                     : 'N/A' }}</p>
-            <p><strong> {{ __('messages.Service Type') }} :</strong> {{ $load->service_type }}</p>
+ <p><strong>{{ __('messages.Client') }} :</strong> {{ $load->creatorfor->business_name }}</p>
+                    <p><strong> {{ __('messages.Service Type') }} :</strong> {{ $load->service_type }}</p>
             @if(!isClientUser())
             <p><strong> {{ __('messages.Payer') }} :</strong> {{ $payerOptions[$load->payer] ?? 'N/A' }}</p>
             @endif
@@ -50,7 +51,7 @@
             <p><strong> {{ __('messages.Hazmat') }} :</strong> {!! $load->is_hazmat ? '<span class="badge bg-danger">Yes</span>' : '<span class="badge bg-secondary">No</span>' !!}</p>
             <p><strong> {{ __('messages.Inbond') }} :</strong> {!! $load->is_inbond ? '<span class="badge bg-warning">Yes</span>' : '<span class="badge bg-secondary">No</span>' !!}</p>
             <p><strong> {{ __('messages.Inspection') }} :</strong> {!! $load->inspection ? '<span class="badge bg-warning">Yes</span>' : '<span class="badge bg-secondary">No</span>' !!}</p>
-
+            <p><strong>{{ __('messages.Notes') }} :</strong> {{ $load->notes?? 'N/A' }}</p>
             <p><strong> {{ __('messages.Status') }} :</strong> 
                 <span class="badge 
                     {{ $load->status == 'Pending' ? 'bg-warning' : ($load->status == 'Completed' ? 'bg-success' : 'bg-secondary') }}">

@@ -69,8 +69,8 @@ class LoadController extends Controller
                     ->orWhereHas('creator', function ($q3) use ($user) {
                         $q3->where('supplier_id', $user->supplier_id);
                     })
-                    ->orWhere('created_by', $user->id)
-                    ->orWhere('status', 'requested');
+                    ->orWhere('created_by', $user->id);
+                    // ->orWhere('status', 'requested');
                 })
                 ->where(function ($q) {
                         $q->whereNull('schedule')
@@ -207,15 +207,6 @@ class LoadController extends Controller
         ->selectRaw('DISTINCT created_by')
         ->whereNotNull('created_by') 
         ->get();
-
-        // $creatorsclients = Load::with('creator.client') 
-        // ->whereHas('creator', function ($query) {
-        //     $query->whereNotNull('client_id')
-        //         ->orWhere('is_client', 1);
-        // })
-        // ->selectRaw('DISTINCT created_by')
-        // ->whereNotNull('created_by')
-        // ->get();
 
         $creatorsclients = Load::with('creatorfor')
         ->selectRaw('DISTINCT created_for')
@@ -932,7 +923,13 @@ class LoadController extends Controller
     {
         $id = decode_id($id); 
         $load = Load::findOrFail($id);
-        return view('loads.edit_truck_details', compact('load'));
+       $assignedSuppliers = AssignedService::with('supplier')
+        ->where('load_id', $id)
+        ->get()
+        ->unique('supplier_id')
+        ->values(); 
+            // dd( $assignedSuppliers); 
+        return view('loads.edit_truck_details', compact('load', 'assignedSuppliers'));
     }
 
     public function updateTruckDetails(Request $request, $id)
@@ -942,12 +939,14 @@ class LoadController extends Controller
             'driver_name' => 'nullable|string|max:255',
             'driver_contact_no' => 'nullable|string|max:20',
             'documents.*' => 'file|mimes:pdf,jpg,png|max:2048',
+            'supplier_id' => 'nullable|exists:suppliers,id',
         ]);
 
         $load = Load::findOrFail($id);
         $load->truck_number = $request->truck_number;
         $load->driver_name = $request->driver_name;
         $load->driver_contact_no = $request->driver_contact_no;
+        $load->truck_supplier_id = $request->supplier_id;
         $load->save();
 
         if ($request->hasFile('documents')) {

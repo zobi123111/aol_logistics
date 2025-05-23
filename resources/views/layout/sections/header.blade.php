@@ -52,8 +52,23 @@
                     <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
                         <img src="{{ Auth::user()->profile_photo ? asset('storage/' . Auth::user()->profile_photo) : asset('assets/img/dummy.png') }}"
                             alt="Profile" class="rounded-circle">
-                        <span class="d-none d-md-block dropdown-toggle ps-2">{{ Auth::user()->fname }}</span>
-                    </a>
+                    @php
+                        $fullName = Auth::user()->fname;
+                        $maxLength = 8;
+                        if (strlen($fullName) > $maxLength) {
+                            $truncated = substr($fullName, 0, $maxLength) . '...';
+                        } else {
+                            $truncated = $fullName;
+                        }
+                    @endphp
+
+                    <span 
+                    class="d-none d-md-block dropdown-toggle ps-2" 
+                    style="max-width: 150px; display: inline-block; vertical-align: middle; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
+                    data-bs-toggle="tooltip" 
+                    title="{{ $fullName }}">
+                    {{ $truncated }}
+                    </span>    
                     <!-- End Profile Image Icon -->
         
                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">

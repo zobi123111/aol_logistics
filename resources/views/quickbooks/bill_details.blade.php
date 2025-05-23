@@ -20,8 +20,6 @@
 
     <div class="card card-container">
     <div class="card-body">
-    <!-- <h2>QuickBooks Invoices for Load #</h2>
-      -->
       <h2>QuickBooks Bill Details</h2>
 
 @if(isset($error))

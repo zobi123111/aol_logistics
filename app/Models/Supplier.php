@@ -38,15 +38,20 @@ class Supplier extends Model
     }
 
 
-public function supplierServices()
-{
-    return $this->hasMany(SupplierService::class, 'supplier_id');
-}
+    public function supplierServices()
+    {
+        return $this->hasMany(SupplierService::class, 'supplier_id');
+    }
 
-public function clientServices()
-{
-    return $this->hasMany(ClientService::class);
-}
+    public function clientServices()
+    {
+        return $this->hasMany(ClientService::class);
+    }
+
+    public function truckLoads()
+    {
+        return $this->hasMany(Load::class, 'truck_supplier_id');
+    }
 
     
 }

@@ -19,7 +19,6 @@
         {{ session()->get('message') }}
     </div>
     @endif
-    @if( isAolUser())
     <div class="filter-container">
         <div class="row mb-0">
             <div class="col-md-3">
@@ -80,7 +79,6 @@
     <button id="reset_filters" class="btn btn-secondary">Reset</button></div>
 </div>
     </div>
-    @endif
 
     <!-- <div style="overflow-x: auto;"> -->
         <table class="display mt-3 respo_table load_table_dis" id="loads">
@@ -100,8 +98,8 @@
                     <th> {{ __('messages.Customer PO') }} </th>
                     <th> {{ __('messages.HazMat') }} </th>
                     <th> {{ __('messages.Inbond') }} </th>
+                    <th> {{ __('messages.Inspection') }} </th>
                     <th> {{ __('messages.Status') }} </th>
-                    <!-- <th> {{ __('messages.Supplier Company') }} </th> -->
                     <th> {{ __('messages.Created By') }} </th>
                     <th width="160px">{{ __('messages.Actions') }} </th>
                     <th> {{ __('messages.Assign') }} </th>
@@ -259,7 +257,8 @@
                 { data: 'customer_po', name: 'customer_po' },
                 { data: 'is_hazmat', name: 'is_hazmat', orderable: false, searchable: false },
                 { data: 'is_inbond', name: 'is_inbond', orderable: false, searchable: false },
-                { data: 'status', name: 'status' },
+                { data: 'inspection', name: 'inspection', orderable: false, searchable: false },
+                   { data: 'status', name: 'status' },
                 // { data: 'supplier_company_name', name: 'supplier_company_name' },
                 { data: 'created_by_user', name: 'created_by' },
                 { data: 'actions', name: 'actions', orderable: false, searchable: false },
@@ -307,6 +306,13 @@
                     className: 'text-center',
                     render: function(data, type, row) {
                         return '<input type="checkbox" ' + (row.is_inbond ? 'checked' : '') + ' disabled>';
+                    }
+                },
+                  {
+                    targets: 11, 
+                    className: 'text-center',
+                    render: function(data, type, row) {
+                        return '<input type="checkbox" ' + (row.inspection ? 'checked' : '') + ' disabled>';
                     }
                 },
                 {

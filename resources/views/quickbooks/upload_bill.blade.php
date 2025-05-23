@@ -2,7 +2,11 @@
 @section('sub-title','Invoice')
 @extends('layout.app')
 @section('content')
-<div class="container">
+<div class="main_cont_outer">
+       <div class="create_btn">
+        <a href="{{ route('loads.index') }}" class="btn btn-primary create-button btn_primary_color"
+            id="createUser"><i class="bi bi-arrow-left-circle-fill"></i> {{ __('messages.Back') }}</a>
+    </div>
     <h3 class="services-text">{{ __('messages.Assigned Services') }} </h3> 
     @if(session()->has('message'))
     <div id="successMessage" class="alert alert-success fade show" role="alert">
@@ -86,7 +90,7 @@
                 </div>
             @enderror
         </div>
-        <button type="submit" class="btn btn-primary">{{ __('messages.upload_bill') }}</button>
+        <button type="submit" class="btn btn-primary btn_primary_color">{{ __('messages.upload_bill') }}</button>
     </form>
 </div>
 @endsection

@@ -31,6 +31,22 @@
             <span class="text-danger">{{ $message }}</span>
         @enderror
     </div>
+    <div class="mb-3">
+        <label for="supplier_id" class="form-label">{{ __('messages.supplier') }}</label>
+        <select name="supplier_id" class="form-select">
+            <option value="">{{ __('messages.supplier') }}</option>
+           @foreach($assignedSuppliers as $assigned)
+            @if ($assigned->supplier)
+                <option value="{{ $assigned->supplier->id }}" {{ old('supplier_id', $load->truck_supplier_id) == $assigned->supplier->id ? 'selected' : '' }}>
+                    {{ $assigned->supplier->company_name }}
+                </option>
+            @endif
+        @endforeach
+        </select>
+        @error('supplier_id')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
+    </div>
 
     <div class="mb-3">
         <label for="driver_name" class="form-label">{{ __('messages.driver_name') }}</label>

@@ -20,13 +20,13 @@
 
     <div class="card card-container">
     <div class="card-body">
-    <h2>QuickBooks Invoices for Load #{{ $load->aol_number }}</h2>
+    <h2>QuickBooks Invoices for AOL #{{ $load->aol_number }}</h2>
 
     @if(count($quickBooksInvoices) > 0)
         @foreach ($quickBooksInvoices as $invoiceData)
             <div class="card mb-4">
                 <div class="card-header btn_primary_color">
-                    <h4>Invoice #{{$invoiceData['invoice']->Id ?? 'N/A'}} DocNumber( {{$invoiceData['invoice']->DocNumber ?? 'N/A'}} )</h4>
+                    <h4>Invoice #{{$invoiceData['invoice']->Id ?? 'N/A'}}</h4>
                 </div>
                 <div class="card-body">
                     <h5 class="text-muted">Customer Details</h5>
