@@ -883,7 +883,8 @@ class QuickBooksController extends Controller
         $de = decode_id($load_id);
         $load = Load::findOrFail($de);
         $request->validate([
-            'bill_pdf' => 'required|mimes:pdf,jpg,jpeg,png,doc,docx|max:5120'
+            'bill_pdf' => 'required|mimes:pdf,jpg,jpeg,png,doc,docx|max:5120',
+            'bill_no' => 'required|string|max:255',
         ]);
         $user = auth()->user();
 
@@ -907,6 +908,7 @@ class QuickBooksController extends Controller
             'file_path' => $filePath,
             'quickbook_invoice_id' => null,
             'status' => 'pending',
+            'bill_no' => $request->input('bill_no'),
         ]);
 
         // Optional: Update Load with invoice ID
@@ -988,7 +990,8 @@ class QuickBooksController extends Controller
 
             $billData = Bill::create([
                 "VendorRef" => ["value" => $supplierId],
-                "Line" => $lines
+                "Line" => $lines,
+                "DocNumber" => $invoice['bill_no'],
             ]);
 
             $bill = $dataService->Add($billData);

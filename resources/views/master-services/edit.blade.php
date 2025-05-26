@@ -114,7 +114,7 @@
                     <label for="country" class="form-label">{{ __('messages.Country') }} <span class="text-danger">*</span></label>
                     <select name="country" class="form-control @error('country') is-invalid @enderror">
                         <option value=""> {{ __('messages.Select Country') }} </option>
-                        @foreach(['USA', 'Canada', 'UK', 'Germany', 'France', 'Australia', 'India', 'China', 'Japan', 'Brazil'] as $country)
+                        @foreach(['USA', 'Maxico', 'UK', 'Germany', 'France', 'Australia', 'India', 'China', 'Japan', 'Brazil'] as $country)
                             <option value="{{ $country }}" 
                                 {{ (isset($service) && $service->country == $country) || old('country') == $country ? 'selected' : '' }}>
                                 {{ $country }}

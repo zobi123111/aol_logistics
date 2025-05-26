@@ -93,7 +93,6 @@
                     <select name="country" class="form-select">
                         <option value="USA" {{ old('country', $supplier->country) == 'USA' ? 'selected' : '' }}>United States</option>
                         <option value="Mexico" {{ old('country', $supplier->country) == 'Mexico' ? 'selected' : '' }}>Mexico</option>
-                        <option value="Canada" {{ old('country', $supplier->country) == 'Canada' ? 'selected' : '' }}>Canada</option>
                         <option value="Other" {{ old('country', $supplier->country) == 'Other' ? 'selected' : '' }}>Other</option>
                     </select>
                     @error('country')

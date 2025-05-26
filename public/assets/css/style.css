@@ -2640,3 +2640,6 @@ li.list-group-item {
   display: flex;
   gap: 20px;
 }
+td.icon-design a img {
+    width: 28px;
+}

@@ -42,7 +42,10 @@
             <select id="creator_filter" class="form-control select2" multiple>
                 <option value="">{{ __('messages.Filter by Creator') }}</option>
                 @foreach($creators as $creator)
-                            <option value="{{ $creator->creator->id }}">{{ isset($creator->creator->business_name) ? $creator->creator->business_name. ' '. $creator->creator->lname : $creator->creator->email }} </option>
+                            <option value="{{ $creator->creator->id }}">{{ $creator->creator->business_name 
+    ?? ($creator->creator->fname && $creator->creator->lname 
+        ? $creator->creator->fname . ' ' . $creator->creator->lname 
+        : $creator->creator->email) }} </option>
                         @endforeach
             </select>
         </div>

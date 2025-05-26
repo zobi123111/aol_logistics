@@ -482,5 +482,16 @@ return [
     'actions' => 'Acciones',
     'Service cannot be deleted because it is currently in use.' => 'El servicio no se puede eliminar porque está en uso.',
     'set_future_cost' => 'Establecer costo futuro',
+    '53\' Trailer' => 'Caja 53\'',
+    '48\' Trailer' => 'Caja 48\'',
+    '53\' Flatbed' => 'Plataforma 53\'',
+    '48\' Flatbed' => 'Plataforma 48\'',
+    'Semi Lowboy (StepDeck)' => 'Semi Lowboy (StepDeck)', 
+    'Lowboy (Double Drop)' => 'Lowboy (Doble caída)',      
+    '3.5 Tn. Truck' => 'Camión 3.5',
+    '10 Tn. Truck' => 'Rabón',
+    'Pickup Truck' => 'Camioneta Pickup',
+    'Reefer' => 'Caja Refrigerada (Termo)',
+    'bill_no' => 'Número de factura',
 
 ];

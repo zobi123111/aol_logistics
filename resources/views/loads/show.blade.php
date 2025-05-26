@@ -25,6 +25,7 @@
                     ];
                 @endphp
             <p><strong> {{ __('messages.AOL Number') }} :</strong> {{ $load->aol_number }}</p>
+             <p><strong>{{ __('messages.Client') }} :</strong> {{ $load->creatorfor->business_name }}</p>
             <p><strong> {{ __('messages.Origin') }} :</strong> 
             {{  $load->origindata
                     ? ($load->origindata->name ?: ($load->origindata->street . ', ' . $load->origindata->city . ', ' . $load->origindata->state . ', ' . $load->origindata->country))
@@ -34,7 +35,6 @@
             <p><strong> {{ __('messages.Destination') }} :</strong> {{$load->destinationdata
                     ? ($load->destinationdata->name ?: ($load->destinationdata->street . ', ' . $load->destinationdata->city . ', ' . $load->destinationdata->state . ', ' . $load->destinationdata->country))
                     : 'N/A' }}</p>
- <p><strong>{{ __('messages.Client') }} :</strong> {{ $load->creatorfor->business_name }}</p>
                     <p><strong> {{ __('messages.Service Type') }} :</strong> {{ $load->service_type }}</p>
             @if(!isClientUser())
             <p><strong> {{ __('messages.Payer') }} :</strong> {{ $payerOptions[$load->payer] ?? 'N/A' }}</p>

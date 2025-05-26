@@ -31,6 +31,10 @@
             <th>Bill ID</th>
             <td>{{ $quickBooksBill->Id }}</td>
         </tr>
+         <tr>
+            <th>Bill No</th>
+            <td>{{ $quickBooksBill->DocNumber }}</td>
+        </tr>
         <tr>
             <th>Vendor ID</th>
             <td>{{ $quickBooksBill->VendorRef ?? 'N/A' }}</td>

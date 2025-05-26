@@ -14,8 +14,9 @@
 
 
     @if($client->country_code && $client->mobile_number)
-                        <a href="{{ route('chat.here', ['number' => $client->country_code . $client->mobile_number, 'name' => $client->business_name ??  $client->email]) }}">
-                            <i class="fa-solid fa-comments table_icon_style blue_icon_color"></i>
+                        <a href="#">
+                            <!-- <i class="fa-brands fa-square-whatsapp"></i> -->
+                              <img src="/assets/img/whatsapp.png" alt="Twitter">
                         </a>
                     @endif
 </td>

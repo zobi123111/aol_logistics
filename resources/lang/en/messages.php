@@ -481,6 +481,17 @@ return [
     'actions' => 'Actions',
     'Service cannot be deleted because it is currently in use.' => 'Service cannot be deleted because it is currently in use.',
     'set_future_cost' => 'Set Future Cost',
+   '53\' Trailer' => '53\' Trailer',
+    '48\' Trailer' => '48\' Trailer',
+    '53\' Flatbed' => '53\' Flatbed',
+    '48\' Flatbed' => '48\' Flatbed',
+    'Semi Lowboy (StepDeck)' => 'Semi Lowboy (StepDeck)',
+    'Lowboy (Double Drop)' => 'Lowboy (Double Drop)',
+    '3.5 Tn. Truck' => '3.5 Tn. Truck',
+    '10 Tn. Truck' => '10 Tn. Truck',
+    'Pickup Truck' => 'Pickup Truck',
+    'Reefer' => 'Reefer',
+    'bill_no' => 'Bill No',
 
 
 ];

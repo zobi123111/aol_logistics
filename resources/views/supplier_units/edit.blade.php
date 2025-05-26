@@ -30,13 +30,20 @@
 
 
         <div class="form-group mb-3 mt-3">
-            <label for="unit_type" class="form-label">{{ __('messages.Unit Type') }} <span class="text-danger">*</span></label>
+            <label for="unit_type" class="form-label">{{ __('messages.Unit Type') }}<span class="text-danger">*</span></label>
             <select name="unit_type" class="form-control" >
                 <option value="">{{ __('messages.Select Unit Type') }} </option>
-                <option value="53' Truck" {{ old('unit_type', $unit->unit_type) == "53' Truck" ? 'selected' : '' }}>53' Truck</option>
-                <option value="48' Truck" {{ old('unit_type', $unit->unit_type) == "48' Truck" ? 'selected' : '' }}>48' Truck</option>
-                <option value="48' Flatbed" {{ old('unit_type', $unit->unit_type) == "48' Flatbed" ? 'selected' : '' }}>48' Flatbed</option>
-                <option value="53' R" {{ old('unit_type', $unit->unit_type) == "53' R" ? 'selected' : '' }}>53' R</option>
+               <option value="53' Trailer" {{ (old('unit_type', $unit->unit_type ?? '') == "53' Trailer") ? 'selected' : '' }}>{{ __('messages.53\' Trailer') }}</option>
+                <option value="48' Trailer" {{ (old('unit_type', $unit->unit_type ?? '') == "48' Trailer") ? 'selected' : '' }}>{{ __('messages.48\' Trailer') }}</option>
+                <option value="53' Flatbed" {{ (old('unit_type', $unit->unit_type ?? '') == "53' Flatbed") ? 'selected' : '' }}>{{ __('messages.53\' Flatbed') }}</option>
+                <option value="48' Flatbed" {{ (old('unit_type', $unit->unit_type ?? '') == "48' Flatbed") ? 'selected' : '' }}>{{ __('messages.48\' Flatbed') }}</option>
+                <option value="Semi Lowboy (StepDeck)" {{ (old('unit_type', $unit->unit_type ?? '') == "Semi Lowboy (StepDeck)") ? 'selected' : '' }}>{{ __('messages.Semi Lowboy (StepDeck)') }}</option>
+                <option value="Lowboy (Double Drop)" {{ (old('unit_type', $unit->unit_type ?? '') == "Lowboy (Double Drop)") ? 'selected' : '' }}>{{ __('messages.Lowboy (Double Drop)') }}</option>
+                <option value="3.5 Tn. Truck" {{ (old('unit_type', $unit->unit_type ?? '') == "3.5 Tn. Truck") ? 'selected' : '' }}>{{ __('messages.3.5 Tn. Truck') }}</option>
+                <option value="10 Tn. Truck" {{ (old('unit_type', $unit->unit_type ?? '') == "10 Tn. Truck") ? 'selected' : '' }}>{{ __('messages.10 Tn. Truck') }}</option>
+                <option value="Pickup Truck" {{ (old('unit_type', $unit->unit_type ?? '') == "Pickup Truck") ? 'selected' : '' }}>{{ __('messages.Pickup Truck') }}</option>
+                <option value="Reefer" {{ (old('unit_type', $unit->unit_type ?? '') == "Reefer") ? 'selected' : '' }}>{{ __('messages.Reefer') }}</option>
+
             </select>
             @error('unit_type')
                 {{ $message }}

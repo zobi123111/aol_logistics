@@ -139,11 +139,16 @@
             <label for="equipment_type" class="form-label">{{ __('messages.Equipment Type') }} <span class="text-danger">*</span></label>
             <select name="equipment_type" id="equipment_type" class="form-control">
                 <option value="">{{ __('messages.Select Equipment') }} </option>
-                <option value="53' Truck" {{ old('equipment_type') == "53' Truck" ? 'selected' : '' }}>53' Truck</option>
-                <option value="48' Truck" {{ old('equipment_type') == "48' Truck" ? 'selected' : '' }}>48' Truck</option>
-                <option value="48' Flatbed" {{ old('equipment_type') == "48' Flatbed" ? 'selected' : '' }}>48' Flatbed</option>
-                <option value="53' R" {{ old('equipment_type') == "53' R" ? 'selected' : '' }}>53' R</option>
-                <option value="Reefer" {{ old('equipment_type') == "Reefer" ? 'selected' : '' }}>Reefer</option>
+                <option value="53' Trailer" {{ old('equipment_type') == "53' Trailer" ? 'selected' : '' }}>{{ __('messages.53\' Trailer') }}</option>
+                <option value="48' Trailer" {{ old('equipment_type') == "48' Trailer" ? 'selected' : '' }}>{{ __('messages.48\' Trailer') }}</option>
+                <option value="53' Flatbed" {{ old('equipment_type') == "53' Flatbed" ? 'selected' : '' }}>{{ __('messages.53\' Flatbed') }}</option>
+                <option value="48' Flatbed" {{ old('equipment_type') == "48' Flatbed" ? 'selected' : '' }}>{{ __('messages.48\' Flatbed') }}</option>
+                <option value="Semi Lowboy (StepDeck)" {{ old('equipment_type') == "Semi Lowboy (StepDeck)" ? 'selected' : '' }}>{{ __('messages.Semi Lowboy (StepDeck)') }}</option>
+                <option value="Lowboy (Double Drop)" {{ old('equipment_type') == "Lowboy (Double Drop)" ? 'selected' : '' }}>{{ __('messages.Lowboy (Double Drop)') }}</option>
+                <option value="3.5 Tn. Truck" {{ old('equipment_type') == "3.5 Tn. Truck" ? 'selected' : '' }}>{{ __('messages.3.5 Tn. Truck') }}</option>
+                <option value="10 Tn. Truck" {{ old('equipment_type') == "10 Tn. Truck" ? 'selected' : '' }}>{{ __('messages.10 Tn. Truck') }}</option>
+                <option value="Pickup Truck" {{ old('equipment_type') == "Pickup Truck" ? 'selected' : '' }}>{{ __('messages.Pickup Truck') }}</option>
+                <option value="Reefer" {{ old('equipment_type') == "Reefer" ? 'selected' : '' }}>{{ __('messages.Reefer') }}</option>
             </select>
             <div id="reefer_temperature_field" style="display: none;">
                 <label for="reefer_temperature">Required Temperature (°F):</label>

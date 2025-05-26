@@ -111,7 +111,7 @@
             <select name="country" class="form-control @error('country') is-invalid @enderror" >
                 <option value=""> {{ __('messages.Select Country') }} </option>
                 <option value="USA" {{ old('country') == 'USA' ? 'selected' : '' }}>United States</option>
-                <option value="Canada" {{ old('country') == 'Canada' ? 'selected' : '' }}>Canada</option>
+                <option value="Mexico" {{ old('country') == 'Mexico' ? 'selected' : '' }}>Mexico</option>
                 <option value="UK" {{ old('country') == 'UK' ? 'selected' : '' }}>United Kingdom</option>
                 <option value="Germany" {{ old('country') == 'Germany' ? 'selected' : '' }}>Germany</option>
                 <option value="France" {{ old('country') == 'France' ? 'selected' : '' }}>France</option>

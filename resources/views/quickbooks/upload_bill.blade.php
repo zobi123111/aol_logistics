@@ -14,6 +14,8 @@
         {{ session()->get('message') }}
     </div>
     @endif
+     <div class="card card-container">
+        <div class="card-body">
 <table class="table" id="assignedServices">
     <thead>
         <tr>
@@ -81,6 +83,16 @@
 
 <form action="{{ route('upload.bill', ['load_id' => $load_id]) }}" method="POST" enctype="multipart/form-data">
     @csrf
+      <div class="mb-3">
+            <label for="bill_no" class="form-label">{{ __('messages.bill_no') }}</label>
+            <input type="text" name="bill_no" class="form-control" value="{{ old('bill_no') }}">
+            @error('bill_no')
+                <div class="text-danger">
+                    {{ $message }}
+                </div>
+            @enderror
+        </div>
+
         <div class="mb-3">
             <label for="bill_pdf" class="form-label">{{ __('messages.upload_bill_pdf') }}</label>
             <input type="file" name="bill_pdf" class="form-control" >
@@ -92,5 +104,7 @@
         </div>
         <button type="submit" class="btn btn-primary btn_primary_color">{{ __('messages.upload_bill') }}</button>
     </form>
+</div>
+</div>
 </div>
 @endsection

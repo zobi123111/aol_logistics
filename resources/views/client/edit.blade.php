@@ -74,7 +74,6 @@
                 <label class="form-label">{{ __('messages.Country Code') }} <span class="text-danger">*</span></label>
                 <select name="country_code" class="form-control" value="{{ old('country_code', $client->country_code) }}">
                     <option value="">Select Country Code</option>
-                    <option value="1" {{ old('country_code', $client->country_code) == '1' ? 'selected' : '' }}>+1 (USA, Canada)</option>
                     <option value="44" {{ old('country_code', $client->country_code) == '44' ? 'selected' : '' }}>+44 (UK)</option>
                     <option value="91" {{ old('country_code', $client->country_code) == '91' ? 'selected' : '' }}>+91 (India)</option>
                     <option value="33" {{ old('country_code', $client->country_code) == '33' ? 'selected' : '' }}>+33 (France)</option>

@@ -17,6 +17,7 @@ class SupplierInvoice extends Model
         'file_path',
         'quickbook_invoice_id',
         'status',
+        'bill_no'
     ];
 
     /**

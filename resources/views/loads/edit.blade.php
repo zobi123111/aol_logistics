@@ -127,12 +127,16 @@
         <label for="equipment_type" class="form-label">{{ __('messages.Equipment Type') }} <span class="text-danger">*</span></label>
         <select name="equipment_type" id="equipment_type" class="form-control">
             <option value="">{{ __('messages.Select Equipment') }} </option>
-            <option value="53' Truck" {{ $load->equipment_type == "53' Truck" ? 'selected' : '' }}>53' Truck</option>
-            <option value="48' Truck" {{ $load->equipment_type == "48' Truck" ? 'selected' : '' }}>48' Truck</option>
-            <option value="48' Flatbed" {{ $load->equipment_type == "48' Flatbed" ? 'selected' : '' }}>48' Flatbed</option>
-            <option value="53' R" {{ $load->equipment_type == "53' R" ? 'selected' : '' }}>53' R</option>
-            <option value="Reefer" {{ $load->equipment_type == "Reefer" ? 'selected' : '' }}>Reefer</option>
-            
+            <option value="53' Trailer" {{ (isset($load) && $load->equipment_type == "53' Trailer") ? 'selected' : '' }}>{{ __('messages.53\' Trailer') }}</option>
+            <option value="48' Trailer" {{ (isset($load) && $load->equipment_type == "48' Trailer") ? 'selected' : '' }}>{{ __('messages.48\' Trailer') }}</option>
+            <option value="53' Flatbed" {{ (isset($load) && $load->equipment_type == "53' Flatbed") ? 'selected' : '' }}>{{ __('messages.53\' Flatbed') }}</option>
+            <option value="48' Flatbed" {{ (isset($load) && $load->equipment_type == "48' Flatbed") ? 'selected' : '' }}>{{ __('messages.48\' Flatbed') }}</option>
+            <option value="Semi Lowboy (StepDeck)" {{ (isset($load) && $load->equipment_type == "Semi Lowboy (StepDeck)") ? 'selected' : '' }}>{{ __('messages.Semi Lowboy (StepDeck)') }}</option>
+            <option value="Lowboy (Double Drop)" {{ (isset($load) && $load->equipment_type == "Lowboy (Double Drop)") ? 'selected' : '' }}>{{ __('messages.Lowboy (Double Drop)') }}</option>
+            <option value="3.5 Tn. Truck" {{ (isset($load) && $load->equipment_type == "3.5 Tn. Truck") ? 'selected' : '' }}>{{ __('messages.3.5 Tn. Truck') }}</option>
+            <option value="10 Tn. Truck" {{ (isset($load) && $load->equipment_type == "10 Tn. Truck") ? 'selected' : '' }}>{{ __('messages.10 Tn. Truck') }}</option>
+            <option value="Pickup Truck" {{ (isset($load) && $load->equipment_type == "Pickup Truck") ? 'selected' : '' }}>{{ __('messages.Pickup Truck') }}</option>
+            <option value="Reefer" {{ (isset($load) && $load->equipment_type == "Reefer") ? 'selected' : '' }}>{{ __('messages.Reefer') }}</option>
         </select>
         <div id="reefer_temperature_field" style="display: none;">
             <label for="reefer_temperature">Required Temperature (°F):</label>
@@ -178,22 +182,8 @@
         @enderror
     </div>
 
-    <!-- <div class="form-group mb-3">
-        <label for="delivery_deadline" class="form-label">{{ __('messages.Delivery Deadline') }} <span class="text-danger">*</span></label>
-        <input type="date" id="delivery_deadline" name="delivery_deadline" class="form-control" value="{{ $load->delivery_deadline ? $load->delivery_deadline->format('Y-m-d') : '' }}">
-        @error('delivery_deadline')
-            <div class="text-danger">{{ $message }}</div>
-        @enderror
-    </div>
-    <div class="form-group mb-3">
-    <label for="schedule" class="form-label">Schedule Date & Time</label>
-    <input type="datetime-local" id="schedule" name="schedule" class="form-control" 
-    value="{{ old('schedule', isset($load) && $load->schedule ? $load->schedule->format('Y-m-d\TH:i') : date('Y-m-d\T09:00')) }}">
-    @error('schedule')
-        <div class="text-danger">{{ $message }}</div>
-    @enderror
-</div> -->
 
+<!-- 
     <div class="form-group mb-3 position-relative">
         <label for="schedule" class="form-label">{{ __('messages.Schedule Date') }} </label>
         @php
@@ -219,7 +209,34 @@
         @error('schedule')
             <div class="text-danger">{{ $message }}</div>
         @enderror
-    </div>
+    </div> -->
+@php
+  $scheduleDateTime = $load->schedule ? \Carbon\Carbon::parse($load->schedule) : null;
+  $scheduleDate = $scheduleDateTime ? $scheduleDateTime->format('M. j, Y') : '';
+  $scheduleTime = $scheduleDateTime ? $scheduleDateTime->format('H:i') : '';
+@endphp
+
+<div class="form-group mb-3 position-relative">
+  <label for="schedule_date" class="form-label">Schedule Date</label>
+  <div class="input-group">
+    <input type="text" id="schedule_date" class="form-control" readonly value="{{ $scheduleDate }}">
+    <button type="button" id="schedule-date-trigger" class="input-group-text" style="cursor: pointer;">
+      <i class="bi bi-calendar"></i>
+    </button>
+  </div>
+</div>
+
+<div class="form-group mb-3 position-relative">
+  <label for="schedule_time" class="form-label">Schedule Time</label>
+  <div class="input-group">
+    <input type="text" id="schedule_time" class="form-control" readonly value="{{ $scheduleTime }}">
+    <button type="button" id="schedule-time-trigger" class="input-group-text" style="cursor: pointer;">
+      <i class="bi bi-clock"></i>
+    </button>
+  </div>
+</div>
+
+<input type="hidden" id="schedule" name="schedule" value="{{ $scheduleDate }} {{ $scheduleTime }}">
 
     <div class="form-group mb-3 position-relative">
         <label for="delivery_deadline" class="form-label">
