@@ -243,11 +243,11 @@ class LoadController extends Controller
             ]);
         }
         
-        if ($request->filled('schedule')) {
-            $request->merge([
-                'schedule' => Carbon::createFromFormat('M. j, Y H:i', $request->schedule)->format('Y-m-d H:i'),
-            ]);
-        }
+        // if ($request->filled('schedule')) {
+        //     $request->merge([
+        //         'schedule' => Carbon::createFromFormat('M. j, Y H:i', $request->schedule)->format('Y-m-d H:i'),
+        //     ]);
+        // }
         $request->validate([
             'origin' => 'required',
             'destination' => 'required',
@@ -268,11 +268,20 @@ class LoadController extends Controller
             'client_id' => 'required|exists:users,id',
             'inspection' => 'boolean',
             'notes' => 'nullable',
+            'schedule_date' => 'nullable',
+            'schedule_time' => 'nullable',
         ]);
         $status = 'requested'; 
         $supplier_id = null; 
         $service_id = null;
+       $schedule = null;
+if ($request->filled('schedule_date') && $request->filled('schedule_time')) {
+    // Combine date and time strings into a datetime string
+    $dateTimeString = $request->input('schedule_date') . ' ' . $request->input('schedule_time');
 
+    // Parse combined datetime string with Carbon
+    $schedule = Carbon::createFromFormat('M. j, Y H:i', $dateTimeString);
+}
         // Step 1: Create Load with supplier_id = null
         $referenceNumbers = array_filter($request->customer_po ?? []); 
 
@@ -284,7 +293,7 @@ class LoadController extends Controller
                 'status' => $status,
                 'shipment_status' => 'pending',
                 'created_by' => Auth::id(),
-                'schedule' => $request->schedule ? Carbon::parse($request->schedule) : null,
+                'schedule' => $schedule,
                 'customer_po' => implode(', ', $referenceNumbers)
             ]
         ));
@@ -396,11 +405,11 @@ class LoadController extends Controller
             ]);
         }
         
-        if ($request->filled('schedule')) {
-            $request->merge([
-                'schedule' => Carbon::createFromFormat('M. j, Y H:i', $request->schedule)->format('Y-m-d H:i'),
-            ]);
-        }
+        // if ($request->filled('schedule')) {
+        //     $request->merge([
+        //         'schedule' => Carbon::createFromFormat('M. j, Y H:i', $request->schedule)->format('Y-m-d H:i'),
+        //     ]);
+        // }
     
         $request->validate([
             'origin' => 'required|string',
@@ -420,6 +429,8 @@ class LoadController extends Controller
             'customer_po' => 'nullable|array',
             'customer_po.*' => 'nullable|string|max:255',
             'notes' => 'nullable',
+            'schedule_date' => 'nullable',
+            'schedule_time' => 'nullable',
         ]);
     
         $load = Load::findOrFail($id);
@@ -456,6 +467,15 @@ class LoadController extends Controller
                 }
             }
         }
+           // Combine schedule_date and schedule_time if both provided
+        if ($request->filled('schedule_date') && $request->filled('schedule_time')) {
+            $date = Carbon::createFromFormat('M. j, Y', $request->input('schedule_date'));
+            $time = Carbon::createFromFormat('H:i', $request->input('schedule_time'));
+            $date->setTime($time->hour, $time->minute, 0);
+            $schedule = $date;
+        } else {
+            $schedule = $load->schedule; // or keep existing: $load->schedule
+        }
             $referenceNumbers = array_filter($request->customer_po ?? []);
         $load->update([
             'origin' => $request->origin,     
@@ -470,7 +490,7 @@ class LoadController extends Controller
             'inspection' => $request->has('inspection'),
             'is_inbond' => $request->has('is_inbond'),
             'trailer_number' => $request->trailer_number,
-            'schedule' => $request->schedule ? Carbon::parse($request->schedule) : null,
+            'schedule' => $schedule ??  null,
             'port_of_entry' => $request->port_of_entry,
             // 'supplier_id' => null,
             'supplier_id' => $supplier_id,

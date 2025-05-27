@@ -194,30 +194,14 @@
                 @enderror
         </div>
 
-        <!-- <div class="form-group mb-3">
-            <label for="delivery_deadline" class="form-label">{{ __('messages.Delivery Deadline') }} <span class="text-danger">*</span></label>
-            <input type="date" id="delivery_deadline" name="delivery_deadline" class="form-control" value="{{old('delivery_deadline')}}">
-            @error('delivery_deadline')
-                <div class="text-danger">
-                     {{ $message }}
-                </div>
-            @enderror
-        </div>
-        <div class="form-group mb-3">
-            <label for="schedule" class="form-label">Schedule Date</label>
-            <input type="datetime-local" id="schedule" name="schedule" class="form-control" value="{{ old('schedule', date('Y-m-d\T09:00')) }}">
-            @error('schedule')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
-        </div>
-         -->
-
-        <div class="form-group mb-3 position-relative">
+        <!-- <div class="form-group mb-3 position-relative">
             <label for="schedule" class="form-label">{{ __('messages.Schedule Date') }}</label>
 
             <div class="input-group">
             <input type="text" id="schedule" name="schedule" class="form-control"
-       value="{{ old('schedule') ? \Carbon\Carbon::createFromFormat('Y-m-d H:i', old('schedule'))->format('M. j, Y H:i') : now()->format('M. j, Y 09:00') }}"
+       value="{{ old('schedule_date') 
+    ? \Carbon\Carbon::parse(old('schedule_date'))->format('M. j, Y') 
+    : now()->format('M. j, Y') }}"
        placeholder="Select date & time" readonly>
 
        <button type="button" id="calendar-trigger" class="input-group-text" style="cursor: pointer;">
@@ -228,8 +212,56 @@
             @error('schedule')
                 <div class="text-danger">{{ $message }}</div>
             @enderror
-        </div>
+        </div> -->
        
+
+   @php
+    // Safely parse schedule_date if old input exists
+    $oldScheduleDate = old('schedule_date');
+    try {
+        $scheduleDateValue = $oldScheduleDate ? \Carbon\Carbon::parse($oldScheduleDate)->format('M. j, Y') : now()->format('M. j, Y');
+    } catch (\Exception $e) {
+        $scheduleDateValue = now()->format('M. j, Y');
+    }
+
+    // Safely parse schedule_time if old input exists
+    $oldScheduleTime = old('schedule_time');
+    try {
+        $scheduleTimeValue = $oldScheduleTime ? \Carbon\Carbon::parse($oldScheduleTime)->format('H:i') : '09:00';
+    } catch (\Exception $e) {
+        $scheduleTimeValue = '09:00';
+    }
+@endphp
+
+<div class="form-group mb-3 position-relative">
+    <label for="schedule_date" class="form-label">{{ __('messages.Schedule Date') }}</label>
+    <div class="input-group mb-2">
+        <input type="text" id="schedule_date" name="schedule_date" class="form-control"
+            value="{{ $scheduleDateValue }}"
+            placeholder="Select date" readonly>
+        <button type="button" id="date-picker-trigger" class="input-group-text" style="cursor: pointer;">
+            <i class="bi bi-calendar"></i>
+        </button>
+    </div>
+    @error('schedule_date')
+        <div class="text-danger">{{ $message }}</div>
+    @enderror
+
+    <label for="schedule_time" class="form-label">{{ __('messages.Schedule Time') }}</label>
+    <div class="input-group">
+        <input type="text" id="schedule_time" name="schedule_time" class="form-control"
+            value="{{ $scheduleTimeValue }}"
+            placeholder="Select time" readonly>
+        <button type="button" id="time-picker-trigger" class="input-group-text" style="cursor: pointer;">
+            <i class="bi bi-clock"></i>
+        </button>
+    </div>
+    @error('schedule_time')
+        <div class="text-danger">{{ $message }}</div>
+    @enderror
+</div>
+
+
 
         <div class="form-group mb-3 position-relative">
             <label for="delivery_deadline" class="form-label">

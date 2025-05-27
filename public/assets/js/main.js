@@ -370,10 +370,15 @@
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-  const input = document.getElementById("schedule");
-  const trigger = document.getElementById("calendar-trigger");
+  // const input = document.getElementById("schedule");
+  // const trigger = document.getElementById("calendar-trigger");
   const deinput = document.getElementById("delivery_deadline");
   const detrigger = document.getElementById("de-calendar-trigger");
+    const scheduleDateInput = document.getElementById("schedule_date");
+    const scheduleDateTrigger = document.getElementById("date-picker-trigger");
+
+    const scheduleTimeInput = document.getElementById("schedule_time");
+    const scheduleTimeTrigger = document.getElementById("time-picker-trigger");
 
   if (typeof flatpickr !== "undefined") {
     const decalendar = flatpickr(deinput, {
@@ -384,22 +389,54 @@ document.addEventListener("DOMContentLoaded", function () {
 
       detrigger.addEventListener('click', () => {
         decalendar.open();
+        deinput.focus();
     });
 
-      const calendar = flatpickr(input, {
-        enableTime: true,
-        dateFormat: "M. j, Y H:i",
-        time_24hr: true,
-        defaultHour: 9,
-        allowInput: true ,
-        clickOpens: false
-    });
+    //   const calendar = flatpickr(input, {
+    //     enableTime: true,
+    //     dateFormat: "M. j, Y H:i",
+    //     time_24hr: true,
+    //     defaultHour: 9,
+    //     allowInput: true ,
+    //     clickOpens: false
+    // });
 
-      trigger.addEventListener('click', () => {
-        calendar.open();
-    });
+    //   trigger.addEventListener('click', () => {
+    //     calendar.open();
+    //     input.focus();
 
+    // });
 
+  const datePicker = flatpickr(scheduleDateInput, {
+            dateFormat: "M. j, Y",
+            allowInput: true,
+            clickOpens: false,
+            defaultDate: scheduleDateInput.value || new Date()
+        });
+
+        // Initialize Time Picker
+        const timePicker = flatpickr(scheduleTimeInput, {
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "H:i",
+            time_24hr: true,
+            allowInput: true,
+            clickOpens: false,
+            defaultDate: scheduleTimeInput.value || "09:00"
+        });
+
+        // Trigger buttons
+        scheduleDateTrigger.addEventListener("click", () => {
+            datePicker.open();
+            scheduleDateInput.focus();
+
+        });
+
+        scheduleTimeTrigger.addEventListener("click", () => {
+            timePicker.open();
+            scheduleTimeInput.focus();
+
+        });
 
       function adjustDate(inputField, increase = true) {
           let instance = inputField._flatpickr;
@@ -418,7 +455,42 @@ document.addEventListener("DOMContentLoaded", function () {
           let today = new Date();
           instance.setDate(today, true);
       }
+   scheduleDateInput.addEventListener("keydown", function (event) {
+              const key = event.key;
 
+    if (key === "+" || (key === "=" && event.shiftKey)) {
+        event.preventDefault();
+        adjustDate(this, true);
+    } else if (key === "-" || key === "_") {
+        event.preventDefault();
+        adjustDate(this, false);
+    } else if (key.toLowerCase() === "t") {
+        event.preventDefault();
+        setToday(this);
+    }
+        });
+scheduleTimeInput.addEventListener("keydown", function (event) {
+    const key = event.key;
+    const instance = this._flatpickr;
+
+    if (!instance) return;
+
+    let date = instance.selectedDates[0] || new Date();
+
+    if (key === "+" || (key === "=" && event.shiftKey)) {
+        event.preventDefault();
+        date.setHours(date.getHours() + 1);
+        instance.setDate(date, true);
+    } else if (key === "-" || key === "_") {
+        event.preventDefault();
+        date.setHours(date.getHours() - 1);
+        instance.setDate(date, true);
+    } else if (key.toLowerCase() === "t") {
+        event.preventDefault();
+        const now = new Date(); // current time
+        instance.setDate(now, true);
+    }
+});
       document.getElementById("delivery_deadline").addEventListener("keydown", function (event) {
           if (event.key === "+" || event.key === "=") { // Increase date
               event.preventDefault();

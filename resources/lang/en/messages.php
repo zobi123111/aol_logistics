@@ -492,6 +492,8 @@ return [
     'Pickup Truck' => 'Pickup Truck',
     'Reefer' => 'Reefer',
     'bill_no' => 'Bill No',
+    'Schedule Time' => 'Schedule Time',
+
 
 
 ];

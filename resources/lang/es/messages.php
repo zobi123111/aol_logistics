@@ -493,5 +493,7 @@ return [
     'Pickup Truck' => 'Camioneta Pickup',
     'Reefer' => 'Caja Refrigerada (Termo)',
     'bill_no' => 'Número de factura',
+    'Schedule Time' => 'Hora Programada',
+
 
 ];

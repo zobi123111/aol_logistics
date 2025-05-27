@@ -58,7 +58,8 @@
                 <th>Quantity</th>
             </tr>
         </thead>
-        <tbody>
+      <tbody>
+             @if (is_array($quickBooksBill->Line))
             @foreach($quickBooksBill->Line as $line)
                 @if(isset($line->ItemBasedExpenseLineDetail))
                     <tr>
@@ -69,6 +70,18 @@
                     </tr>
                 @endif
             @endforeach
+            @else
+            <tr>
+                <td>{{ $quickBooksBill->Line->Description ?? 'N/A' }}</td>
+                <td>${{ number_format($quickBooksBill->Line->Amount ?? 0, 2) }}</td>
+                <td>
+                    {{ $quickBooksBill->Line->ItemBasedExpenseLineDetail->UnitPrice ?? '0.00' }}
+                </td>
+                <td>
+                    {{ $quickBooksBill->Line->ItemBasedExpenseLineDetail->Qty ?? '0' }}
+                </td>
+            </tr>
+              @endif
         </tbody>
     </table>
     
