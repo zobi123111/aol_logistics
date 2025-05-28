@@ -46,7 +46,13 @@ class SupplierController extends Controller
                             <i class="fa-solid fa-gear"></i> '. __('messages.Manage').'
                         </a>';
             })
-            ->rawColumns(['status', 'actions', 'supplier_users', 'supplier_units', 'services']) 
+            ->addColumn('trailers', function ($supplier) {
+                return '<a href="' . route('supplier_trailers.index', encode_id($supplier->id)) . '" class="btn btn-secondary create-button btn_secondary_color">
+                            <i class="fa-solid fa-truck-moving"></i> ' . __('messages.Manage') . '
+                        </a>';
+            })
+
+            ->rawColumns(['status', 'actions', 'supplier_users', 'supplier_units', 'services', 'trailers']) 
             ->make(true);
         }
     

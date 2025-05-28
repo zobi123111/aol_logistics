@@ -493,6 +493,20 @@ return [
     'Reefer' => 'Reefer',
     'bill_no' => 'Bill No',
     'Schedule Time' => 'Schedule Time',
+      'Truck not found.' => 'Truck not found.',
+    'Truck deleted successfully.' => 'Truck deleted successfully.',
+        'Updated Successfully' => 'Updated Successfully',
+            'Add truck Number' => 'Add truck Number',
+             'Truck Number' => 'Truck Number',
+    'Actions' => 'Actions',
+        'Truck' => 'Truck',
+            'select_truck' => 'Select Truck',
+                'select_supplier' => 'Select Supplier',
+
+'get_supplier_truck_position' => 'Get Supplier Truck Position',
+
+
+
 
 
 

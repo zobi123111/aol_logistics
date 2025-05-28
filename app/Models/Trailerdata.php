@@ -10,6 +10,11 @@ class Trailerdata extends Model
 {
     use HasFactory; 
     protected $fillable = [
-        'trailer_num'
+        'trailer_num',
+        'supplier_id'
     ];
+     public function supplier()
+    {
+        return $this->belongsTo(Supplier::class);
+    }
 }

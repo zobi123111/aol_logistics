@@ -24,7 +24,7 @@
         <form action="{{ route('loads.updateTruckDetails', $load->id) }}" method="POST" enctype="multipart/form-data">
     @csrf
 
-    <div class="mb-3">
+    <!-- <div class="mb-3">
         <label for="truck_number" class="form-label">{{ __('messages.truck_number') }}</label>
         <input type="text" class="form-control" name="truck_number" value="{{ old('truck_number', $load->truck_number) }}">
         @error('truck_number')
@@ -46,7 +46,35 @@
         @error('supplier_id')
             <span class="text-danger">{{ $message }}</span>
         @enderror
-    </div>
+    </div> -->
+
+    <div class="mb-3">
+    <label for="supplier_id" class="form-label">{{ __('messages.supplier') }}</label>
+    <select name="supplier_id" id="supplier_id" class="form-select">
+        <option value="">{{ __('messages.select_supplier') }}</option>
+        @foreach($assignedSuppliers as $assigned)
+            @if ($assigned->supplier)
+                <option value="{{ $assigned->supplier->id }}" 
+                    {{ old('supplier_id', $load->truck_supplier_id) == $assigned->supplier->id ? 'selected' : '' }}>
+                    {{ $assigned->supplier->company_name }}
+                </option>
+            @endif
+        @endforeach
+    </select>
+    @error('supplier_id')
+        <span class="text-danger">{{ $message }}</span>
+    @enderror
+</div>
+
+<div class="mb-3">
+    <label for="truck_number" class="form-label">{{ __('messages.truck_number') }}</label>
+    <select name="truck_number" id="truck_number" class="form-select">
+        <option value="{{ old('truck_number', $load->truck_number) }}">{{ old('truck_number', $load->truck_number) }}</option>
+    </select>
+    @error('truck_number')
+        <span class="text-danger">{{ $message }}</span>
+    @enderror
+</div>
 
     <div class="mb-3">
         <label for="driver_name" class="form-label">{{ __('messages.driver_name') }}</label>
@@ -223,6 +251,26 @@ $(document).ready(function () {
             updateFileDisplay(field);
         };
     });
+$('#supplier_id').on('change', function () {
+            let supplierId = $(this).val();
+
+            if (supplierId) {
+                $.ajax({
+                    url: `/supplier/${supplierId}/trucks`,
+                    type: 'GET',
+                    success: function (response) {
+                        $('#truck_number').empty();
+                        $('#truck_number').append(`<option value="">@lang('messages.select_truck')</option>`);
+
+                        response.forEach(function (truck) {
+                            $('#truck_number').append(`<option value="${truck.trailer_num}">${truck.trailer_num}</option>`);
+                        });
+                    }
+                });
+            } else {
+                $('#truck_number').html('<option value="">@lang("messages.select_truck")</option>');
+            }
+        });
 });
 function showDeleteModal(id, deleteUrl) {
     $('#deleteRoleFormId').attr('action', deleteUrl);

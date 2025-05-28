@@ -6,7 +6,9 @@
 <div class="main_cont_outer">
     <div class="card card-container">
         <div class="card-body">
-            <div class="mb-3 mt-3 trailer_number">
+                        <h4 class="mb-4">{{ __('messages.get_supplier_truck_position') }}</h4>
+
+            <!-- <div class="mb-3 mt-3 trailer_number">
                 <label class="form-label"> {{ __('messages.Select Trailer Number') }} </label>
                 <select id="trailer_no" class="searchable-select">
                     <option value=""> {{ __('messages.Select a Trailer') }} </option>
@@ -14,7 +16,34 @@
                         <option value="{{ $row->trailer_num }}">{{ $row->trailer_num }}</option>
                     @endforeach
                 </select>
-            </div>
+            </div> -->
+<div class="mb-3">
+    <label for="supplier_id" class="form-label">{{ __('messages.supplier') }}</label>
+    <select name="supplier_id" id="supplier_id" class="form-select">
+        <option value="">{{ __('messages.select_supplier') }}</option>
+        @foreach($assignedSuppliers as $assigned)
+            @if ($assigned->supplier)
+                <option value="{{ $assigned->supplier->id }}">
+                    {{ $assigned->supplier->dba ?? $assigned->supplier->company_name }}
+                </option>
+            @endif
+        @endforeach
+    </select>
+    @error('supplier_id')
+        <span class="text-danger">{{ $message }}</span>
+    @enderror
+</div>
+
+<div class="mb-3">
+    <label for="truck_number" class="form-label">{{ __('messages.truck_number') }}</label>
+    <select name="truck_number" id="truck_number" class="form-select">
+        <option value="">{{ __('messages.select_truck') }}</option>
+    </select>
+    @error('truck_number')
+        <span class="text-danger">{{ $message }}</span>
+    @enderror
+</div>
+
             <div class="mb-3 mt-3 address-container" id="address">
                 <div id="append_address" class="address-box"></div>
                 <div id="append_error" class="text-danger error-message"></div>
@@ -43,6 +72,27 @@
     } else {
                 console.error("Select2 is not loaded!");
             }
+
+            $('#supplier_id').on('change', function () {
+            let supplierId = $(this).val();
+
+            if (supplierId) {
+                $.ajax({
+                    url: `/supplier/${supplierId}/trucks`,
+                    type: 'GET',
+                    success: function (response) {
+                        $('#truck_number').empty();
+                        $('#truck_number').append(`<option value="">@lang('messages.select_truck')</option>`);
+
+                        response.forEach(function (truck) {
+                            $('#truck_number').append(`<option value="${truck.trailer_num}">${truck.trailer_num}</option>`);
+                        });
+                    }
+                });
+            } else {
+                $('#truck_number').html('<option value="">@lang("messages.select_truck")</option>');
+            }
+        });
     });
     var map;
     var marker;
@@ -83,7 +133,7 @@
     // setCurrentLocation();
 
 
-    $('#trailer_no').on('change', function() {
+    $('#truck_number').on('change', function() {
         $('#append_address').html('');
         $('#append_error').html('');
         var trailerId = $(this).val(); // Get the selected trailer ID
@@ -106,7 +156,7 @@
             url: apiUrl,
             type: 'GET',
             beforeSend: function() {
-            $('#trailer_no').prop('disabled', true);
+            $('#truck_number').prop('disabled', true);
             $('#mapFrame, #mapLink').hide();
             },
 
@@ -117,7 +167,7 @@
             timeout: 30000,
             success: function(response) {
                 if (!response.length) {
-                    $('#trailer_no').prop('disabled', false);
+                    $('#truck_number').prop('disabled', false);
                     $('#append_address').html('');
                     $('#append_error').html('No location data found.');
 
@@ -149,10 +199,10 @@
                 // marker.setLatLng([latitude, longitude])
                 //     .bindPopup('Trailer Location: ' + latitude + ', ' + longitude)
                 //     .openPopup();
-                $('#trailer_no').prop('disabled', false);
+                $('#truck_number').prop('disabled', false);
             },
             error: function(xhr, status, error) {
-                $('#trailer_no').prop('disabled', false);
+                $('#truck_number').prop('disabled', false);
                 console.log('Error:', error);
                 $('#append_address').html('');
                 $('#append_error').html('Request failed');

@@ -55,6 +55,8 @@
                 <th scope="col"> {{ __('messages.User') }}  </th>
                 <th scope="col"> {{ __('messages.Equipment') }}  </th>
                 <th scope="col"> {{ __('messages.Service') }}  </th>
+               <th>{{ __('messages.Truck Number') }}</th>
+
             </tr>
         </thead>
       
@@ -104,7 +106,9 @@
                 { data: 'actions', name: 'actions', orderable: false, searchable: false },
                 { data: 'supplier_users', name: 'supplier_users', orderable: false, searchable: false },
                 { data: 'supplier_units', name: 'supplier_units', orderable: false, searchable: false },
-                { data: 'services', name: 'services', orderable: false, searchable: false }
+                { data: 'services', name: 'services', orderable: false, searchable: false },
+                { data: 'trailers', name: 'trailers', orderable: false, searchable: false },
+
             ],
             language: {
                 sSearch: "{{ __('messages.Search') }}",

@@ -494,6 +494,19 @@ return [
     'Reefer' => 'Caja Refrigerada (Termo)',
     'bill_no' => 'Número de factura',
     'Schedule Time' => 'Hora Programada',
+    'Trailer not found.' => 'Remolque no encontrado.',
+    'Trailer deleted successfully.' => 'Remolque eliminado con éxito.',
+     'Truck not found.' => 'Camión no encontrado.',
+    'Truck deleted successfully.' => 'Camión eliminado con éxito.',
+        'Updated Successfully' => 'Actualizado con éxito',
+    'Add truck Number' => 'Agregar número de camión',
+    'Truck Number' => 'Número de camión',
+    'Actions' => 'Acciones',
+        'Truck' => 'Camión',
+    'select_truck' => 'Seleccionar camión',
+        'select_supplier' => 'Seleccionar proveedor',
+'get_supplier_truck_position' => 'Obtener posición del camión del proveedor',
+
 
 
 ];

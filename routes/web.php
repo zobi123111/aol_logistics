@@ -43,6 +43,7 @@ use App\Livewire\Chat;
 use App\Http\Controllers\MasterServiceController;
 use App\Http\Controllers\SupplierServiceController;
 use App\Http\Controllers\ClientServiceController;
+use App\Http\Controllers\TrailerdataController;
 
 
 
@@ -145,6 +146,8 @@ Route::middleware(['auth.user', 'otp.verified'])->group(function () {
         Route::delete('/{serviceId}', [ClientServiceController::class, 'destroy'])->name('client_services.destroy');
         Route::post('/restore/{serviceId}', [ClientServiceController::class, 'restore'])->name('client_services.restore');
     });
+    Route::get('/supplier/{id}/trucks', [LoadController::class, 'getTrucksBySupplier']);
+
 });
 
 Route::middleware(['auth.user', 'otp.verified', 'check.suppliers'])->group(function () {
@@ -194,6 +197,15 @@ Route::middleware(['auth.user', 'otp.verified', 'check.supplier'])->group(functi
         Route::put('/{serviceId}', [SupplierServiceController::class, 'update'])->name('supplier_services.update');
         Route::delete('/{serviceId}', [SupplierServiceController::class, 'destroy'])->name('supplier_services.destroy');
         Route::post('/restore/{serviceId}', [SupplierServiceController::class, 'restore'])->name('supplier_services.restore');
+    });
+
+    Route::prefix('suppliers/{supplierId}/trailers')->name('supplier_trailers.')->group(function () {
+        Route::get('/', [TrailerdataController::class, 'index'])->name('index'); 
+        Route::get('/create', [TrailerdataController::class, 'create'])->name('create');
+        Route::post('/', [TrailerdataController::class, 'store'])->name('store');
+        Route::get('/{trailer}/edit', [TrailerdataController::class, 'edit'])->name('edit');
+        Route::put('/{trailer}', [TrailerdataController::class, 'update'])->name('update');
+        Route::delete('/{trailer}', [TrailerdataController::class, 'destroy'])->name('destroy');
     });
 });
 Route::middleware(['auth.user', 'otp.verified', 'check.client'])->group(function () {

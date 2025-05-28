@@ -53,5 +53,8 @@ class Supplier extends Model
         return $this->hasMany(Load::class, 'truck_supplier_id');
     }
 
-    
+    public function trailerdatas()
+{
+    return $this->hasMany(Trailerdata::class);
+}
 }

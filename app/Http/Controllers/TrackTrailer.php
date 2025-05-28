@@ -8,7 +8,12 @@ class TrackTrailer extends Controller
 {
     public function lastposition(){
         $trailers = Trailerdata::orderBy('trailer_num', 'asc')->get();
+               $assignedSuppliers = Trailerdata::with('supplier')
+        ->get()
+        ->unique('supplier_id')
+        ->values(); 
 
-        return view('tracktrailer.lastpostion', compact('trailers'));
+
+        return view('tracktrailer.lastpostion', compact('trailers', 'assignedSuppliers'));
     }
 }
