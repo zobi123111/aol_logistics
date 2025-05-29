@@ -6,9 +6,12 @@
 @section('content')
 <div class="main_cont_outer">
     <div class="create_btn">
+            @if(checkAllowedModule('loads', 'loads.create')->isNotEmpty() )
+
         <a href="{{ route('loads.create') }}" class="btn btn-primary create-button btn_primary_color"
             id="createrole"> {{ __('messages.Add Service') }}
             </a>
+            @endif
     </div>
     <div id="successMessagea" class="alert alert-success" style="display: none;" role="alert">
         <i class="bi bi-check-circle me-1"></i>
@@ -84,6 +87,7 @@
     </div>
 
     <!-- <div style="overflow-x: auto;"> -->
+        @if(checkAllowedModule('loads', 'loads.index')->isNotEmpty() )
         <table class="display mt-3 respo_table load_table_dis" id="loads">
             <thead>
                 <tr>
@@ -104,16 +108,29 @@
                     <th> {{ __('messages.Inspection') }} </th>
                     <th> {{ __('messages.Status') }} </th>
                     <th> {{ __('messages.Created By') }} </th>
+                    @if(checkAllowedModule('loads', 'loads.edit')->isNotEmpty() ||  checkAllowedModule('loads', 'loads.destroy')->isNotEmpty())
                     <th width="160px">{{ __('messages.Actions') }} </th>
+                    @endif
                     <th> {{ __('messages.Assign') }} </th>
+                     @if (checkAllowedModule('loads', 'loads.changeStatus')->isNotEmpty())
                     <th>{{ __('messages.shipment_status') }}</th>
+                    @endif
+                @if (checkAllowedModule('loads', 'loads.editTruckDetails')->isNotEmpty())
+
                     <th>{{ __('messages.update_truck_details') }}</th>
-                    @if (auth()->user()->roledata->user_type_id == 3)
+                    @endif
+
+                     @if (checkAllowedModule('loads', 'upload.bill.form')->isNotEmpty())
+                    <!-- @if (auth()->user()->roledata->user_type_id == 3) -->
                     <th>{{ __('messages.add_invoice') }}</th>
-                    @endif
-                    @if (auth()->user()->roledata->user_type_id == 3)
+                    <!-- @endif -->
+                      @endif
+                    @if (checkAllowedModule('loads', 'invoice.supplier')->isNotEmpty())
+
+                    <!-- @if (auth()->user()->roledata->user_type_id == 3) -->
                     <th>{{ __('messages.supplier_bills') }}</th>
-                    @endif
+                    <!-- @endif -->
+                      @endif
                     @if (auth()->user()->roledata->user_type_id != 3)
                     <th>{{ __('messages.Client Invoice') }}</th>
                     @endif
@@ -121,7 +138,7 @@
             </thead>
 
         </table>
-        
+         @endif
     <!-- </div> -->
     <form method="POST" id="deleteloadFormId">
         @csrf
@@ -264,12 +281,29 @@
                    { data: 'status', name: 'status' },
                 // { data: 'supplier_company_name', name: 'supplier_company_name' },
                 { data: 'created_by_user', name: 'created_by' },
+                @if(checkAllowedModule('loads', 'loads.edit')->isNotEmpty() ||  checkAllowedModule('loads', 'loads.destroy')->isNotEmpty())
                 { data: 'actions', name: 'actions', orderable: false, searchable: false },
+                @endif
                 { data: 'assign', name: 'assign', orderable: false, searchable: false },
+                @if (checkAllowedModule('loads', 'loads.changeStatus')->isNotEmpty())
+
                 { data: 'shipment_status', name: 'shipment_status', orderable: false, searchable: false },
+                   @endif
+
+                @if (checkAllowedModule('loads', 'loads.editTruckDetails')->isNotEmpty())
+
                 { data: 'update_details', name: 'update_details', orderable: false, searchable: false },
-                ...(userType === 3 ? [{ data: 'add_invoice', name: 'add_invoice', orderable: false, searchable: false }] : []),
-                ...(userType === 3 ? [{ data: 'quickbooks_supplier_invoice', name: 'quickbooks_supplier_invoice', orderable: false, searchable: false }] : []),
+                 @endif
+                 @if (checkAllowedModule('loads', 'upload.bill.form')->isNotEmpty())
+                 { data: 'add_invoice', name: 'add_invoice', orderable: false, searchable: false },
+                  @endif
+
+                 @if (checkAllowedModule('loads', 'invoice.supplier')->isNotEmpty())
+
+                 { data: 'quickbooks_supplier_invoice', name: 'quickbooks_supplier_invoice', orderable: false, searchable: false },
+                  @endif
+                // ...(userType === 3 ? [{ data: 'add_invoice', name: 'add_invoice', orderable: false, searchable: false }] : []),
+                // ...(userType === 3 ? [{ data: 'quickbooks_supplier_invoice', name: 'quickbooks_supplier_invoice', orderable: false, searchable: false }] : []),
                 ...(userType != 3 ? [{ data: 'quickbooks_invoice', name: 'quickbooks_invoice', orderable: false, searchable: false }] : []),
             ],
             language: {

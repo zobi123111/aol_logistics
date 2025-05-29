@@ -106,7 +106,13 @@
                        @endif
                     </td>
                     @if(!isClientUser())
-                    <td>${{ number_format($assignedService->cost, 2) }}</td>
+                      <td>
+                        ${{ number_format(($assignedService->cost ?? $assignedService->cost) * $assignedService->quantity, 2) }}  
+                        @if($assignedService->quantity > 1)
+                            <br>
+                            <small class="text-muted">(${{ number_format($assignedService->cost ?? $assignedService->cost, 2) }} per unit)</small>
+                        @endif
+                    </td>
                     @endif
                 </tr>
             @empty

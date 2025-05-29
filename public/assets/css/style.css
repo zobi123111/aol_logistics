@@ -1766,6 +1766,7 @@ div#client_filter {
 .main_cont_outer .card.card-container {
   background: var(--header-bg);
   color: var(--text-color);
+  width: auto;
 }
 div#loads_length label{
   color: var(--font-color);

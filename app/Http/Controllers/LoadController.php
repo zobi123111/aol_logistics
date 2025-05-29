@@ -118,16 +118,23 @@ class LoadController extends Controller
                     return 'N/A';
                 })
                 ->addColumn('actions', function ($load) {
+                    $actions = '';
                     $editUrl = route('loads.edit', encode_id($load->id));
                     $deleteId = encode_id($load->id);
                     $showUrl = route('loads.show', $deleteId);
-                    return '
-                            <a href="' . $editUrl . '" class="">
-                                <i class="fa fa-edit edit-user-icon table_icon_style blue_icon_color"></i>
-                            </a>
-                            <a href="#" class="delete-icon table_icon_style blue_icon_color" data-load-id="' . $deleteId . '">
-                                <i class="fa-solid fa-trash"></i>
-                            </a>';
+                      if (checkAllowedModule('loads', 'loads.edit')->isNotEmpty()) {
+        $actions .= '<a href="' . $editUrl . '" class="me-2" title="Edit">
+                        <i class="fa fa-edit table_icon_style blue_icon_color"></i>
+                     </a>';
+    }
+
+    if (checkAllowedModule('loads', 'loads.destroy')->isNotEmpty()) {
+        $actions .= '<a href="#" class="delete-icon table_icon_style blue_icon_color" title="Delete" data-load-id="' . $deleteId . '">
+                        <i class="fa fa-trash"></i>
+                     </a>';
+    }
+
+    return $actions;
                 })
                 ->addColumn('assign', function ($load) {
                     return '<a href="' . route('loads.assign', encode_id($load->id)) . '" class="btn btn-primary create-button btn_primary_color">
