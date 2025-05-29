@@ -113,7 +113,7 @@
 
                 <!-- Office Phone -->
                 <div class="mb-3">
-                    <label class="form-label"> {{ __('messages.Office Phone Number') }} </label>
+                    <label class="form-label"> {{ __('messages.Office Phone Number') }} </label><span class="text-danger">*</span>
                     <input type="text" name="office_phone" class="form-control" value="{{ old('office_phone') }}">
                     @error('office_phone')
                         <div class="text-danger">

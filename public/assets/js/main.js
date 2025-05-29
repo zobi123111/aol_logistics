@@ -458,7 +458,7 @@ document.addEventListener("DOMContentLoaded", function () {
    scheduleDateInput.addEventListener("keydown", function (event) {
               const key = event.key;
 
-    if (key === "+" || (key === "=" && event.shiftKey)) {
+    if (key === "+" || (key === "=" && event.shiftKey || key === "=" )) {
         event.preventDefault();
         adjustDate(this, true);
     } else if (key === "-" || key === "_") {
@@ -477,7 +477,7 @@ scheduleTimeInput.addEventListener("keydown", function (event) {
 
     let date = instance.selectedDates[0] || new Date();
 
-    if (key === "+" || (key === "=" && event.shiftKey)) {
+    if (key === "+" || (key === "=" && event.shiftKey || key === "=")) {
         event.preventDefault();
         date.setHours(date.getHours() + 1);
         instance.setDate(date, true);

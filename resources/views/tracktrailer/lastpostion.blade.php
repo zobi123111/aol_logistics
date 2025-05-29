@@ -19,7 +19,7 @@
             </div> -->
 <div class="mb-3">
     <label for="supplier_id" class="form-label">{{ __('messages.supplier') }}</label>
-    <select name="supplier_id" id="supplier_id" class="form-select">
+    <select name="supplier_id" id="supplier_id" class="form-select searchable-select-supplier">
         <option value="">{{ __('messages.select_supplier') }}</option>
         @foreach($assignedSuppliers as $assigned)
             @if ($assigned->supplier)
@@ -36,7 +36,7 @@
 
 <div class="mb-3">
     <label for="truck_number" class="form-label">{{ __('messages.truck_number') }}</label>
-    <select name="truck_number" id="truck_number" class="form-select">
+    <select name="truck_number" id="truck_number" class="form-select searchable-select">
         <option value="">{{ __('messages.select_truck') }}</option>
     </select>
     @error('truck_number')
@@ -67,6 +67,11 @@
             if ($.fn.select2) { 
         $('.searchable-select').select2({
             placeholder: "{{ __('messages.Select a Trailer') }}",
+            allowClear: true // Adds a clear button
+        });
+
+         $('.searchable-select-supplier').select2({
+            placeholder: "{{ __('messages.select_supplier') }}",
             allowClear: true // Adds a clear button
         });
     } else {
