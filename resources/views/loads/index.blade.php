@@ -111,7 +111,9 @@
                     @if(checkAllowedModule('loads', 'loads.edit')->isNotEmpty() ||  checkAllowedModule('loads', 'loads.destroy')->isNotEmpty())
                     <th width="160px">{{ __('messages.Actions') }} </th>
                     @endif
+                    @if (checkAllowedModule('loads', 'loads.assign')->isNotEmpty())
                     <th> {{ __('messages.Assign') }} </th>
+                     @endif
                      @if (checkAllowedModule('loads', 'loads.changeStatus')->isNotEmpty())
                     <th>{{ __('messages.shipment_status') }}</th>
                     @endif
@@ -120,18 +122,13 @@
                     <th>{{ __('messages.update_truck_details') }}</th>
                     @endif
 
-                     @if (checkAllowedModule('loads', 'upload.bill.form')->isNotEmpty())
-                    <!-- @if (auth()->user()->roledata->user_type_id == 3) -->
+                     @if (checkAllowedModule('loads', 'upload.bill.form')->isNotEmpty() && auth()->user()->roledata->user_type_id == 3)
                     <th>{{ __('messages.add_invoice') }}</th>
-                    <!-- @endif -->
                       @endif
-                    @if (checkAllowedModule('loads', 'invoice.supplier')->isNotEmpty())
-
-                    <!-- @if (auth()->user()->roledata->user_type_id == 3) -->
+                    @if (checkAllowedModule('loads', 'invoice.supplier')->isNotEmpty() && auth()->user()->roledata->user_type_id == 3)
                     <th>{{ __('messages.supplier_bills') }}</th>
-                    <!-- @endif -->
                       @endif
-                    @if (auth()->user()->roledata->user_type_id != 3)
+                    @if (checkAllowedModule('loads', 'loads.quickbooks_invoices')->isNotEmpty())
                     <th>{{ __('messages.Client Invoice') }}</th>
                     @endif
                 </tr>
@@ -242,6 +239,7 @@
                         client_filter: client_filter,
                         columns: data.columns,
                         shipment_status_filter: shipment_status_filter,
+                        search: data.search.value
                     },
                     success: function(response) {
                         $('#loader').hide();
@@ -262,7 +260,7 @@
             columns: [
                 { data: 'aol', name: 'aol_number' },
                 { data: 'service_type', name: 'service_type' },
-                { data: 'created_for_user', name: 'created_for_user', orderable: false, searchable: false },
+                { data: 'created_for_user', name: 'created_for_user', searchable: true},
                 { data: 'originval', name: 'origin' },
                 { data: 'destinationval', name: 'destination' },
                 //{ data: 'payer', name: 'payer' },
@@ -271,20 +269,41 @@
                 //     return row.weight ? `${row.weight} ${row.weight_unit}` : 'N/A';
                 // } },
                 { data: 'schedule', name: 'schedule', render: function(data) { 
-                    return data ? moment(data).tz(userTimezone).format('MMM. D, YYYY HH:mm') : 'N/A'; 
+                    return data ? moment(data).tz(userTimezone).format('MMM. D, YYYY HH:mm') : '--'; 
                 }  },
                 { data: 'delivery_deadline', name: 'delivery_deadline', render: function(data) { return moment(data).tz(userTimezone).format('MMM. D, YYYY'); } },
-                { data: 'customer_po', name: 'customer_po' },
+                { data: 'customer_po', name: 'customer_po' , render: function(data) { 
+                    return data ? data : '--'; 
+                }  },
                 { data: 'is_hazmat', name: 'is_hazmat', orderable: false, searchable: false },
                 { data: 'is_inbond', name: 'is_inbond', orderable: false, searchable: false },
                 { data: 'inspection', name: 'inspection', orderable: false, searchable: false },
                    { data: 'status', name: 'status' },
                 // { data: 'supplier_company_name', name: 'supplier_company_name' },
                 { data: 'created_by_user', name: 'created_by' },
-                @if(checkAllowedModule('loads', 'loads.edit')->isNotEmpty() ||  checkAllowedModule('loads', 'loads.destroy')->isNotEmpty())
-                { data: 'actions', name: 'actions', orderable: false, searchable: false },
+               
+                @if(checkAllowedModule('loads', 'loads.edit')->isNotEmpty() || checkAllowedModule('loads', 'loads.destroy')->isNotEmpty())
+                {
+                    data: 'actions',
+                    name: 'actions',
+                    orderable: false,
+                    searchable: false,
+                    render: function (data, type, row) {
+                        return data; // render expects the backend to return HTML string
+                    }
+                },
                 @endif
-                { data: 'assign', name: 'assign', orderable: false, searchable: false },
+                @if (checkAllowedModule('loads', 'loads.assign')->isNotEmpty())
+                {
+                    data: 'assign',
+                    name: 'assign',
+                    orderable: false,
+                    searchable: false,
+                    render: function (data, type, row) {
+                        return data; // render expects the backend to return HTML string
+                    }
+                },
+                @endif
                 @if (checkAllowedModule('loads', 'loads.changeStatus')->isNotEmpty())
 
                 { data: 'shipment_status', name: 'shipment_status', orderable: false, searchable: false },
@@ -294,17 +313,19 @@
 
                 { data: 'update_details', name: 'update_details', orderable: false, searchable: false },
                  @endif
-                 @if (checkAllowedModule('loads', 'upload.bill.form')->isNotEmpty())
-                 { data: 'add_invoice', name: 'add_invoice', orderable: false, searchable: false },
-                  @endif
+                 @if (checkAllowedModule('loads', 'upload.bill.form')->isNotEmpty() && auth()->user()->roledata->user_type_id == 3)
 
-                 @if (checkAllowedModule('loads', 'invoice.supplier')->isNotEmpty())
+                  { data: 'add_invoice', name: 'add_invoice', orderable: false, searchable: false },
+                  @endif
+             
+
+                 @if (checkAllowedModule('loads', 'invoice.supplier')->isNotEmpty() && auth()->user()->roledata->user_type_id == 3)
 
                  { data: 'quickbooks_supplier_invoice', name: 'quickbooks_supplier_invoice', orderable: false, searchable: false },
                   @endif
-                // ...(userType === 3 ? [{ data: 'add_invoice', name: 'add_invoice', orderable: false, searchable: false }] : []),
-                // ...(userType === 3 ? [{ data: 'quickbooks_supplier_invoice', name: 'quickbooks_supplier_invoice', orderable: false, searchable: false }] : []),
-                ...(userType != 3 ? [{ data: 'quickbooks_invoice', name: 'quickbooks_invoice', orderable: false, searchable: false }] : []),
+              @if (checkAllowedModule('loads', 'loads.quickbooks_invoices')->isNotEmpty())
+              { data: 'quickbooks_invoice', name: 'quickbooks_invoice', orderable: false, searchable: false }
+              @endif
             ],
             language: {
                 sSearch: "{{ __('messages.Search') }}",

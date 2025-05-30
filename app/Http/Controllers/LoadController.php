@@ -20,6 +20,7 @@ use App\Models\ClientCost;
 use App\Models\ClientService;
 use App\Models\SupplierService;
 use App\Models\Trailerdata;
+use Illuminate\Support\Facades\Schema;
 
 class LoadController extends Controller
 {
@@ -42,7 +43,7 @@ class LoadController extends Controller
             $shipment_status_filter = $request->input('shipment_status_filter');
             $creatorFilter = $request->input('creator_filter');
             $clientFilter = $request->input('client_filter');
-
+$search = $request->input('search.value'); 
             $loads = Load::with(['origindata', 'destinationdata', 'supplierdata', 'assignedServices.supplier', 'creator', 'creatorfor'])
             ->when($userType == 2, function ($query) use ($user, $company_name) {
                 return $query->where(function ($q) use ($user, $company_name) {
@@ -96,10 +97,47 @@ class LoadController extends Controller
                 ->when($shipment_status_filter, function ($query) use ($shipment_status_filter) {
                     return $query->where('shipment_status', $shipment_status_filter);
                 })
-                ->latest('id')
-                ->get();
+                ->latest('id');
+          
 
             return DataTables::of($loads)
+          ->filter(function ($query) use ($request) {
+        $search = $request->input('search');
+
+        if (!empty($search)) {
+            $columns = Schema::getColumnListing((new \App\Models\Load)->getTable());
+
+            $query->where(function ($q) use ($columns, $search) {
+                // Search in Load table columns
+                foreach ($columns as $column) {
+                    $q->orWhere("loads.$column", 'like', "%{$search}%");
+                }
+
+                // Search in related model: creator
+                $q->orWhereHas('creator', function ($sub) use ($search) {
+                    $sub->where('fname', 'like', "%{$search}%")
+                    ->orWhere('lname', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%")
+                         ->orWhereRaw("CONCAT(fname, ' ', lname) LIKE ?", ["%{$search}%"]);
+                });
+
+                // Search in related model: creatorfor
+                $q->orWhereHas('creatorfor', function ($sub) use ($search) {
+                    $sub->where('business_name', 'like', "%{$search}%");
+                });
+
+                // Search in related model: origindata
+                $q->orWhereHas('origindata', function ($sub) use ($search) {
+                    $sub->where('name', 'like', "%{$search}%");
+                });
+
+                // Search in related model: destinationdata
+                $q->orWhereHas('destinationdata', function ($sub) use ($search) {
+                    $sub->where('name', 'like', "%{$search}%");
+                });
+            });
+        }
+    })
                 ->addColumn('originval', function ($load) {
                     return $load->origindata
                     ? ($load->origindata->name ?: ($load->origindata->street . ', ' . $load->origindata->city . ', ' . $load->origindata->state . ', ' . $load->origindata->country))

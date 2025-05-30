@@ -74,6 +74,7 @@
                 <option value=""> {{ __('messages.Select Country') }} </option>
                 <option value="USA" {{ old('country') == 'USA' ? 'selected' : '' }}>United States</option>
                 <option value="Mexico" {{ old('country') == 'Mexico' ? 'selected' : '' }}>Mexico</option>
+                  </select>
             @error('country')
                 <div class="text-danger">
                     {{ $message }}

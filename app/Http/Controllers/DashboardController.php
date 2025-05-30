@@ -54,7 +54,7 @@ class DashboardController extends Controller
         }
         
         $activeUsers = User::whereIn('id', array_unique($activeUserIds))->with('roledata')->get();
-        $pendingLoads = Load::with('origindata','destinationdata', 'creatorfor')->where('shipment_status', 'pending')->get();
+        $pendingLoads = Load::with('origindata','destinationdata', 'creatorfor', 'assignedServices.supplier' )->where('shipment_status', 'pending')->get();
         if ($request->ajax()) {
 
             // dd($request->all());
@@ -80,17 +80,27 @@ class DashboardController extends Controller
                 ->addColumn('created_for_user', function ($load) {
                     return optional($load->creatorfor)->business_name ?? optional($load->creatorfor)->email;
                 })
+                 ->addColumn('supplier_dba', function ($load) {
+                    return $load->assignedServices
+                        ->pluck('supplier.dba')   // Get all dba names
+                        ->filter()                // Remove null values
+                        ->unique()                // Avoid duplicates
+                        ->implode(', ');         // Join them with a comma
+                })
                 ->rawColumns(['originval', 'destinationval', 'aol']) 
                     ->addIndexColumn()
                     ->make(true);
             }
 
-            if ($request->query('type') === 'filter') {
-                $query = Load::with(['supplierdata', 'creator', 'origindata','destinationdata']);
+                if ($request->query('type') === 'filter') {
+                $query = Load::with(['supplierdata', 'creator', 'origindata','destinationdata', 'assignedServices.supplier']);
         
-                if (!empty($request->supplier_ids)) {
-                    $query->whereIn('supplier_id', $request->supplier_ids);
+                                if (!empty($request->supplier_ids)) {
+                    $query->whereHas('assignedServices', function ($q) use ($request) {
+                        $q->whereIn('supplier_id', $request->supplier_ids);
+                    });
                 }
+
         
                 if (!empty($request->creator_ids)) {
                     $query->whereIn('created_by', $request->creator_ids);
@@ -120,6 +130,15 @@ class DashboardController extends Controller
                             ? $load->destinationdata->street . ', ' . $load->destinationdata->city . ', ' . $load->destinationdata->state . ', ' . $load->destinationdata->country
                             : 'N/A';
                     })
+                    ->addColumn('supplier_dba', function ($load) {
+                            return $load->assignedServices
+                                ->map(function ($service) {
+                                    return optional($service->supplier)->dba;
+                                })
+                                ->filter() 
+                                ->unique() 
+                                ->implode(', ');
+                        })
                     ->addColumn('aol', function ($load) {
                         $deleteId = encode_id($load->id);
                         $showUrl = route('loads.show', $deleteId);
@@ -142,10 +161,20 @@ class DashboardController extends Controller
         // $creators = User::select('id', 'fname')->get();
 
 
-        $suppliers = Load::with('supplierdata')
-        ->selectRaw('DISTINCT supplier_id')
-        ->whereNotNull('supplier_id') 
-        ->get();
+        // $suppliers = Load::with('supplierdata')
+        // ->selectRaw('DISTINCT supplier_id')
+        // ->whereNotNull('supplier_id') 
+        // ->get();
+
+        $loads = Load::with('assignedServices.supplier')->get();
+
+$suppliers = $loads
+    ->pluck('assignedServices')              // Get all assignedServices per load
+    ->flatten()
+    ->pluck('supplier')                      // Extract suppliers
+    ->filter()                               // Remove nulls
+    ->unique('id')                           // Ensure uniqueness by supplier ID
+    ->values();
 
         $creators = Load::with('creator')
         ->selectRaw('DISTINCT created_by')

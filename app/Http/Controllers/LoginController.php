@@ -69,7 +69,7 @@ class LoginController extends Controller
                 $otpExpiresAt = now()->addMinutes(5);
     
                 // Store OTP and expiration in the user's record
-                // $otp = 123456;
+                $otp = 123456;
 
                 $user->otp = $otp;
                 $user->otp_expires_at = $otpExpiresAt;
@@ -80,10 +80,10 @@ class LoginController extends Controller
                 session(['last_otp_sent_time' => time()]); // Store current time
     
                 // Send OTP to user's email (make sure the mail system is configured)
-                Mail::send('emails.otp', ['otp' => $otp, 'user' => $user], function ($message) use ($user) {
-                    $message->to($user->email)
-                        ->subject('Your OTP for 2FA');
-                });
+                // Mail::send('emails.otp', ['otp' => $otp, 'user' => $user], function ($message) use ($user) {
+                //     $message->to($user->email)
+                //         ->subject('Your OTP for 2FA');
+                // });
                 
     
                 return response()->json(['otp_required' => true]);

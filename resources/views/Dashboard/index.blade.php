@@ -137,13 +137,20 @@
                 <div class="row mt-4">
                 <div class="col-md-3">
                     <label for="supplierFilter">{{ __('messages.filter_by_supplier') }}</label>
-                    <select id="supplierFilter" class="form-control" multiple>
+                    <!-- <select id="supplierFilter" class="form-control" multiple>
                         @foreach($suppliers as $supplier)
                         @if(isset($supplier->supplierdata))
                             <option value="{{ $supplier->supplierdata->id }}">{{ $supplier->supplierdata->company_name }}</option>
                             @endif
                         @endforeach
-                    </select>
+                    </select> -->
+                    <select id="supplierFilter" class="form-control" multiple>
+    @foreach($suppliers as $supplier)
+        @if(!empty($supplier))
+            <option value="{{ $supplier->id }}">{{ $supplier->dba ?? $supplier->company_name }}</option>
+        @endif
+    @endforeach
+</select>
                 </div>
 
                 <div class="col-md-3">
@@ -214,6 +221,7 @@
 </div>
 
 @endif
+@if( isAolUser())
     <!-- User Statistics Chart -->
     <div class="row mt-4">
         <div class="col-lg-6">
@@ -225,6 +233,7 @@
             </div>
         </div>
     </div>
+    @endif
 </div>
 </div>
 
@@ -334,7 +343,7 @@
                 { data: 'originval', name: 'origin' },
                 { data: 'created_for_user', name: 'created_for_user', orderable: false, searchable: false },
                 { data: 'destinationval', name: 'destination' },
-                { data: 'supplier_name', name: 'supplierdata.company_name' },
+                { data: 'supplier_dba', name: 'supplierdata.company_name' },
                 { data: 'creator_name', name: 'creator.fname' },
                 { data: 'status', name: 'status' }
             ]

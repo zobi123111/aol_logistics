@@ -126,7 +126,7 @@
     <thead>
         <tr>
             <th>{{ __('messages.Supplier Company Name') }} </th>
-            <th>{{ __('messages.supplier_transport_type') }}</th>
+            <!-- <th>{{ __('messages.supplier_transport_type') }}</th> -->
             <th>{{ __('messages.service_type') }}</th>
             <th> {{ __('messages.Service Name') }}  </th>
             <th>{{ __('messages.Service Details') }} </th>
@@ -144,7 +144,7 @@
         @foreach ($supplier->supplierServices as $service)
             <tr>
                 <td>{{ $supplier->dba }}</td>
-            <td>{{ ucfirst($supplier->service_type) }}</td>
+            <!-- <td>{{ ucfirst($supplier->service_type) }}</td> -->
                 <td>{{ ucfirst($service->masterService->service_type) }}</td>
                 <td>{{ $service->masterService->service_name ?? 'NA' }}</td>
 
@@ -201,7 +201,7 @@
     <thead>
         <tr>
             <th>{{ __('messages.Supplier Company Name') }} </th>
-            <th>{{ __('messages.supplier_transport_type') }}</th>
+            <!-- <th>{{ __('messages.supplier_transport_type') }}</th> -->
             <th>{{ __('messages.service_type') }}</th>
              <th> {{ __('messages.Service Name') }}  </th>
             <th>{{ __('messages.quantity') }}</th>
@@ -221,7 +221,7 @@
             @foreach ($assignedServices as $assigned)
                 <tr>
                     <td>{{ $assigned->supplier->dba }}</td>
-                    <td>{{ ucfirst($assigned->supplier->service_type) }}</td>
+                    <!-- <td>{{ ucfirst($assigned->supplier->service_type) }}</td> -->
                     <td>{{ ucfirst($assigned->service->masterService->service_type) }}</td>
                     <td>{{ $assigned->service->masterService->service_name?? 'NA' }}</td>
                     <td>{{ $assigned->quantity }}</td>
@@ -267,7 +267,7 @@
     <thead>
         <tr>
             <th>{{ __('messages.Supplier Company Name') }} </th>
-             <th>{{ __('messages.supplier_transport_type') }}</th>
+             <!-- <th>{{ __('messages.supplier_transport_type') }}</th> -->
             <th>{{ __('messages.service_type') }}</th>
             <th> {{ __('messages.Service Name') }}  </th>
             <th>{{ __('messages.service_details') }}</th>
@@ -286,7 +286,7 @@
             @foreach ($deletedAssignedServices as $assigned)
                 <tr>
                     <td>{{ $assigned->supplier->dba }}</td>
-                    <td>{{ ucfirst($assigned->supplier->service_type) }}</td>
+                    <!-- <td>{{ ucfirst($assigned->supplier->service_type) }}</td> -->
 
                     <td>{{ ucfirst($assigned->service->masterService->service_type) }}</td>
                     <td>{{ $assigned->service->masterService->service_name?? 'NA' }}</td>

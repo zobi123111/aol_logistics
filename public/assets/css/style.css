@@ -1461,8 +1461,9 @@ section.section.dashboard p {
 }
 
 .module_cont {
-  display: flex;
-  column-gap: 12px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
 }
 
 .resend_otp_btn {
@@ -1766,7 +1767,6 @@ div#client_filter {
 .main_cont_outer .card.card-container {
   background: var(--header-bg);
   color: var(--text-color);
-  width: auto;
 }
 div#loads_length label{
   color: var(--font-color);
