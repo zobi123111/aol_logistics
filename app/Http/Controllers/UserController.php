@@ -24,7 +24,7 @@ class UserController extends Controller
         $users = User::with('roledata')
         ->whereHas('roledata', function ($query) {
             $query->where('user_type_id', 1); 
-        })->where('is_dev', 0)
+        })
         ->get();
         $roles = Role::with(['userType'])->where('user_type_id', 1)->get();
         $userType = UserType::all();

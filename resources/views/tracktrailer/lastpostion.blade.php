@@ -90,7 +90,7 @@
                         $('#truck_number').append(`<option value="">@lang('messages.select_truck')</option>`);
 
                         response.forEach(function (truck) {
-                            $('#truck_number').append(`<option value="${truck.trailer_num}">${truck.trailer_num}</option>`);
+                            $('#truck_number').append(`<option value="${truck.truck_number}">${truck.truck_number}</option>`);
                         });
                     }
                 });

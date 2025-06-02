@@ -36,6 +36,8 @@ class SupplierUnitController extends Controller
             // 'license_plate' => ['required','string', 'regex:/^[A-Za-z]{2}-\d{2}-[A-Za-z]{2}$/'],
             'license_plate' => 'required|string',
             'state' => 'required|string',
+            'truck_number' => 'required|string',
+
         ]);
     
         // Check if validation fails
@@ -70,6 +72,7 @@ class SupplierUnitController extends Controller
             // 'license_plate' => ['required','string', 'regex:/^[A-Za-z]{2}-\d{2}-[A-Za-z]{2}$/'],
             'license_plate' => 'required|string',
             'state' => 'required|string',
+            'truck_number' => 'required|string',
         ]);
     
         // Check if validation fails

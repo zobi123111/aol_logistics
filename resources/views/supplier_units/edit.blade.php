@@ -66,7 +66,21 @@
             @enderror  
         </div>
  
-
+        <div class="form-group mb-3">
+                <label for="truck_number" class="form-label">{{__('messages.Truck Number')}} <span class="text-danger">*</span><small class="text-muted d-block">
+    {{ __('messages.Truck Number Note') }}
+</small></label>
+                <input 
+                    type="text" 
+                    class="form-control" 
+                    id="truck_number" 
+                    name="truck_number" 
+                    value="{{ old('truck_number', $unit->truck_number) }}"
+                >
+                @error('truck_number')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
         <div class="form-group mb-3">
             <label for="license_plate" class="form-label">{{ __('messages.License Plate') }} <span class="text-danger">*</span></label>
             <!-- <select name="license_plate" class="form-control">

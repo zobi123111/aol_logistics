@@ -72,6 +72,23 @@
             @error('unit_number')
                 {{ $message }}
             @enderror  
+
+        </div>
+
+            <div class="form-group mb-3">
+            <label for="truck_number" class="form-label">{{__('messages.Truck Number')}} <span class="text-danger">*</span> <small class="text-muted d-block">
+    {{ __('messages.Truck Number Note') }}
+</small> </label>
+            <input 
+                type="text" 
+                class="form-control" 
+                id="truck_number" 
+                name="truck_number" 
+                value="{{ old('truck_number') }}" 
+            >
+            @error('truck_number')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
         </div>
 
         <div class="form-group mb-3">

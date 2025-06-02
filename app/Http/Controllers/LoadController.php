@@ -19,7 +19,7 @@ use App\Models\UserActivityLog;
 use App\Models\ClientCost;
 use App\Models\ClientService;
 use App\Models\SupplierService;
-use App\Models\Trailerdata;
+use App\Models\SupplierUnit;
 use Illuminate\Support\Facades\Schema;
 
 class LoadController extends Controller
@@ -1049,7 +1049,7 @@ if ($request->filled('schedule_date') && $request->filled('schedule_time')) {
 
 public function getTrucksBySupplier($id)
 {
-    $trucks = Trailerdata::where('supplier_id', $id)
+    $trucks = SupplierUnit::where('supplier_id', $id)
                   ->select('trailer_num')
                   ->distinct()
                   ->get();

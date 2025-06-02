@@ -504,10 +504,5 @@ return [
                 'select_supplier' => 'Select Supplier',
 
 'get_supplier_truck_position' => 'Get Supplier Truck Position',
-
-
-
-
-
-
+'Truck Number Note' => 'This will be used for GPS tracking.',
 ];

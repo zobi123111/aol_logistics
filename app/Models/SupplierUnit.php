@@ -15,6 +15,7 @@ class SupplierUnit extends Model
         'unit_number',
         'license_plate',
         'state',
+        'truck_number'
     ];
 
     public function supplier()

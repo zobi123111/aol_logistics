@@ -2207,6 +2207,8 @@ a.logo.d-flex.align-items-center.w-auto {
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
 }
+
+
 }
 @media (max-width: 475px) {
 .module_cont {
@@ -2643,4 +2645,19 @@ li.list-group-item {
 }
 td.icon-design a img {
     width: 28px;
+}
+nav.header-nav.ms-auto.d-flex.align-items-center {
+    justify-content: flex-end;
+}
+
+span.d-none.d-md-block.dropdown-toggle.ps-2
+ {
+    overflow: visible;
+}
+
+
+@media (max-width: 767px) {
+    p.text {
+      display: none !important;
+  }
 }

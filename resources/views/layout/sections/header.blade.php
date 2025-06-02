@@ -48,13 +48,13 @@
                 </button>
                 </li><!-- End Search Icon-->
                 
-                <li class="nav-item dropdown pe-5">
+                <li class="nav-item dropdown pe-2">
                     <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
                         <img src="{{ Auth::user()->profile_photo ? asset('storage/' . Auth::user()->profile_photo) : asset('assets/img/dummy.png') }}"
                             alt="Profile" class="rounded-circle">
                     @php
-                        $fullName = Auth::user()->fname;
-                        $maxLength = 8;
+                        $fullName = Auth::user()->fname. ' ' . Auth::user()->lname;
+                        $maxLength = 15;
                         if (strlen($fullName) > $maxLength) {
                             $truncated = substr($fullName, 0, $maxLength) . '...';
                         } else {
@@ -63,10 +63,9 @@
                     @endphp
 
                     <span 
-                    class="d-none d-md-block dropdown-toggle ps-2" 
-                    style="max-width: 150px; display: inline-block; vertical-align: middle; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
-                    data-bs-toggle="tooltip" 
-                    title="{{ $fullName }}">
+                    class="d-md-block dropdown-toggle ps-2" 
+                    >
+                    <p class="text" style="max-width: 150px;display: inline-block;vertical-align: middle;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 100%;margin-bottom: 0;" data-bs-toggle="tooltip" title="{{ $fullName }}">
                     {{ $truncated }}
                     </span>    
                     <!-- End Profile Image Icon -->

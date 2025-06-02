@@ -506,7 +506,5 @@ return [
     'select_truck' => 'Seleccionar camión',
         'select_supplier' => 'Seleccionar proveedor',
 'get_supplier_truck_position' => 'Obtener posición del camión del proveedor',
-
-
-
+'Truck Number Note' => 'Esto se utilizará para el seguimiento por GPS.',
 ];

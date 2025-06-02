@@ -251,7 +251,7 @@ $(document).ready(function () {
             updateFileDisplay(field);
         };
     });
-$('#supplier_id').on('change', function () {
+    $('#supplier_id').on('change', function () {
             let supplierId = $(this).val();
 
             if (supplierId) {
@@ -263,7 +263,7 @@ $('#supplier_id').on('change', function () {
                         $('#truck_number').append(`<option value="">@lang('messages.select_truck')</option>`);
 
                         response.forEach(function (truck) {
-                            $('#truck_number').append(`<option value="${truck.trailer_num}">${truck.trailer_num}</option>`);
+                            $('#truck_number').append(`<option value="${truck.truck_number}">${truck.truck_number}</option>`);
                         });
                     }
                 });
