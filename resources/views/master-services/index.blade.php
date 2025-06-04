@@ -71,7 +71,16 @@ $(document).ready(function() {
     serverSide: true,
     ajax: "{{ route('master-services.data') }}",
     columns: [
-        { data: 'service_type', name: 'service_type' },
+       {
+            data: 'service_type',
+            name: 'service_type',
+            render: function (data, type, row) {
+                if (typeof data === 'string' && data.length > 0) {
+                    return data.charAt(0).toUpperCase() + data.slice(1);
+                }
+                return data;
+            }
+        },
         { data: 'service_name', name: 'service_name' },
         { data: 'origin', name: 'origin' },
         { data: 'destination', name: 'destination' },

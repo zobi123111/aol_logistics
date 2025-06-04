@@ -74,7 +74,7 @@
                 @endif
                 <th> {{ __('messages.Service Name') }}  </th>
                 <th>{{ __('messages.Service Details') }} </th>
-                @if(!isClientUser())
+                @if(isAolAdminUser())
                 <th>{{ __('messages.Cost') }} </th>
                 @endif
             </tr>
@@ -105,7 +105,7 @@
 
                        @endif
                     </td>
-                    @if(!isClientUser())
+                    @if(isAolAdminUser())
                       <td>
                         ${{ number_format(($assignedService->cost ?? $assignedService->cost) * $assignedService->quantity, 2) }}  
                         @if($assignedService->quantity > 1)

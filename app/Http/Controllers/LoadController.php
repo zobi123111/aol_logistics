@@ -1050,9 +1050,10 @@ if ($request->filled('schedule_date') && $request->filled('schedule_time')) {
 public function getTrucksBySupplier($id)
 {
     $trucks = SupplierUnit::where('supplier_id', $id)
-                  ->select('trailer_num')
+                  ->select('truck_number')
                   ->distinct()
                   ->get();
     return response()->json($trucks);
 }
 }
+

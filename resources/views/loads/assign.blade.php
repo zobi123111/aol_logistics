@@ -130,7 +130,9 @@
             <th>{{ __('messages.service_type') }}</th>
             <th> {{ __('messages.Service Name') }}  </th>
             <th>{{ __('messages.Service Details') }} </th>
+             @if(isAolAdminUser())
             <th>{{ __('messages.Cost') }} </th>
+            @endif
             <th>{{ __('messages.Action') }} </th>
         </tr>
     </thead>
@@ -166,8 +168,9 @@
                         : 'N/A' }}
                       @endif
                 </td>
+                 @if(isAolAdminUser())
                 <td>{{ optional($service->clientServices->first())->cost !== null ? '$' . number_format($service->clientServices->first()->cost, 2) : '---' }}
-
+                @endif
 
                 </td>
                 <td>
@@ -206,7 +209,9 @@
              <th> {{ __('messages.Service Name') }}  </th>
             <th>{{ __('messages.quantity') }}</th>
             <th>{{ __('messages.Service Details') }} </th>
+             @if(isAolAdminUser())
             <th>{{ __('messages.Cost') }} </th>
+            @endif
             <th>{{ __('messages.Action') }} </th>
         </tr>
     </thead>
@@ -242,6 +247,7 @@
                         : 'N/A' }}
                         @endif
                     </td>
+                     @if(isAolAdminUser())
                     <td>
                         ${{ number_format(($assigned->cost ?? $assigned->cost) * $assigned->quantity, 2) }}  
                         @if($assigned->quantity > 1)
@@ -249,7 +255,7 @@
                             <small class="text-muted">(${{ number_format($assigned->cost ?? $assigned->cost, 2) }} per unit)</small>
                         @endif
                     </td>
-
+                    @endif
                     <td>
                         <button type="button" class="btn btn-danger" onclick="showDeleteModal({{ $assigned->id }})">
                             <i class="fas fa-times"></i>
@@ -271,7 +277,9 @@
             <th>{{ __('messages.service_type') }}</th>
             <th> {{ __('messages.Service Name') }}  </th>
             <th>{{ __('messages.service_details') }}</th>
+             @if(isAolAdminUser())
             <th>{{ __('messages.Cost') }} </th> 
+             @endif
             <th>{{ __('messages.reason_of_cancellation') }}</th>
         </tr>
     </thead>
@@ -310,7 +318,9 @@
 
                        @endif
                     </td>
+                     @if(isAolAdminUser())
                     <td>${{ number_format($assigned->cost ?? $assigned->cost, 2) }}</td>
+                    @endif
                     <td>{{ $assigned->cancel_reason }}</td>
 
                 </tr>

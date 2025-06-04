@@ -311,7 +311,7 @@
 
                 @if (checkAllowedModule('loads', 'loads.editTruckDetails')->isNotEmpty())
 
-                // { data: 'update_details', name: 'update_details', orderable: false, searchable: false },
+                { data: 'update_details', name: 'update_details', orderable: false, searchable: false },
                  @endif
                  @if (checkAllowedModule('loads', 'upload.bill.form')->isNotEmpty() && auth()->user()->roledata->user_type_id == 3)
 

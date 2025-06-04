@@ -98,8 +98,17 @@ function isAdminUser()
     if (!$user) {
         return false;
     }
+    return ($user->is_owner == 1 || $user->is_dev == 1);
+}
 
-    return ($user->role === 'admin' || $user->is_owner == 1);
+function isAolAdminUser()
+{
+    $user = auth()->user();
+    
+    if (!$user) {
+        return false;
+    }
+    return ($user->role === 'aol_admin' || $user->is_owner == 1 || $user->is_dev == 1);
 }
 
 function isAolUser()
