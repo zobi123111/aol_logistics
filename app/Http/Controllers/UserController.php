@@ -13,6 +13,7 @@ use App\Models\UserActivityLog;
 use Illuminate\Support\Facades\App;
 use Illuminate\Validation\Rule;
 use App\Models\EmailJob;
+use Eludadev\Passage\Passage;
 
 
 class UserController extends Controller
@@ -76,7 +77,8 @@ class UserController extends Controller
 
        $store =  User::create($store_user);
         if($store){
-
+            $passage = new Passage(env('PASSAGE_APP_ID'), env('PASSAGE_API_KEY'));
+            $newUser1 = $passage->user->create($request->email);
             // Generate password to send in the email
             $password = $request->password;
 

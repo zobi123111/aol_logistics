@@ -2661,3 +2661,30 @@ span.d-none.d-md-block.dropdown-toggle.ps-2
       display: none !important;
   }
 }
+
+
+/* Base button style */
+.login-toggle-btn {
+    background-color: #ffffff;
+    color: #00709e;
+    border: 1px solid #00709e;
+    transition: all 0.3s ease;
+}
+
+/* Active button */
+.login-toggle-btn.active {
+    background-color: #00709e;
+    color: #ffffff;
+}
+
+/* Hover effect for inactive button */
+.login-toggle-btn:not(.active):hover {
+    background-color: #e6f4f8;
+    color: #005c84;
+}
+
+/* Hover effect for active button */
+.login-toggle-btn.active:hover {
+    background-color: #005c84;
+    color: #ffffff;
+}

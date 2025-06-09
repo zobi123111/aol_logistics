@@ -29,7 +29,7 @@
                     <select name="service_type" id="service_type" class="form-control">
                         <option value="">{{ __('messages.Select Service Type') }}</option>
                         <option value="freight" {{ (old('service_type', $service->service_type ?? '') == 'freight') ? 'selected' : '' }}>{{ __('messages.Freight') }}</option>
-                        <option value="warehouse" {{ (old('service_type', $service->service_type ?? '') == 'warehouse') ? 'selected' : '' }}>{{ __('messages.Warehouse') }}Warehouse</option>
+                        <option value="warehouse" {{ (old('service_type', $service->service_type ?? '') == 'warehouse') ? 'selected' : '' }}>{{ __('messages.Warehouse') }}</option>
                     </select>
                     @error('service_type')
                         <div class="text-danger">{{ $message }}</div>
@@ -113,8 +113,8 @@
                 <div class="mb-3">
                     <label for="country" class="form-label">{{ __('messages.Country') }} <span class="text-danger">*</span></label>
                     <select name="country" class="form-control @error('country') is-invalid @enderror">
-                        <option value=""> {{ __('messages.Select Country') }} </option>
-                        @foreach(['USA', 'Maxico', 'UK', 'Germany', 'France', 'Australia', 'India', 'China', 'Japan', 'Brazil'] as $country)
+                        <option value=""> {{ __('messages.Select Country') }}</option>
+                        @foreach(['USA', 'Mexico'] as $country)
                             <option value="{{ $country }}" 
                                 {{ (isset($service) && $service->country == $country) || old('country') == $country ? 'selected' : '' }}>
                                 {{ $country }}

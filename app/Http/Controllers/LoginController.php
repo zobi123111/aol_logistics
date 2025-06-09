@@ -8,8 +8,13 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Log\Logger;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+
+use Eludadev\Passage\Passage;
 
 class LoginController extends Controller
 {
@@ -186,6 +191,8 @@ class LoginController extends Controller
 
         Session::flush();
         Auth::logout(); 
+        session()->forget('logged_in_via_passage');
+
         session()->invalidate(); 
         session()->regenerateToken();
         
@@ -271,4 +278,129 @@ class LoginController extends Controller
     {
         return view('Login/otpform');
     }
+
+    // public function loginhere(Request $request)
+    // {
+    //     $authHeader = $request->header('Authorization');
+    //     if (!$authHeader || !str_starts_with($authHeader, 'Bearer ')) {
+    //         return response()->json(['error' => 'No or invalid Authorization header'], 401);
+    //     }
+
+    //     $jwt = substr($authHeader, 7);
+
+    //     try {
+    //         $appId = env('PASSAGE_API_KEY');
+    //         $certsJson = file_get_contents("https://auth.passage.id/v1/apps/$appId/certs");
+    //         $certs = json_decode($certsJson, true);
+
+    //         $publicKey = $certs['keys'][0]['x5c'][0];
+    //         $pem = "-----BEGIN CERTIFICATE-----\n" . chunk_split($publicKey, 64, "\n") . "-----END CERTIFICATE-----\n";
+
+    //         $decoded = JWT::decode($jwt, new Key($pem, 'RS256'));
+    //         $userId = $decoded->sub;
+    //         $email = $decoded->email ?? ('user_' . substr($userId, 0, 8) . '@example.com');
+
+    //         $user = User::firstOrCreate(
+    //             ['passage_id' => $userId],
+    //             ['name' => 'Passage User', 'email' => $email, 'password' => bcrypt('passage_default')]
+    //         );
+
+    //         auth()->login($user);
+
+    //         return response()->json([
+    //             'status' => 'authenticated',
+    //             'user' => [
+    //                 'id' => $user->id,
+    //                 'email' => $user->email
+    //             ]
+    //         ]);
+    //     } catch (\Exception $e) {
+    //         Log::error('JWT decode failed: ' . $e->getMessage());
+    //         return response()->json(['error' => 'Invalid token'], 401);
+    //     }
+    // }
+
+
+     public function handle(Request $request)
+    {
+      $token = $request->bearerToken() ?? $request->cookie('passage-token');
+
+        if (!$token) {
+            return redirect('/login')->withErrors(['token' => 'Missing Passage token']);
+        }
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('PASSAGE_API_KEY'),
+        ])->get('https://auth.passage.id/v1/auth/user-info', [
+            'auth_token' => $token,
+        ]);
+        if ($response->failed()) {
+            return redirect('/login')->withErrors(['token' => 'Invalid token']);
+        }
+
+        $userInfo = $response->json();
+        $email = $userInfo['email'] ?? null;
+
+        if (!$email) {
+            return redirect('/login')->withErrors(['email' => 'No email returned by Passage']);
+        }
+
+        // ✅ Only log in users that already exist
+        $user = User::where('email', $email)->first();
+
+        if (!$user) {
+            return redirect('/login')->withErrors(['email' => 'Email not registered.']);
+        }
+
+        // ✅ Optional: also check otp_verified or role, if needed
+
+        Auth::login($user);
+
+        return redirect()->route('dashboard');
+    }
+
+
+public function loginhere(Request $request)
+
+{
+
+   
+        $passage = new Passage(env('PASSAGE_APP_ID'), env('PASSAGE_API_KEY'));
+    //    $newUser1 = $passage->user->create('simranjit.developer.03+3@gmail.com');
+
+        try {
+            $userID = $passage->authenticateRequest($request);
+
+            if (!$userID) {
+                return redirect('/login')->withErrors(['msg' => 'Invalid Passage token']);
+            }
+
+            $passageUser = $passage->user->get($userID);
+            $email = $passageUser['email'] ?? null;
+                if (!$passageUser['email_verified']) {
+                    return redirect('/login')->withErrors(['msg' => 'Email not verified']);
+                }
+            if (!$email) {
+                return redirect('/login')->withErrors(['msg' => 'Email not found in Passage user']);
+            }
+
+            $user = \App\Models\User::where('email', $email)->first();
+
+            if (!$user) {
+                return redirect('/login')->withErrors(['msg' => 'Email not registered in Laravel']);
+            }
+
+            // ✅ Log user into Laravel
+            session()->put('logged_in_via_passage', true);
+
+            Auth::login($user);
+
+            // ✅ Redirect to dashboard
+            return redirect('/dashboard');
+
+        } catch (\Throwable $e) {
+            return redirect('/login')->withErrors(['msg' => 'Login error: ' . $e->getMessage()]);
+        }
+}
+
 }

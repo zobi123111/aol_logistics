@@ -38,9 +38,20 @@
     <link href="{{ url('assets/css/style.css') }}" rel="stylesheet">
  
     <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<meta name="csrf-token" content="{{ csrf_token() }}">
+  <script src="https://psg.so/web.js"></script>
+  <script src="https://cdn.passage.id/passage-auth.js"></script>
 
+<!-- <script src="https://cdn.passage.id/passage-auth.js"></script> -->
+
+<!-- <script src="https://psg.so/passage-elements.js"></script> -->
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<!-- <script src="https://cdn.passage.id/passage-elements/v2.x/passage-elements.js"></script>
+  <script src="https://psg.so/web.js"></script> -->
+
+    <!-- <script src="https://cdn.passage.id/passage.js"></script> -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <script>
         (function() {
             const savedMode = localStorage.getItem('darkMode');

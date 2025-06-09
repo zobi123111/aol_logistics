@@ -483,6 +483,15 @@ if ($request->filled('schedule_date') && $request->filled('schedule_time')) {
         $status = $load->status; 
         $supplier_id = $load->supplier_id; 
 
+        // Check if the load has any assigned services
+            $load = Load::with('assignedServices')->findOrFail($id);
+
+            if ($load->assignedServices()->exists() ) {
+                return redirect()->route('loads.index')->with('error',  __('messages.cannot_edit_client_assigned'));
+
+    }
+
+
         $message =  __('messages.Load updated successfully.');
       
         if ($request->filled('supplier_id')) {

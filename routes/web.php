@@ -46,6 +46,10 @@ use App\Http\Controllers\ClientServiceController;
 use App\Http\Controllers\TrailerdataController;
 
 
+use Eludadev\Passage\Passage;
+use Eludadev\Passage\Middleware\PassageAuthMiddleware;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -77,6 +81,7 @@ Route::post('/forgot-password', [LoginController::class, 'forgotPassword'])->nam
 Route::get('/reset/password/{token}', [LoginController::class, 'resetPassword']);
 Route::post('/reset/password', [LoginController::class, 'submitResetPasswordForm'])->name('submit.reset.password');
 
+// Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 Route::middleware(['auth.user', 'otp.verified', 'role.permission'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -245,4 +250,7 @@ Route::get('/chat/{number}/{name}', function ($number, $name) {
     return view('chat', ['number' => $number, 'name' => $name ]);
 })->name('chat.here');
 
+// Route::get('/passage/callback', [LoginController::class, 'handle']);
+
+Route::get('/passage-login', [LoginController::class, 'loginhere'])->name('passage.login');
 

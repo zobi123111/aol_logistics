@@ -505,4 +505,6 @@ return [
 
 'get_supplier_truck_position' => 'Get Supplier Truck Position',
 'Truck Number Note' => 'This will be used for GPS tracking.',
+'cannot_edit_client_assigned' => 'You cannot edit the client for this load because it has been assigned to a supplier.',
+
 ];

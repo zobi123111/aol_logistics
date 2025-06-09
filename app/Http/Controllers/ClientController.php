@@ -64,6 +64,7 @@ class ClientController extends Controller
             'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'mobile_number' => 'required|numeric',  
             'country_code' => 'required|string|max:5', 
+            'dba' => 'required|string|max:255',
         ];
         
       
@@ -100,6 +101,7 @@ class ClientController extends Controller
                 'is_client' => 1,
                 'mobile_number' => $request->mobile_number,
                 'country_code' => $request->country_code,
+                'dba' => $request->dba,
             ]);
         
             DB::commit();
@@ -200,6 +202,7 @@ class ClientController extends Controller
             // 'email' => 'required|email|unique:users,email,' . $user->id,
             'mobile_number' => 'required|numeric', 
             'country_code' => 'required|string|max:5',
+            'dba' => 'required|string|max:255',
          ]);
      
          // Check if validation fails
@@ -215,6 +218,7 @@ class ClientController extends Controller
          $user->business_name = $request->business_name;
          $user->mobile_number = $request->mobile_number;
          $user->country_code = $request->country_code;
+         $user->dba = $request->dba;
 
          $user->save();
 

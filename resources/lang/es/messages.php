@@ -507,4 +507,6 @@ return [
         'select_supplier' => 'Seleccionar proveedor',
 'get_supplier_truck_position' => 'Obtener posición del camión del proveedor',
 'Truck Number Note' => 'Esto se utilizará para el seguimiento por GPS.',
+    'cannot_edit_client_assigned' => 'No puedes editar el cliente de esta carga porque ha sido asignada a un proveedor.',
+
 ];

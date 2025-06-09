@@ -112,14 +112,14 @@
                 <option value=""> {{ __('messages.Select Country') }} </option>
                 <option value="USA" {{ old('country') == 'USA' ? 'selected' : '' }}>United States</option>
                 <option value="Mexico" {{ old('country') == 'Mexico' ? 'selected' : '' }}>Mexico</option>
-                <option value="UK" {{ old('country') == 'UK' ? 'selected' : '' }}>United Kingdom</option>
+                <!-- <option value="UK" {{ old('country') == 'UK' ? 'selected' : '' }}>United Kingdom</option>
                 <option value="Germany" {{ old('country') == 'Germany' ? 'selected' : '' }}>Germany</option>
                 <option value="France" {{ old('country') == 'France' ? 'selected' : '' }}>France</option>
                 <option value="Australia" {{ old('country') == 'Australia' ? 'selected' : '' }}>Australia</option>
                 <option value="India" {{ old('country') == 'India' ? 'selected' : '' }}>India</option>
                 <option value="China" {{ old('country') == 'China' ? 'selected' : '' }}>China</option>
                 <option value="Japan" {{ old('country') == 'Japan' ? 'selected' : '' }}>Japan</option>
-                <option value="Brazil" {{ old('country') == 'Brazil' ? 'selected' : '' }}>Brazil</option>
+                <option value="Brazil" {{ old('country') == 'Brazil' ? 'selected' : '' }}>Brazil</option> -->
             </select>
             @error('country')
                 <div class="text-danger">

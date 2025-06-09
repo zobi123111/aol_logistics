@@ -60,12 +60,14 @@
                                     {{ session()->get('message') }}
                                 </div>
                                 @endif
-                                <form class="row g-3 needs-validation" novalidate id="login_form">
+     
+                                <!-- <form class="row g-3 needs-validation" novalidate id="login_form">
                                     @csrf
                                     <div class="col-12">
                                         <label for="yourUsername" class="form-label">Username</label>
                                         <div class="input-group has-validation">
                                             <span class="input-group-text" id="inputGroupPrepend">@</span>
+
                                             <input type="text" class="form-control" id="yourUsername" name="email"
                                                 required>
                                             <div class="invalid-feedback">Please enter your username.</div>
@@ -111,8 +113,79 @@
                                         </div>
                                     </div>
                                     </div>
+           
+                                   
+                                    
 
                                 </form>
+     <passage-auth  app-id="{{ env('PASSAGE_APP_ID') }}"   redirect-url="javascript:void(0)" 
+                                        style="min-height: 400px; display: block;" lang="en"></passage-auth> -->
+                                        <!-- Login Type Selection Buttons -->
+<div class="col-12 mb-3 text-center" style="display: none;">
+    <button type="button" class="btn btn-outline-primary me-2 login-toggle-btn active" id="showOtpLogin">Login with OTP</button>
+    <button type="button" class="btn btn-outline-secondary login-toggle-btn" id="showPasskeyLogin">Login with Passkey</button>
+</div>
+
+<!-- 🔐 OTP Login Form -->
+<div id="otpLoginForm">
+    <form class="row g-3 needs-validation" novalidate id="login_form" method="POST" action="{{ route('login') }}">
+        @csrf
+        <div class="col-12">
+            <label for="yourUsername" class="form-label">Username</label>
+            <div class="input-group has-validation">
+                <span class="input-group-text" id="inputGroupPrepend">@</span>
+                <input type="text" class="form-control" id="yourUsername" name="email" required>
+                <div class="invalid-feedback">Please enter your username.</div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <label for="yourPassword" class="form-label">Password</label>
+            <input type="password" name="password" class="form-control" id="yourPassword" required>
+            <div class="invalid-feedback">Please enter your password!</div>
+        </div>
+
+        <div class="col-12">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="remember" value="true" id="rememberMe">
+                <label class="form-check-label" for="rememberMe">Remember me</label>
+            </div>
+        </div>
+
+        <span class="text-danger credential_error">{{ $errors->first('credentials_error') }}</span>
+
+        <div class="col-12">
+            <button class="btn btn-primary w-100 btn_primary_color login-btn" type="submit"><span>Login</span></button>
+        </div>
+
+        <div class="col-12">
+            <div class="social-media">
+                <p class="small mb-0" ><a href="{{ url('forgot-password') }}" style="color: #00709e">Forgot Password?</a></p>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/alphaomega_log" target="_blank">
+                        <img src="/assets/img/instagram.png" alt="Instagram">
+                    </a>
+                    <a href="https://x.com/alphaomega_log" target="_blank">
+                        <img src="/assets/img/twitter.png" alt="Twitter">
+                    </a>
+                    <a href="https://www.facebook.com/alphaomegalog" target="_blank">
+                        <img src="/assets/img/facebook.png" alt="Facebook">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- 🔐 Passkey Login Area (Initially Hidden) -->
+<div id="passkeyLoginForm" style="display: none;">
+    <passage-auth 
+        app-id="{{ env('PASSAGE_APP_ID') }}" 
+        redirect-url="javascript:void(0)" 
+        style="min-height: 400px; display: block;" 
+        lang="en">
+    </passage-auth>
+</div>
 
                                 <!-- OTP Form (Initially Hidden) -->
                                 <form class="row g-3 needs-validation" novalidate id="otp_form" style="display:none;">
@@ -146,6 +219,24 @@
 @include('layout.includes.js')
 
 <script>
+    const otpBtn = document.getElementById('showOtpLogin');
+    const passkeyBtn = document.getElementById('showPasskeyLogin');
+
+    otpBtn.addEventListener('click', function () {
+        document.getElementById('otpLoginForm').style.display = 'block';
+        document.getElementById('passkeyLoginForm').style.display = 'none';
+
+        otpBtn.classList.add('active');
+        passkeyBtn.classList.remove('active');
+    });
+
+    passkeyBtn.addEventListener('click', function () {
+        document.getElementById('otpLoginForm').style.display = 'none';
+        document.getElementById('passkeyLoginForm').style.display = 'block';
+
+        passkeyBtn.classList.add('active');
+        otpBtn.classList.remove('active');
+    });
 $(document).ready(function() {
     $("#login_form").submit(function(event) {
         event.preventDefault();
@@ -214,4 +305,75 @@ $(document).ready(function() {
     }, 2000);
 
 });
+
+    // document.querySelector('passage-auth').addEventListener('authenticated', async (event) => {
+    //         const userInfo = await event.detail.userInfo;
+    //         const jwt = userInfo.auth_token;
+
+    //         const response = await fetch('/passage-login', {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Authorization': 'Bearer ' + jwt,
+    //                 'Content-Type': 'application/json',
+    //             },
+    //         });
+
+    //         const result = await response.json();
+    //         if (result.status === 'authenticated') {
+    //             alert('Logged in as user: ' + result.user.email);
+    //             window.location.href = '/home';
+    //         } else {
+    //             alert('Authentication failed.');
+    //         }
+    //     });
+// const auth = document.querySelector("passage-auth");
+
+//   if (auth) {
+
+//     auth.addEventListener("passage-auth-success", async () => {
+//       console.log("Passage login success triggered");
+
+//       const token = await auth.getAuthToken();
+//       console.log("Token:", token);
+
+//       const res = await fetch('/passage-login', {
+//         method: 'POST',
+//         headers: {
+//           'Content-Type': 'application/json',
+//           'X-CSRF-TOKEN': '{{ csrf_token() }}'
+//         },
+//         body: JSON.stringify({ authToken: token })
+//       });
+
+//       if (res.ok) {
+//         console.log("Logged in, redirecting...");
+//         window.location.href = "/";
+//       } else {
+//         console.error("Login failed:", await res.text());
+//       }
+//     });
+//   } else {
+//     console.error("Passage auth element NOT found");
+//   }
+
+
+// const passageAuth = document.querySelector('passage-auth');
+//   passageAuth.addEventListener('onSuccess', async (event) => {
+//     console.log('Passage authentication successful:', event.detail);
+//     const passageAuthToken = event.detail.authToken;
+//     // Now trigger your fetch:
+//     fetch('/passage-login', {
+//       method: 'POST',
+//       headers: { 'Content-Type': 'application/json' },
+//       body: JSON.stringify({ auth_token: passageAuthToken })
+//     })
+//     .then(response => response.json())
+//     .then(data => {
+//       if (data.message === 'Login successful') {
+//         window.location.href = '/dashboard';
+//       } else {
+//         alert(data.error);
+//       }
+//     });
+//   });
 </script>

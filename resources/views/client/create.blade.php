@@ -55,6 +55,17 @@
                     @enderror
                 </div>
 
+                  <!-- DBA -->
+                <div class="mb-3">
+                    <label class="form-label"> {{ __('messages.DBA (Nickname)') }} </label><span class="text-danger">*</span>
+                    <input type="text" name="dba" class="form-control" value="{{ old('dba') }}">
+                    @error('dba')
+                        <div class="text-danger">
+                           {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+
                 <!-- Client Email -->
                 <!-- <div class="mb-3">
                     <label class="form-label"> {{ __('messages.Email') }} <span class="text-danger">*</span></label>

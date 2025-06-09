@@ -22,6 +22,13 @@
         {{ session()->get('message') }}
     </div>
     @endif
+
+    @if(session()->has('error'))
+        <div id="errorMessage" class="alert alert-danger fade show" role="alert">
+            <i class="bi bi-exclamation-triangle me-1"></i>
+            {{ session('error') }}
+        </div>
+    @endif
     <div class="filter-container">
         <div class="row mb-0">
             <div class="col-md-3">

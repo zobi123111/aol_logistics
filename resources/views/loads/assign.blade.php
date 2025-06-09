@@ -106,7 +106,7 @@
 <select id="supplierFilter" class="form-control select2 mr-3">
     <option value="">All Suppliers</option>
     @foreach ($allSuppliers as $supplier)
-        <option value="{{ $supplier->id }}">{{ $supplier->company_name }}</option>
+        <option value="{{ $supplier->id }}">{{ $supplier->dba ?? $supplier->company_name }}</option>
     @endforeach
 </select>
 </div>
@@ -144,6 +144,11 @@
         @else
     @foreach ($suppliers as $supplier)
         @foreach ($supplier->supplierServices as $service)
+        @php
+        $clientService = $service->clientServices->first();
+    @endphp
+
+    @if ($clientService && $clientService->cost !== null)
             <tr>
                 <td>{{ $supplier->dba }}</td>
             <!-- <td>{{ ucfirst($supplier->service_type) }}</td> -->
@@ -193,6 +198,7 @@
                     </button>
                 </td>
             </tr>
+             @endif
         @endforeach
     @endforeach
        @endif
@@ -306,15 +312,48 @@
  
                        @else
 
-                     {{ $assigned->service->masterService->origindata 
-                    ? ($assigned->service->masterService->origindata->name 
-                        ?: ($assigned->service->masterService->origindata->street . ', ' . $assigned->service->masterService->origindata->city . ', ' . $assigned->service->masterService->origindata->state . ', ' . $assigned->service->masterService->origindata->zip . ', ' . $assigned->service->masterService->origindata->country)) 
-                    : 'N/A' }}  
-                →  
-                {{ $assigned->service->masterService->destinationdata 
-                    ? ($assigned->service->masterService->destinationdata->name 
-                        ?: ($assigned->service->masterService->destinationdata->street . ', ' . $assigned->service->masterService->destinationdata->city . ', ' . $assigned->service->masterService->destinationdata->state . ', ' . $assigned->service->masterService->destinationdata->zip . ', ' . $assigned->service->masterService->destinationdata->country)) 
-                    : 'N/A' }}
+                   <tr>
+                    <td>{{ $assigned->supplier->dba }}</td>
+                    <!-- <td>{{ ucfirst($assigned->supplier->service_type) }}</td> -->
+
+                    <td>{{ ucfirst($assigned->service?->masterService?->service_type ?? 'N/A' ) }}</td>
+                    <td>{{ $assigned->service->masterService?->service_name?? 'NA' }}</td>
+
+                    <td>
+                        @if ($assigned->service?->masterService?->service_type === 'warehouse')
+                      
+                      {{$assigned->service->masterService->street . ', ' . $assigned->service->masterService->city . ', ' . $assigned->service->masterService->state . ', ' . $assigned->service->masterService->zip . ', ' . $assigned->service->masterService->country}}
+ 
+                       @else
+
+                        {{ $assigned->service?->masterService?->origindata
+                            ? ($assigned->service->masterService->origindata->name
+                                ?: $assigned->service->masterService->origindata->street . ', ' .
+                                   $assigned->service->masterService->origindata->city . ', ' .
+                                   $assigned->service->masterService->origindata->state . ', ' .
+                                   $assigned->service->masterService->origindata->zip . ', ' .
+                                   $assigned->service->masterService->origindata->country)
+                            : 'N/A'
+                        }} →
+                        {{ $assigned->service?->masterService?->destinationdata
+                            ? ($assigned->service->masterService->destinationdata->name
+                                ?: $assigned->service->masterService->destinationdata->street . ', ' .
+                                   $assigned->service->masterService->destinationdata->city . ', ' .
+                                   $assigned->service->masterService->destinationdata->state . ', ' .
+                                   $assigned->service->masterService->destinationdata->zip . ', ' .
+                                   $assigned->service->masterService->destinationdata->country)
+                            : 'N/A'
+                        }}
+
+
+                       @endif
+                    </td>
+                     @if(isAolAdminUser())
+                    <td>${{ number_format($assigned->cost ?? $assigned->cost, 2) }}</td>
+                    @endif
+                    <td>{{ $assigned->cancel_reason }}</td>
+
+                </tr>
 
                        @endif
                     </td>
