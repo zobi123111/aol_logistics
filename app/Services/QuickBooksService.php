@@ -4,6 +4,8 @@ namespace App\Services;
 
 use QuickBooksOnline\API\DataService\DataService;
 use Illuminate\Support\Facades\Cache;
+use App\Models\QuickbooksToken;
+use Illuminate\Support\Facades\Schema;
 
 class QuickBooksService
 {
@@ -19,7 +21,24 @@ class QuickBooksService
             'scope'        => "com.intuit.quickbooks.accounting",
             'baseUrl'      => env('QUICKBOOKS_ENVIRONMENT') === 'sandbox' ? "development" : "production"
         ]);
+        if (Schema::hasTable('quickbooks_tokens')) {
+    // Check if the refresh token exists in cache
+        if (!Cache::has('qb_refresh_token')) {
+            $tokenRow = QuickbooksToken::first();
 
+            if ($tokenRow && $tokenRow->refresh_token) {
+                Cache::put('qb_refresh_token', $tokenRow->refresh_token, now()->addDays(90));
+            }
+        }
+
+    if (!Cache::has('qb_access_token')) {
+        $tokenRow = $tokenRow ?? QuickbooksToken::first(); // reuse if already fetched above
+
+        if ($tokenRow && $tokenRow->access_token && $tokenRow->access_token_expires_at) {
+            Cache::put('qb_access_token', $tokenRow->access_token, \Carbon\Carbon::parse($tokenRow->access_token_expires_at));
+        }
+    }
+    }
         $this->refreshAccessToken();
     }
 
@@ -41,6 +60,11 @@ class QuickBooksService
         Cache::put('qb_access_token', $accessTokenObj->getAccessToken(), now()->addSeconds($accessTokenObj->getAccessTokenExpiresAt()));
         Cache::put('qb_refresh_token', $accessTokenObj->getRefreshToken(), now()->addDays(90));
         Cache::put('qb_realm_id', $accessTokenObj->getRealmID());
+         $this->updateQuickBooksTokensInDB(
+                    $accessTokenObj->getAccessToken(),
+                    $accessTokenObj->getRefreshToken(),
+                    now()->addSeconds($accessTokenObj->getAccessTokenExpiresAt())
+                );
     }
 
     public function refreshAccessToken()
@@ -79,4 +103,18 @@ class QuickBooksService
         return null;
     }
     }
+
+    protected function updateQuickBooksTokensInDB($accessToken, $refreshToken, $expiresAt)
+{
+     if (Schema::hasTable('quickbooks_tokens')) {
+    QuickbooksToken::updateOrCreate(
+        ['id' => 1], // Adjust if using multiple records
+        [
+            'access_token' => $accessToken,
+            'refresh_token' => $refreshToken,
+            'access_token_expires_at' => $expiresAt,
+        ]
+    );
+}
+}
 }

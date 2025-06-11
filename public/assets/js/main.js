@@ -389,7 +389,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
       detrigger.addEventListener('click', () => {
         decalendar.open();
+        if (!/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
         deinput.focus();
+        }
     });
 
     //   const calendar = flatpickr(input, {
@@ -428,14 +430,17 @@ document.addEventListener("DOMContentLoaded", function () {
         // Trigger buttons
         scheduleDateTrigger.addEventListener("click", () => {
             datePicker.open();
-            scheduleDateInput.focus();
+            if (!/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
+                scheduleDateInput.focus();
+            }
 
         });
 
         scheduleTimeTrigger.addEventListener("click", () => {
             timePicker.open();
-            scheduleTimeInput.focus();
-
+            if (!/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
+                scheduleTimeInput.focus();
+            }
         });
 
       function adjustDate(inputField, increase = true) {

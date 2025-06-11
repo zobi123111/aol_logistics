@@ -41,7 +41,8 @@ class User extends Authenticatable
         'business_name',
         'mobile_number', 
         'country_code', 
-        'dba'
+        'dba',
+        'last_activity'
     ];
 
     /**

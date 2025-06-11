@@ -38,6 +38,8 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\LanguageManager::class,
             \App\Http\Middleware\PreventBackHistory::class,
+            \App\Http\Middleware\UpdateLastUserActivity::class,
+
         ],
 
         'api' => [

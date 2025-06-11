@@ -306,20 +306,6 @@
                     <td>{{ $assigned->service->masterService->service_name?? 'NA' }}</td>
 
                     <td>
-                        @if ($assigned->service->masterService->service_type === 'warehouse')
-                      
-                      {{$assigned->service->masterService->street . ', ' . $assigned->service->masterService->city . ', ' . $assigned->service->masterService->state . ', ' . $assigned->service->masterService->zip . ', ' . $assigned->service->masterService->country}}
- 
-                       @else
-
-                   <tr>
-                    <td>{{ $assigned->supplier->dba }}</td>
-                    <!-- <td>{{ ucfirst($assigned->supplier->service_type) }}</td> -->
-
-                    <td>{{ ucfirst($assigned->service?->masterService?->service_type ?? 'N/A' ) }}</td>
-                    <td>{{ $assigned->service->masterService?->service_name?? 'NA' }}</td>
-
-                    <td>
                         @if ($assigned->service?->masterService?->service_type === 'warehouse')
                       
                       {{$assigned->service->masterService->street . ', ' . $assigned->service->masterService->city . ', ' . $assigned->service->masterService->state . ', ' . $assigned->service->masterService->zip . ', ' . $assigned->service->masterService->country}}
@@ -355,14 +341,6 @@
 
                 </tr>
 
-                       @endif
-                    </td>
-                     @if(isAolAdminUser())
-                    <td>${{ number_format($assigned->cost ?? $assigned->cost, 2) }}</td>
-                    @endif
-                    <td>{{ $assigned->cancel_reason }}</td>
-
-                </tr>
             @endforeach
         @endif
 

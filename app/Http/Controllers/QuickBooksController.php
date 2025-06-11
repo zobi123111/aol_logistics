@@ -23,10 +23,33 @@ use App\Models\AssignedService;
 use App\Models\Supplier;
 use App\Models\SupplierInvoice;
 use Illuminate\Support\Facades\Storage;
+use App\Models\QuickbooksToken;
+use Illuminate\Support\Facades\Schema;
 
 
 class QuickBooksController extends Controller
 {
+       public function __construct()
+    {
+          if (Schema::hasTable('quickbooks_tokens')) {
+        // Check if the refresh token exists in cache
+        if (!Cache::has('qb_refresh_token')) {
+            $tokenRow = QuickbooksToken::first();
+            if ($tokenRow && $tokenRow->refresh_token) {
+                Cache::put('qb_refresh_token', $tokenRow->refresh_token, now()->addDays(90));
+            }
+        }
+
+    if (!Cache::has('qb_access_token')) {
+        $tokenRow = $tokenRow ?? QuickbooksToken::first(); // reuse if already fetched above
+
+        if ($tokenRow && $tokenRow->access_token && $tokenRow->access_token_expires_at) {
+            Cache::put('qb_access_token', $tokenRow->access_token, \Carbon\Carbon::parse($tokenRow->access_token_expires_at));
+        }
+    }
+    }
+    }
+
     // ✅ Function to refresh QuickBooks Access Token
     public function refreshAccessToken()
     {
@@ -56,6 +79,11 @@ class QuickBooksController extends Controller
             Cache::put('qb_access_token', $newAccessToken->getAccessToken(), now()->addSeconds($newAccessToken->getAccessTokenExpiresAt()));
             Cache::put('qb_refresh_token', $newAccessToken->getRefreshToken(), now()->addDays(90));
 
+                $this->updateQuickBooksTokensInDB(
+                    $newAccessToken->getAccessToken(),
+                    $newAccessToken->getRefreshToken(),
+                    now()->addSeconds($newAccessToken->getAccessTokenExpiresAt())
+                );
             return $newAccessToken->getAccessToken();
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to refresh QuickBooks Access Token: ' . $e->getMessage()], 500);
@@ -170,7 +198,11 @@ class QuickBooksController extends Controller
             // Store tokens
             Cache::put('qb_access_token', $accessToken->getAccessToken(), now()->addSeconds($accessToken->getAccessTokenExpiresAt()));
             Cache::put('qb_refresh_token', $accessToken->getRefreshToken(), now()->addDays(90));
-
+                $this->updateQuickBooksTokensInDB(
+                    $accessToken->getAccessToken(),
+                    $accessToken->getRefreshToken(),
+                    now()->addSeconds($accessToken->getAccessTokenExpiresAt())
+                );
             return response()->json(['success' => 'QuickBooks connected successfully!']);
         } catch (\Exception $e) {
             return response()->json(['error' => 'QuickBooks connection failed: ' . $e->getMessage()], 500);
@@ -322,7 +354,11 @@ class QuickBooksController extends Controller
 
             Cache::put('qb_access_token', $accessTokenObj->getAccessToken(), now()->addSeconds($accessTokenObj->getAccessTokenExpiresAt()));
             Cache::put('qb_refresh_token', $accessTokenObj->getRefreshToken(), now()->addDays(90));
-
+                $this->updateQuickBooksTokensInDB(  
+                    $accessTokenObj->getAccessToken(),
+                    $accessTokenObj->getRefreshToken(),
+                    now()->addSeconds($accessTokenObj->getAccessTokenExpiresAt())
+                );
             return $accessTokenObj->getAccessToken();
         }
 
@@ -1106,6 +1142,21 @@ class QuickBooksController extends Controller
     } catch (\Exception $e) {
         return view('quickbooks.bill_details')->with('error', 'Error fetching bill or vendor from QuickBooks: ' . $e->getMessage());
     }
+}
+
+
+protected function updateQuickBooksTokensInDB($accessToken, $refreshToken, $expiresAt)
+{
+      if (Schema::hasTable('quickbooks_tokens')) {
+    QuickbooksToken::updateOrCreate(
+        ['id' => 1], // Adjust if using multiple records
+        [
+            'access_token' => $accessToken,
+            'refresh_token' => $refreshToken,
+            'access_token_expires_at' => $expiresAt,
+        ]
+    );
+}
 }
 
 }

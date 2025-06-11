@@ -119,7 +119,7 @@ function isAolUser()
         return false;
     }
 
-    return ($user->user_type === 1 || $user->is_owner == 1 || $user->is_dev == 1);
+    return ($user->roledata->user_type_id == 1 || $user->is_owner == 1 || $user->is_dev == 1);
 }
 
 function isDev()
