@@ -27,14 +27,20 @@
 
         <div class="form-group mb-3">
     <label for="service-type" class="form-label">Service Type <span class="text-danger">*</span></label>
-    <select id="service-type" class="form-control" name="service_type">
-        <option value="">Select Service Type</option>
-        @foreach ($serviceTypes as $type)
-            <option value="{{ $type }}" {{ old('service_type') == $type ? 'selected' : '' }}>
-                {{ ucfirst($type) }}
-            </option>
-        @endforeach
-    </select>
+   <select id="service-type" class="form-control" name="service_type">
+    <option value="">{{ __('messages.Select Service Type') }}</option>
+    @foreach ($serviceTypes as $type)
+        @php
+            // Convert snake_case to Title Case for translation key
+            $translationKey = str_replace('_', ' ', $type);
+            $translatedLabel = __('messages.' . ucwords($translationKey));
+        @endphp
+        <option value="{{ $type }}" {{ old('service_type') == $type ? 'selected' : '' }}>
+            {{ $translatedLabel }}
+        </option>
+    @endforeach
+</select>
+
     @error('service_type')
         <div class="text-danger">
             {{ $message }}

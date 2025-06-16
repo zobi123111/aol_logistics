@@ -29,14 +29,19 @@
     <!-- Service Type Selection -->
     <div class="form-group mb-3">
         <label for="service-type" class="form-label">Service Type <span class="text-danger">*</span></label>
-        <select id="service-type" class="form-control" name="service_type" onchange="updateMasterServices()">
-            <option value="">Select Service Type</option>
+       <select id="service-type" class="form-control" name="service_type" onchange="updateMasterServices()">
+            <option value="">{{ __('messages.Select Service Type') }}</option>
             @foreach ($serviceTypes as $type)
-                <option value="{{ $type }}" {{ old('service_type', $supplierService->masterService->service_type) == $type ? 'selected' : '' }}>
-                    {{ ucfirst($type) }}
+                @php
+                    // Prepare translation label (e.g., bridge_crossing → Bridge Crossing)
+                    $labelKey = ucwords(str_replace('_', ' ', $type));
+                @endphp
+                <option value="{{ $type }}" {{ old('service_type', $supplierService->masterService->service_type ?? '') == $type ? 'selected' : '' }}>
+                    {{ __('messages.' . $labelKey) }}
                 </option>
             @endforeach
         </select>
+
         @error('service_type')
             <div class="text-danger">
                 {{ $message }}

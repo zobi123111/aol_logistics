@@ -80,7 +80,11 @@
             </tr>
         </thead>
         <tbody>
+            @php
+                $loggedInSupplierId = Auth::user()->supplier_id ?? null;
+            @endphp
             @forelse($load->assignedServices as $assignedService)
+             @if(($assignedService->supplier->id == $loggedInSupplierId) ||  Auth::user()->roledata->user_type_id != 3)
                 <tr>
                     @if(!isClientUser())
                     <td>{{ $assignedService->supplier->dba ?? $assignedService->supplier->company_name }}</td>
@@ -115,6 +119,7 @@
                     </td>
                     @endif
                 </tr>
+                 @endif
             @empty
                 <tr>
                     <td colspan="3" class="text-center">{{ __('messages.No assigned services') }} </td>

@@ -160,7 +160,7 @@ Route::middleware(['auth.user', 'otp.verified', 'check.suppliers'])->group(funct
     Route::get('/upload-bill/{load_id}', [QuickBooksController::class, 'showUploadBillForm'])->name('upload.bill.form');
     Route::post('/upload-bill/supplier/{load_id}', [QuickBooksController::class, 'createSupplierBill'])
         ->name('upload.bill');
-    Route::get('/invoice/supplier/{load_id}', [QuickBooksController::class, 'showQuickBooksBillByLoadId'])->name('invoice.supplier');
+    // Route::get('/invoice/supplier/{load_id}', [QuickBooksController::class, 'showQuickBooksBillByLoadId'])->name('invoice.supplier');
 
 });
 

@@ -21,7 +21,11 @@
     <div class="card card-container">
     <div class="card-body">
       <h2>QuickBooks Bill Details</h2>
-
+@if(isset($success))
+    <div class="alert alert-success">
+        {{ $success }}
+    </div>
+@endif
 @if(isset($error))
     <div class="alert alert-danger">{{ $error }}</div>
 @elseif(isset($quickBooksBill))

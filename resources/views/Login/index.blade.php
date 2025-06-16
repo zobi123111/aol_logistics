@@ -60,6 +60,11 @@
                                     {{ session()->get('message') }}
                                 </div>
                                 @endif
+                                @if(session('error'))
+                                    <div class="alert alert-danger">
+                                        {{ session('error') }}
+                                    </div>
+                                @endif
      
                                 <!-- <form class="row g-3 needs-validation" novalidate id="login_form">
                                     @csrf

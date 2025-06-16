@@ -26,21 +26,19 @@
 
     <div class="form-group mb-3 mt-3">
     <label for="service_type" class="form-label">{{ __('messages.service_type') }} <span class="text-danger">*</span></label>
+   @php
+    use App\Constants\ServiceTypes;
+    $selectedService = old('service_type', $load->service_type ?? '');
+    @endphp
+
     <select name="service_type" id="service_type" class="form-control">
-        <!-- <option value="">{{ __('messages.Select Service Type') }} </option>
-        <option value="Express" {{ old('service_type', $load->service_type) == 'Express' ? 'selected' : '' }}>Express</option>
-        <option value="Standard" {{ old('service_type', $load->service_type) == 'Standard' ? 'selected' : '' }}>Standard</option>
-        <option value="Overnight" {{ old('service_type', $load->service_type) == 'Overnight' ? 'selected' : '' }}>Overnight</option> -->
-        <option value="Land Freight" {{ old('service_type', $load->service_type) == 'Land Freight' ? 'selected' : '' }}>{{ __('messages.Land Freight') }}</option>
-        <option value="Air Freight" {{ old('service_type', $load->service_type) == 'Air Freight' ? 'selected' : '' }}>{{ __('messages.Air Freight') }}</option>
-        <option value="Ocean Freight" {{ old('service_type', $load->service_type) == 'Ocean Freight' ? 'selected' : '' }}>{{ __('messages.Ocean Freight') }}</option>
-        <option value="Local Delivery" {{ old('service_type', $load->service_type) == 'Local Delivery' ? 'selected' : '' }}>
-    {{ __('messages.Local Delivery') }}
-        </option>
-        <option value="Bridge Crossing" {{ old('service_type', $load->service_type) == 'Bridge Crossing' ? 'selected' : '' }}>
-            {{ __('messages.Bridge Crossing') }}
-        </option>
-</select>
+        <option value="">{{ __('messages.Select Service Type') }}</option>
+        @foreach (ServiceTypes::SELECTABLE_TYPES as $key => $label)
+            <option value="{{ $label }}" {{ $selectedService === $label ? 'selected' : '' }}>
+                {{ __('messages.' . $label) }}
+            </option>
+        @endforeach
+    </select>
     @error('service_type')
         <div class="text-danger">{{ $message }}</div>
     @enderror

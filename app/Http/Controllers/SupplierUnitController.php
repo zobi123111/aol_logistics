@@ -32,7 +32,7 @@ class SupplierUnitController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'unit_type' => 'required|string',
-            'unit_number' => 'required|string',
+            // 'unit_number' => 'required|string',
             // 'license_plate' => ['required','string', 'regex:/^[A-Za-z]{2}-\d{2}-[A-Za-z]{2}$/'],
             'license_plate' => 'required|string',
             'state' => 'required|string',
@@ -68,7 +68,7 @@ class SupplierUnitController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'unit_type' => 'required|string',
-            'unit_number' => 'required|string',
+            // 'unit_number' => 'required|string',
             // 'license_plate' => ['required','string', 'regex:/^[A-Za-z]{2}-\d{2}-[A-Za-z]{2}$/'],
             'license_plate' => 'required|string',
             'state' => 'required|string',

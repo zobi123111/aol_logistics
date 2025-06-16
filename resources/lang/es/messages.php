@@ -492,7 +492,7 @@ return [
     '10 Tn. Truck' => 'Rabón',
     'Pickup Truck' => 'Camioneta Pickup',
     'Reefer' => 'Caja Refrigerada (Termo)',
-    'bill_no' => 'Número de factura',
+     'bill_no' => 'Número de factura',
     'Schedule Time' => 'Hora Programada',
     'Trailer not found.' => 'Remolque no encontrado.',
     'Trailer deleted successfully.' => 'Remolque eliminado con éxito.',
@@ -508,5 +508,16 @@ return [
 'get_supplier_truck_position' => 'Obtener posición del camión del proveedor',
 'Truck Number Note' => 'Esto se utilizará para el seguimiento por GPS.',
     'cannot_edit_client_assigned' => 'No puedes editar el cliente de esta carga porque ha sido asignada a un proveedor.',
-
+    'assigned_services_for_aol' => 'Servicios asignados para el número de AOL #:id',
+    'no_valid_documents_found' => 'No se encontraron documentos válidos',
+    'no_documents_uploaded' => 'No se han subido documentos',
+  'Select Service Type' => 'Seleccione el tipo de servicio',
+    'Freight' => 'Carga',
+    'Warehouse' => 'Almacén',
+    'Bridge Crossing' => 'Cruce de puente',
+    'Local Delivery' => 'Entrega local',
+    'Custody Of Goods' => 'Custodia de bienes',
+     'Custody of Goods' => 'Custodia de bienes',
+    'TONU' => 'TONU',  // If acronym, leave as-is
+    'Overtime' => 'Horas extra',
 ];

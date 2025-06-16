@@ -28,11 +28,16 @@
     <!-- Service Type Selection -->
     <div class="form-group mb-3">
         <label for="service-type" class="form-label">{{ __('messages.service_type') }} <span class="text-danger">*</span></label>
-        <select id="service-type" class="form-control" name="service_type" onchange="updateMasterServices()">
-            <option value="">Select Service Type</option>
+       <select id="service-type" class="form-control" name="service_type" onchange="updateMasterServices()">
+            <option value="">{{ __('messages.Select Service Type') }}</option>
             @foreach ($serviceTypes as $type)
-                <option value="{{ $type }}" {{ old('service_type', $clientService->masterService->service_type) == $type ? 'selected' : '' }}>
-                    {{ ucfirst($type) }}
+                @php
+                    // Convert snake_case to Title Case for translation key
+                    $labelKey = ucwords(str_replace('_', ' ', $type));
+                    $selected = old('service_type', $clientService->masterService->service_type ?? '') == $type ? 'selected' : '';
+                @endphp
+                <option value="{{ $type }}" {{ $selected }}>
+                    {{ __('messages.' . $labelKey) }}
                 </option>
             @endforeach
         </select>

@@ -66,6 +66,9 @@
 
 <script>
 $(document).ready(function() {
+      window.Laravel = {
+        translations: @json(__('messages'))
+    };
     $('#servicesTable').DataTable({
         processing: true,
     serverSide: true,
@@ -75,11 +78,19 @@ $(document).ready(function() {
             data: 'service_type',
             name: 'service_type',
             render: function (data, type, row) {
-                if (typeof data === 'string' && data.length > 0) {
-                    return data.charAt(0).toUpperCase() + data.slice(1);
-                }
-                return data;
-            }
+        if (typeof data === 'string' && data.length > 0) {
+            // Convert snake_case to Title Case
+            let label = data.replace(/_/g, ' ')
+                            .replace(/\w\S*/g, function(txt) {
+                                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+                            });
+
+            // Use Laravel translation key
+            return Laravel.translations[label] || label;
+
+        }
+        return data;
+    }
         },
         { data: 'service_name', name: 'service_name' },
         { data: 'origin', name: 'origin' },

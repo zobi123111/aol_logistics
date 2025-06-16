@@ -380,7 +380,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const scheduleTimeInput = document.getElementById("schedule_time");
     const scheduleTimeTrigger = document.getElementById("time-picker-trigger");
 
-  if (typeof flatpickr !== "undefined") {
+  if (typeof flatpickr !== "undefined" && (deinput || detrigger || scheduleDateInput || scheduleDateTrigger || scheduleTimeInput || scheduleTimeTrigger)) {
     const decalendar = flatpickr(deinput, {
         dateFormat: "M. j, Y",
           allowInput: true,
@@ -523,7 +523,7 @@ scheduleTimeInput.addEventListener("keydown", function (event) {
       });
 
   } else {
-      console.error("Flatpickr failed to load.");
+      // console.error("Flatpickr failed to load.");
   }
 });
 var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))

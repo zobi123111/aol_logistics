@@ -24,7 +24,7 @@ class CheckRolePermission
         
          // Handle specific permissions for Create and Edit actions
          if (!$user->is_dev && (Str::contains($request->route()->getName(), 'roles'))) {
-            Session::flash('message', 'You dont have permission to access this page');
+            Session::flash('message', "You don't have permission to access this page.");
             return redirect()->route('dashboard')->with('error', 'Access Denied!');
         }
 
@@ -37,7 +37,7 @@ class CheckRolePermission
 
          // Handle specific permissions for Create and Edit actions
          if ($request->isMethod('get') && !$allowedPages->contains($request->route()->getName())) {
-            Session::flash('message', 'You dont have permission to access this page');
+            Session::flash('message', "You don't have permission to access this page.");
             return redirect()->route('dashboard')->with('error', 'Access Denied!');
         }
         return $next($request);

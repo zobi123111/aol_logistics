@@ -24,12 +24,18 @@
         <div class="card-body">
         <form action="{{ route('master-services.store') }}" method="POST">
             @csrf
+            @php use App\Constants\ServiceTypes; @endphp
+
             <div class="form-group mb-3 mt-3">
                     <label for="service_type" class="form-label">{{ __('messages.Service Type') }} <span class="text-danger">*</span></label>
-            <select name="service_type" id="service_type" class="form-control" >
+            <select name="service_type" id="service_type" class="form-control">
                 <option value="">{{ __('messages.Select Service Type') }}</option>
-                <option value="freight" {{ old('service_type') == 'freight' ? 'selected' : '' }}>{{ __('messages.Freight') }}</option>
-                <option value="warehouse" {{ old('service_type') == 'warehouse' ? 'selected' : '' }}>{{ __('messages.Warehouse') }}</option>
+
+                @foreach(ServiceTypes::SELECTABLE_TYPES as $key => $label)
+                    <option value="{{ $key }}" {{ old('service_type') == $key ? 'selected' : '' }}>
+                        {{ __('messages.' . $label) }}
+                    </option>
+                @endforeach
             </select>
             @error('service_type')
                 <div class="text-danger">{{ $message }}</div>
@@ -144,7 +150,7 @@
     $(document).ready(function() {
         function toggleFields() {
             let serviceType = $('#service_type').val();
-            $('#freight_fields').toggle(serviceType === 'freight');
+            $('#freight_fields').toggle(serviceType !== 'warehouse' && serviceType !== '');
             $('#warehouse_fields').toggle(serviceType === 'warehouse');
         }
         toggleFields(); // Run on page load to retain values

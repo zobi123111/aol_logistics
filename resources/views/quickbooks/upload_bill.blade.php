@@ -7,7 +7,8 @@
         <a href="{{ route('loads.index') }}" class="btn btn-primary create-button btn_primary_color"
             id="createUser"><i class="bi bi-arrow-left-circle-fill"></i> {{ __('messages.Back') }}</a>
     </div>
-    <h3 class="services-text">{{ __('messages.Assigned Services') }} </h3> 
+    <h3 class="services-text">{{ __('messages.assigned_services_for_aol', ['id' => $aol]) }}
+ </h3> 
     @if(session()->has('message'))
     <div id="successMessage" class="alert alert-success fade show" role="alert">
         <i class="bi bi-check-circle me-1"></i>
@@ -20,7 +21,7 @@
     <thead>
         <tr>
             <!-- <th>{{ __('messages.Supplier Company Name') }} </th> -->
-            <th>{{ __('messages.supplier_transport_type') }}</th>
+            <!-- <th>{{ __('messages.supplier_transport_type') }}</th> -->
             <th>{{ __('messages.service_type') }}</th>
              <th> {{ __('messages.Service Name') }}  </th>
             <th>{{ __('messages.quantity') }}</th>
@@ -33,14 +34,14 @@
         <!-- Show Assigned Services at the Top -->
         @if($assignedServices->isEmpty())
             <tr>
-                <td colspan="6" class="text-center">{{ __('messages.No Assigned Services') }} </td>
+                <td colspan="5" class="text-center">{{ __('messages.No Assigned Services') }} </td>
             </tr>
         @else
             @foreach ($assignedServices as $assigned)
                 <tr>
                     <!-- <td>{{ $assigned->supplier->company_name }}</td> -->
-                    <td>{{ $assigned->supplier->service_type }}</td>
-                    <td>{{ $assigned->service->masterService->service_type }}</td>
+                    <!-- <td>{{ $assigned->supplier->service_type }}</td> -->
+                    <td>{{ Str::ucfirst($assigned->service->masterService->service_type) }}</td>
                     <td>{{ $assigned->service->masterService->service_name?? 'NA' }}</td>
                     <td>{{ $assigned->quantity }}</td>
                     <td>

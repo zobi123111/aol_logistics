@@ -57,23 +57,16 @@
                         </div>
                     @enderror  
         </div>
-        <div class="form-group mb-3">
+        <!-- <div class="form-group mb-3">
             <label for="unit_number" class="form-label"> {{ __('messages.Unit Number') }} <span class="text-danger">*</span></label>
-            <!-- <select name="unit_number" class="form-control">
-                <option value="">{{ __('messages.Select Unit Number') }} </option>
-                <option value="1023" {{ old('unit_number') == '1023' ? 'selected' : '' }}>1023</option>
-                <option value="1785" {{ old('unit_number') == '1785' ? 'selected' : '' }}>1785</option>
-                <option value="2547" {{ old('unit_number') == '2547' ? 'selected' : '' }}>2547</option>
-                <option value="3098" {{ old('unit_number') == '3098' ? 'selected' : '' }}>3098</option>
-                <option value="4621" {{ old('unit_number') == '4621' ? 'selected' : '' }}>4621</option>
-            </select> -->
+       
             <input type="text" name="unit_number" class="form-control" value="{{ old('unit_number') }}">
 
             @error('unit_number')
                 {{ $message }}
             @enderror  
 
-        </div>
+        </div> -->
 
             <div class="form-group mb-3">
             <label for="truck_number" class="form-label">{{__('messages.Truck Number')}} <span class="text-danger">*</span> <small class="text-muted d-block">

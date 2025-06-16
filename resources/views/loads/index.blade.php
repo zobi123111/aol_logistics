@@ -132,7 +132,7 @@
                      @if (checkAllowedModule('loads', 'upload.bill.form')->isNotEmpty() && auth()->user()->roledata->user_type_id == 3)
                     <th>{{ __('messages.add_invoice') }}</th>
                       @endif
-                    @if (checkAllowedModule('loads', 'invoice.supplier')->isNotEmpty() && auth()->user()->roledata->user_type_id == 3)
+                    @if (checkAllowedModule('loads', 'invoice.supplier')->isNotEmpty() )
                     <th>{{ __('messages.supplier_bills') }}</th>
                       @endif
                     @if (checkAllowedModule('loads', 'loads.quickbooks_invoices')->isNotEmpty())
@@ -326,7 +326,7 @@
                   @endif
              
 
-                 @if (checkAllowedModule('loads', 'invoice.supplier')->isNotEmpty() && auth()->user()->roledata->user_type_id == 3)
+                 @if (checkAllowedModule('loads', 'invoice.supplier')->isNotEmpty() )
 
                  { data: 'quickbooks_supplier_invoice', name: 'quickbooks_supplier_invoice', orderable: false, searchable: false },
                   @endif

@@ -595,10 +595,11 @@ class QuickBooksController extends Controller
         $en = $load_id;
         $de = decode_id($load_id);
         $load = Load::findOrFail($de);
+        $aol = $load->aol_number;
         $user = auth()->user();
         $userType = $user->roledata->user_type_id;
         if ($userType != 3) {
-            Session::flash('message', 'You dont have permission to access this page');
+            Session::flash('message', "You don't have permission to access this page.");
             return redirect()->route('dashboard')->with('error', 'Access Denied!');
         }
         $supplierId = auth()->user()->supplier_id;
@@ -609,7 +610,7 @@ class QuickBooksController extends Controller
         })
         ->get();
 
-        return view('quickbooks.upload_bill', compact('assignedServices', 'load_id'));
+        return view('quickbooks.upload_bill', compact('assignedServices', 'load_id', 'aol'));
     }
 
     // Get or Create Supplier
@@ -1107,7 +1108,8 @@ class QuickBooksController extends Controller
      $billId = $supplierInvoice->quickbook_invoice_id;
  
      if (!$billId) {
-         return view('quickbooks.bill_details')->with('error', 'No QuickBooks Bill ID found for this load.');
+         return view('quickbooks.bill_details')->with('success', 'The bill is being uploaded to QuickBooks. Please refresh the page after a short while.');
+
      }
  
     // Get QuickBooks Access Token

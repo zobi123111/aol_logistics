@@ -39,7 +39,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\LanguageManager::class,
             \App\Http\Middleware\PreventBackHistory::class,
             \App\Http\Middleware\UpdateLastUserActivity::class,
-
+            \App\Http\Middleware\CheckIfUserIsActive::class,
         ],
 
         'api' => [

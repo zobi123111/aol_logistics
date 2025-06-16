@@ -81,10 +81,10 @@
                         @endforeach
                     </ul>
                 @else
-                    <p> {{ __('messages.No valid documents found') }} </p>
+                    <p> {{ __('messages.no_documents_uploaded') }} </p>
                 @endif
             @else   
-                <p> {{ __('messages.No documents uploaded') }} </p>
+                <p> {{ __('messages.no_documents_uploaded') }} </p>
             @endif
 
             <hr>
@@ -115,10 +115,10 @@
                         @endforeach
                     </ul>
                 @else
-                    <p>  {{ __('messages.No valid documents found') }}</p>
+                    <p>  {{ __('messages.no_documents_uploaded') }}</p>
                 @endif
             @else   
-                <p>  {{ __('messages.No documents uploaded') }} </p>
+                <p>  {{ __('messages.no_documents_uploaded') }} </p>
             @endif
 
             <hr>
@@ -149,10 +149,10 @@
                             @endforeach
                         </ul>
                     @else
-                        <p>  {{ __('messages.No valid documents found') }} </p>
+                        <p>  {{ __('messages.no_documents_uploaded') }} </p>
                     @endif
                 @else   
-                    <p>  {{ __('messages.No documents uploaded') }} </p>
+                    <p>  {{ __('messages.no_documents_uploaded') }} </p>
                 @endif
         </div>
     </div>

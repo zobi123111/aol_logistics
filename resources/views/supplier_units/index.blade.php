@@ -24,7 +24,7 @@
         <thead>
             <tr>
                 <th> {{ __('messages.Unit Type') }} </th>
-                <th> {{ __('messages.Unit Number') }} </th>
+                <!-- <th> {{ __('messages.Unit Number') }} </th> -->
                 <th> {{ __('messages.Truck Number') }} </th>
                 <th> {{ __('messages.License Plate') }} </th>
                 <th> {{ __('messages.State') }} </th>
@@ -40,7 +40,7 @@
             @foreach ($units as $unit)
                 <tr>
                     <td>{{ $unit->unit_type }}</td>
-                    <td>{{ $unit->unit_number }}</td>
+                    <!-- <td>{{ $unit->unit_number }}</td> -->
                     <td>{{ $unit->truck_number }}</td>
                     <td>{{ $unit->license_plate }}</td>
                     <td>{{ $unit->state }}</td>
