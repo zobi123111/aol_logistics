@@ -208,6 +208,9 @@
 <script>
 
     $(document).ready(function() {
+          window.Laravel = {
+            translations: @json(__('messages'))
+        };
         var userType = @json(auth()->user()->roledata->user_type_id);
 
         let userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;    
@@ -266,7 +269,23 @@
            
             columns: [
                 { data: 'aol', name: 'aol_number' },
-                { data: 'service_type', name: 'service_type' },
+                     {
+            data: 'service_type',
+            name: 'service_type',
+            render: function (data, type, row) {
+        if (typeof data === 'string' && data.length > 0) {
+            // Convert snake_case to Title Case
+            let label = data.replace(/_/g, ' ')
+                            .replace(/\w\S*/g, function(txt) {
+                                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+                            });
+
+            // Use Laravel translation key
+            return Laravel.translations[label] || label;
+
+        }
+        return data;
+    }},
                 { data: 'created_for_user', name: 'created_for_user', searchable: true},
                 { data: 'originval', name: 'origin' },
                 { data: 'destinationval', name: 'destination' },

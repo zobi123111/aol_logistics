@@ -15,7 +15,7 @@
         {{ session()->get('message') }}
     </div>
     @endif
-     <div class="card card-container">
+     <div class="card card-container upload-bill-card">
         <div class="card-body">
 <table class="table" id="assignedServices">
     <thead>

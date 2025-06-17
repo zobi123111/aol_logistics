@@ -34,7 +34,7 @@
     <select name="service_type" id="service_type" class="form-control">
         <option value="">{{ __('messages.Select Service Type') }}</option>
         @foreach (ServiceTypes::SELECTABLE_TYPES as $key => $label)
-            <option value="{{ $label }}" {{ $selectedService === $label ? 'selected' : '' }}>
+            <option value="{{ $key }}" {{ $selectedService === $key ? 'selected' : '' }}>
                 {{ __('messages.' . $label) }}
             </option>
         @endforeach
