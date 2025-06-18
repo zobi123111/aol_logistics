@@ -64,7 +64,12 @@
     @error('supplier_id')
         <span class="text-danger">{{ $message }}</span>
     @enderror
+    @if ($assignedSuppliers->isEmpty())
+    <small class="d-block mt-1">{{ __('messages.No supplier assigned to this load.') }}
+</small>
+@endif
 </div>
+
 
 <div class="mb-3">
     <label for="truck_number" class="form-label">{{ __('messages.truck_number') }}</label>

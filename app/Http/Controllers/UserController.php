@@ -138,7 +138,6 @@ class UserController extends Controller
             'edit_profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'edit_password' => 'nullable|min:6|confirmed'
         ]);
-
         // Find the user by ID
         $user = User::find(decode_id($request->edit_id));
 
@@ -172,11 +171,11 @@ class UserController extends Controller
         if (isAdminUser() && $request->filled('edit_password')) {
             $user->password = Hash::make($request->edit_password);
         }
-
+        $role_id= decode_id($request->edit_role_name);
         // Update the user's details
         $user->fname = $request->fname;
         $user->lname = $request->lname;
-        $user->role = decode_id($request->edit_role_name);
+        $user->role = $role_id;
         $user->save();
 
         // Log the update action

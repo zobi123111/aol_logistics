@@ -71,7 +71,7 @@ class User extends Authenticatable
 
 public function supplier()
 {
-    return $this->hasOne(Supplier::class, 'user_id');
+    return $this->hasOne(Supplier::class, 'id', 'supplier_id');    
 }
 
 public function client(): BelongsTo

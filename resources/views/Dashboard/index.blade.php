@@ -88,6 +88,8 @@
                                     <div>
                                         <strong>{{ $user->fname }} {{ $user->lname }}</strong> 
                                         <small class="text-muted">({{ $user->email }})</small><br>
+                                        <strong>{{ __('messages.Company') }}:</strong> 
+                                            {{ $user->supplier?->company_name ?? $user->client?->business_name ?? 'AOL' }}<br>    
                                         <strong>{{ __('messages.User Type') }}:</strong> {{ $user->roledata->userType->name ?? 'Not Assigned' }}<br>
                                         <strong>{{ __('messages.Role') }}:</strong> {{ $user->roledata->role_name ?? 'Not Assigned' }}
                                     </div>

@@ -518,5 +518,10 @@ return [
     'Custody of Goods' => 'Custody of Goods',
     'TONU' => 'TONU',
     'Overtime' => 'Overtime',
+        'no_supplier_assigned' => 'No supplier assigned to this load.',
+        'Company' => 'Company',
+        'No supplier assigned to this load.' => 'No supplier assigned to this load.',
+
+
 
 ];

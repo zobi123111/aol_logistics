@@ -520,4 +520,8 @@ return [
      'Custody of Goods' => 'Custodia de bienes',
     'TONU' => 'TONU',  // If acronym, leave as-is
     'Overtime' => 'Horas extra',
+    'no_supplier_assigned' => 'No se ha asignado un proveedor a esta carga.',
+    'Company' => 'Compañía',
+'No supplier assigned to this load.' => 'Ningún proveedor asignado a esta carga.',
+
 ];

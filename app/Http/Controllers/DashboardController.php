@@ -56,7 +56,8 @@ class DashboardController extends Controller
         }
         
         // $activeUsers = User::whereIn('id', array_unique($activeUserIds))->with('roledata')->get();
-        $activeUsers = User::where('last_activity', '>=', Carbon::now()->subMinutes(5))->with('roledata')->get();
+        $activeUsers = User::where('last_activity', '>=', Carbon::now()->subMinutes(5))->with('roledata', 'supplier', 'client')->get();
+
         $pendingLoads = Load::with('origindata','destinationdata', 'creatorfor', 'assignedServices.supplier' )->where('shipment_status', 'pending')->get();
         if ($request->ajax()) {
 
